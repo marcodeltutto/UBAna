@@ -20,7 +20,21 @@
 
 #pragma link C++ class Base::sample+;
 #pragma link C++ class Base::BootstrapTH1D+;
+#pragma link C++ class Base::CrossSectionCalculator1D+;
+#pragma link C++ class Base::CrossSectionCalculator2D+;
+#pragma link C++ class Base::CovarianceCalculator2D+;
+#pragma link C++ class Base::MigrationMatrix2D+;
+#pragma link C++ class Base::MigrationMatrix4D+;
+#pragma link C++ class Base::ReweightingPlotter+;
+#pragma link C++ class Base::PlottingTools+;
 //ADD_NEW_CLASS ... do not change this line
 #endif
+
+
+
+
+
+
+
 
 

@@ -3,9 +3,16 @@
 
 #include "Maker.h"
 
+using namespace Base;
+
 void Main::Maker::SetInputFile(std::string in)
 {
   filen = in;
+}
+
+void Main::Maker::SetOutputFile(std::string in)
+{
+  fileoutn = in;
 }
 
 void Main::Maker::SetEntries(int e)
@@ -225,7 +232,7 @@ void Main::Maker::MakeFile()
 {
 	std::cout << "Main::Maker::MakeFile()  called" << std::endl;
 
-	  clock_t begin = clock();
+	clock_t begin = clock();
 
   
 
@@ -237,12 +244,7 @@ void Main::Maker::MakeFile()
   _csvfile.open ("output/dqdx_trklen.csv", std::ofstream::out | std::ofstream::trunc);
   _csvfile << "dqdx,trklen,y" << std::endl;
 
-
-  //*************************
-  //* Getting input parameters
-
-    std::cout << "_beamSpillStarts is " << _beamSpillStarts << std::endl;
-  std::cout << "_beamSpillEnds is   " << _beamSpillEnds << std::endl;
+   
   if (isdata)
     std::cout << "Is data." << std::endl;
   else
@@ -265,8 +267,8 @@ void Main::Maker::MakeFile()
 
 
 
-  std::cout << "Opening output file ubxsecana_output.root." << std::endl;
-  TFile *file_out = new TFile("ubxsecana_output.root","RECREATE");
+  std::cout << "Opening output file with name " << fileoutn << std::endl;
+  TFile *file_out = new TFile(fileoutn.c_str(),"RECREATE");
   if ( file_out->IsOpen() )
     std::cout << "File opened successfully" << std::endl;
   
@@ -449,7 +451,9 @@ void Main::Maker::MakeFile()
   TH2D* h_eff_muangle_mumom_den = new TH2D("h_eff_muangle_mumom_den", "h_eff_muangle_mumom_den", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
 
   //Base::BootstrapTH1D* h_eff_mumom_num_bs = new Base::BootstrapTH1D("h_eff_mumom_num_bs", "h_eff_mumom_num_bs_title", 6, bins_mumom);
-  Base::BootstrapTH1D h_eff_mumom_num_bs("h_eff_mumom_num_bs", "h_eff_mumom_num_bs_title", 6, bins_mumom);
+  BootstrapTH1D h_eff_mumom_num_bs("h_eff_mumom_num_bs", "h_eff_mumom_num_bs_title", 6, bins_mumom);
+  BootstrapTH1D h_eff_mumom_den_bs("h_eff_mumom_den_bs", "h_eff_mumom_den_bs_title", 6, bins_mumom);
+
   //double bins[4] = {0, 1, 2, 3};
 	Base::BootstrapTH1D mytako("helloname", "hellotitle", 6, bins_mumom);
 	
@@ -1105,7 +1109,8 @@ void Main::Maker::MakeFile()
       std::vector<std::string> str_v = {"uni1", "uni2", "uni3"};
 	    mytako.SetWeightNames(str_v);
 
-	    h_eff_mumom_num_bs.SetWeightNames(str_v);//fname_genie_multisim);
+	    h_eff_mumom_num_bs.SetWeightNames(fname_genie_multisim);
+	    h_eff_mumom_den_bs.SetWeightNames(fname_genie_multisim);
       
     }
 
@@ -1121,7 +1126,7 @@ void Main::Maker::MakeFile()
 
 		mytako.Fill(i, 1., wgts);
 
-		h_eff_mumom_num_bs.Fill(i, 1., wgts);//wgts_genie_multisim);
+		//h_eff_mumom_num_bs.Fill(i, 1., wgts);//wgts_genie_multisim);
 
 
 
@@ -1266,8 +1271,9 @@ void Main::Maker::MakeFile()
     }
 
     
-    
+    //
     // Construct the denominator for the efficiency plots
+    //
     if (isSignal) {
       
       h_eff_onebin_den->Fill(0.5);
@@ -1276,7 +1282,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap) FillBootstrap(t->true_muon_mom, bs_genie_pm1_eff_mumom_den, fname_genie_pm1, wgts_genie_pm1);
       if (!isdata && _fill_bootstrap) FillBootstrap(t->true_muon_mom, bs_genie_multisim_eff_mumom_den, fname_genie_multisim, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap) FillBootstrap(t->true_muon_mom, bs_flux_multisim_eff_mumom_den, fname_flux_multisim, wgts_flux_multisim);
-      //h_eff_mumom_den_bs->Fill(t->true_muon_mom, 1., wgts_genie_pm1);
+      h_eff_mumom_den_bs.Fill(t->true_muon_mom, 1., wgts_genie_multisim);
       h_eff_muangle_den->Fill(t->lep_costheta);
       h_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom);
       h_eff_muphi_den->Fill(t->lep_phi);
@@ -1851,7 +1857,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap) FillBootstrap(t->true_muon_mom, bs_genie_pm1_eff_mumom_num, fname_genie_pm1, wgts_genie_pm1);
       if (!isdata && _fill_bootstrap) FillBootstrap(t->true_muon_mom, bs_genie_multisim_eff_mumom_num, fname_genie_multisim, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap) FillBootstrap(t->true_muon_mom, bs_flux_multisim_eff_mumom_num, fname_flux_multisim, wgts_flux_multisim);
-      /////h_eff_mumom_num_bs->Fill(t->true_muon_mom, 1., wgts_genie_multisim);
+      h_eff_mumom_num_bs.Fill(t->true_muon_mom, 1., wgts_genie_multisim);
       h_eff_muangle_num->Fill(t->lep_costheta);
       h_eff_muangle_mumom_num->Fill(t->lep_costheta, t->true_muon_mom);
       h_eff_muphi_num->Fill(t->lep_phi);
@@ -2904,7 +2910,7 @@ void Main::Maker::MakeFile()
   std::cout << "Just before writing h_eff_mumom_num_bs" << std::endl;
   file_out->WriteObject(&h_eff_mumom_num_bs, "h_eff_mumom_num_bs");
   std::cout << "Just after writing h_eff_mumom_num_bs" << std::endl;
-  //file_out->WriteObject(h_eff_mumom_den_bs, "h_eff_mumom_den_bs");
+  file_out->WriteObject(&h_eff_mumom_den_bs, "h_eff_mumom_den_bs");
   
   pEff_percut->Write();
   pPur_percut->Write();

@@ -58,10 +58,10 @@ namespace Base {
 
   void BootstrapTH1D::ResetIterator()
   {
-    //_current_iterator = _hmap.begin();
+    _current_iterator = _hmap.begin();
   }
 
-  /*bool BootstrapTH1D::NextUniverse(std::string & uni_name, TH1D & uni_histo) {
+  bool BootstrapTH1D::NextUniverse(std::string & uni_name, TH1D & uni_histo) {
 
     if (_current_iterator == _hmap.end()) {
       std::cout << "NextUniverse false" << std::endl;
@@ -73,12 +73,12 @@ namespace Base {
     }
 
     uni_name = _current_iterator->first;
-    uni_histo = *_current_iterator->second;
+    uni_histo = _current_iterator->second;
 
     _current_iterator++;
     
     return true;
-  } */
+  } 
 
   std::map<std::string, std::vector<TH1D>> BootstrapTH1D::UnpackPMHisto()
   {

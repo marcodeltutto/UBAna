@@ -72,6 +72,9 @@ namespace Main {
     void SetInputFile(std::string);
 
     ///
+    void SetOutputFile(std::string);
+
+    ///
     void SetEntries(int);
 
     ///
@@ -132,6 +135,7 @@ namespace Main {
     double _gainCalib       = 198;  // e-/ADC
 
     std::string filen     = "ubxsec_output.root";
+    std::string fileoutn  = "ubxsecana_output.root";
     bool evalPOT          = false;
     int maxEntries        = -1;
     bool isdata           = false;

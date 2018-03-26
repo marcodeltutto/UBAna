@@ -69,7 +69,7 @@ namespace Base {
     void ResetIterator();
 
     ///
-    //bool NextUniverse(std::string & uni_name, TH1D & uni_histo);
+    bool NextUniverse(std::string & uni_name, TH1D & uni_histo);
 
     ///
     std::map<std::string, std::vector<TH1D>> UnpackPMHisto();
@@ -95,7 +95,7 @@ namespace Base {
     std::vector<std::string> _wnames; ///< Weight names
 
     //std::map<std::string, TH1D*>::iterator _current_iterator = _hmap.begin();
-    //std::map<std::string, TH1D>::iterator _current_iterator; //!
+    std::map<std::string, TH1D>::iterator _current_iterator; //!
 
   };
 }
