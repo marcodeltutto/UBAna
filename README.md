@@ -72,4 +72,14 @@ With these info, you know what you need to do for your new package compilation t
 2. Include statements in the source codes
   * `#include "litefmwk/$(PACKAGE_NAME)/$(WANTED_HEADER)"`
   * ... where `$(WANTED_HEADER)` is the header file you want (like `sample.h`).
- 
+
+For example, add:
+
+```
+INCFLAGS += -I$(MYSW_INCDIR) 
+LDFLAGS += -L$(MYSW_LIBDIR) -lLiteFMWK_Base
+```
+just before
+``` 
+include $(MYSW_DIR)/Makefile/Makefile.${OSNAME} 
+```
