@@ -405,6 +405,11 @@ std::cout << ">> here7" << std::endl;
 
 
 
+
+   gROOT->SetBatch(kTRUE);
+
+
+
   if (_calculate_xsec) {
     // Intantiate cross section calculator for 1D cross section
     CrossSectionCalculator1D _xsec_calc;
@@ -437,231 +442,21 @@ std::cout << ">> here7" << std::endl;
     // 
     // Total cross section: Cross section reweighting
     //
-    /*
+    
 
     if (_do_reweighting_plots) {
 
-      std::map<std::string, TH1D*> xsec_onebin_per_universe;
+      //
+      // GENIE Multisim Systematics: 
+      //
 
-      for (auto it : bs_genie_multisim_true_reco_mom_mc) {
-
-        std::string universe_name = it.first;
-        TH2D* this_h_true_reco_mom = it.second;
-
-        // Create the MC histo map for this universe
-        std::map<std::string, TH1D*> hmap_onebin_mc_universe;
-        for (auto i : hmap_onebin_genie_multisim_bs_mc) {
-
-          std::map<std::string, TH1D*> temp_map = i.second;
-
-          for (auto i2 : temp_map) {
-
-            if (i2.first == universe_name) {
-              hmap_onebin_mc_universe[i.first] = i2.second;
-              break;
-            }
-          }      
-        }
-    
-        // Get the efficiency num and den for this universe
-        auto it_find = map_bs_genie_multisim_eff_onebin_num_mc.find(universe_name);
-        if (it_find == map_bs_genie_multisim_eff_onebin_num_mc.end()) {
-          std::cout << "Cannot find efficiency numerator for universe " << universe_name << std::endl;
-          exit(0);
-        }
-        TH1D* h_eff_num_universe = it_find->second;
-        it_find = map_bs_genie_multisim_eff_onebin_den_mc.find(universe_name);
-        if (it_find == map_bs_genie_multisim_eff_onebin_den_mc.end()) {
-          std::cout << "Cannot find efficiency denominator for universe " << universe_name << std::endl;
-          exit(0);
-        }
-        TH1D* h_eff_den_universe = it_find->second;
-
-
-        _xsec_calc.Reset();
-        //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
-        _xsec_calc.SetHistograms(hmap_onebin_mc_universe, h_onebin_total_bnbon, h_onebin_total_extbnb);  
-        _xsec_calc.SetTruthHistograms(h_eff_num_universe, h_eff_den_universe, h_true_reco_mom);  
-        _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
-        _xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-        _xsec_calc.ProcessPlots();
-        _xsec_calc.Draw();
-        _xsec_calc.Draw(hist_to_subtract);
-        _xsec_calc.DoNotSmear(); // No smearing for total cross section
-        TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
-
-        xsec_onebin_per_universe[universe_name] = universe_xsec;
-
-        //exit(0);
-        //break;
-
-      }
-
-      BootstrapTH1D xsec_onebin_bs;
-      xsec_onebin_bs.SetAllHistograms(xsec_onebin_per_universe);
-
-      //genie_rw_plotter.SetXSecBootstrap(xsec_mumom_bs);
-      //genie_rw_plotter.MakeXsecDiffPlots(true);
-    
-      // Covariance Matrix
-      CovarianceCalculator2D _cov_calc;
-      _cov_calc.SetPrefix("genie_multisim_onebin_");
-      _cov_calc.SetBootstrap(xsec_onebin_bs);
-      _cov_calc.CalculateCovarianceMatrix();
-      _cov_calc.PlotMatrices();
-
-      gROOT->SetBatch(kFALSE);
-
-      TCanvas * genie_onebin_multisim_xsec_canvas = new TCanvas();
-      for (auto it : xsec_onebin_per_universe) {
-        if (it.first == "nominal") {
-          continue;
-        }
-        if (it.first == "universe0") {
-          it.second->GetXaxis()->SetTitle("p_{#mu} [GeV]");
-          it.second->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-          it.second->GetYaxis()->SetTitleOffset(0.8);
-        }
-        it.second->SetLineWidth(1);
-        it.second->SetLineColor(kGreen+2);
-        it.second->Draw("histo same");
-      }
-      xsec_onebin_per_universe["nominal"]->SetLineColor(kGreen+3);
-      xsec_onebin_per_universe["nominal"]->SetLineWidth(3);
-      xsec_onebin_per_universe["nominal"]->Draw("histo same");
-
-      TLegend *l = new TLegend(0.5644699,0.7347368,0.8868195,0.8673684,NULL,"brNDC");
-      l -> AddEntry(xsec_onebin_per_universe["nominal"], "Central Value", "l");
-      l -> AddEntry(xsec_onebin_per_universe["universe0"], "Other Universes", "l");
-      l -> Draw();
-
-      TLatex* genie_onebin_label = new TLatex(.10, .92, "GENIE Re-Weighting Only");
-      genie_onebin_label->SetTextFont(62);
-      genie_onebin_label->SetTextColor(kRed+2);
-      genie_onebin_label->SetNDC();
-      genie_onebin_label->SetTextSize(1/30.);
-      genie_onebin_label->SetTextAlign(10);//left adjusted
-      genie_onebin_label->Draw();
-      genie_onebin_multisim_xsec_canvas->SaveAs("genie_multisim_onebin_xsec_all.pdf");
-      */
-
-      /*****************************/
-      /*
-
-      gROOT->SetBatch(kTRUE);
-
-      xsec_onebin_per_universe.clear();
-
-      for (auto it : bs_flux_multisim_true_reco_mom_mc) {
-
-        std::string universe_name = it.first;
-        TH2D* this_h_true_reco_mom = it.second;
-
-        // Create a smearing matrix for this universe
-        TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 6);
-        MigrationMatrix2D migrationmatrix2d;
-        migrationmatrix2d.SetNBins(7, 6);
-        migrationmatrix2d.SetTrueRecoHistogram(this_h_true_reco_mom);
-        S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-        //migrationmatrix2d.PlotMatrix();
-
-
-        // Create the MC histo map for this universe
-        std::map<std::string, TH1D*> hmap_onebin_mc_universe;
-       for (auto i : hmap_onebin_flux_multisim_bs_mc) {
-
-          std::map<std::string, TH1D*> temp_map = i.second;
-
-          for (auto i2 : temp_map) {
-
-            if (i2.first == universe_name) {
-              hmap_onebin_mc_universe[i.first] = i2.second;
-              break;
-            }
-          }      
-        }
-    
-        // Get the efficiency num and den for this universe
-        auto it_find = map_bs_flux_multisim_eff_onebin_num_mc.find(universe_name);
-        if (it_find == map_bs_flux_multisim_eff_onebin_num_mc.end()) {
-          std::cout << "Cannot find efficiency numerator for universe " << universe_name << std::endl;
-          exit(0);
-        }
-        TH1D* h_eff_num_universe = it_find->second;
-        it_find = map_bs_flux_multisim_eff_onebin_den_mc.find(universe_name);
-        if (it_find == map_bs_flux_multisim_eff_onebin_den_mc.end()) {
-          std::cout << "Cannot find efficiency denominator for universe " << universe_name << std::endl;
-          exit(0);
-        }
-        TH1D* h_eff_den_universe = it_find->second;
-
-
-        _xsec_calc.Reset();
-        //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
-        _xsec_calc.SetHistograms(hmap_onebin_mc_universe, h_onebin_total_bnbon, h_onebin_total_extbnb);  
-        _xsec_calc.SetTruthHistograms(h_eff_num_universe, h_eff_den_universe, h_true_reco_mom);
-        _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
-        _xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-        _xsec_calc.ProcessPlots();
-        _xsec_calc.Draw();
-        _xsec_calc.Draw(hist_to_subtract);
-        _xsec_calc.DoNotSmear(); // No smearing for total cross section
-        TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
-
-        xsec_onebin_per_universe[universe_name] = universe_xsec;
-
-        //exit(0);
-        //break;
-
-      }
-      BootstrapTH1D xsec_flux_multisim_onebin_bs;
-      xsec_flux_multisim_onebin_bs.SetAllHistograms(xsec_onebin_per_universe);
-    
-      // Covariance Matrix
-      CovarianceCalculator2D _cov_calc_flux;
-      _cov_calc_flux.SetPrefix("flux_multisim");
-      _cov_calc_flux.SetBootstrap(xsec_flux_multisim_onebin_bs);
-      _cov_calc_flux.CalculateCovarianceMatrix();
-      _cov_calc_flux.PlotMatrices();
-
-      gROOT->SetBatch(kFALSE);
-
-      TCanvas * flux_multisim_onebin_xsec_canvas = new TCanvas();
-      for (auto it : xsec_onebin_per_universe) {
-        if (it.first == "nominal") {
-          continue;
-        }
-        if (it.first == "universe0") {
-          it.second->GetXaxis()->SetTitle("p_{#mu} [GeV]");
-          it.second->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-          it.second->GetYaxis()->SetTitleOffset(0.8);
-        }
-        it.second->SetLineWidth(1);
-        it.second->SetLineColor(kGreen+2);
-        it.second->Draw("histo same");
-      }
-      xsec_onebin_per_universe["nominal"]->SetLineColor(kGreen+3);
-      xsec_onebin_per_universe["nominal"]->SetLineWidth(3);
-      xsec_onebin_per_universe["nominal"]->Draw("histo same");
-
-      TLegend *l_flux = new TLegend(0.5644699,0.7347368,0.8868195,0.8673684,NULL,"brNDC");
-      l_flux -> AddEntry(xsec_onebin_per_universe["nominal"], "Central Value", "l");
-      l_flux -> AddEntry(xsec_onebin_per_universe["universe0"], "Other Universes", "l");
-      l_flux -> Draw();
-
-      TLatex* flux_onebin_label = new TLatex(.10, .92, "FLUX Non-Hadron Re-Weighting Only");
-      flux_onebin_label->SetTextFont(62);
-      flux_onebin_label->SetTextColor(kRed+2);
-      flux_onebin_label->SetNDC();
-      flux_onebin_label->SetTextSize(1/30.);
-      flux_onebin_label->SetTextAlign(10);//left adjusted
-      flux_onebin_label->Draw();
-      flux_multisim_onebin_xsec_canvas->SaveAs("flux_multisim_xsec_all.pdf");
+      //
+      // FLUX Multisim Systematics: 
+      //
       
 
-
     } // _do_reweighting_plots
-    */
+    
 
 
 
@@ -689,16 +484,15 @@ std::cout << ">> here7" << std::endl;
     _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
 
-
-    gROOT->SetBatch(kTRUE);
-
-
     // 
     // Muon Momentum: Cross section reweighting
     //
 
     if (_do_reweighting_plots) {
 
+      //
+      // GENIE Multisim Systematics
+      //
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
       _xsec_bs_calc.Reset();
@@ -714,129 +508,9 @@ std::cout << ">> here7" << std::endl;
       _xsec_bs_calc.Run();
 
 
-      std::map<std::string, TH1D*> xsec_mumom_per_universe;
-/*
-      for (auto it : bs_genie_multisim_true_reco_mom_mc) {
-
-        std::string universe_name = it.first;
-        TH2D* this_h_true_reco_mom = it.second;
-
-        std::cout << "this_h_true_reco_mom->GetBinContent(2, 2)" << this_h_true_reco_mom->GetBinContent(2, 2) << std::endl;
-
-        // Create a smearing matrix for this universe
-        TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 6);
-        MigrationMatrix2D migrationmatrix2d;
-        migrationmatrix2d.SetNBins(7, 6);
-        migrationmatrix2d.SetTrueRecoHistogram(this_h_true_reco_mom);
-        S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-        //migrationmatrix2d.PlotMatrix();
-
-
-        // Create the MC histo map for this universe
-        std::map<std::string, TH1D*> hmap_trkmom_mc_universe;
-       for (auto i : hmap_trkmom_genie_multisim_bs_mc) {
-
-          std::map<std::string, TH1D*> temp_map = i.second;
-
-          for (auto i2 : temp_map) {
-
-            if (i2.first == universe_name) {
-              hmap_trkmom_mc_universe[i.first] = i2.second;
-              break;
-            }
-          }      
-        }
-    
-        // Get the efficiency num and den for this universe
-        auto it_find = map_bs_genie_multisim_eff_mumom_num_mc.find(universe_name);
-        if (it_find == map_bs_genie_multisim_eff_mumom_num_mc.end()) {
-          std::cout << "Cannot find efficiency numerator for universe " << universe_name << std::endl;
-          exit(0);
-        }
-        TH1D* h_eff_num_universe = it_find->second;
-        it_find = map_bs_genie_multisim_eff_mumom_den_mc.find(universe_name);
-        if (it_find == map_bs_genie_multisim_eff_mumom_den_mc.end()) {
-          std::cout << "Cannot find efficiency denominator for universe " << universe_name << std::endl;
-          exit(0);
-        }
-        TH1D* h_eff_den_universe = it_find->second;
-
-
-        _xsec_calc.Reset();
-        //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
-        _xsec_calc.SetHistograms(hmap_trkmom_mc_universe, h_trkmom_total_bnbon, h_trkmom_total_extbnb);  
-        _xsec_calc.SetTruthHistograms(h_eff_num_universe, h_eff_den_universe, h_true_reco_mom);
-        _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
-        _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
-        _xsec_calc.ProcessPlots();
-        _xsec_calc.Draw();
-        _xsec_calc.Draw(hist_to_subtract);
-        _xsec_calc.SetMigrationMatrix(S_2d);
-        _xsec_calc.Smear(7, 6);
-        TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-
-        xsec_mumom_per_universe[universe_name] = universe_xsec;
-
-        //exit(0);
-        //break;
-
-      }
-
-      BootstrapTH1D xsec_mumom_bs;
-      xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
-
-      //genie_rw_plotter.SetXSecBootstrap(xsec_mumom_bs);
-      //genie_rw_plotter.MakeXsecDiffPlots(true);
-    
-      // Covariance Matrix
-      CovarianceCalculator2D _cov_calc;
-      _cov_calc.SetPrefix("genie_multisim");
-      _cov_calc.SetBootstrap(xsec_mumom_bs);
-      _cov_calc.CalculateCovarianceMatrix();
-      _cov_calc.PlotMatrices();
-
-      gROOT->SetBatch(kFALSE);
-
-      TCanvas * genie_multisim_xsec_canvas = new TCanvas();
-      for (auto it : xsec_mumom_per_universe) {
-        if (it.first == "nominal") {
-          continue;
-        }
-        if (it.first == "universe0") {
-          it.second->GetXaxis()->SetTitle("p_{#mu} [GeV]");
-          it.second->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-          it.second->GetYaxis()->SetTitleOffset(0.8);
-        }
-        it.second->SetLineWidth(1);
-        it.second->SetLineColor(kGreen+2);
-        it.second->Draw("histo same");
-      }
-      xsec_mumom_per_universe["nominal"]->SetLineColor(kGreen+3);
-      xsec_mumom_per_universe["nominal"]->SetLineWidth(3);
-      xsec_mumom_per_universe["nominal"]->Draw("histo same");
-
-      TLegend *l = new TLegend(0.5644699,0.7347368,0.8868195,0.8673684,NULL,"brNDC");
-      l -> AddEntry(xsec_mumom_per_universe["nominal"], "Central Value", "l");
-      l -> AddEntry(xsec_mumom_per_universe["universe0"], "Other Universes", "l");
-      l -> Draw();
-
-      TLatex* genie_label = new TLatex(.10, .92, "GENIE Re-Weighting Only");
-      genie_label->SetTextFont(62);
-      genie_label->SetTextColor(kRed+2);
-      genie_label->SetNDC();
-      genie_label->SetTextSize(1/30.);
-      genie_label->SetTextAlign(10);//left adjusted
-      genie_label->Draw();
-      genie_multisim_xsec_canvas->SaveAs("genie_multisim_xsec_all.pdf");
-      */
-
-
-      /*****************************/
-
-      //std::string flux_file_rw_path = std::getenv("MYSW_DIR");
-      //flux_file_rw_path += "/Flux/MCC8_FluxHistograms_Uncertainties.root";
-      //std::cout << "Using reweighted flux file: " << flux_file_rw_path << std::endl;
-
+      //
+      // FLUX Multisim Systematics
+      //
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -851,205 +525,10 @@ std::cout << ">> here7" << std::endl;
       _xsec_bs_calc.Run(true);
 
 
-/*
-      gROOT->SetBatch(kTRUE);
-
-      xsec_mumom_per_universe.clear();
-
-      for (auto it : bs_flux_multisim_true_reco_mom_mc) {
-
-        std::string universe_name = it.first;
-        TH2D* this_h_true_reco_mom = it.second;
-
-        std::cout << "this_h_true_reco_mom->GetBinContent(2, 2)" << this_h_true_reco_mom->GetBinContent(2, 2) << std::endl;
-
-        // Create a smearing matrix for this universe
-        TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 6);
-        MigrationMatrix2D migrationmatrix2d;
-        migrationmatrix2d.SetNBins(7, 6);
-        migrationmatrix2d.SetTrueRecoHistogram(this_h_true_reco_mom);
-        S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-        //migrationmatrix2d.PlotMatrix();
-
-
-        // Create the MC histo map for this universe
-        std::map<std::string, TH1D*> hmap_trkmom_mc_universe;
-       for (auto i : hmap_trkmom_flux_multisim_bs_mc) {
-
-          std::map<std::string, TH1D*> temp_map = i.second;
-
-          for (auto i2 : temp_map) {
-
-            if (i2.first == universe_name) {
-              hmap_trkmom_mc_universe[i.first] = i2.second;
-              break;
-            }
-          }      
-        }
-    
-        // Get the efficiency num and den for this universe
-        auto it_find = map_bs_flux_multisim_eff_mumom_num_mc.find(universe_name);
-        if (it_find == map_bs_flux_multisim_eff_mumom_num_mc.end()) {
-          std::cout << "Cannot find efficiency numerator for universe " << universe_name << std::endl;
-          exit(0);
-        }
-        TH1D* h_eff_num_universe = it_find->second;
-        it_find = map_bs_flux_multisim_eff_mumom_den_mc.find(universe_name);
-        if (it_find == map_bs_flux_multisim_eff_mumom_den_mc.end()) {
-          std::cout << "Cannot find efficiency denominator for universe " << universe_name << std::endl;
-          exit(0);
-        }
-        TH1D* h_eff_den_universe = it_find->second;
-
-
-        _xsec_calc.Reset();
-        //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
-        _xsec_calc.SetHistograms(hmap_trkmom_mc_universe, h_trkmom_total_bnbon, h_trkmom_total_extbnb);  
-        _xsec_calc.SetTruthHistograms(h_eff_num_universe, h_eff_den_universe, h_true_reco_mom);
-        _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
-        _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
-        _xsec_calc.ProcessPlots();
-        _xsec_calc.Draw();
-        _xsec_calc.Draw(hist_to_subtract);
-        _xsec_calc.SetMigrationMatrix(S_2d);
-        _xsec_calc.Smear(7, 6);
-        TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-
-        xsec_mumom_per_universe[universe_name] = universe_xsec;
-
-        //exit(0);
-        //break;
-
-      }
-
-      BootstrapTH1D xsec_flux_multisim_mumom_bs;
-      xsec_flux_multisim_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
-    
-      // Covariance Matrix
-      CovarianceCalculator2D _cov_calc_flux;
-      _cov_calc_flux.SetPrefix("flux_multisim");
-      _cov_calc_flux.SetBootstrap(xsec_flux_multisim_mumom_bs);
-      _cov_calc_flux.CalculateCovarianceMatrix();
-      _cov_calc_flux.PlotMatrices();
-
-      gROOT->SetBatch(kFALSE);
-
-      TCanvas * flux_multisim_xsec_canvas = new TCanvas();
-      for (auto it : xsec_mumom_per_universe) {
-        if (it.first == "nominal") {
-          continue;
-        }
-        if (it.first == "universe0") {
-          it.second->GetXaxis()->SetTitle("p_{#mu} [GeV]");
-          it.second->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-          it.second->GetYaxis()->SetTitleOffset(0.8);
-        }
-        it.second->SetLineWidth(1);
-        it.second->SetLineColor(kGreen+2);
-        it.second->Draw("histo same");
-      }
-      xsec_mumom_per_universe["nominal"]->SetLineColor(kGreen+3);
-      xsec_mumom_per_universe["nominal"]->SetLineWidth(3);
-      xsec_mumom_per_universe["nominal"]->Draw("histo same");
-
-      TLegend *l_flux = new TLegend(0.5644699,0.7347368,0.8868195,0.8673684,NULL,"brNDC");
-      l_flux -> AddEntry(xsec_mumom_per_universe["nominal"], "Central Value", "l");
-      l_flux -> AddEntry(xsec_mumom_per_universe["universe0"], "Other Universes", "l");
-      l_flux -> Draw();
-
-      TLatex* flux_label = new TLatex(.10, .92, "FLUX Non-Hadron Re-Weighting Only");
-      flux_label->SetTextFont(62);
-      flux_label->SetTextColor(kRed+2);
-      flux_label->SetNDC();
-      flux_label->SetTextSize(1/30.);
-      flux_label->SetTextAlign(10);//left adjusted
-      flux_label->Draw();
-      flux_multisim_xsec_canvas->SaveAs("flux_multisim_xsec_all.pdf");
-      */
-
 
     } // _do_reweighting_plots
 
 
-
-
-/*
-
-
-    // 
-    // Muon Momentum: Cross section reweighting
-    //
-
-    if (_do_reweighting_plots) {
-
-      std::map<std::string, TH1D*> xsec_mumom_per_universe;
-
-      for (auto it : bs_true_reco_mom_mc) {
-
-        std::string universe_name = it.first;
-        TH2D* this_h_true_reco_mom = it.second;
-
-        // Create a smearing matrix for this universe
-        TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 6);
-        MigrationMatrix2D migrationmatrix2d;
-        migrationmatrix2d.SetNBins(7, 6);
-        migrationmatrix2d.SetTrueRecoHistogram(this_h_true_reco_mom);
-        S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-        //migrationmatrix2d.PlotMatrix();
-
-
-        // Create the MC histo map for this universe
-        std::map<std::string, TH1D*> hmap_trkmom_mc_universe;
-       for (auto i : map_bs) {
-
-          std::map<std::string, TH1D*> temp_map = i.second;
-
-          for (auto i2 : temp_map) {
-
-            if (i2.first == universe_name) {
-              hmap_trkmom_mc_universe[i.first] = i2.second;
-              break;
-            }
-          }      
-        }
-    
-        // Get the efficiency num and den for this universe
-        auto it_find = map_bs_eff_mumom_num_mc.find(universe_name);
-        TH1D* h_eff_num_universe = it_find->second;
-        it_find = map_bs_eff_mumom_den_mc.find(universe_name);
-        TH1D* h_eff_den_universe = it_find->second;
-
-
-        _xsec_calc.Reset();
-        _xsec_calc.SetHistograms(hmap_trkmom_mc_universe, h_trkmom_total_bnbon, h_trkmom_total_extbnb);  
-        _xsec_calc.SetTruthHistograms(h_eff_num_universe, h_eff_den_universe, h_true_reco_mom);
-        _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
-        _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
-        _xsec_calc.ProcessPlots();
-        _xsec_calc.Draw();
-        _xsec_calc.Draw(hist_to_subtract);
-        _xsec_calc.SetMigrationMatrix(S_2d);
-        _xsec_calc.Smear(7, 6);
-        TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-
-        xsec_mumom_per_universe[universe_name] = universe_xsec;
-
-      }
-
-      BootstrapTH1D xsec_mumom_bs;
-      xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
-      genie_rw_plotter.SetXSecBootstrap(xsec_mumom_bs);
-      genie_rw_plotter.MakeXsecDiffPlots(true);
-    
-
-      // Cocariance Matrix
-      CovarianceCalculator2D _cov_calc;
-      _cov_calc.SetBootstrap(xsec_mumom_bs);
-      _cov_calc.CalculateCovarianceMatrix();
-      _cov_calc.PlotMatrices();
-
-    } // _do_reweighting_plots
-    */
 
 
 
