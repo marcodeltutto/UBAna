@@ -75,7 +75,7 @@ namespace Base {
 
   private:
 
-    std::string _name = "[CorrelationCalculator2D] ";
+    std::string _name = "[CovarianceCalculator2D] ";
 
     BootstrapTH1D _bs;
 

@@ -17,7 +17,7 @@ OSNAME          = $(shell uname -s)
 HOST            = $(shell uname -n)
 OSNAMEMODE      = $(OSNAME)
 
-LDFLAGS += -L$(MYSW_LIBDIR) -lLiteFMWK_Base
+LDFLAGS += -L$(MYSW_LIBDIR) -lUBAna_Base
 
 # call kernel specific compiler setup
 include $(MYSW_DIR)/Makefile/Makefile.${OSNAME}

@@ -55,26 +55,14 @@ namespace Main {
 	void Analyse::DoAnalise() 
 	{
 
-		clock_t begin = clock();
+	clock_t begin = clock();
   
 
 
   system("mkdir -p output_data_mc/");
   
-
-  // Reset input in order to use TApplication
-  //char* temp[1] = {argv[0]};
-  //argc = 1;
-  //argv = temp;
-
-  //std::string env = std::getenv("UBXSecAnaRoot");
-
-  //TApplication* rootapp = new TApplication("ROOT Application",&argc, argv);
   gROOT->SetBatch(kTRUE);
   gROOT->ProcessLine("gErrorIgnoreLevel = 2001;"); // 1001: INFO, 2001: WARNINGS, 3001: ERRORS
-
-  //std::string library = ".x " + env + "rootlogon.C";
-  //gROOT->ProcessLine(library.c_str());
 
   int bnbon_total_events = 1000;
   int extbnb_total_events = 1000;
@@ -135,8 +123,8 @@ namespace Main {
   // *************************************
   // Calculating scale factors
   // *************************************
-  double scale_factor_extbnb = (double)bnbon_triggers/(double)extbnb_triggers;// 0.7432886072; //0.7937414399; //0.78661374; //0.278463;//1.23 * (382718./(double)extbnb_total_events) * ((double)bnbon_total_events/547616.);
-  double scale_factor_bnbon = 1.; //bnbon_pot_meas * bnbon_pot_target;
+  double scale_factor_extbnb = (double)bnbon_triggers/(double)extbnb_triggers;
+  double scale_factor_bnbon = 1.; 
   double scale_factor_mc_bnbcosmic = bnbon_pot_meas / mc_pot_sim;
 
   std::cout << "Data Scale Factors:" << std::endl;
@@ -204,27 +192,33 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("hmap_trkmom_genie_pm1_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> map_bs = *temp_map_bs;
 
-  BootstrapTH1D * h_eff_mumom_num_bs_temp;
-  mc_bnbcosmic_file->GetObject("h_eff_mumom_num_bs", h_eff_mumom_num_bs_temp);
-  BootstrapTH1D h_eff_mumom_num_bs = *h_eff_mumom_num_bs_temp;
+  //BootstrapTH1D * h_eff_mumom_num_bs_temp;
+  //mc_bnbcosmic_file->GetObject("h_eff_mumom_num_bs", h_eff_mumom_num_bs_temp);
+  //BootstrapTH1D h_eff_mumom_num_bs = *h_eff_mumom_num_bs_temp;
+
+  std::cout << ">> here1" << std::endl;
 
   // Bootstrap efficiency
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_num", temp_map);
   std::map<std::string,TH1D*>  map_bs_eff_mumom_num_mc = *temp_map;
+  std::cout << ">> here2" << std::endl;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_den", temp_map);
   std::map<std::string,TH1D*>  map_bs_eff_mumom_den_mc = *temp_map;
+  std::cout << ">> here3" << std::endl;
   BootstrapTH1D bs_eff_mumom_num;
   bs_eff_mumom_num.SetAllHistograms(map_bs_eff_mumom_num_mc);
+  std::cout << ">> here4" << std::endl;
   BootstrapTH1D bs_eff_mumom_den;
   bs_eff_mumom_den.SetAllHistograms(map_bs_eff_mumom_den_mc);
-
+  std::cout << ">> here5" << std::endl;
   // Boostrap reco-true
   std::map<std::string,TH2D*>* temp_map_bs2;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_true_reco_mom", temp_map_bs2);
   std::map<std::string,TH2D*> bs_true_reco_mom_mc = *temp_map_bs2;
-
+  std::cout << ">> here6" << std::endl;
   // Instantiate the GENIE reweighting plotter
   ReweightingPlotter genie_rw_plotter;
+
 
   if (_do_pm1sigma_plots) {
 
@@ -235,7 +229,6 @@ namespace Main {
       temp.SetAllHistograms(it.second);
       bs[it.first] = temp;
     }
-
     // Make +-1 sigma plots from GENIE
     genie_rw_plotter.SetEventBootstrapMap(bs);
     genie_rw_plotter.SetEfficiencyBootstraps(bs_eff_mumom_num, bs_eff_mumom_den);
@@ -244,35 +237,67 @@ namespace Main {
     genie_rw_plotter.MakeBackgroundPlots(0, false, true);  
   }
 
-
+std::cout << ">> here7" << std::endl;
   // Events - GENIE Multisim
   mc_bnbcosmic_file->GetObject("hmap_trkmom_genie_multisim_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_multisim_bs_mc = *temp_map_bs;
-  mc_bnbcosmic_file->GetObject("hmap_onebin_genie_multisim_bs", temp_map_bs);
-  std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs_mc = *temp_map_bs;
+
+  mc_bnbcosmic_file->GetObject("hmap_trkangle_genie_multisim_bs", temp_map_bs);
+  std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_genie_multisim_bs_mc = *temp_map_bs;
+
+  std::cout << ">> Just before" << std::endl;
+  std::map<std::string,BootstrapTH1D>* map_bs_temp;  //BootstrapTH1D* temp;
+  mc_bnbcosmic_file->GetObject("map_bs_trkmom_genie_multisim", map_bs_temp);
+  std::map<std::string,BootstrapTH1D> map_bs_trkmom_genie_multisim = *map_bs_temp;
+  std::cout << ">> Just after" << std::endl;
+
+  //mc_bnbcosmic_file->GetObject("hmap_onebin_genie_multisim_bs", temp_map_bs);
+  //std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs_mc = *temp_map_bs;
+
 
   // Bootstrap efficiency - GENIE Multisim
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_num", temp_map);
-  std::map<std::string,TH1D*>  map_bs_genie_multisim_eff_mumom_num_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_den", temp_map);
-  std::map<std::string,TH1D*>  map_bs_genie_multisim_eff_mumom_den_mc = *temp_map;
+  BootstrapTH1D * temp_bs;
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_num", temp_bs);
+  BootstrapTH1D  bs_genie_multisim_eff_mumom_num = *temp_bs;
+
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_den", temp_bs);
+  BootstrapTH1D  bs_genie_multisim_eff_mumom_den = *temp_bs;
+
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_num", temp_bs);
+  BootstrapTH1D  bs_genie_multisim_eff_muangle_num = *temp_bs;
+
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_den", temp_bs);
+  BootstrapTH1D  bs_genie_multisim_eff_muangle_den = *temp_bs;
+
+/*
   BootstrapTH1D bs_genie_multisim_eff_mumom_num;
   bs_genie_multisim_eff_mumom_num.SetAllHistograms(map_bs_genie_multisim_eff_mumom_num_mc);
+
   BootstrapTH1D bs_genie_multisim_eff_mumom_den;
   bs_genie_multisim_eff_mumom_den.SetAllHistograms(map_bs_genie_multisim_eff_mumom_den_mc);
+*/
 
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_onebin_num", temp_map);
-  std::map<std::string,TH1D*>  map_bs_genie_multisim_eff_onebin_num_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_onebin_den", temp_map);
-  std::map<std::string,TH1D*>  map_bs_genie_multisim_eff_onebin_den_mc = *temp_map;
-  BootstrapTH1D bs_genie_multisim_eff_onebin_num;
-  bs_genie_multisim_eff_mumom_num.SetAllHistograms(map_bs_genie_multisim_eff_onebin_num_mc);
-  BootstrapTH1D bs_genie_multisim_eff_onebin_den;
-  bs_genie_multisim_eff_mumom_den.SetAllHistograms(map_bs_genie_multisim_eff_onebin_den_mc);
+  //mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_onebin_num", temp_map);
+  //std::map<std::string,TH1D*>  map_bs_genie_multisim_eff_onebin_num_mc = *temp_map;
+  //mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_onebin_den", temp_map);
+  //std::map<std::string,TH1D*>  map_bs_genie_multisim_eff_onebin_den_mc = *temp_map;
+  //BootstrapTH1D bs_genie_multisim_eff_onebin_num;
+  //bs_genie_multisim_eff_mumom_num.SetAllHistograms(map_bs_genie_multisim_eff_onebin_num_mc);
+  //BootstrapTH1D bs_genie_multisim_eff_onebin_den;
+  //bs_genie_multisim_eff_mumom_den.SetAllHistograms(map_bs_genie_multisim_eff_onebin_den_mc);
+
 
   // Boostrap reco-true - GENIE Multisim
   mc_bnbcosmic_file->GetObject("bs_genie_multisim_true_reco_mom", temp_map_bs2);
   std::map<std::string,TH2D*> bs_genie_multisim_true_reco_mom_mc = *temp_map_bs2;
+
+  BootstrapTH2D bs_genie_multisim_reco_true_mumom;
+  bs_genie_multisim_reco_true_mumom.SetAllHistograms(bs_genie_multisim_true_reco_mom_mc);
+
+  BootstrapTH2D * temp_bs_2d;
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_true_reco_muangle", temp_bs_2d);
+  BootstrapTH2D bs_genie_multisim_true_reco_muangle = *temp_bs_2d;
+
 
   // Events - FLUX Multisim
   mc_bnbcosmic_file->GetObject("hmap_trkmom_flux_multisim_bs", temp_map_bs);
@@ -292,6 +317,8 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_mom", temp_map_bs2);
   std::map<std::string,TH2D*> bs_flux_multisim_true_reco_mom_mc = *temp_map_bs2;
 
+  BootstrapTH2D bs_flux_multisim_true_reco_mumom;
+  bs_flux_multisim_true_reco_mumom.SetAllHistograms(bs_flux_multisim_true_reco_mom_mc);
 
 
 
@@ -301,8 +328,8 @@ namespace Main {
 
   TH1D* h_trklen_total_bnbon = (TH1D*)bnbon_file->Get("h_trklen_total");
   TH1D* h_trklen_total_extbnb = (TH1D*)extbnb_file->Get("h_trklen_total");
-  TH1D* h_onebin_total_bnbon = (TH1D*)bnbon_file->Get("h_onebin_total");
-  TH1D* h_onebin_total_extbnb = (TH1D*)extbnb_file->Get("h_onebin_total");
+  //TH1D* h_onebin_total_bnbon = (TH1D*)bnbon_file->Get("h_onebin_total");
+  //TH1D* h_onebin_total_extbnb = (TH1D*)extbnb_file->Get("h_onebin_total");
   TH1D* h_trkmom_total_bnbon = (TH1D*)bnbon_file->Get("h_trkmom_total");
   TH1D* h_trkmom_total_extbnb = (TH1D*)extbnb_file->Get("h_trkmom_total");
   TH1D* h_trktheta_total_bnbon = (TH1D*)bnbon_file->Get("h_trktheta_total");
@@ -352,8 +379,8 @@ namespace Main {
   TH1D* h_deltax_2d_extbnb = (TH1D*)extbnb_file->Get("h_deltax_2d");
 
   // Total
-  TH1D * h_eff_onebin_num = (TH1D*)mc_bnbcosmic_file->Get("h_eff_onebin_num");
-  TH1D * h_eff_onebin_den = (TH1D*)mc_bnbcosmic_file->Get("h_eff_onebin_den");
+  //TH1D * h_eff_onebin_num = (TH1D*)mc_bnbcosmic_file->Get("h_eff_onebin_num");
+  //TH1D * h_eff_onebin_den = (TH1D*)mc_bnbcosmic_file->Get("h_eff_onebin_den");
 
   // Muon momentum
   TH1D * h_truth_xsec_mumom = (TH1D*)mc_bnbcosmic_file->Get("h_truth_xsec_mumom");
@@ -394,16 +421,17 @@ namespace Main {
     //
     // Total cross section
     //
-    _xsec_calc.Reset();
-    _xsec_calc.SetHistograms(hmap_onebin_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);  
-    _xsec_calc.SetTruthHistograms(h_eff_onebin_num, h_eff_onebin_den, h_true_reco_mom); /*h_true_reco_mom is placeholder*/
-    _xsec_calc.SetTruthXSec(h_truth_xsec_mumom); /*h_truth_xsec_mumom is placeholder*/
-    _xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-    _xsec_calc.ProcessPlots();
-    _xsec_calc.Draw();
-    _xsec_calc.Draw(hist_to_subtract);
-    _xsec_calc.DoNotSmear(); // No smearing for total cross section
-    _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
+
+    //_xsec_calc.Reset();
+    //_xsec_calc.SetHistograms(hmap_onebin_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);  
+    //_xsec_calc.SetTruthHistograms(h_eff_onebin_num, h_eff_onebin_den, h_true_reco_mom); /*h_true_reco_mom is placeholder*/
+    //_xsec_calc.SetTruthXSec(h_truth_xsec_mumom); /*h_truth_xsec_mumom is placeholder*/
+    //_xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
+    //_xsec_calc.ProcessPlots();
+    //_xsec_calc.Draw();
+    //_xsec_calc.Draw(hist_to_subtract);
+    //_xsec_calc.DoNotSmear(); // No smearing for total cross section
+    //_xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
 
 
     // 
@@ -671,8 +699,23 @@ namespace Main {
 
     if (_do_reweighting_plots) {
 
-      std::map<std::string, TH1D*> xsec_mumom_per_universe;
 
+      CrossSectionBootstrapCalculator1D _xsec_bs_calc;
+      _xsec_bs_calc.Reset();
+      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
+      _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+      _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
+      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_mumom_num, bs_genie_multisim_eff_mumom_den, bs_genie_multisim_reco_true_mumom);
+      _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
+      _xsec_bs_calc.SetSavePrefix("genie_multisim");
+      _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
+      _xsec_bs_calc.Run();
+
+
+      std::map<std::string, TH1D*> xsec_mumom_per_universe;
+/*
       for (auto it : bs_genie_multisim_true_reco_mom_mc) {
 
         std::string universe_name = it.first;
@@ -785,10 +828,30 @@ namespace Main {
       genie_label->SetTextAlign(10);//left adjusted
       genie_label->Draw();
       genie_multisim_xsec_canvas->SaveAs("genie_multisim_xsec_all.pdf");
+      */
 
 
       /*****************************/
 
+      //std::string flux_file_rw_path = std::getenv("MYSW_DIR");
+      //flux_file_rw_path += "/Flux/MCC8_FluxHistograms_Uncertainties.root";
+      //std::cout << "Using reweighted flux file: " << flux_file_rw_path << std::endl;
+
+      _xsec_bs_calc.Reset();
+      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
+      _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+      _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
+      _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
+      _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
+      _xsec_bs_calc.SetSavePrefix("flux_multisim");
+      _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
+      _xsec_bs_calc.SetFluxHistogramType(true, "FluxUnisim"); // Also reweight the flux
+      _xsec_bs_calc.Run(true);
+
+
+/*
       gROOT->SetBatch(kTRUE);
 
       xsec_mumom_per_universe.clear();
@@ -902,6 +965,7 @@ namespace Main {
       flux_label->SetTextAlign(10);//left adjusted
       flux_label->Draw();
       flux_multisim_xsec_canvas->SaveAs("flux_multisim_xsec_all.pdf");
+      */
 
 
     } // _do_reweighting_plots

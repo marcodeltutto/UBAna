@@ -46,7 +46,9 @@
 #include <TCanvas.h>
 
 #include "UBXSecEvent.h"
-#include "litefmwk/Base/BootstrapTH1D.h"
+#include "ubana/Base/BootstrapTH1D.h"
+#include "ubana/Base/BootstrapTH2D.h"
+#include "ubana/Base/PlottingTools.h"
 
 namespace Main {
 

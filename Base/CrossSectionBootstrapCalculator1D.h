@@ -1,9 +1,9 @@
 /**
- * \file CrossSectionCalculator1D.h
+ * \file CrossSectionBootstrapCalculator1D.h
  *
  * \ingroup Base
  * 
- * \brief Class def header for a class CrossSectionCalculator1D
+ * \brief Class def header for a class CrossSectionBootstrapCalculator1D
  *
  * @author deltutto
  */
@@ -11,8 +11,8 @@
 /** \addtogroup Base
 
     @{*/
-#ifndef __BASE_CROSSSECTIONCALCULATOR1D_H__
-#define __BASE_CROSSSECTIONCALCULATOR1D_H__
+#ifndef __BASE_CROSSSECTIONBOOTSTRAPCALCULATOR1D_H__
+#define __BASE_CROSSSECTIONBOOTSTRAPCALCULATOR1D_H__
 
 #include <iostream>
 #include <sstream>
@@ -51,22 +51,33 @@
 #include "TMatrix.h"
 #include "TGraphAsymmErrors.h"
 
+
+#include "BootstrapTH1D.h"
+#include "BootstrapTH2D.h"
+#include "CrossSectionCalculator1D.h"
+#include "MigrationMatrix2D.h"
+#include "CovarianceCalculator2D.h"
+
+
 namespace Base {
 
   /**
-     \class CrossSectionCalculator1D
-     User defined class CrossSectionCalculator1D ... these comments are used to generate
+     \class CrossSectionBootstrapCalculator1D
+     User defined class CrossSectionBootstrapCalculator1D ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionCalculator1D{
+  class CrossSectionBootstrapCalculator1D{
     
   public:
     
     /// Default constructor
-    CrossSectionCalculator1D(){}
+    CrossSectionBootstrapCalculator1D(){}
     
     /// Default destructor
-    ~CrossSectionCalculator1D(){}
+    ~CrossSectionBootstrapCalculator1D(){}
+
+    ///
+    void Run();
 
     /// Configure function parameters
     void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
@@ -81,55 +92,31 @@ namespace Base {
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms
-    void SetHistograms(std::map<std::string,TH1D*> bnbcosmic, TH1D* bnbon, TH1D* extbnb, TH1D* intimecosmic = 0);
+    void SetHistograms(std::map<std::string,std::map<std::string,TH1D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH1D* bnbon, TH1D* extbnb, TH1D* intimecosmic = 0);
 
     /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
-    void SetTruthHistograms(TH1D*, TH1D*, TH2D*);
+    void SetTruthHistograms(BootstrapTH1D, BootstrapTH1D, BootstrapTH2D);
 
     /// Sets truth XSec
     void SetTruthXSec(TH1D* xsec);
 
     ///
-    void SetMigrationMatrix(TMatrix);
+    void SetMigrationMatrixDimensions(int n, int m);
 
-    /// Printd the current configuration
-    void PrintConfig();
-
-    ///
-    void ProcessPlots();
-
-    ///
-    void Draw();
-
-    ///
-    void Draw(std::vector<std::string> histos_to_subtract);
-
-    /// 
-    double EstimateFlux(std::string flux_file_name = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_name = "numu/numu_CV_AV_TPC");
-
-    ///
-    THStack * ProcessTHStack(std::map<std::string,TH1D*> themap, TLegend*, std::vector<std::string>);
-
-    ///
-    TH1D* ProcessDataHisto(TH1D* histo);
-
-    ///
-    TH1D* ExtractCrossSection(std::string, std::string);
-
-    ///
-    void Smear(int n, int m);
-
-    ///
-    void DoNotSmear();
-
-    ///
-    TLatex* GetPOTLatex(double pot); 
+    /// If rwgt_flux is true also reweights the flux, flux_unc_type is the type reweighting (total, FluxUnisim, ...)
+    void SetFluxHistogramType(bool rwgt_flux = false, std::string flux_unc_type = "total");
 
     ///
     void Reset();
+ 
+    ///
+    void SetSavePrefix(std::string s);
+
+    ///
+    void SetUpperLabel(std::string s) {_upper_label = s;}
 
   private:
-    
+
     bool _configured = false;
 
     double _scale_factor_mc_bnbcosmic;
@@ -148,22 +135,31 @@ namespace Base {
     std::string _outdir;
     std::string _folder;
 
-    std::map<std::string,TH1D*> _hmap_bnbcosmic;
-    TH1D* _h_bnbon;
-    TH1D* _h_extbnb;
-    TH1D* _h_intimecosmic;
+    //std::map<std::string,BootstrapTH1D> _hmap_bnbcosmic;
+    std::map<std::string,std::map<std::string,TH1D*>> _hmap_bnbcosmic;
+    TH1D* _h_bnbon = nullptr;
+    TH1D* _h_extbnb = nullptr;
+    TH1D* _h_intimecosmic = nullptr;
 
-    TH1D* _h_eff_mumom_num;
-    TH1D* _h_eff_mumom_den;
-    TH2D* _h_true_reco_mom;
+    BootstrapTH1D _h_eff_mumom_num;
+    BootstrapTH1D _h_eff_mumom_den;
+    BootstrapTH2D _h_true_reco_mom;
 
     TH1D* _truth_xsec;
 
     TH1D* _h_data_sub;
 
-    TEfficiency* _eff;
+    TEfficiency* _eff = nullptr;
 
     TMatrix _S;
+
+    int _n, _m;
+
+    std::string _save_prefix = "PREFIX_"; ///< Prefix name used to save output plots
+    std::string _upper_label = "NOT SET"; ///< The label that will happer in the upper plot of the reweighted cross sections
+
+    bool _rwgt_flux = false; ///< If true the flux is also reweighted
+    std::string _flux_unc_type = "total"; ///< Specifies what flux rewegthing to pick
     
   };
 }

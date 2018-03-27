@@ -115,7 +115,8 @@ namespace Base {
 
   double CrossSectionCalculator2D::EstimateFlux() 
   {
-    std::string flux_file = std::getenv("UBXSecAnaFluxFile");
+    std::string flux_file = std::getenv("MYSW_DIR");
+    flux_file += "/Flux/numode_bnb_470m_r200.root";
     std::cout << "Using flux file: " << flux_file << std::endl;
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();

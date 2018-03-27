@@ -5,7 +5,7 @@
 
 namespace Base {
 	
-	void CrossSectionCalculator1D::Reset() 
+  void CrossSectionCalculator1D::Reset() 
   {
 
     _configured = false;
@@ -115,14 +115,20 @@ namespace Base {
     _truth_xsec = xsec;
   }
 
-  double CrossSectionCalculator1D::EstimateFlux() 
+  double CrossSectionCalculator1D::EstimateFlux(std::string flux_file_name, std::string histogram_file_name) 
   {
-    std::string flux_file = std::getenv("UBXSecAnaFluxFile");
+    std::string flux_file = std::getenv("MYSW_DIR");
+    //flux_file += "/Flux/numode_bnb_470m_r200.root";
+    flux_file += "/Flux/";
+    flux_file += flux_file_name;
     std::cout << "Using flux file: " << flux_file << std::endl;
+
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
-    TH1D * h_flux_numu = (TH1D*) f->Get("numu");
-    h_flux_numu->Scale(_pot/1.e20);
+    TH1D * h_flux_numu = (TH1D*) f->Get(histogram_file_name.c_str());//f->Get("numu");
+    //h_flux_numu->Scale(_pot/1.e20);
+    double scale_factor = 2.43e11 * 256.35 * 233.;
+    h_flux_numu->Scale(_pot / scale_factor);
 
 
     TCanvas * c_flux = new TCanvas();
@@ -483,8 +489,9 @@ namespace Base {
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
 
+
     // Do it also for the truth xsec
-    _truth_xsec->Scale(1. / den, "width");
+    //_truth_xsec->Scale(1. / den, "width");
 
 
     std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
@@ -507,7 +514,7 @@ namespace Base {
     h_mc_main->SetFillColor(0); // fully transparent
     h_mc_main->Draw("histo same");
 
-    _truth_xsec->SetLineColor(kGreen+2);
+    //_truth_xsec->SetLineColor(kGreen+2);
     //_truth_xsec->Draw("hist same");
 
     h_data->SetMarkerStyle(kFullCircle);

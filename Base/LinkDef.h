@@ -27,8 +27,12 @@
 #pragma link C++ class Base::MigrationMatrix4D+;
 #pragma link C++ class Base::ReweightingPlotter+;
 #pragma link C++ class Base::PlottingTools+;
+#pragma link C++ class Base::CrossSectionBootstrapCalculator1D+;
+#pragma link C++ class Base::BootstrapTH2D+;
 //ADD_NEW_CLASS ... do not change this line
 #endif
+
+
 
 
 

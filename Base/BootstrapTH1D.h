@@ -66,6 +66,12 @@ namespace Base {
     int GetNUniverses();
 
     ///
+    size_t GetNWeights();
+
+    ///
+    std::vector<std::string> GetUniverseNames();
+
+    ///
     void ResetIterator();
 
     ///
@@ -79,6 +85,12 @@ namespace Base {
 
     ///
     TH1D GetNominal();
+
+    ///
+    void GetUniverseHisto(std::string, TH1D &);
+
+    ///
+    void GetUniverseHistoFast(std::string, TH1D &);
 
   protected:
 

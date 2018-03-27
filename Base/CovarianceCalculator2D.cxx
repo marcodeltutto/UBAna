@@ -40,6 +40,9 @@ namespace Base {
 
 
     _bs.ResetIterator();
+    std::cout << _name << " Calculating Cov Matrix with " << _bs.GetNUniverses() << " universes. Nominal histogram is excluded." << std::endl;
+
+    double number_of_universes = (double)_bs.GetNUniverses() - 1;
 
     for (int i = 0; i < _bs.GetNbinsX(); i++) {
 
@@ -47,20 +50,22 @@ namespace Base {
 
         _bs.ResetIterator();
 
-        for (int s = 0; s < _bs.GetNUniverses(); s++) {
+        for (int s = 0; s < number_of_universes; s++) {
 
           std::string uni_name;
           TH1D uni_histo;
           _bs.NextUniverse(uni_name, uni_histo);
+
+          //std::cout << "************************()()()()() this is universe " << uni_name << std::endl;
 
           double N_i_s = uni_histo.GetBinContent(i+1);
           double N_i_cv = _bs.GetNominal().GetBinContent(i+1);
           double N_j_s = uni_histo.GetBinContent(j+1);
           double N_j_cv = _bs.GetNominal().GetBinContent(j+1);
 
-          _M[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / (double)_bs.GetNUniverses();
+          _M[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / number_of_universes;
 
-          _M_frac[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / ((double)_bs.GetNUniverses() * N_i_cv * N_j_cv);
+          _M_frac[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / (number_of_universes * N_i_cv * N_j_cv);
 
         } // universe loop
       } // bin j loop

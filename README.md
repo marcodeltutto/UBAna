@@ -60,7 +60,7 @@ If you wonder when you want to do it, here's some example reasons:
 To make one package depend on another, you typically want to know 2 information: headers to be included and libraries to be linked against.
 Here are two pieces of information you may find it useful/handy:
 *  Package libraries are compiled and available under `$MYSW_LIBDIR/libLiteFMWK_$(PACKAGE_NAME).so`
-*  Package header files are copied and available under `$MYSW_INCDIR/litefmwk/$(PACKAGE_NAME)`
+*  Package header files are copied and available under `$MYSW_INCDIR/ubana/$(PACKAGE_NAME)`
 ... where you substitute `$(PACKAGE_NAME)` with the actual name string.
 
 With these info, you know what you need to do for your new package compilation that depends on those.
@@ -70,7 +70,7 @@ With these info, you know what you need to do for your new package compilation t
   * `-L$(MYSW_LIBDIR) -lLiteFMWK_$(PACKAGE_NAME).so`
   
 2. Include statements in the source codes
-  * `#include "litefmwk/$(PACKAGE_NAME)/$(WANTED_HEADER)"`
+  * `#include "ubana/$(PACKAGE_NAME)/$(WANTED_HEADER)"`
   * ... where `$(WANTED_HEADER)` is the header file you want (like `sample.h`).
 
 For example, add:
