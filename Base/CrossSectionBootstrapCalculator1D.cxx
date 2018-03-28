@@ -16,6 +16,8 @@ namespace Base {
 
     _rwgt_flux = false;
 
+    _do_smear = true;
+
     _hmap_bnbcosmic.clear();
     _h_bnbon = NULL;
     _h_extbnb = NULL;
@@ -107,6 +109,12 @@ namespace Base {
   	_n = n;
   	_m = m;
   }
+
+  void CrossSectionBootstrapCalculator1D::DoNotSmear()
+  {
+    _do_smear = false;
+  }
+
 
   void CrossSectionBootstrapCalculator1D::SetSavePrefix(std::string s)
   {
@@ -257,8 +265,12 @@ namespace Base {
       _xsec_calc.ProcessPlots();
       _xsec_calc.Draw();
       _xsec_calc.Draw(hist_to_subtract);
-      _xsec_calc.SetMigrationMatrix(S_2d);
-      _xsec_calc.Smear(_n, _m);
+      if (_do_smear) {
+        _xsec_calc.SetMigrationMatrix(S_2d);
+        _xsec_calc.Smear(_n, _m);
+      } else {
+        _xsec_calc.DoNotSmear(); 
+      }
       TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
 

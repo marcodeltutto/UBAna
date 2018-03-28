@@ -103,6 +103,9 @@ namespace Base {
     ///
     void SetMigrationMatrixDimensions(int n, int m);
 
+    ///
+    void DoNotSmear();
+
     /// If rwgt_flux is true also reweights the flux, flux_unc_type is the type reweighting (total, FluxUnisim, ...)
     void SetFluxHistogramType(bool rwgt_flux = false, std::string flux_unc_type = "total");
 
@@ -154,6 +157,7 @@ namespace Base {
     TMatrix _S;
 
     int _n, _m;
+    bool _do_smear = true;
 
     std::string _save_prefix = "PREFIX_"; ///< Prefix name used to save output plots
     std::string _upper_label = "NOT SET"; ///< The label that will happer in the upper plot of the reweighted cross sections

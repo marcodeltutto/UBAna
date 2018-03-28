@@ -542,7 +542,7 @@ namespace Base {
 
     if (h_data->GetNbinsX() == 1) {
       std::cout << "Total cross section - DATA: " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
-      std::cout << "Total cross section - DATA: " << h_mc->GetBinContent(1)   << " +- " << h_mc->GetBinError(1) << std::endl;
+      std::cout << "Total cross section - MC  : " << h_mc->GetBinContent(1)   << " +- " << h_mc->GetBinError(1) << std::endl;
     }
 
     return h_data;

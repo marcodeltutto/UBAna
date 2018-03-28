@@ -30,10 +30,13 @@ namespace Base {
     _bins.resize(nbins+1);
     double bin_size = (bin_end - bin_start) / (double) nbins;
 
-    for (double i = bin_start; i <= bin_end; i++) {
+    for (double i = bin_start; i < bin_end; i++) {
       _bins.at(i) = i;
       i+= bin_size;
     }
+
+    _bins.at(nbins) = bin_end;
+
   }
 
 
