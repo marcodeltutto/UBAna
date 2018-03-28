@@ -51,6 +51,11 @@ void Main::Maker::SetIsData(bool v)
   isdata = v;
 }
 
+void Main::Maker::SetTargetFluxSystematic(std::string s)
+{
+  _target_flux_syst = s;
+}
+
 void Main::Maker::PrintConfig()
 {
   std::cout << "--- Main::Maker::PrintConfig" << std::endl;
@@ -1251,8 +1256,6 @@ void Main::Maker::MakeFile()
     //
     // ************************
 
-    std::string target_flux_syst = "FluxUnisim";
-
     if (i==0 && !isdata && _fill_bootstrap_flux) {
 
       fname_flux_multisim.clear();
@@ -1311,15 +1314,34 @@ void Main::Maker::MakeFile()
     for (size_t i = 0; i < fname_flux_multisim.size(); i++) wgts_flux_multisim.at(i) = 1.;
 
     if (!isdata && _fill_bootstrap) {
+
+      bool keep_all = false;
+      if (_target_flux_syst == "total") {
+        keep_all = true;
+      }
+
+      // Loop over all the flux reweighting function names and find the one we want unlsee "total" was requested
       for (size_t i_func = 0; i_func < t->evtwgt_flux_multisim_funcname.size(); i_func++) {
 
         std::string func_name = t->evtwgt_flux_multisim_funcname.at(i_func);
 
         //std::cout << "This is func name: " << func_name << std::endl;
 
-        size_t found = func_name.find(target_flux_syst);
+        size_t found = std::string::npos;
+
+        if (keep_all) {
+          found = 0;
+        } else {
+          found = func_name.find(_target_flux_syst);
+        }
+
         if (found == std::string::npos) {
           //std::cout << "Not what we want, continue." << std::endl;
+          continue;
+        }
+
+        // Always exclude the bnbcorrection weight, this is not a systematic, though should be applied to every event
+        if (func_name == "bnbcorrection_FluxHist") {
           continue;
         }
 
