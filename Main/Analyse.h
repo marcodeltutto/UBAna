@@ -113,6 +113,8 @@ namespace Main {
     double bnbon_pot_meas        = -1;
     double bnbon_triggers        = -1;
     double extbnb_triggers       = -1;
+
+    bool _do_flux_sysys = false;
     
   };
 }

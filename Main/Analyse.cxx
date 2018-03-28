@@ -200,11 +200,27 @@ namespace Main {
 
   std::cout << ">> here1" << std::endl;
 
-  // Bootstrap efficiency
+  // Bootstrap efficiency - GENIE pm1sigma
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_num", temp_bs);
   BootstrapTH1D bs_genie_pm1_eff_mumom_num = *temp_bs;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_den", temp_bs);
   BootstrapTH1D bs_genie_pm1_eff_mumom_den = *temp_bs;
+
+  // Bootstrap efficiency - GENIE Multisim
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_onebin_num", temp_bs);
+  BootstrapTH1D bs_genie_multisim_eff_onebin_num = *temp_bs;
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_onebin_den", temp_bs);
+  BootstrapTH1D bs_genie_multisim_eff_onebin_den = *temp_bs;
+
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_num", temp_bs);
+  BootstrapTH1D  bs_genie_multisim_eff_mumom_num = *temp_bs;
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_den", temp_bs);
+  BootstrapTH1D  bs_genie_multisim_eff_mumom_den = *temp_bs;
+
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_num", temp_bs);
+  BootstrapTH1D  bs_genie_multisim_eff_muangle_num = *temp_bs;
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_den", temp_bs);
+  BootstrapTH1D  bs_genie_multisim_eff_muangle_den = *temp_bs;
 
 /* to remove
   std::map<std::string,TH1D*>  map_bs_eff_mumom_num_mc = *temp_map;
@@ -246,7 +262,11 @@ namespace Main {
   }
 
 std::cout << ">> here7" << std::endl;
+
   // Events - GENIE Multisim
+  mc_bnbcosmic_file->GetObject("hmap_onebin_genie_multisim_bs", temp_map_bs);
+  std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs_mc = *temp_map_bs;
+
   mc_bnbcosmic_file->GetObject("hmap_trkmom_genie_multisim_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_multisim_bs_mc = *temp_map_bs;
 
@@ -263,18 +283,7 @@ std::cout << ">> here7" << std::endl;
   //std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs_mc = *temp_map_bs;
 
 
-  // Bootstrap efficiency - GENIE Multisim
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_num", temp_bs);
-  BootstrapTH1D  bs_genie_multisim_eff_mumom_num = *temp_bs;
 
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_den", temp_bs);
-  BootstrapTH1D  bs_genie_multisim_eff_mumom_den = *temp_bs;
-
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_num", temp_bs);
-  BootstrapTH1D  bs_genie_multisim_eff_muangle_num = *temp_bs;
-
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_den", temp_bs);
-  BootstrapTH1D  bs_genie_multisim_eff_muangle_den = *temp_bs;
 
 /*
   BootstrapTH1D bs_genie_multisim_eff_mumom_num;
@@ -311,6 +320,13 @@ std::cout << ">> here7" << std::endl;
   std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_flux_multisim_bs_mc = *temp_map_bs;
 
   // Bootstrap efficiency - FLUX Multisim
+  mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_num", temp_bs);
+  BootstrapTH1D bs_flux_multisim_eff_mumom_num = *temp_bs;
+  mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_den", temp_bs);
+  BootstrapTH1D bs_flux_multisim_eff_mumom_den = *temp_bs;
+
+
+/* to remove
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_num", temp_map);
   std::map<std::string,TH1D*>  map_bs_flux_multisim_eff_mumom_num_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_den", temp_map);
@@ -319,6 +335,7 @@ std::cout << ">> here7" << std::endl;
   bs_flux_multisim_eff_mumom_num.SetAllHistograms(map_bs_flux_multisim_eff_mumom_num_mc);
   BootstrapTH1D bs_flux_multisim_eff_mumom_den;
   bs_flux_multisim_eff_mumom_den.SetAllHistograms(map_bs_flux_multisim_eff_mumom_den_mc);
+*/
 
   // Boostrap reco-true - FLUX Multisim
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_mom", temp_map_bs2);
@@ -335,8 +352,8 @@ std::cout << ">> here7" << std::endl;
 
   TH1D* h_trklen_total_bnbon = (TH1D*)bnbon_file->Get("h_trklen_total");
   TH1D* h_trklen_total_extbnb = (TH1D*)extbnb_file->Get("h_trklen_total");
-  //TH1D* h_onebin_total_bnbon = (TH1D*)bnbon_file->Get("h_onebin_total");
-  //TH1D* h_onebin_total_extbnb = (TH1D*)extbnb_file->Get("h_onebin_total");
+  TH1D* h_onebin_total_bnbon = (TH1D*)bnbon_file->Get("h_onebin_total");
+  TH1D* h_onebin_total_extbnb = (TH1D*)extbnb_file->Get("h_onebin_total");
   TH1D* h_trkmom_total_bnbon = (TH1D*)bnbon_file->Get("h_trkmom_total");
   TH1D* h_trkmom_total_extbnb = (TH1D*)extbnb_file->Get("h_trkmom_total");
   TH1D* h_trktheta_total_bnbon = (TH1D*)bnbon_file->Get("h_trktheta_total");
@@ -386,8 +403,8 @@ std::cout << ">> here7" << std::endl;
   TH1D* h_deltax_2d_extbnb = (TH1D*)extbnb_file->Get("h_deltax_2d");
 
   // Total
-  //TH1D * h_eff_onebin_num = (TH1D*)mc_bnbcosmic_file->Get("h_eff_onebin_num");
-  //TH1D * h_eff_onebin_den = (TH1D*)mc_bnbcosmic_file->Get("h_eff_onebin_den");
+  TH1D * h_eff_onebin_num = (TH1D*)mc_bnbcosmic_file->Get("h_eff_onebin_num");
+  TH1D * h_eff_onebin_den = (TH1D*)mc_bnbcosmic_file->Get("h_eff_onebin_den");
 
   // Muon momentum
   TH1D * h_truth_xsec_mumom = (TH1D*)mc_bnbcosmic_file->Get("h_truth_xsec_mumom");
@@ -434,16 +451,16 @@ std::cout << ">> here7" << std::endl;
     // Total cross section
     //
 
-    //_xsec_calc.Reset();
-    //_xsec_calc.SetHistograms(hmap_onebin_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);  
-    //_xsec_calc.SetTruthHistograms(h_eff_onebin_num, h_eff_onebin_den, h_true_reco_mom); /*h_true_reco_mom is placeholder*/
-    //_xsec_calc.SetTruthXSec(h_truth_xsec_mumom); /*h_truth_xsec_mumom is placeholder*/
-    //_xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-    //_xsec_calc.ProcessPlots();
-    //_xsec_calc.Draw();
-    //_xsec_calc.Draw(hist_to_subtract);
-    //_xsec_calc.DoNotSmear(); // No smearing for total cross section
-    //_xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
+    _xsec_calc.Reset();
+    _xsec_calc.SetHistograms(hmap_onebin_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);  
+    _xsec_calc.SetTruthHistograms(h_eff_onebin_num, h_eff_onebin_den, h_true_reco_mom); /*h_true_reco_mom is a placeholder*/
+    _xsec_calc.SetTruthXSec(h_truth_xsec_mumom); /*h_truth_xsec_mumom is a placeholder*/
+    _xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
+    _xsec_calc.ProcessPlots();
+    _xsec_calc.Draw();
+    _xsec_calc.Draw(hist_to_subtract);
+    _xsec_calc.DoNotSmear(); // No smearing for total cross section
+    _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
 
 
     // 
@@ -518,18 +535,20 @@ std::cout << ">> here7" << std::endl;
       //
       // FLUX Multisim Systematics
       //
-      _xsec_bs_calc.Reset();
-      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
-      _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-      _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
-      _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
-      _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
-      _xsec_bs_calc.SetSavePrefix("flux_multisim");
-      _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
-      _xsec_bs_calc.SetFluxHistogramType(true, "FluxUnisim"); // Also reweight the flux
-      _xsec_bs_calc.Run();
+      if (_do_flux_sysys) {
+        _xsec_bs_calc.Reset();
+        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+        _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
+        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+        _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
+        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
+        _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
+        _xsec_bs_calc.SetSavePrefix("flux_multisim");
+        _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
+        _xsec_bs_calc.SetFluxHistogramType(true, "FluxUnisim"); // Also reweight the flux
+        _xsec_bs_calc.Run();
+      }
 
 
 
