@@ -196,10 +196,17 @@ namespace Main {
   //mc_bnbcosmic_file->GetObject("h_eff_mumom_num_bs", h_eff_mumom_num_bs_temp);
   //BootstrapTH1D h_eff_mumom_num_bs = *h_eff_mumom_num_bs_temp;
 
+  BootstrapTH1D * temp_bs; // temp Bootstrap to get stuff from file
+
   std::cout << ">> here1" << std::endl;
 
   // Bootstrap efficiency
-  mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_num", temp_map);
+  mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_num", temp_bs);
+  BootstrapTH1D bs_genie_pm1_eff_mumom_num = *temp_bs;
+  mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_den", temp_bs);
+  BootstrapTH1D bs_genie_pm1_eff_mumom_den = *temp_bs;
+
+/* to remove
   std::map<std::string,TH1D*>  map_bs_eff_mumom_num_mc = *temp_map;
   std::cout << ">> here2" << std::endl;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_den", temp_map);
@@ -211,6 +218,7 @@ namespace Main {
   BootstrapTH1D bs_eff_mumom_den;
   bs_eff_mumom_den.SetAllHistograms(map_bs_eff_mumom_den_mc);
   std::cout << ">> here5" << std::endl;
+  */
   // Boostrap reco-true
   std::map<std::string,TH2D*>* temp_map_bs2;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_true_reco_mom", temp_map_bs2);
@@ -231,7 +239,7 @@ namespace Main {
     }
     // Make +-1 sigma plots from GENIE
     genie_rw_plotter.SetEventBootstrapMap(bs);
-    genie_rw_plotter.SetEfficiencyBootstraps(bs_eff_mumom_num, bs_eff_mumom_den);
+    genie_rw_plotter.SetEfficiencyBootstraps(bs_genie_pm1_eff_mumom_num, bs_genie_pm1_eff_mumom_den);
     genie_rw_plotter.MakePlots(0, false, true);
     genie_rw_plotter.MakePlots(2, false, true);
     genie_rw_plotter.MakeBackgroundPlots(0, false, true);  
@@ -256,7 +264,6 @@ std::cout << ">> here7" << std::endl;
 
 
   // Bootstrap efficiency - GENIE Multisim
-  BootstrapTH1D * temp_bs;
   mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_mumom_num", temp_bs);
   BootstrapTH1D  bs_genie_multisim_eff_mumom_num = *temp_bs;
 
