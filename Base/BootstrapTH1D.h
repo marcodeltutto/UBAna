@@ -45,6 +45,9 @@ namespace Base {
 
     /// Constructor
     BootstrapTH1D(std::string, std::string, int, double*);
+
+    /// Constructor
+    BootstrapTH1D(std::string, std::string, int, double, double);
     
     /// Default destructor
     ~BootstrapTH1D(){}

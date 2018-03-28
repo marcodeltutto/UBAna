@@ -148,7 +148,7 @@ namespace Base {
 
     if (weights.size() != _n_weights) {
       std::cout << __PRETTY_FUNCTION__ << " Size mismatch, this weight vector has size " << weights.size() 
-                << ", but " << _n_weights << " is expected." << std::endl;
+                << ", but " << _n_weights << " is expected. This is Bootstrap " << _hname << "::" << _title << std::endl;
       throw std::exception();
     }
 

@@ -20,6 +20,22 @@ namespace Base {
     }
   }
 
+  BootstrapTH1D::BootstrapTH1D(std::string name, std::string title, int nbins, double bin_start, double bin_end) 
+  {
+    TH1D temp((name+"nominal").c_str(), title.c_str(), nbins, bin_start, bin_end);
+    _hmap["nominal"] = temp;
+    _hname = name;
+    _title = title;
+    _nbins = nbins;
+    _bins.resize(nbins+1);
+    double bin_size = (bin_end - bin_start) / (double) nbins;
+
+    for (double i = bin_start; i <= bin_end; i++) {
+      _bins.at(i) = i;
+      i+= bin_size;
+    }
+  }
+
 
 
   void BootstrapTH1D::SetWeightNames(std::vector<std::string> names)
@@ -145,7 +161,7 @@ namespace Base {
 
     if (weights.size() != _n_weights-1) {
       std::cout << __PRETTY_FUNCTION__ << " Size mismatch, this weight vector has size " << weights.size() 
-                << ", but " << _n_weights-1 << " is expected." << std::endl;
+                << ", but " << _n_weights-1 << " is expected. This is Bootstrap " << _hname << "::" << _title << std::endl;
       throw std::exception();
     }
 

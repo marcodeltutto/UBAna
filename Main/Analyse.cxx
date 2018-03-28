@@ -522,7 +522,7 @@ std::cout << ">> here7" << std::endl;
       _xsec_bs_calc.SetSavePrefix("flux_multisim");
       _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
       _xsec_bs_calc.SetFluxHistogramType(true, "FluxUnisim"); // Also reweight the flux
-      _xsec_bs_calc.Run(true);
+      _xsec_bs_calc.Run();
 
 
 
