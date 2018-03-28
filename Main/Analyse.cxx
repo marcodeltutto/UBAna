@@ -302,18 +302,18 @@ std::cout << ">> here7" << std::endl;
   //BootstrapTH1D bs_genie_multisim_eff_onebin_den;
   //bs_genie_multisim_eff_mumom_den.SetAllHistograms(map_bs_genie_multisim_eff_onebin_den_mc);
 
+  BootstrapTH2D * temp_bs_2d;
 
   // Boostrap reco-true - GENIE Multisim
-  mc_bnbcosmic_file->GetObject("bs_genie_multisim_true_reco_mom", temp_map_bs2);
-  std::map<std::string,TH2D*> bs_genie_multisim_true_reco_mom_mc = *temp_map_bs2;
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_true_reco_mumom", temp_bs_2d);
+  BootstrapTH2D bs_genie_multisim_reco_true_mumom = *temp_bs_2d;
 
-  BootstrapTH2D bs_genie_multisim_reco_true_mumom;
-  bs_genie_multisim_reco_true_mumom.SetAllHistograms(bs_genie_multisim_true_reco_mom_mc);
+  std::cout << ">> herea" << std::endl;
 
-  BootstrapTH2D * temp_bs_2d;
   mc_bnbcosmic_file->GetObject("bs_genie_multisim_true_reco_muangle", temp_bs_2d);
   BootstrapTH2D bs_genie_multisim_true_reco_muangle = *temp_bs_2d;
 
+std::cout << ">> here8" << std::endl;
 
   // Events - FLUX Multisim
   mc_bnbcosmic_file->GetObject("hmap_trkmom_flux_multisim_bs", temp_map_bs);
@@ -325,6 +325,7 @@ std::cout << ">> here7" << std::endl;
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_den", temp_bs);
   BootstrapTH1D bs_flux_multisim_eff_mumom_den = *temp_bs;
 
+std::cout << ">> here9" << std::endl;
 
 /* to remove
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_num", temp_map);
@@ -344,7 +345,7 @@ std::cout << ">> here7" << std::endl;
   BootstrapTH2D bs_flux_multisim_true_reco_mumom;
   bs_flux_multisim_true_reco_mumom.SetAllHistograms(bs_flux_multisim_true_reco_mom_mc);
 
-
+std::cout << ">> here10" << std::endl;
 
   // *************************************
   // Getting the relevant histograms from data file
@@ -428,7 +429,7 @@ std::cout << ">> here7" << std::endl;
   TH2D* h_eff_muangle_mumom_den = (TH2D*)mc_bnbcosmic_file->Get("h_eff_muangle_mumom_den");
 
 
-
+std::cout << ">> here11" << std::endl;
 
    gROOT->SetBatch(kTRUE);
 
