@@ -472,11 +472,24 @@ std::cout << ">> here11" << std::endl;
     if (_do_reweighting_plots) {
 
       //
-      // GENIE Multisim Systematics: 
+      // GENIE Multisim Systematics
       //
 
+      CrossSectionBootstrapCalculator1D _xsec_bs_calc;
+      _xsec_bs_calc.Reset();
+      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
+      _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+      _xsec_bs_calc.SetHistograms(hmap_onebin_genie_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
+      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_onebin_num, bs_genie_multisim_eff_onebin_den, bs_genie_multisim_reco_true_mumom); // bs_genie_multisim_reco_true_mumom just a placehollder
+      _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
+      _xsec_bs_calc.SetSavePrefix("genie_multisim_onebin");
+      _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
+      _xsec_bs_calc.Run();
+
       //
-      // FLUX Multisim Systematics: 
+      // FLUX Multisim Systematics
       //
       
 
