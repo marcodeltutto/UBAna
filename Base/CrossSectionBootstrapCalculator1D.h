@@ -118,6 +118,9 @@ namespace Base {
     ///
     void SetUpperLabel(std::string s) {_upper_label = s;}
 
+    ///
+    void GetCovarianceMatrix(TH2D &);
+
   private:
 
     bool _configured = false;
@@ -164,6 +167,8 @@ namespace Base {
 
     bool _rwgt_flux = false; ///< If true the flux is also reweighted
     std::string _flux_unc_type = "total"; ///< Specifies what flux rewegthing to pick
+
+    TH2D _cov_matrix; ///< The 2d histo representing the covariance matrix, available after calling Run()
     
   };
 }

@@ -98,6 +98,9 @@ namespace Main {
     void SetEXTBNBTriggers(double v);
 
     ///
+    void SetTargetFluxSystematic(std::string);
+
+    ///
     void DoAnalise();
 
   private:
@@ -115,6 +118,7 @@ namespace Main {
     double extbnb_triggers       = -1;
 
     bool _do_flux_sysys = false;
+    std::string _target_flux_syst = "";
     
   };
 }

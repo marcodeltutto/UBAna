@@ -49,6 +49,10 @@ namespace Main {
 
 	}
 
+	void Analyse::SetTargetFluxSystematic(std::string s) {
+		_target_flux_syst = s;
+	}
+
 
 
 
@@ -503,32 +507,11 @@ std::cout << ">> here11" << std::endl;
 
 
 
-
-    //
-    // Muon Momentum Cross Section
-    //
-    TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 6);
-    MigrationMatrix2D migrationmatrix2d;
-    migrationmatrix2d.SetNBins(7, 6);
-    migrationmatrix2d.SetTrueRecoHistogram(h_true_reco_mom);
-    S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-    migrationmatrix2d.PlotMatrix();
-    _xsec_calc.Reset();
-    _xsec_calc.SetHistograms(hmap_trkmom_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb);  
-    _xsec_calc.SetTruthHistograms(h_eff_mumom_num, h_eff_mumom_den, h_true_reco_mom);
-    _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
-    _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
-    _xsec_calc.ProcessPlots();
-    _xsec_calc.Draw();
-    _xsec_calc.Draw(hist_to_subtract);
-    _xsec_calc.SetMigrationMatrix(S_2d);
-    _xsec_calc.Smear(7, 6);
-    _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-
-
     // 
     // Muon Momentum: Cross section reweighting
     //
+
+    TH2D genie_multisim_cov;
 
     if (_do_reweighting_plots) {
 
@@ -549,6 +532,12 @@ std::cout << ">> here11" << std::endl;
       _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
       _xsec_bs_calc.Run();
 
+      _xsec_bs_calc.GetCovarianceMatrix(genie_multisim_cov);
+
+      for (int i = 0; i < genie_multisim_cov.GetNbinsX(); i++) {
+      	std::cout << "Uncertainties on the diagonal: " << i << " => " << genie_multisim_cov.GetBinContent(i+1, i+1) << std::endl;
+      }
+
 
       //
       // FLUX Multisim Systematics
@@ -564,13 +553,42 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
         _xsec_bs_calc.SetSavePrefix("flux_multisim");
         _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
-        _xsec_bs_calc.SetFluxHistogramType(true, "FluxUnisim"); // Also reweight the flux
+        _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
       }
 
 
 
     } // _do_reweighting_plots
+
+
+
+    //
+    // Muon Momentum Cross Section
+    //
+    TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 6);
+    MigrationMatrix2D migrationmatrix2d;
+    migrationmatrix2d.SetNBins(7, 6);
+    migrationmatrix2d.SetTrueRecoHistogram(h_true_reco_mom);
+    S_2d = migrationmatrix2d.CalculateMigrationMatrix();
+    migrationmatrix2d.PlotMatrix();
+    _xsec_calc.Reset();
+    _xsec_calc.SetHistograms(hmap_trkmom_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb);  
+    _xsec_calc.SetTruthHistograms(h_eff_mumom_num, h_eff_mumom_den, h_true_reco_mom);
+    _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
+    _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
+    _xsec_calc.ProcessPlots();
+    _xsec_calc.Draw();
+    _xsec_calc.Draw(hist_to_subtract);
+    _xsec_calc.SetMigrationMatrix(S_2d);
+    _xsec_calc.Smear(7, 6);
+    _xsec_calc.SetCovarianceMatrix(genie_multisim_cov);
+    _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+
+
+
+
+
 
 
 
@@ -613,7 +631,7 @@ std::cout << ">> here11" << std::endl;
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
       _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
       _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-      _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
+      _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
       _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
       _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
       _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle");

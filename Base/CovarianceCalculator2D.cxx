@@ -18,6 +18,11 @@ namespace Base {
     _prefix = prefix;
   }
 
+  void CovarianceCalculator2D::GetCovarianceMatrix(TH2D &h)
+  {
+    h = _M_h;
+  }
+
   void CovarianceCalculator2D::CalculateCovarianceMatrix() 
   {
 
@@ -121,7 +126,7 @@ namespace Base {
 
     TCanvas * cov_matrix = new TCanvas;
     cov_matrix_histo->SetMarkerColor(kWhite);
-    cov_matrix_histo->SetMarkerSize(1.8);
+    cov_matrix_histo->SetMarkerSize(1.6);
     cov_matrix_histo->GetXaxis()->CenterTitle();
     cov_matrix_histo->GetYaxis()->CenterTitle();
     cov_matrix_histo->GetXaxis()->SetTitle("Bin i");
@@ -149,7 +154,7 @@ namespace Base {
 
     TCanvas * corr_matrix = new TCanvas;
     corr_matrix_histo->SetMarkerColor(kWhite);
-    corr_matrix_histo->SetMarkerSize(1.8);
+    corr_matrix_histo->SetMarkerSize(1.6);
     corr_matrix_histo->GetXaxis()->CenterTitle();
     corr_matrix_histo->GetYaxis()->CenterTitle();
     corr_matrix_histo->GetXaxis()->SetTitle("Bin i");
@@ -161,6 +166,12 @@ namespace Base {
     corr_matrix->SaveAs(name + ".pdf");
 
     gStyle->SetPalette(kRainBow);
+
+
+
+    _M_h = *cov_matrix_histo;
+    _M_frac_h = *frac_cov_matrix_histo;
+    _RHO_h = *corr_matrix_histo;
 
   }
 }

@@ -31,6 +31,8 @@ namespace Base {
     _h_eff_mumom_den = NULL;
 
     _h_true_reco_mom = NULL;
+
+    _covariance_matrix_is_set = false;
   }
 
   void CrossSectionCalculator1D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic)
@@ -66,6 +68,12 @@ namespace Base {
 
     system(("mkdir " + _folder).c_str());
 
+  }
+
+  void CrossSectionCalculator1D::SetCovarianceMatrix(TH2D h)
+  {
+    _covariance_matrix = h;
+    _covariance_matrix_is_set = true;
   }
 
   void CrossSectionCalculator1D::SetMigrationMatrix(TMatrix s) 
@@ -420,9 +428,14 @@ namespace Base {
     // And update the total histogram
     _hmap_bnbcosmic["total"]->Add(_h_extbnb);
 
-    std::cout << "beam-on integral " << _h_bnbon->Integral() << std::endl;
+    std::cout << "beam-on integral "  << _h_bnbon->Integral() << std::endl;
     std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->Integral() << std::endl;
-    std::cout << "mc signal " << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
+    std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
+    std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->Integral() << std::endl;
+    std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->Integral() << std::endl;
+    std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->Integral() << std::endl;
+    std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
+    std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
 
   }
 
@@ -520,6 +533,36 @@ namespace Base {
     h_data->SetMarkerStyle(kFullCircle);
     h_data->SetMarkerSize(0.6);
     h_data->Draw("E1 same");
+
+
+    //
+    // Add systs uncertainties (if cov. matrix is set)
+    //
+
+    TH1D * h_syst_unc = (TH1D*) h_data->Clone("h_syst_unc");
+
+    if (_covariance_matrix_is_set) {
+ 
+      for (int i = 0; i < _covariance_matrix.GetNbinsX(); i++) {
+
+        double unc_stat = h_data->GetBinError(i+1);
+
+        double unc_syst = std::sqrt(_covariance_matrix.GetBinContent(i+1, i+1));
+
+        double unc_tot = std::sqrt(unc_stat * unc_stat + unc_syst * unc_syst);
+
+        std::cout << "Bin " << i << " - stat: " << unc_stat << ", syst: " << unc_syst << ", tot: " << unc_tot << std::endl;
+
+        h_syst_unc->SetBinError(i+1, unc_tot);
+      }
+
+    }
+
+    h_syst_unc->SetMarkerStyle(kFullCircle);
+    h_syst_unc->SetMarkerSize(0.1);
+    h_syst_unc->Draw("E1 same");
+
+
 
     TLegend *l = new TLegend(0.44,0.74, 0.87,0.85,NULL,"brNDC");
     l->AddEntry(h_mc, "MC (Stat. Uncertainty)");

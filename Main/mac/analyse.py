@@ -14,5 +14,16 @@ analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.7_test6.root");
 analyser.SetBNBPOT(4.852e+19);    
 analyser.SetBNBONTriggers(10820589);    
-analyser.SetEXTBNBTriggers(15482261);    
+analyser.SetEXTBNBTriggers(15482261);
+
+
+#analyser.SetTargetFluxSystematic("FluxUnisim");
+#analyser.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
+#analyser.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
+#analyser.SetTargetFluxSystematic("kzero_PrimaryHadronSanfordWang");
+#analyser.SetTargetFluxSystematic("piminus_PrimaryHadronSWCentral");
+#analyser.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
+analyser.SetTargetFluxSystematic("total");
+
+
 analyser.DoAnalise();

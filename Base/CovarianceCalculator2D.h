@@ -68,6 +68,9 @@ namespace Base {
     void CalculateCovarianceMatrix();
 
     ///
+    void GetCovarianceMatrix(TH2D &);
+
+    ///
     void PlotMatrices();
 
     ///
@@ -84,6 +87,10 @@ namespace Base {
     TMatrix _M;      ///< The covariance matrix
     TMatrix _M_frac; ///< The fractional covariance matrix
     TMatrix _RHO;    ///< The correlation matrix
+ 
+    TH2D _M_h;       ///< The covariance matrix in histogram form
+    TH2D _M_frac_h;  ///< The fractional covariance matrix in histogram form
+    TH2D _RHO_h;     ///< The correlation matrix in histogram form
 
     bool _verbose = true;
     

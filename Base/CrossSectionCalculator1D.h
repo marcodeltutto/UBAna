@@ -92,6 +92,9 @@ namespace Base {
     ///
     void SetMigrationMatrix(TMatrix);
 
+    ///
+    void SetCovarianceMatrix(TH2D);
+
     /// Printd the current configuration
     void PrintConfig();
 
@@ -163,7 +166,10 @@ namespace Base {
 
     TEfficiency* _eff;
 
-    TMatrix _S;
+    TMatrix _S; ///< The migration matrix (to be set externally)
+
+    TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
+    bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
     
   };
 }

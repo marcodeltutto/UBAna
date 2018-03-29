@@ -22,6 +22,16 @@ maker.SetGainCalibration(198)
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
 
+#maker.SetTargetFluxSystematic("FluxUnisim");
+#maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
+#maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
+#maker.SetTargetFluxSystematic("kzero_PrimaryHadronSanfordWang");
+#maker.SetTargetFluxSystematic("piminus_PrimaryHadronSWCentral");
+#maker.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
+maker.SetTargetFluxSystematic("total");
+
+
+
 maker.PrintConfig()
 
 maker.MakeFile()

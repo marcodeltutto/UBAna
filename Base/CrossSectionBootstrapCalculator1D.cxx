@@ -127,6 +127,11 @@ namespace Base {
   	_flux_unc_type = flux_unc_type;
   }
 
+  void CrossSectionBootstrapCalculator1D::GetCovarianceMatrix(TH2D & h)
+  {
+    h = _cov_matrix;
+  }
+
 
   //
   // Main method
@@ -279,9 +284,7 @@ namespace Base {
     } // endl loop over universes
 
 
-    for (auto i : xsec_mumom_per_universe) {
-    	std::cout << "xxx name is  " << i.first << std::endl;
-    }
+    
     
 
     //
@@ -302,6 +305,13 @@ namespace Base {
     _cov_calc.SetBootstrap(xsec_mumom_bs);
     _cov_calc.CalculateCovarianceMatrix();
     _cov_calc.PlotMatrices();
+
+    _cov_calc.GetCovarianceMatrix(_cov_matrix);
+
+
+    //
+    // Plot all the xsec in one plot
+    //
 
     TCanvas * genie_multisim_xsec_canvas = new TCanvas();
     for (auto it : xsec_mumom_per_universe) {

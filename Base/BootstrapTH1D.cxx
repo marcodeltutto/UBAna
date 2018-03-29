@@ -62,7 +62,7 @@ namespace Base {
 
   	for (auto it : input_map) {
   		_hmap[it.first] = *it.second;
-      std::cout << "[BootstrapTH1D] Setting up histogram " << it.first << std::endl;
+      //std::cout << "[BootstrapTH1D] Setting up histogram " << it.first << std::endl;
   	}
 
     _nbins = _hmap.begin()->second.GetNbinsX();
