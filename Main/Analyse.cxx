@@ -343,11 +343,8 @@ std::cout << ">> here9" << std::endl;
 */
 
   // Boostrap reco-true - FLUX Multisim
-  mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_mom", temp_map_bs2);
-  std::map<std::string,TH2D*> bs_flux_multisim_true_reco_mom_mc = *temp_map_bs2;
-
-  BootstrapTH2D bs_flux_multisim_true_reco_mumom;
-  bs_flux_multisim_true_reco_mumom.SetAllHistograms(bs_flux_multisim_true_reco_mom_mc);
+  mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_mumom", temp_bs_2d);
+  BootstrapTH2D bs_flux_multisim_true_reco_mumom = *temp_bs_2d;
 
 std::cout << ">> here10" << std::endl;
 
@@ -559,7 +556,7 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
         _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
-        _xsec_bs_calc.SetSavePrefix("flux_multisim");
+        _xsec_bs_calc.SetSavePrefix("flux_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
@@ -601,7 +598,7 @@ std::cout << ">> here11" << std::endl;
 
 
 
-
+/*
 
 
     // 
@@ -640,12 +637,12 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_flux_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-        _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
-        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
+        _xsec_bs_calc.SetHistograms(hmap_trkangle_flux_multisim_bs_mc, h_trkangle_total_bnbon, h_trkangle_total_extbnb);
+        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_num, bs_flux_multisim_eff_muangle_den, bs_flux_multisim_true_reco_muangle);
         _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
-        _xsec_bs_calc.SetFluxHistogramType(true, "FluxUnisim"); // Also reweight the flux
+        _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
       }
 
@@ -677,7 +674,7 @@ std::cout << ">> here11" << std::endl;
 
 
 
-
+*/
 
 
     //

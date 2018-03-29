@@ -117,7 +117,7 @@ namespace Main {
     double bnbon_triggers        = -1;
     double extbnb_triggers       = -1;
 
-    bool _do_flux_systs = false;
+    bool _do_flux_systs = true;
     std::string _target_flux_syst = "";
 
     bool _do_genie_systs = false;

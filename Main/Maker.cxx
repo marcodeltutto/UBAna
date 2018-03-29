@@ -1327,14 +1327,27 @@ void Main::Maker::MakeFile()
         bs_flux_multisim_true_reco_mom[fname_flux_multisim.at(i)] = new TH2D(histo_name.c_str(), ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", 6, this_bins_mumom, 6, this_bins_mumom);
       }
       */ 
+
+      bs_flux_multisim_eff_onebin_num.SetWeightNames(fname_flux_multisim);
+      bs_flux_multisim_eff_onebin_den.SetWeightNames(fname_flux_multisim);
+
+      bs_flux_multisim_eff_mumom_num.SetWeightNames(fname_flux_multisim);
+      bs_flux_multisim_eff_mumom_den.SetWeightNames(fname_flux_multisim);
+
+      bs_flux_multisim_eff_muangle_num.SetWeightNames(fname_flux_multisim);
+      bs_flux_multisim_eff_muangle_den.SetWeightNames(fname_flux_multisim);
+
+      bs_flux_multisim_true_reco_mumom.SetWeightNames(fname_flux_multisim);
+      bs_flux_multisim_true_reco_muangle.SetWeightNames(fname_flux_multisim);
     }
+
     // Prepare the vector of weights to be used for bootstraps
     std::vector<double> wgts_flux_multisim;
     wgts_flux_multisim.clear();
     wgts_flux_multisim.resize(fname_flux_multisim.size(), 1.);
     //for (size_t i = 0; i < fname_flux_multisim.size(); i++) wgts_flux_multisim.at(i) = 1.;
 
-    if (i==0 && !isdata && _fill_bootstrap_flux) {
+    if (!isdata && _fill_bootstrap_flux) {
 
       bool keep_all = false;
       if (_target_flux_syst == "total") {
@@ -1374,17 +1387,6 @@ void Main::Maker::MakeFile()
 
       }
 
-      bs_flux_multisim_eff_onebin_num.SetWeightNames(fname_flux_multisim);
-      bs_flux_multisim_eff_onebin_den.SetWeightNames(fname_flux_multisim);
-
-      bs_flux_multisim_eff_mumom_num.SetWeightNames(fname_flux_multisim);
-      bs_flux_multisim_eff_mumom_den.SetWeightNames(fname_flux_multisim);
-
-      bs_flux_multisim_eff_muangle_num.SetWeightNames(fname_flux_multisim);
-      bs_flux_multisim_eff_muangle_den.SetWeightNames(fname_flux_multisim);
-
-      bs_flux_multisim_true_reco_mumom.SetWeightNames(fname_flux_multisim);
-      bs_flux_multisim_true_reco_muangle.SetWeightNames(fname_flux_multisim);
     }
 
 
