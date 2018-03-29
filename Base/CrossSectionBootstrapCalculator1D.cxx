@@ -235,15 +235,21 @@ namespace Base {
       // Calculate flux for this universe
       //
       //std::string _flux_unc_type = "FluxUnisim";
-      if (_rwgt_flux) {
+      if (_rwgt_flux && universe_names.at(s) != "nominal") {
       	std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
       	std::stringstream sstm;
         sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << s << "_AV_TPC";
         std::string flux_name = sstm.str();
 
-        std::cout << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
+        std::cout << "[CrossSectionBootstrapCalculator1D] Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
         _xsec_calc.EstimateFlux(flux_file, flux_name);
+      }
+      if (universe_names.at(s) == "nominal") {
+        std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
+
+        std::cout << "[CrossSectionBootstrapCalculator1D] Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
+        _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
 
 

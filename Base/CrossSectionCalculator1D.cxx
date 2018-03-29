@@ -129,7 +129,7 @@ namespace Base {
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
     flux_file += flux_file_name;
-    std::cout << "Using flux file: " << flux_file << std::endl;
+    std::cout << "[CrossSectionCalculator1D] Using flux file: " << flux_file << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();

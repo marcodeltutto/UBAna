@@ -511,7 +511,7 @@ std::cout << ">> here11" << std::endl;
     // Muon Momentum: Cross section reweighting
     //
 
-    TH2D genie_multisim_cov;
+    TH2D covariance_matrix;
 
     if (_do_reweighting_plots) {
 
@@ -534,10 +534,10 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
 
-        _xsec_bs_calc.GetCovarianceMatrix(genie_multisim_cov);
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix);
 
-        for (int i = 0; i < genie_multisim_cov.GetNbinsX(); i++) {
-      	  std::cout << "Uncertainties on the diagonal: " << i << " => " << genie_multisim_cov.GetBinContent(i+1, i+1) << std::endl;
+        for (int i = 0; i < covariance_matrix.GetNbinsX(); i++) {
+      	  std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix.GetBinContent(i+1, i+1) << std::endl;
         }
       }
 
@@ -560,6 +560,12 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
+
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix);
+
+        for (int i = 0; i < covariance_matrix.GetNbinsX(); i++) {
+      	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix.GetBinContent(i+1, i+1) << std::endl;
+        }
       }
 
 
@@ -587,7 +593,7 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(7, 6);
-    _xsec_calc.SetCovarianceMatrix(genie_multisim_cov);
+    _xsec_calc.SetCovarianceMatrix(covariance_matrix);
     _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
 

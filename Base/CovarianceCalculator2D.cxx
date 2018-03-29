@@ -53,6 +53,12 @@ namespace Base {
 
       for (int j = 0; j < _bs.GetNbinsX(); j++) {
 
+        // Nominal cross section for bin i and j 
+        double N_i_cv = _bs.GetNominal().GetBinContent(i+1);
+        double N_j_cv = _bs.GetNominal().GetBinContent(j+1);
+
+        //if (_verbose) std::cout << "Nominal cross section in i " << i << ": " << N_i_cv << " and j " << j << ": " << N_j_cv << std::endl;
+
         _bs.ResetIterator();
 
         for (int s = 0; s < number_of_universes; s++) {
@@ -64,15 +70,21 @@ namespace Base {
           //std::cout << "************************()()()()() this is universe " << uni_name << std::endl;
 
           double N_i_s = uni_histo.GetBinContent(i+1);
-          double N_i_cv = _bs.GetNominal().GetBinContent(i+1);
           double N_j_s = uni_histo.GetBinContent(j+1);
-          double N_j_cv = _bs.GetNominal().GetBinContent(j+1);
+          
 
           _M[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / number_of_universes;
 
-          _M_frac[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / (number_of_universes * N_i_cv * N_j_cv);
+          //std::cout << "N_i_s = " << N_i_s << ", N_j_s = " << N_j_s << std::endl;          
 
         } // universe loop
+
+        //_M_frac[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / (number_of_universes * N_i_cv * N_j_cv);
+        _M_frac[i][j] = _M[i][j] / (N_i_cv * N_j_cv);
+
+        //if (_verbose) std::cout << "_M[" << i << "][" << j << "] = " << _M[i][j] << std::endl;
+        //if (_verbose) std::cout << "_M_frac[" << i << "][" << j << "] = " << _M_frac[i][j] << std::endl;
+
       } // bin j loop
     } // bin i loop
 
