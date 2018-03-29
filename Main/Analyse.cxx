@@ -362,6 +362,8 @@ std::cout << ">> here9" << std::endl;
   // Boostrap reco-true - FLUX Multisim
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_mumom", temp_bs_2d);
   BootstrapTH2D bs_flux_multisim_true_reco_mumom = *temp_bs_2d;
+  mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_muangle", temp_bs_2d);
+  BootstrapTH2D bs_flux_multisim_true_reco_muangle = *temp_bs_2d;
 
 std::cout << ">> here10" << std::endl;
 
@@ -502,7 +504,7 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_onebin_genie_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
-        _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_onebin_num, bs_genie_multisim_eff_onebin_den, bs_genie_multisim_reco_true_mumom); // bs_genie_multisim_reco_true_mumom just a placehollder
+        _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_onebin_num, bs_genie_multisim_eff_onebin_den);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("genie_multisim_onebin");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
@@ -520,7 +522,7 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_onebin_flux_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
-        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_onebin_num, bs_flux_multisim_eff_onebin_den, bs_flux_multisim_reco_true_mumom); // bs_genie_multisim_reco_true_mumom just a placehollder
+        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_onebin_num, bs_flux_multisim_eff_onebin_den);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("flux_multisim_onebin");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
@@ -670,7 +672,7 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_flux_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-        _xsec_bs_calc.SetHistograms(hmap_trkangle_flux_multisim_bs_mc, h_trkangle_total_bnbon, h_trkangle_total_extbnb);
+        _xsec_bs_calc.SetHistograms(hmap_trkangle_flux_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_num, bs_flux_multisim_eff_muangle_den, bs_flux_multisim_true_reco_muangle);
         _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
