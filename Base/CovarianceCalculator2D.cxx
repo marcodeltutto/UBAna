@@ -139,7 +139,7 @@ namespace Base {
 
     TCanvas * frac_cov_matrix = new TCanvas;
     frac_cov_matrix_histo->SetMarkerColor(kWhite);
-    frac_cov_matrix_histo->SetMarkerSize(1.8);
+    frac_cov_matrix_histo->SetMarkerSize(1.6);
     frac_cov_matrix_histo->GetXaxis()->CenterTitle();
     frac_cov_matrix_histo->GetYaxis()->CenterTitle();
     frac_cov_matrix_histo->GetXaxis()->SetTitle("Bin i");
