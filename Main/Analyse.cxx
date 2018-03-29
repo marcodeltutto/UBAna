@@ -480,23 +480,26 @@ std::cout << ">> here11" << std::endl;
       //
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
-      _xsec_bs_calc.Reset();
-      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-      _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-      _xsec_bs_calc.SetHistograms(hmap_onebin_genie_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
-      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_onebin_num, bs_genie_multisim_eff_onebin_den, bs_genie_multisim_reco_true_mumom); // bs_genie_multisim_reco_true_mumom just a placehollder
-      _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
-      _xsec_bs_calc.SetSavePrefix("genie_multisim_onebin");
-      _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
-      _xsec_bs_calc.Run();
+
+      if (_do_genie_systs) {
+        _xsec_bs_calc.Reset();
+        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+        _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
+        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+        _xsec_bs_calc.SetHistograms(hmap_onebin_genie_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
+        _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_onebin_num, bs_genie_multisim_eff_onebin_den, bs_genie_multisim_reco_true_mumom); // bs_genie_multisim_reco_true_mumom just a placehollder
+        _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
+        _xsec_bs_calc.SetSavePrefix("genie_multisim_onebin");
+        _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
+        _xsec_bs_calc.Run();
+      }
 
       //
       // FLUX Multisim Systematics
       //
 
-      if (_do_flux_sysys) {
+      if (_do_flux_systs) {
 
       }
       
@@ -520,29 +523,34 @@ std::cout << ">> here11" << std::endl;
       //
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
-      _xsec_bs_calc.Reset();
-      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
-      _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-      _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
-      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_mumom_num, bs_genie_multisim_eff_mumom_den, bs_genie_multisim_reco_true_mumom);
-      _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
-      _xsec_bs_calc.SetSavePrefix("genie_multisim");
-      _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
-      _xsec_bs_calc.Run();
 
-      _xsec_bs_calc.GetCovarianceMatrix(genie_multisim_cov);
+      if (_do_genie_systs) {
+        _xsec_bs_calc.Reset();
+        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+        _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
+        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+        _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
+        _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_mumom_num, bs_genie_multisim_eff_mumom_den, bs_genie_multisim_reco_true_mumom);
+        _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
+        _xsec_bs_calc.SetSavePrefix("genie_multisim");
+        _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
+        _xsec_bs_calc.Run();
 
-      for (int i = 0; i < genie_multisim_cov.GetNbinsX(); i++) {
-      	std::cout << "Uncertainties on the diagonal: " << i << " => " << genie_multisim_cov.GetBinContent(i+1, i+1) << std::endl;
+        _xsec_bs_calc.GetCovarianceMatrix(genie_multisim_cov);
+
+        for (int i = 0; i < genie_multisim_cov.GetNbinsX(); i++) {
+      	  std::cout << "Uncertainties on the diagonal: " << i << " => " << genie_multisim_cov.GetBinContent(i+1, i+1) << std::endl;
+        }
       }
+
+      
 
 
       //
       // FLUX Multisim Systematics
       //
-      if (_do_flux_sysys) {
+      if (_do_flux_systs) {
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -594,6 +602,58 @@ std::cout << ">> here11" << std::endl;
 
 
 
+
+
+    // 
+    // Muon CosTheta: Cross section reweighting
+    //
+
+    if (_do_reweighting_plots) {
+
+      //
+      // GENIE Multisim Systematics
+      //
+
+      CrossSectionBootstrapCalculator1D _xsec_bs_calc;
+
+      if (_do_genie_systs) {
+        _xsec_bs_calc.Reset();
+        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+        _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
+        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+        _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
+        _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
+        _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+        _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle");
+        _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
+        _xsec_bs_calc.Run();
+      }
+
+
+      //
+      // FLUX Multisim Systematics
+      //
+      if (_do_flux_systs) {
+        _xsec_bs_calc.Reset();
+        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+        _xsec_bs_calc.SetNameAndLabel("trkcostheta_flux_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
+        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+        _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
+        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
+        _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+        _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
+        _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
+        _xsec_bs_calc.SetFluxHistogramType(true, "FluxUnisim"); // Also reweight the flux
+        _xsec_bs_calc.Run();
+      }
+
+
+
+    } // _do_reweighting_plots
+
+
     //
     // Muon CosTheta Cross Section
     // 
@@ -615,51 +675,7 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
 
 
-    // 
-    // Muon CosTheta: Cross section reweighting
-    //
 
-    if (_do_reweighting_plots) {
-
-      //
-      // GENIE Multisim Systematics
-      //
-
-      CrossSectionBootstrapCalculator1D _xsec_bs_calc;
-      _xsec_bs_calc.Reset();
-      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
-      _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-      _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
-      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
-      _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
-      _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle");
-      _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
-      _xsec_bs_calc.Run();
-
-
-      //
-      // FLUX Multisim Systematics
-      //
-      if (_do_flux_sysys) {
-        _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkcostheta_flux_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
-        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-        _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
-        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
-        _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
-        _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
-        _xsec_bs_calc.SetFluxHistogramType(true, "FluxUnisim"); // Also reweight the flux
-        _xsec_bs_calc.Run();
-      }
-
-
-
-    } // _do_reweighting_plots
 
 
 
