@@ -104,6 +104,12 @@ namespace Base {
 
   }
 
+  void CrossSectionBootstrapCalculator1D::SetTruthHistograms(BootstrapTH1D num, BootstrapTH1D den)
+  {
+    _h_eff_mumom_num = num;
+    _h_eff_mumom_den = den;
+  }
+
   void CrossSectionBootstrapCalculator1D::SetMigrationMatrixDimensions(int n, int m) 
   {
   	_n = n;

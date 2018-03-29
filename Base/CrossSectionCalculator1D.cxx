@@ -118,6 +118,13 @@ namespace Base {
 
   }
 
+  void CrossSectionCalculator1D::SetTruthHistograms(TH1D* num, TH1D* den)
+  {
+    _h_eff_mumom_num = num;
+    _h_eff_mumom_den = den;
+
+  }
+
   void CrossSectionCalculator1D::SetTruthXSec(TH1D* xsec) 
   {
     _truth_xsec = xsec;

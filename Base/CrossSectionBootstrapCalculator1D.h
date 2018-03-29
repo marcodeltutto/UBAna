@@ -97,6 +97,9 @@ namespace Base {
     /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
     void SetTruthHistograms(BootstrapTH1D, BootstrapTH1D, BootstrapTH2D);
 
+    /// Sets num and dem histograms for the efficiency
+    void SetTruthHistograms(BootstrapTH1D, BootstrapTH1D);
+
     /// Sets truth XSec
     void SetTruthXSec(TH1D* xsec);
 
