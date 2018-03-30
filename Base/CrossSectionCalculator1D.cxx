@@ -484,10 +484,6 @@ namespace Base {
       unc /= 2.;
       h_eff->SetBinError(b, unc);
 
-      //if (b == 1) h_eff->SetBinContent(b,0.5);
-      //if (b == 2) h_eff->SetBinContent(b,0.55);
-
-      //std::cout << "Efficiency at bin " << b << ": " << h_eff->GetBinContent(b) << " =- " << unc << std::endl;
     }
 
     //
@@ -527,6 +523,14 @@ namespace Base {
 
     h_mc->SetLineColor(kGreen+2);
     h_mc->SetFillColor(29);
+
+    if (_name.find("mom") != std::string::npos) {
+      h_mc->SetMinimum(0.);
+      h_mc->SetMaximum(1.5);
+    } else {
+      h_mc->SetMinimum(0.);
+      h_mc->SetMaximum(2.8);
+    }
     h_mc->Draw("E2");
 
     TH1D* h_mc_main = (TH1D*) h_mc->Clone("h_mc_main");
@@ -574,7 +578,11 @@ namespace Base {
     TLegend *l = new TLegend(0.44,0.74, 0.87,0.85,NULL,"brNDC");
     l->AddEntry(h_mc, "MC (Stat. Uncertainty)");
     //l->AddEntry(_truth_xsec, "Monte Carlo (Truth)", "l");
-    l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
+    if (_covariance_matrix_is_set) {
+      l->AddEntry(h_data, "Measured (Stat. #oplus Syst Uncertainty)", "lep");
+    } else {
+      l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
+    }
     l->Draw();
 
     TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");

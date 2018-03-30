@@ -468,13 +468,18 @@ std::cout << ">> here11" << std::endl;
     std::vector<std::string> hist_to_subtract = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
 
 
+    std::cout << "***************" << std::endl;
+    std::cout << "* Total cross section" << std::endl;
+    std::cout << "***************" << std::endl;
+
+
     //
     // Total cross section
     //
 
     _xsec_calc.Reset();
     _xsec_calc.SetHistograms(hmap_onebin_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);  
-    _xsec_calc.SetTruthHistograms(h_eff_onebin_num, h_eff_onebin_den, h_true_reco_mom); /*h_true_reco_mom is a placeholder*/
+    _xsec_calc.SetTruthHistograms(h_eff_onebin_num, h_eff_onebin_den);//, h_true_reco_mom); /*h_true_reco_mom is a placeholder*/
     _xsec_calc.SetTruthXSec(h_truth_xsec_mumom); /*h_truth_xsec_mumom is a placeholder*/
     _xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
     _xsec_calc.ProcessPlots();
@@ -526,6 +531,7 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("flux_multisim_onebin");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
+        _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
       }
       
@@ -534,13 +540,18 @@ std::cout << ">> here11" << std::endl;
     
 
 
+    std::cout << "***************" << std::endl;
+    std::cout << "* Muon Momentum cross section" << std::endl;
+    std::cout << "***************" << std::endl;
+
+    TH2D covariance_matrix_genie;
+    TH2D covariance_matrix_flux;
+
 
 
     // 
     // Muon Momentum: Cross section reweighting
     //
-
-    TH2D covariance_matrix;
 
     if (_do_reweighting_plots) {
 
@@ -559,14 +570,14 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_mumom_num, bs_genie_multisim_eff_mumom_den, bs_genie_multisim_reco_true_mumom);
         _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
-        _xsec_bs_calc.SetSavePrefix("genie_multisim");
+        _xsec_bs_calc.SetSavePrefix("genie_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
 
-        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix);
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
 
-        for (int i = 0; i < covariance_matrix.GetNbinsX(); i++) {
-      	  std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix.GetBinContent(i+1, i+1) << std::endl;
+        for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
+      	  std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
       }
 
@@ -586,14 +597,14 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
         _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_mumom");
-        _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
+        _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
 
-        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix);
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
 
-        for (int i = 0; i < covariance_matrix.GetNbinsX(); i++) {
-      	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix.GetBinContent(i+1, i+1) << std::endl;
+        for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
+      	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
         }
       }
 
@@ -601,6 +612,13 @@ std::cout << ">> here11" << std::endl;
 
     } // _do_reweighting_plots
 
+
+    TH2D covariance_matrix_mumom = * ((TH2D*)covariance_matrix_genie.Clone("covariance_matrix"));
+    covariance_matrix_mumom.Add(&covariance_matrix_flux);
+
+    for (int i = 0; i < covariance_matrix_mumom.GetNbinsX(); i++) {
+      std::cout << "TOTAL - Momentum - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_mumom.GetBinContent(i+1, i+1) << std::endl;
+    }
 
 
     //
@@ -622,7 +640,7 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(7, 6);
-    _xsec_calc.SetCovarianceMatrix(covariance_matrix);
+    _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
     _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
 
@@ -631,7 +649,9 @@ std::cout << ">> here11" << std::endl;
 
 
 
-
+    std::cout << "***************" << std::endl;
+    std::cout << "* Muon cos(theta) cross section" << std::endl;
+    std::cout << "***************" << std::endl;
 
 
 
@@ -660,6 +680,12 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
+
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
+
+        for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
+      	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+        }
       }
 
 
@@ -676,14 +702,26 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_num, bs_flux_multisim_eff_muangle_den, bs_flux_multisim_true_reco_muangle);
         _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
-        _xsec_bs_calc.SetUpperLabel("FluxUnisim Re-Weighting Only");
+        _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
+
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
+
+        for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
+      	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
+        }
       }
 
-
-
     } // _do_reweighting_plots
+
+
+    TH2D covariance_matrix_muangle = * ((TH2D*)covariance_matrix_genie.Clone("covariance_matrix"));
+    covariance_matrix_muangle.Add(&covariance_matrix_flux);
+
+    for (int i = 0; i < covariance_matrix_muangle.GetNbinsX(); i++) {
+      std::cout << "TOTAL - Angle - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_muangle.GetBinContent(i+1, i+1) << std::endl;
+    }
 
 
     //
@@ -704,6 +742,7 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(9, 9);
+    _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
     _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
 
 

@@ -148,6 +148,7 @@ namespace Base {
     cov_matrix->SetRightMargin(0.13);
     name = _prefix + "_cov_matrix_2d";
     cov_matrix->SaveAs(name + ".pdf");
+    cov_matrix->SaveAs(name + ".C");
 
     TCanvas * frac_cov_matrix = new TCanvas;
     frac_cov_matrix_histo->SetMarkerColor(kWhite);
@@ -161,6 +162,7 @@ namespace Base {
     frac_cov_matrix->SetRightMargin(0.13);
     name = _prefix + "_cov_frac_matrix_2d";
     frac_cov_matrix->SaveAs(name + ".pdf");
+    frac_cov_matrix->SaveAs(name + ".C");
 
     gStyle->SetPaintTextFormat("4.2f");
 
@@ -176,6 +178,7 @@ namespace Base {
     corr_matrix->SetRightMargin(0.13);
     name = _prefix + "_corr_matrix_2d";
     corr_matrix->SaveAs(name + ".pdf");
+    corr_matrix->SaveAs(name + ".C");
 
     gStyle->SetPalette(kRainBow);
 

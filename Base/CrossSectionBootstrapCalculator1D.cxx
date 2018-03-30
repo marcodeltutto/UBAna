@@ -23,6 +23,8 @@ namespace Base {
     _h_extbnb = NULL;
     _h_intimecosmic = NULL;
 
+    _true_to_reco_is_set = false;
+
     //_h_eff_mumom_num = NULL;
     //_h_eff_mumom_den = NULL;
 
@@ -102,6 +104,10 @@ namespace Base {
 
     _h_true_reco_mom = h;
 
+    _true_to_reco_is_set = true;
+
+    std::cout << "_true_to_reco_is_set is true" << std::endl;
+
   }
 
   void CrossSectionBootstrapCalculator1D::SetTruthHistograms(BootstrapTH1D num, BootstrapTH1D den)
@@ -152,7 +158,6 @@ namespace Base {
 
 		std::map<std::string, TH1D*> xsec_mumom_per_universe;
 
-    std::cout << "$here1" << std::endl;
 
 		CrossSectionCalculator1D _xsec_calc;
     _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb);
@@ -163,7 +168,6 @@ namespace Base {
     std::vector<std::string> hist_to_subtract = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
 
 
-    std::cout << "$here2" << std::endl;
 
 
     size_t n_universe = _h_eff_mumom_num.GetNWeights();
@@ -181,17 +185,17 @@ namespace Base {
     TH1D this_eff_num;
     TH1D this_eff_den; 
     TH2D this_reco_true;
+    TMatrix S_2d;
 
-    std::cout << "$here3" << std::endl;
 
-    for (size_t s = 0; s < n_universe; s++) {
+    for (size_t s = 0; s < n_universe; s++) { 
 
     	std::cout << "$>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is universe " << s << ", with name " << universe_names.at(s) << std::endl;
 
       //
     	// Construnct the hmap for the MC histograms
       //
-      int counter = 0;
+      // to be removed int counter = 0;
       std::map<std::string, TH1D*> input_map_mc;
       for (auto iter : _hmap_bnbcosmic) {
 
@@ -226,15 +230,15 @@ namespace Base {
       //TH1D * this_eff_den = (TH1D*) _h_eff_mumom_den.GetUniverseHisto(universe_names.at(s)).Clone(hname.c_str());
       _h_eff_mumom_den.GetUniverseHisto(universe_names.at(s), this_eff_den);
 
-
     
       //
       // Construct the map true vs reco
       //
-      hname = "this_reco_true" + universe_names.at(s);
-      //TH2D * this_reco_true = (TH2D*) _h_true_reco_mom.GetUniverseHisto(universe_names.at(s)).Clone(hname.c_str());
-      _h_true_reco_mom.GetUniverseHisto(universe_names.at(s), this_reco_true);
-
+      if (_true_to_reco_is_set) {
+        hname = "this_reco_true" + universe_names.at(s);
+        //TH2D * this_reco_true = (TH2D*) _h_true_reco_mom.GetUniverseHisto(universe_names.at(s)).Clone(hname.c_str());
+        _h_true_reco_mom.GetUniverseHisto(universe_names.at(s), this_reco_true);
+      }
 
 
       //
@@ -261,14 +265,15 @@ namespace Base {
 
 
 
-
       // Calculate the migration matrix for this universe
-      TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(_n, _m);
-      MigrationMatrix2D migrationmatrix2d;
-      migrationmatrix2d.SetNBins(_n, _m);
-      migrationmatrix2d.SetTrueRecoHistogram(&this_reco_true);
-      S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-
+      if (_true_to_reco_is_set) {
+        S_2d.Clear(); S_2d.ResizeTo(_n, _m);
+        MigrationMatrix2D migrationmatrix2d;
+        migrationmatrix2d.SetNBins(_n, _m);
+        migrationmatrix2d.SetTrueRecoHistogram(&this_reco_true);
+        S_2d = migrationmatrix2d.CalculateMigrationMatrix();
+        std::cout << "S_2d calculated" << std::endl;
+      }
 
 
       // Calculate the cross section with these new objects in this universe
@@ -276,13 +281,17 @@ namespace Base {
       _xsec_calc.Reset();
       //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
       _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb);  
-      _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den, &this_reco_true);
+      if (_true_to_reco_is_set) {
+        _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den, &this_reco_true);
+      } else {
+        _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
+      }
       //_xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
       _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
       _xsec_calc.ProcessPlots();
       _xsec_calc.Draw();
       _xsec_calc.Draw(hist_to_subtract);
-      if (_do_smear) {
+      if (_do_smear && _true_to_reco_is_set) {
         _xsec_calc.SetMigrationMatrix(S_2d);
         _xsec_calc.Smear(_n, _m);
       } else {
@@ -292,6 +301,7 @@ namespace Base {
 
 
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
+
 
     } // endl loop over universes
 
@@ -321,6 +331,7 @@ namespace Base {
     _cov_calc.GetCovarianceMatrix(_cov_matrix);
 
 
+
     //
     // Plot all the xsec in one plot
     //
@@ -331,8 +342,23 @@ namespace Base {
         continue;
       }
       if (it.first == "universe0") {
-        it.second->GetXaxis()->SetTitle("p_{#mu} [GeV]");
-        it.second->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+        if (_save_prefix.find("mumom") != std::string::npos) {
+          it.second->GetXaxis()->SetTitle("p_{#mu} [GeV]");
+          it.second->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+          it.second->SetMinimum(0.);
+          it.second->SetMaximum(1.5);
+        } else if (_save_prefix.find("onebin") != std::string::npos) {
+          it.second->GetXaxis()->SetTickLength(0);
+          it.second->GetXaxis()->SetLabelSize(0);
+          it.second->GetXaxis()->SetTitle("");
+          it.second->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}");
+          it.second->SetMinimum(0.4);
+          it.second->SetMaximum(1.2);
+        }else {
+          it.second->GetXaxis()->SetTitle("cos(#theta_{#mu})");
+          it.second->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
+          it.second->SetMaximum(2);
+        }
         it.second->GetYaxis()->SetTitleOffset(0.8);
       }
       it.second->SetLineWidth(1);
@@ -343,10 +369,17 @@ namespace Base {
     xsec_mumom_per_universe["nominal"]->SetLineWidth(3);
     xsec_mumom_per_universe["nominal"]->Draw("histo same");
 
-    TLegend *l = new TLegend(0.5644699,0.7347368,0.8868195,0.8673684,NULL,"brNDC");
-    l -> AddEntry(xsec_mumom_per_universe["nominal"], "Central Value", "l");
-    l -> AddEntry(xsec_mumom_per_universe["universe0"], "Other Universes", "l");
-    l -> Draw();
+    TLegend *l = new TLegend(0.5873926,0.7621053,0.8166189,0.8589474,NULL,"brNDC");
+    l->SetBorderSize(0);
+    l->SetTextSize(0.03789474);
+    l->SetLineColor(1);
+    l->SetLineStyle(1);
+    l->SetLineWidth(1);
+    l->SetFillColor(0);
+    l->SetFillStyle(1001);
+    l->AddEntry(xsec_mumom_per_universe["nominal"], "Central Value", "l");
+    l->AddEntry(xsec_mumom_per_universe["universe0"], "Other Universes", "l");
+    l->Draw();
 
     TLatex* genie_label = new TLatex(.10, .92, _upper_label.c_str());
     genie_label->SetTextFont(62);
@@ -355,7 +388,9 @@ namespace Base {
     genie_label->SetTextSize(1/30.);
     genie_label->SetTextAlign(10);//left adjusted
     genie_label->Draw();
-    genie_multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.pdf").c_str());//  "xx_genie_multisim_xsec_all.pdf");
+    genie_multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.pdf").c_str());
+    genie_multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.C").c_str());
+
 
     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 

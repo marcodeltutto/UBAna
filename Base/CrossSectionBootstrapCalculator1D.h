@@ -154,6 +154,8 @@ namespace Base {
     BootstrapTH1D _h_eff_mumom_den;
     BootstrapTH2D _h_true_reco_mom;
 
+    bool _true_to_reco_is_set = false; ///< Is set to true when SetTruthHistograms() is called with three arguments
+
     TH1D* _truth_xsec;
 
     TH1D* _h_data_sub;

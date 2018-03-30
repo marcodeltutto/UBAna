@@ -55,6 +55,9 @@ namespace Base {
     _nbins_x = _hmap["nominal"].GetNbinsX();
     _nbins_y = _hmap["nominal"].GetNbinsY();
 
+    _hname = _hmap["nominal"].GetTitle();
+    _title = _hmap["nominal"].GetTitle();
+
   }
 
   int BootstrapTH2D::GetNbinsX()
@@ -171,7 +174,7 @@ namespace Base {
   {
     auto iter = _hmap.find(uni_name);
     if (iter == _hmap.end()) {
-      std::cout << __PRETTY_FUNCTION__ << " :: Histomgram for universe " << uni_name << " not found!" << std::endl;
+      std::cout << __PRETTY_FUNCTION__ << " :: Histomgram for universe " << uni_name << " not found! This is Bootstrap " << _hname << "::" << _title << std::endl;
       throw std::exception();
     }
 
