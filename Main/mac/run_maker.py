@@ -15,6 +15,7 @@ maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Inp
 maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_500k.root");
   
 maker.SetEntries(-1)
+maker.SetInitialEntry(0)
 maker.SetBeamSpillStart(3.2)    
 maker.SetBeamSpillEnd(4.8)    
 maker.SetFlashShift(0.)    

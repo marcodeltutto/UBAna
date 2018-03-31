@@ -122,7 +122,7 @@ namespace Main {
   mc_pot_sim = h_simpot->GetBinContent(1);
   std::cout << "Simulated POT:      " << mc_pot_sim << std::endl;
   std::cout << "BNBON Measured POT: " << bnbon_pot_meas << std::endl << std::endl;
-  
+  mc_pot_sim = 5.052719378E19;
   
   // *************************************
   // Calculating scale factors
@@ -449,13 +449,20 @@ std::cout << ">> here10" << std::endl;
   TH2D* h_eff_muangle_mumom_den = (TH2D*)mc_bnbcosmic_file->Get("h_eff_muangle_mumom_den");
 
 
-std::cout << ">> here11" << std::endl;
+  std::cout << ">> here11" << std::endl;
 
-   gROOT->SetBatch(kTRUE);
+  gROOT->SetBatch(kTRUE);
+
+
+  std::cout << "Opening output file with name " << "xsec_file.root" << std::endl;
+    TFile *file_out = new TFile("xsec_file.root","RECREATE");
+    if ( file_out->IsOpen() )
+      std::cout << "File opened successfully" << std::endl;
 
 
 
   if (_calculate_xsec) {
+
     // Intantiate cross section calculator for 1D cross section
     CrossSectionCalculator1D _xsec_calc;
     _xsec_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
@@ -486,7 +493,11 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.Draw();
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.DoNotSmear(); // No smearing for total cross section
-    _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
+    TH1D * xsec = _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
+
+    xsec->SetTitle("xsec_onebin");
+    file_out->cd();
+    xsec->Write("xsec_onebin");
 
 
     // 
@@ -641,9 +652,11 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(7, 6);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
-    _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+    TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
-
+    xsec_mumom->SetTitle("xsec_mumom");
+    file_out->cd();
+    xsec_mumom->Write("xsec_mumom");
 
 
 
@@ -743,9 +756,11 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(9, 9);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
-    _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
+    TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
 
-
+    xsec_muangle->SetTitle("xsec_muangle");
+    file_out->cd();
+    xsec_muangle->Write("xsec_muangle");
 
 
 
@@ -783,6 +798,9 @@ std::cout << ">> here11" << std::endl;
 
     xseccalc2d.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
   }
+
+  file_out->Write();
+  file_out->Close();
 
   
   // *************************************

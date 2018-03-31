@@ -76,8 +76,11 @@ namespace Main {
     ///
     void SetOutputFile(std::string);
 
-    ///
+    /// Sets the number of entries to loop over (-1: all entries)
     void SetEntries(int);
+
+    /// Sets the first entry that will be used in the tree loop (default is 0)
+    void SetInitialEntry(int);
 
     ///
     void SetBeamSpillStart(double);
@@ -149,6 +152,7 @@ namespace Main {
     std::string fileoutn  = "ubxsecana_output.root";
     bool evalPOT          = false;
     int maxEntries        = -1;
+    int _initial_entry    = 0; ///< Entry in Tree to beging with
     bool isdata           = false;
 
     const double _pe_cut = 50;

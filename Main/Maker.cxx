@@ -20,6 +20,11 @@ void Main::Maker::SetEntries(int e)
   maxEntries = e;
 }
 
+void Main::Maker::SetInitialEntry(int e)
+{
+  _initial_entry = e;
+}
+
 void Main::Maker::SetBeamSpillStart(double v)
 {
   _beamSpillStarts = v;
@@ -1071,6 +1076,10 @@ void Main::Maker::MakeFile()
   int barWidth = 70;
   
   if(maxEntries > 0.) evts = maxEntries;
+
+  evts += _initial_entry;
+
+  std::cout << "Looping over " << evts - _initial_entry << " events starting with entry " << _initial_entry << std::endl;
   
   int total_events = 0;
 
@@ -1079,7 +1088,7 @@ void Main::Maker::MakeFile()
     run_numbers.resize(evts); subrun_numbers.resize(evts); event_numbers.resize(evts);
   }
   
-  for(int i = 0; i < evts; i++) {
+  for(int i = _initial_entry; i < evts; i++) {
     
     DrawProgressBar((double)i/(double)evts, barWidth);
     
@@ -1121,7 +1130,7 @@ void Main::Maker::MakeFile()
 
     // Set the weight names, just do it once (first event only)
     
-    if (i==0 && !isdata && _fill_bootstrap_genie) {
+    if (i == _initial_entry && !isdata && _fill_bootstrap_genie) {
 
       for (auto name : t->evtwgt_genie_pm1_funcname) {
         fname_genie_pm1.push_back(name + "_p1");
@@ -1187,7 +1196,7 @@ void Main::Maker::MakeFile()
     // ************************
 
 
-    if (i==0 && !isdata && _fill_bootstrap_genie) {
+    if (i == _initial_entry && !isdata && _fill_bootstrap_genie) {
 
       if (t->evtwgt_genie_multisim_nfunc == 1) {
 
@@ -1293,7 +1302,7 @@ void Main::Maker::MakeFile()
     //
     // ************************
 
-    if (i==0 && !isdata && _fill_bootstrap_flux) {
+    if (i == _initial_entry && !isdata && _fill_bootstrap_flux) {
 
       fname_flux_multisim.clear();
       fname_flux_multisim.resize(t->evtwgt_flux_multisim_nweight.at(1));
