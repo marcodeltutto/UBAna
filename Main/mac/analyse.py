@@ -15,6 +15,7 @@ analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 analyser.SetBNBPOT(4.852e+19);    
 analyser.SetBNBONTriggers(10820589);    
 analyser.SetEXTBNBTriggers(15482261);
+analyser.SetPrefix("cv");
 
 
 #analyser.SetTargetFluxSystematic("FluxUnisim");

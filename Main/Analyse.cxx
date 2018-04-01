@@ -53,6 +53,10 @@ namespace Main {
 		_target_flux_syst = s;
 	}
 
+	void Analyse::SetPrefix(std::string p) {
+		_prefix = p;
+	}
+
 
 
 
@@ -122,7 +126,7 @@ namespace Main {
   mc_pot_sim = h_simpot->GetBinContent(1);
   std::cout << "Simulated POT:      " << mc_pot_sim << std::endl;
   std::cout << "BNBON Measured POT: " << bnbon_pot_meas << std::endl << std::endl;
-  mc_pot_sim = 5.052719378E19;
+  //mc_pot_sim = 5.052719378E19;
   
   // *************************************
   // Calculating scale factors
@@ -453,11 +457,12 @@ std::cout << ">> here10" << std::endl;
 
   gROOT->SetBatch(kTRUE);
 
-
-  std::cout << "Opening output file with name " << "xsec_file.root" << std::endl;
-    TFile *file_out = new TFile("xsec_file.root","RECREATE");
-    if ( file_out->IsOpen() )
-      std::cout << "File opened successfully" << std::endl;
+  std::string xsec_file_name = "xsec_file_" + _prefix + ".root";
+  std::cout << "Opening output file with name " << xsec_file_name << std::endl;
+  TFile *file_out = new TFile(xsec_file_name.c_str(),"RECREATE");
+  if ( file_out->IsOpen() )
+    std::cout << "File opened successfully" << std::endl;
+  std::string save_name = "";
 
 
 
@@ -495,9 +500,9 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.DoNotSmear(); // No smearing for total cross section
     TH1D * xsec = _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
 
-    xsec->SetTitle("xsec_onebin");
+    save_name = "xsec_onebin_" + _prefix;
     file_out->cd();
-    xsec->Write("xsec_onebin");
+    xsec->Write(save_name.c_str());
 
 
     // 
@@ -654,9 +659,9 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
     TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
-    xsec_mumom->SetTitle("xsec_mumom");
+    save_name = "xsec_mumom_" + _prefix;
     file_out->cd();
-    xsec_mumom->Write("xsec_mumom");
+    xsec_mumom->Write(save_name.c_str());
 
 
 
@@ -758,9 +763,9 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
     TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
 
-    xsec_muangle->SetTitle("xsec_muangle");
+    save_name = "xsec_muangle_" + _prefix;
     file_out->cd();
-    xsec_muangle->Write("xsec_muangle");
+    xsec_muangle->Write(save_name.c_str());
 
 
 
@@ -799,7 +804,7 @@ std::cout << ">> here10" << std::endl;
     xseccalc2d.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
   }
 
-  file_out->Write();
+  //file_out->Write();
   file_out->Close();
 
   

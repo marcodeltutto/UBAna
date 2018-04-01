@@ -101,6 +101,9 @@ namespace Main {
     void SetTargetFluxSystematic(std::string);
 
     ///
+    void SetPrefix(std::string);
+
+    ///
     void DoAnalise();
 
   private:
@@ -121,6 +124,8 @@ namespace Main {
     std::string _target_flux_syst = "";
 
     bool _do_genie_systs = false;
+
+    std::string _prefix = "";
     
   };
 }
