@@ -45,3 +45,5 @@ analyser.SetTargetFluxSystematic("total");
 #analyser.SetTargetFluxSystematic("FluxUnisim");
 
 analyser.DoAnalise();
+
+raw_input("Please press enter to exit.")
