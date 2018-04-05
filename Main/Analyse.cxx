@@ -69,7 +69,7 @@ namespace Main {
 
   system("mkdir -p output_data_mc/");
   
-  gROOT->SetBatch(kTRUE);
+  //gROOT->SetBatch(kTRUE);
   gROOT->ProcessLine("gErrorIgnoreLevel = 2001;"); // 1001: INFO, 2001: WARNINGS, 3001: ERRORS
 
   int bnbon_total_events = 1000;
@@ -189,6 +189,7 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_perc_used_hits_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mom_mcs_length", temp_map);
   std::map<std::string,TH1D*> hmap_mom_mcs_length_mc = *temp_map;
+  TH1D* h_flsPe_wcut_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsPe_wcut");
 
   
   mc_bnbcosmic_file->GetObject("hmap_dqdx_trunc", temp_map);
@@ -418,6 +419,9 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_mom_mcs_length_total_bnbon = (TH1D*)bnbon_file->Get("h_mom_mcs_length_total");
   TH1D* h_mom_mcs_length_total_extbnb = (TH1D*)extbnb_file->Get("h_mom_mcs_length_total");
 
+  TH1D* h_flsPe_wcut_bnbon = (TH1D*)bnbon_file->Get("h_flsPe_wcut");
+  TH1D* h_flsPe_wcut_extbnb = (TH1D*)extbnb_file->Get("h_flsPe_wcut");
+
   TH1D* h_dqdx_trunc_total_bnbon = (TH1D*)bnbon_file->Get("h_dqdx_trunc_total");
   TH1D* h_dqdx_trunc_total_extbnb = (TH1D*)extbnb_file->Get("h_dqdx_trunc_total");
   TH2D* h_dqdx_trunc_length_bnbon = (TH2D*)bnbon_file->Get("h_dqdx_trunc_length");
@@ -498,11 +502,14 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.Draw();
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.DoNotSmear(); // No smearing for total cross section
+    _xsec_calc.PrintOnFile(_prefix);
     TH1D * xsec = _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
 
     save_name = "xsec_onebin_" + _prefix;
     file_out->cd();
     xsec->Write(save_name.c_str());
+
+
 
 
     // 
@@ -807,6 +814,9 @@ std::cout << ">> here10" << std::endl;
   //file_out->Write();
   file_out->Close();
 
+
+  gROOT->SetBatch(kFALSE);
+
   
   // *************************************
   // Doing beam-on minus beam-off subtraction
@@ -972,6 +982,13 @@ std::cout << ">> here10" << std::endl;
   h_mom_mcs_length_total_data->Sumw2();
   h_mom_mcs_length_total_data->Add(h_mom_mcs_length_total_extbnb, -1.);
 
+  h_flsPe_wcut_extbnb->Scale(scale_factor_extbnb);
+  h_flsPe_wcut_bnbon->Scale(scale_factor_bnbon);
+  TH1D* h_flsPe_wcut_data = (TH1D*)h_flsPe_wcut_bnbon->Clone("h_flsPe_wcut_bnbon");
+  h_flsPe_wcut_data->Sumw2();
+  h_flsPe_wcut_data->Add(h_flsPe_wcut_extbnb, -1.);
+
+
   // *************************************
   // Plotting data and MC distribution
   // *************************************
@@ -1066,9 +1083,12 @@ std::cout << ">> here10" << std::endl;
   
   TCanvas* canvas_multpfp = new TCanvas();
   THStack *hs_multpfp_mc = new THStack("hs_multpfp",";PFP Multiplicity; Selected Events");
+  hmap_multpfp_mc["beam-off"] = h_multpfp_total_extbnb;
   leg = PlottingTools::DrawTHStack(hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc);
-  PlottingTools::DrawDataHisto(h_multpfp_data);
-  leg->AddEntry(h_multpfp_data,"Data (Beam-on - Beam-off)","lep");
+  PlottingTools::DrawDataHisto(h_multpfp_total_bnbon);
+  leg->AddEntry(hmap_multpfp_mc["beam-off"],"Data (Beam-off)","f");
+  leg->AddEntry(h_multpfp_total_bnbon,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
+  //leg->AddEntry(h_multpfp_data,"Data (Beam-on - Beam-off)","lep");
   PlottingTools::DrawPOT(bnbon_pot_meas);
   leg->Draw();
   
@@ -1078,9 +1098,12 @@ std::cout << ">> here10" << std::endl;
   
   TCanvas* canvas_multtracktol = new TCanvas();
   THStack *hs_multtracktol_mc = new THStack("hs_multtracktol",";Track Multiplicity (5 cm); Selected Events");
+  hmap_multtracktol_mc["beam-off"] = h_multtracktol_total_extbnb;
   leg = PlottingTools::DrawTHStack(hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc);
-  PlottingTools::DrawDataHisto(h_multtracktol_data);
-  leg->AddEntry(h_multtracktol_data,"Data (Beam-on - Beam-off)","lep");
+  PlottingTools::DrawDataHisto(h_multtracktol_total_bnbon);
+  leg->AddEntry(hmap_multtracktol_mc["beam-off"],"Data (Beam-off)","f");
+  leg->AddEntry(h_multtracktol_data,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
+  //leg->AddEntry(h_multtracktol_data,"Data (Beam-on - Beam-off)","lep");
   PlottingTools::DrawPOT(bnbon_pot_meas);
   leg->Draw();
   
@@ -1305,6 +1328,16 @@ std::cout << ">> here10" << std::endl;
   name = outdir + "dqdx_trunc_length_data";
   canvas_dqdx_trunc_length_data->SaveAs(name + ".pdf");
   canvas_dqdx_trunc_length_data->SaveAs(name + ".C","C");
+
+
+  TCanvas* canvas_flsPe_wcut_data = new TCanvas();
+  h_flsPe_wcut_mc->Scale(scale_factor_mc_bnbcosmic);
+  h_flsPe_wcut_mc->Draw("histo");
+  h_flsPe_wcut_data->Draw("E1 same");
+
+  name = outdir + "flsPe_wcut";
+  canvas_flsPe_wcut_data->SaveAs(name + ".pdf");
+  canvas_flsPe_wcut_data->SaveAs(name + ".C","C");
  
 
   
