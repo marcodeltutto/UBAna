@@ -367,7 +367,7 @@ TLegend* PlottingTools::DrawTHStack2(THStack *hs_trklen,
   themap["signal"]->SetFillColor(kRed+2);
   hs_trklen->Add(themap["signal"]);
   
-  hs_trklen->Draw();
+  hs_trklen->Draw("hist");
   
   //themap["total"]->SetFillColor(kBlack);
   //themap["total"]->SetFillStyle(3005);

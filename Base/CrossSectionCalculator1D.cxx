@@ -446,6 +446,22 @@ namespace Base {
 
   }
 
+  
+  void CrossSectionCalculator1D::PrintOnFile(std::string name)
+  {
+    std::ofstream fout; 
+    fout.open("xsec_out.txt", std::ofstream::app);
+    fout << name << " & " << _hmap_bnbcosmic["signal"]->Integral()
+                 << " & " << _hmap_bnbcosmic["cosmic"]->Integral() 
+                 << " & " << _hmap_bnbcosmic["outfv"]->Integral()
+                 << " & " << _hmap_bnbcosmic["nc"]->Integral()
+                 << " & " << _hmap_bnbcosmic["nue"]->Integral()
+                 << " & " << _hmap_bnbcosmic["anumu"]->Integral()
+                 << " & " << _eff->GetEfficiency(1) 
+                 << " & " << _hmap_bnbcosmic["beam-off"]->Integral()
+                 << " & " << _h_bnbon->Integral() << "\\\\" << std::endl;
+  }  
+
 
   TH1D* CrossSectionCalculator1D::ExtractCrossSection(std::string xaxis_label, std::string yaxis_label) 
   {
@@ -579,7 +595,8 @@ namespace Base {
     l->AddEntry(h_mc, "MC (Stat. Uncertainty)");
     //l->AddEntry(_truth_xsec, "Monte Carlo (Truth)", "l");
     if (_covariance_matrix_is_set) {
-      l->AddEntry(h_data, "Measured (Stat. #oplus Syst Uncertainty)", "lep");
+      //l->AddEntry(h_data, "Measured (Stat. #oplus Syst Uncertainty)", "lep");
+      l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
     } else {
       l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
     }
@@ -625,7 +642,13 @@ namespace Base {
     }
 
 
-    TLegend* leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");;
+    TLegend* leg;
+
+    if (_name.find("costheta") != std::string::npos) {
+      leg = new TLegend(0.1733524,0.3936842,0.4340974,0.8442105,NULL,"brNDC");
+    } else {
+      leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
+    }
 
     TCanvas* canvas = new TCanvas();
 
@@ -654,7 +677,13 @@ namespace Base {
   void CrossSectionCalculator1D::Draw() 
   {
 
-    TLegend* leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");;
+    TLegend* leg;
+
+    if (_name.find("costheta") != std::string::npos) {
+      leg = new TLegend(0.1733524,0.3936842,0.4340974,0.8442105,NULL,"brNDC");
+    } else {
+      leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
+    }
 
     TCanvas* canvas = new TCanvas();
 
@@ -703,7 +732,7 @@ namespace Base {
 
     THStack *hs_trklen = new THStack("hs",_label.c_str());
 
-    bool _breakdownPlots = false;
+    bool _breakdownPlots = true;
 
     bool _draw_beamoff = true, _draw_cosmic = true, _draw_outfv = true, _draw_nue = true, _draw_nc = true, _draw_anumu = true;
 
@@ -863,7 +892,11 @@ namespace Base {
       if (_draw_cosmic) leg->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
       sstm.str("");
     }
-    leg->AddEntry(themap["total"],"MC Stat Unc.","f");
+    leg->AddEntry(themap["total"],"Stat Unc.","f");
+
+    if (themap["beam-off"] != NULL && _draw_beamoff){
+      leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
+    }
     
 
     return hs_trklen;

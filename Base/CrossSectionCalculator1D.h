@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <map>
 #include <time.h>
+#include <fstream>
 
 #include <TSystem.h>
 #include <TApplication.h>
@@ -127,6 +128,9 @@ namespace Base {
 
     ///
     void DoNotSmear();
+
+    ///
+    void PrintOnFile(std::string);
 
     ///
     TLatex* GetPOTLatex(double pot); 
