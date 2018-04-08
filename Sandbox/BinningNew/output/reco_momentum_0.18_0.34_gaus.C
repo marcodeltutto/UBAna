@@ -1,0 +1,148 @@
+void reco_momentum_0.18_0.34_gaus()
+{
+//=========Macro generated from canvas: c1_n435/c1_n435
+//=========  (Sat Apr  7 08:51:18 2018) by ROOT version6.06/06
+   TCanvas *c1_n435 = new TCanvas("c1_n435", "c1_n435",0,0,700,500);
+   gStyle->SetOptStat(0);
+   c1_n435->Range(-0.5,-312.7688,4.5,2814.919);
+   c1_n435->SetFillColor(10);
+   c1_n435->SetBorderMode(0);
+   c1_n435->SetBorderSize(2);
+   c1_n435->SetFrameLineWidth(2);
+   c1_n435->SetFrameBorderMode(0);
+   c1_n435->SetFrameLineWidth(2);
+   c1_n435->SetFrameBorderMode(0);
+   
+   TH1D *h_reco_mom_pre_truth__1 = new TH1D("h_reco_mom_pre_truth__1","",60,0,4);
+   h_reco_mom_pre_truth__1->SetBinContent(1,17);
+   h_reco_mom_pre_truth__1->SetBinContent(2,146);
+   h_reco_mom_pre_truth__1->SetBinContent(3,850);
+   h_reco_mom_pre_truth__1->SetBinContent(4,2153);
+   h_reco_mom_pre_truth__1->SetBinContent(5,2383);
+   h_reco_mom_pre_truth__1->SetBinContent(6,1268);
+   h_reco_mom_pre_truth__1->SetBinContent(7,340);
+   h_reco_mom_pre_truth__1->SetBinContent(8,149);
+   h_reco_mom_pre_truth__1->SetBinContent(9,96);
+   h_reco_mom_pre_truth__1->SetBinContent(10,74);
+   h_reco_mom_pre_truth__1->SetBinContent(11,33);
+   h_reco_mom_pre_truth__1->SetBinContent(12,45);
+   h_reco_mom_pre_truth__1->SetBinContent(13,24);
+   h_reco_mom_pre_truth__1->SetBinContent(14,24);
+   h_reco_mom_pre_truth__1->SetBinContent(15,17);
+   h_reco_mom_pre_truth__1->SetBinContent(16,13);
+   h_reco_mom_pre_truth__1->SetBinContent(17,13);
+   h_reco_mom_pre_truth__1->SetBinContent(18,4);
+   h_reco_mom_pre_truth__1->SetBinContent(19,6);
+   h_reco_mom_pre_truth__1->SetBinContent(20,10);
+   h_reco_mom_pre_truth__1->SetBinContent(21,3);
+   h_reco_mom_pre_truth__1->SetBinContent(22,4);
+   h_reco_mom_pre_truth__1->SetBinContent(23,4);
+   h_reco_mom_pre_truth__1->SetBinContent(24,2);
+   h_reco_mom_pre_truth__1->SetBinContent(25,2);
+   h_reco_mom_pre_truth__1->SetBinContent(27,1);
+   h_reco_mom_pre_truth__1->SetBinContent(28,1);
+   h_reco_mom_pre_truth__1->SetBinContent(29,1);
+   h_reco_mom_pre_truth__1->SetBinContent(32,1);
+   h_reco_mom_pre_truth__1->SetBinContent(34,1);
+   h_reco_mom_pre_truth__1->SetBinContent(36,1);
+   h_reco_mom_pre_truth__1->SetBinContent(40,1);
+   h_reco_mom_pre_truth__1->SetBinContent(47,2);
+   h_reco_mom_pre_truth__1->SetBinContent(49,1);
+   h_reco_mom_pre_truth__1->SetBinContent(52,1);
+   h_reco_mom_pre_truth__1->SetBinContent(60,1);
+   h_reco_mom_pre_truth__1->SetEntries(7692);
+   h_reco_mom_pre_truth__1->SetStats(0);
+   
+   TF1 *gaus1 = new TF1("gaus","gaus",0,4);
+   gaus1->SetFillColor(10);
+   gaus1->SetFillStyle(0);
+
+   Int_t ci;      // for color index setting
+   TColor *color; // for color definition with alpha
+   ci = TColor::GetColor("#ff0000");
+   gaus1->SetLineColor(ci);
+   gaus1->SetLineWidth(2);
+   gaus1->SetChisquare(463.5332);
+   gaus1->SetNDF(33);
+   gaus1->GetXaxis()->SetNdivisions(506);
+   gaus1->GetXaxis()->SetLabelFont(42);
+   gaus1->GetXaxis()->SetTitleSize(0.055);
+   gaus1->GetXaxis()->SetTitleOffset(0.8);
+   gaus1->GetXaxis()->SetTitleFont(42);
+   gaus1->GetYaxis()->SetNdivisions(506);
+   gaus1->GetYaxis()->SetLabelFont(42);
+   gaus1->GetYaxis()->SetTitleSize(0.055);
+   gaus1->GetYaxis()->SetTitleOffset(0.9);
+   gaus1->GetYaxis()->SetTitleFont(42);
+   gaus1->SetParameter(0,2463.768);
+   gaus1->SetParError(0,37.08352);
+   gaus1->SetParLimits(0,0,0);
+   gaus1->SetParameter(1,0.2802382);
+   gaus1->SetParError(1,0.0009376757);
+   gaus1->SetParLimits(1,0,0);
+   gaus1->SetParameter(2,0.07803914);
+   gaus1->SetParError(2,0.0007276166);
+   gaus1->SetParLimits(2,0,1.720422);
+   h_reco_mom_pre_truth__1->GetListOfFunctions()->Add(gaus1);
+   h_reco_mom_pre_truth__1->SetLineWidth(2);
+   h_reco_mom_pre_truth__1->GetXaxis()->SetTitle("Muon Momentum (Truth) [GeV]");
+   h_reco_mom_pre_truth__1->GetXaxis()->SetNdivisions(506);
+   h_reco_mom_pre_truth__1->GetXaxis()->SetLabelFont(42);
+   h_reco_mom_pre_truth__1->GetXaxis()->SetTitleSize(0.055);
+   h_reco_mom_pre_truth__1->GetXaxis()->SetTitleOffset(0.8);
+   h_reco_mom_pre_truth__1->GetXaxis()->SetTitleFont(42);
+   h_reco_mom_pre_truth__1->GetYaxis()->SetNdivisions(506);
+   h_reco_mom_pre_truth__1->GetYaxis()->SetLabelFont(42);
+   h_reco_mom_pre_truth__1->GetYaxis()->SetTitleSize(0.055);
+   h_reco_mom_pre_truth__1->GetYaxis()->SetTitleOffset(0.9);
+   h_reco_mom_pre_truth__1->GetYaxis()->SetTitleFont(42);
+   h_reco_mom_pre_truth__1->GetZaxis()->SetNdivisions(506);
+   h_reco_mom_pre_truth__1->GetZaxis()->SetLabelFont(42);
+   h_reco_mom_pre_truth__1->GetZaxis()->SetTitleSize(0.055);
+   h_reco_mom_pre_truth__1->GetZaxis()->SetTitleOffset(0.8);
+   h_reco_mom_pre_truth__1->GetZaxis()->SetTitleFont(42);
+   h_reco_mom_pre_truth__1->Draw("histo");
+   
+   TF1 *gaus2 = new TF1("gaus","gaus",0,4);
+   gaus2->SetFillColor(10);
+   gaus2->SetFillStyle(0);
+
+   ci = TColor::GetColor("#ff0000");
+   gaus2->SetLineColor(ci);
+   gaus2->SetLineWidth(2);
+   gaus2->SetChisquare(463.5332);
+   gaus2->SetNDF(33);
+   gaus2->GetXaxis()->SetNdivisions(506);
+   gaus2->GetXaxis()->SetLabelFont(42);
+   gaus2->GetXaxis()->SetTitleSize(0.055);
+   gaus2->GetXaxis()->SetTitleOffset(0.8);
+   gaus2->GetXaxis()->SetTitleFont(42);
+   gaus2->GetYaxis()->SetNdivisions(506);
+   gaus2->GetYaxis()->SetLabelFont(42);
+   gaus2->GetYaxis()->SetTitleSize(0.055);
+   gaus2->GetYaxis()->SetTitleOffset(0.9);
+   gaus2->GetYaxis()->SetTitleFont(42);
+   gaus2->SetParameter(0,2463.768);
+   gaus2->SetParError(0,37.08352);
+   gaus2->SetParLimits(0,0,0);
+   gaus2->SetParameter(1,0.2802382);
+   gaus2->SetParError(1,0.0009376757);
+   gaus2->SetParLimits(1,0,0);
+   gaus2->SetParameter(2,0.07803914);
+   gaus2->SetParError(2,0.0007276166);
+   gaus2->SetParLimits(2,0,1.720422);
+   gaus2->Draw("same");
+   TLatex *   tex = new TLatex(0.88,0.86,"Reco Momentum: 0.18-0.34 GeV");
+tex->SetNDC();
+   tex->SetTextAlign(32);
+
+   ci = TColor::GetColor("#666666");
+   tex->SetTextColor(ci);
+   tex->SetTextFont(42);
+   tex->SetTextSize(0.038);
+   tex->SetLineWidth(2);
+   tex->Draw();
+   c1_n435->Modified();
+   c1_n435->cd();
+   c1_n435->SetSelected(c1_n435);
+}
