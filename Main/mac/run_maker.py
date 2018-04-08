@@ -12,7 +12,10 @@ maker = Main.Maker()
 # BNBComisc
 
 maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.9_500k.root")
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/marco_ubxsec_ana_dev_high_mem_merge.root")
 maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_500k.root");
+
+
   
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)

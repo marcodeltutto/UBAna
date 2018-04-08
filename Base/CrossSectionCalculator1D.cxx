@@ -328,7 +328,7 @@ namespace Base {
 
     TCanvas * c = new TCanvas;
     _h_eff_mumom_den->SetTitle("");
-    _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");
+    _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");//->SetTitle("p_{#mu}^{truth} [GeV]");
     _h_eff_mumom_den->GetYaxis()->SetTitle("Events");
     _h_eff_mumom_den->SetFillColorAlpha(30, 0.35);
     _h_eff_mumom_den->SetLineColor(30);
@@ -364,7 +364,7 @@ namespace Base {
 
     TCanvas * c_smear = new TCanvas;
     h_eff_mumom_den_smear->SetTitle("");
-    h_eff_mumom_den_smear->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
+    h_eff_mumom_den_smear->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");//->SetTitle("p_{#mu}^{reco} [GeV]");
     h_eff_mumom_den_smear->GetYaxis()->SetTitle("Events");
     h_eff_mumom_den_smear->Draw("histo");
     h_eff_mumom_num_smear->Draw("histo same");
@@ -385,7 +385,7 @@ namespace Base {
     TEfficiency* teff_reco = new TEfficiency(*h_eff_mumom_num_smear,*h_eff_mumom_den_smear);
 
     TCanvas * c_eff_reco = new TCanvas;
-    teff_reco->SetTitle(";Reco Muon cos(#theta);Efficiency");
+    teff_reco->SetTitle(";Reco Muon cos(#theta);Efficiency");//->SetTitle(";Reco Muon Momentum [GeV];Efficiency");
     teff_reco->SetLineColor(kGreen+3);
     teff_reco->SetMarkerColor(kGreen+3);
     teff_reco->SetMarkerStyle(20);
@@ -401,6 +401,9 @@ namespace Base {
     name = _folder +_name + "_efficiecy_reco";
     c_eff_reco->SaveAs(name + ".pdf");
 
+    std::cout << "Statistic option used for efficiency calculation: " << teff_reco->GetStatisticOption() << ", check https://root.cern.ch/doc/v608/classTEfficiency.html#af27fb4e93a1b16ed7a5b593398f86312." << std::endl;
+    std::cout << "Efficiency bin 1: " << teff_reco->GetEfficiency(1) << " - " << teff_reco->GetEfficiencyErrorLow(1) << " + " << teff_reco->GetEfficiencyErrorUp(1) << std::endl;
+    std::cout << "Efficiency bin 2: " << teff_reco->GetEfficiency(2) << " - " << teff_reco->GetEfficiencyErrorLow(2) << " + " << teff_reco->GetEfficiencyErrorUp(2) << std::endl;
 
     _eff = teff_reco;
 
@@ -411,11 +414,16 @@ namespace Base {
   void CrossSectionCalculator1D::ProcessPlots() 
   {
 
+    bool bin_width_scale = false;
+
     // Scale mc histograms
     for (auto iter : _hmap_bnbcosmic) {
       if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
       iter.second->Sumw2();
       iter.second->Scale(_scale_factor_mc_bnbcosmic);
+      if (bin_width_scale) {
+        iter.second->Scale(1, "width");
+      }
     }
 
     // Scale data histograms
@@ -423,6 +431,11 @@ namespace Base {
     _h_bnbon->Sumw2();
     _h_extbnb->Scale(_scale_factor_extbnb);
     _h_bnbon->Scale(_scale_factor_bnbon);
+
+    if (bin_width_scale) {
+      _h_extbnb->Scale(1, "width");
+      _h_bnbon->Scale(1, "width");
+    }
 
     // Get the beam-on - beam-off histogram
     _h_data_sub = (TH1D*)_h_bnbon->Clone("_h_data_sub");
@@ -444,6 +457,50 @@ namespace Base {
     std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
     std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
 
+    if (_h_bnbon->GetNbinsX() == 1) {
+      // If one bin means we are dealing with the total cross section, print the number of events
+      std::cout << "Number of events for POT: " << _pot << std::endl;
+      std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << std::endl;
+      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << std::endl;
+      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << std::endl;
+      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << std::endl;
+      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << std::endl;
+      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << std::endl;
+      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << std::endl;
+      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << std::endl;
+    }
+
+  }
+
+  void CrossSectionCalculator1D::SaveEventNumbers(std::string file_name)
+  {
+    std::ofstream f_out;
+    f_out.open(_folder+file_name, std::ios::out | std::ios::trunc);
+
+    f_out << "\\begin{table}[]" << std::endl;
+    f_out << "\\caption{My caption}" << std::endl;
+    f_out << "\\label{tab:mylabel}" << std::endl;
+    f_out << "\\centering" << std::endl;
+    f_out << "\\begin{tabular}{ccccccccc}" << std::endl;
+    f_out << "\\toprule" << std::endl;
+    f_out << "Bin & Measured & $\\nu_\\mu$ CC & Cosmic & Cosmic & OUTFV & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
+    f_out << "               & Events       & Only   & in BNB &       &    &                           &                 \\\\" << std::endl;
+    f_out << "\\midrule" << std::endl;
+    for (int i = 1; i < _h_bnbon->GetNbinsX()+1; i++) {
+      f_out << std::setprecision(4) 
+            << i 
+            << _h_bnbon->GetBinContent(i) << " $\\pm$ " << _h_bnbon->GetBinError(i) << " & " 
+            << _hmap_bnbcosmic["signal"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["signal"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["beam-off"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["beam-off"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["cosmic"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["cosmic"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["outfv"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["outfv"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["nc"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nc"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["nue"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nue"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["anumu"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["anumu"]->GetBinError(i) << " \\\\ " << std::endl;
+    }
+    f_out << "\\bottomrule" << std::endl;
+    f_out << "\\end{tabular}" << std::endl;
+    f_out << "\\end{table}" << std::endl;
   }
 
   
@@ -629,6 +686,8 @@ namespace Base {
   void CrossSectionCalculator1D::Draw(std::vector<std::string> histos_to_subtract)
   {
 
+    bool bin_width_scale = false;
+
     TH1D* _h_data_subtracted = (TH1D*)_h_bnbon->Clone("_h_data_subtracted");
     _h_data_subtracted->Sumw2();
 
@@ -656,6 +715,12 @@ namespace Base {
 
     TH1D* data = ProcessDataHisto(_h_data_subtracted);
 
+    if (bin_width_scale) {
+      _hmap_bnbcosmic["signal"]->Scale(1, "width");
+      _hmap_bnbcosmic["total"]->Scale(1, "width");
+      data->Scale(1, "width");
+    } 
+
     hs_mc->Draw("hist");
     _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
     data->Draw("E1 same");
@@ -667,7 +732,7 @@ namespace Base {
     TLatex* l = this->GetPOTLatex(_pot);
     l->Draw();
 
-    TString name = _folder +_name + "_test2";
+    TString name = _folder +_name + "_selectedevents_bkgsubtracted";
     canvas->SaveAs(name + ".pdf");
     canvas->SaveAs(name + ".C","C");
 
@@ -718,7 +783,7 @@ namespace Base {
     //DrawPOT(_pot);
 */
 
-    TString name = _folder +_name + "_test";
+    TString name = _folder +_name + "_selectedevents";
     canvas->SaveAs(name + ".pdf");
     canvas->SaveAs(name + ".C","C");
 
@@ -732,7 +797,7 @@ namespace Base {
 
     THStack *hs_trklen = new THStack("hs",_label.c_str());
 
-    bool _breakdownPlots = true;
+    bool _breakdownPlots = false;
 
     bool _draw_beamoff = true, _draw_cosmic = true, _draw_outfv = true, _draw_nue = true, _draw_nc = true, _draw_anumu = true;
 

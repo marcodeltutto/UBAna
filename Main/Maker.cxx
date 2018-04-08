@@ -380,6 +380,9 @@ void Main::Maker::MakeFile()
   int n_slc_nu_origin = 0;
   int n_slc_acpt_tag_nu = 0;
 
+  int semisel_tpcobj = 0;
+  int semisel_tpcobj_with_atleast_one_track = 0;
+
   std::map<std::string, double> selected_events_percut;
   selected_events_percut["initial"] = 0.;
   selected_events_percut["beamflash"] = 0.;
@@ -1863,9 +1866,14 @@ void Main::Maker::MakeFile()
     //m if(t->slc_vtxcheck_angle.at(scl_ll_max) > 2.9) continue;
     
     //if(t->slc_vtxcheck_angle.at(scl_ll_max) < 0.05 && t->slc_vtxcheck_angle.at(scl_ll_max) !=-9999 ) continue;
+
+    semisel_tpcobj++;
     
     // If zero tracks in this tpcobject, continue
     if(t->slc_ntrack.at(scl_ll_max) == 0) continue;
+
+    semisel_tpcobj_with_atleast_one_track++;
+
 
         // Cut on residuala ans fraction of used hits in cluster
     if (t->slc_muoncandidate_residuals_std.at(scl_ll_max) > 2.5) continue;
@@ -1931,7 +1939,7 @@ void Main::Maker::MakeFile()
     // EVENT IS SELECTED
     //
     
-    //std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
+    //if (isSignal && nu_origin)std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
     
     hmap_onebin["total"]->Fill(0.5, event_weight);
     hmap_trklen["total"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
@@ -2536,6 +2544,10 @@ void Main::Maker::MakeFile()
   std::cout << "Number of selected nue where an electron is selected: " << n_nue_electron * 6.6e20/totalPOT<< std::endl;
   std::cout << "Number of selected nue where a proton is selected: " << n_nue_proton * 6.6e20/totalPOT << std::endl;
   std::cout << "Number of selected nue where a pion is selected: " << n_nue_pion * 6.6e20/totalPOT << std::endl;
+
+  std::cout << std::endl;
+  std::cout << "semisel_tpcobj: " << semisel_tpcobj << std::endl;
+  std::cout << "semisel_tpcobj_with_atleast_one_track: " << semisel_tpcobj_with_atleast_one_track << std::endl;
 
   // ************************
   //
@@ -3183,7 +3195,9 @@ void Main::Maker::MakeFile()
   selected_signal_percut->SetBinContent(9, selected_signal_events_percut["fiducial_volume"]);
 
   for (int i = 0; i < 9; i++) {
-    std::cout << "cut " << i << " => " << selected_percut->GetBinContent(i+1) << std::endl;
+    std::cout << "cut " << i << " => " << selected_signal_percut->GetBinContent(i+1) 
+              << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(1) * 100 
+              << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(i) * 100  << "\\\\" << std::endl;
     generated_signal_percut->SetBinContent(i+1, (double)nsignal);
     //generated_percut->SetBinContent(i+1, (double)sel_tot);
   }

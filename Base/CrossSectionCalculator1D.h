@@ -133,6 +133,9 @@ namespace Base {
     void PrintOnFile(std::string);
 
     ///
+    void SaveEventNumbers(std::string);
+
+    ///
     TLatex* GetPOTLatex(double pot); 
 
     ///
