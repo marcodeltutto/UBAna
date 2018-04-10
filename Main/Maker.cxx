@@ -1049,6 +1049,16 @@ void Main::Maker::MakeFile()
   TH2D * h_vtx_xz = new TH2D("h_vtx_xz", ";X;Z", 40, 0, 275, 50, 0,1050);
   TH2D * h_vtx_xy = new TH2D("h_vtx_xy", ";X;Y", 40, 0, 275, 40, -125,125);
 
+  std::map<std::string,TH1D*> hmap_vtxz_upborder;
+  hmap_vtxz_upborder["total"] = new TH1D("h_vtxz_upborder_total", ";Candidate Neutrino Vertex Z [cm];", 3, 0,1050);
+  hmap_vtxz_upborder["signal"] = new TH1D("h_vtxz_upborder_signal", ";Candidate Neutrino Vertex Z [cm];", 3, 0,1050);
+  hmap_vtxz_upborder["background"] = new TH1D("h_vtxz_upborder_background", ";Candidate Neutrino Vertex Z [cm];", 3, 0,1050);
+
+  std::map<std::string,TH1D*> hmap_vtxx_upborder;
+  hmap_vtxx_upborder["total"] = new TH1D("h_vtxx_upborder_total", ";Candidate Neutrino Vertex X [cm];", 5, 0, 275);
+  hmap_vtxx_upborder["signal"] = new TH1D("h_vtxx_upborder_signal", ";Candidate Neutrino Vertex X [cm];", 5, 0, 275);
+  hmap_vtxx_upborder["background"] = new TH1D("h_vtxx_upborder_background", ";Candidate Neutrino Vertex X [cm];", 5, 0, 275);
+
   std::map<std::string,TH1D*> hmap_flsmatch_score;
   hmap_flsmatch_score["total"] = new TH1D("h_flsmatch_score_total", ";1/(-log(L));", 100, 0, 1.5);
   hmap_flsmatch_score["signal"] = new TH1D("h_flsmatch_score_signal", ";1/(-log(L));", 100, 0, 1.5);
@@ -1875,9 +1885,9 @@ void Main::Maker::MakeFile()
     semisel_tpcobj_with_atleast_one_track++;
 
 
-        // Cut on residuala ans fraction of used hits in cluster
+    // Cut on residuala ans fraction of used hits in cluster
     if (t->slc_muoncandidate_residuals_std.at(scl_ll_max) > 2.5) continue;
-    if (std::abs(t->slc_muoncandidate_residuals_mean.at(scl_ll_max)) > 0.7) continue;
+    //if (std::abs(t->slc_muoncandidate_residuals_mean.at(scl_ll_max)) > 0.7) continue;
     if (t->slc_muoncandidate_perc_used_hits_in_cluster.at(scl_ll_max) < 0.7) continue;
     
     //if(!t->slc_passed_min_track_quality.at(scl_ll_max)) continue;
@@ -1908,6 +1918,21 @@ void Main::Maker::MakeFile()
 
     if (isSignal && nu_origin) selected_signal_events_percut["mip_consistency"]++;
     selected_events_percut["mip_consistency"]++;
+
+
+
+    // Just before the FV cut, make distribution of vtxz
+    if (t->slc_nuvtx_y.at(scl_ll_max) > 82) {
+      hmap_vtxz_upborder["total"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+      hmap_vtxx_upborder["total"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+      if (isSignal && nu_origin) {
+        hmap_vtxz_upborder["signal"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+        hmap_vtxx_upborder["signal"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+      } else {
+        hmap_vtxz_upborder["background"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+        hmap_vtxx_upborder["background"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+      }
+    }
 
 
     // FV cut
@@ -3196,6 +3221,8 @@ void Main::Maker::MakeFile()
 
   for (int i = 0; i < 9; i++) {
     std::cout << "cut " << i << " => " << selected_signal_percut->GetBinContent(i+1) 
+      << " => " << selected_percut->GetBinContent(i+1) 
+
               << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(1) * 100 
               << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(i) * 100  << "\\\\" << std::endl;
     generated_signal_percut->SetBinContent(i+1, (double)nsignal);
@@ -3389,6 +3416,8 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_vtxz, "hmap_vtxz");
   h_vtx_xz->Write();
   h_vtx_xy->Write();
+  file_out->WriteObject(&hmap_vtxz_upborder, "hmap_vtxz_upborder");
+  file_out->WriteObject(&hmap_vtxx_upborder, "hmap_vtxx_upborder");
   
   file_out->WriteObject(&hmap_dqdx_trunc, "hmap_dqdx_trunc");
   h_dqdx_trunc_length->Write();

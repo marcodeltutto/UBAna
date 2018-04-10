@@ -175,6 +175,10 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_vtxy_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_vtxz", temp_map);
   std::map<std::string,TH1D*> hmap_vtxz_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_vtxz_upborder", temp_map);
+  std::map<std::string,TH1D*> hmap_vtxz_upborder_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_vtxx_upborder", temp_map);
+  std::map<std::string,TH1D*> hmap_vtxx_upborder_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_flsmatch_score", temp_map);
   std::map<std::string,TH1D*> hmap_flsmatch_score_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_ntpcobj", temp_map);
@@ -404,6 +408,10 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_vtxy_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxy_total");
   TH1D* h_vtxz_total_bnbon = (TH1D*)bnbon_file->Get("h_vtxz_total");
   TH1D* h_vtxz_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxz_total");
+  TH1D* h_vtxz_upborder_total_bnbon = (TH1D*)bnbon_file->Get("h_vtxz_upborder_total");
+  TH1D* h_vtxz_upborder_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxz_upborder_total");
+  TH1D* h_vtxx_upborder_total_bnbon = (TH1D*)bnbon_file->Get("h_vtxx_upborder_total");
+  TH1D* h_vtxx_upborder_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxx_upborder_total");
   TH1D* h_flsmatch_score_total_bnbon = (TH1D*)bnbon_file->Get("h_flsmatch_score_total");
   TH1D* h_flsmatch_score_total_extbnb = (TH1D*)extbnb_file->Get("h_flsmatch_score_total");
   TH1D* h_ntpcobj_total_bnbon = (TH1D*)bnbon_file->Get("h_ntpcobj_total");
@@ -928,6 +936,18 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_vtxz_data = (TH1D*)h_vtxz_total_bnbon->Clone("h_vtxx_data");
   h_vtxz_data->Sumw2();
   h_vtxz_data->Add(h_vtxz_total_extbnb, -1.);
+
+  h_vtxz_upborder_total_extbnb->Scale(scale_factor_extbnb);
+  h_vtxz_upborder_total_bnbon->Scale(scale_factor_bnbon);
+  TH1D* h_vtxz_upborder_data = (TH1D*)h_vtxz_upborder_total_bnbon->Clone("h_vtxz_upborder_data");
+  h_vtxz_upborder_data->Sumw2();
+  h_vtxz_upborder_data->Add(h_vtxz_upborder_total_extbnb, -1.);
+
+  h_vtxx_upborder_total_extbnb->Scale(scale_factor_extbnb);
+  h_vtxx_upborder_total_bnbon->Scale(scale_factor_bnbon);
+  TH1D* h_vtxx_upborder_data = (TH1D*)h_vtxx_upborder_total_bnbon->Clone("h_vtxx_upborder_data");
+  h_vtxx_upborder_data->Sumw2();
+  h_vtxx_upborder_data->Add(h_vtxx_upborder_total_extbnb, -1.);
   
   h_flsmatch_score_total_extbnb->Scale(scale_factor_extbnb);
   h_flsmatch_score_total_bnbon->Scale(scale_factor_bnbon);
@@ -1167,7 +1187,29 @@ std::cout << ">> here10" << std::endl;
   canvas_zdiff->SaveAs(name + ".pdf");
   canvas_zdiff->SaveAs(name + ".C","C");
 
+  TCanvas* canvas_vtxz_upborder = new TCanvas();
+  THStack *hs_vtxz_upborder_mc = new THStack("hs_vtxz_upborder",";Candidate Neutrino Vertex Z [cm]; Selected Events");
+  leg = PlottingTools::DrawTHStack2(hs_vtxz_upborder_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_upborder_mc);
+  PlottingTools::DrawDataHisto(h_vtxz_upborder_data);
+  leg->AddEntry(h_vtxz_upborder_data,"Data (Beam-on - Beam-off)","lep");
+  PlottingTools::DrawPOT(bnbon_pot_meas);
+  leg->Draw();
+  
+  name = outdir + "vtxz_upborder";
+  canvas_vtxz_upborder->SaveAs(name + ".pdf");
+  canvas_vtxz_upborder->SaveAs(name + ".C","C");
 
+  TCanvas* canvas_vtxx_upborder = new TCanvas();
+  THStack *hs_vtxx_upborder_mc = new THStack("hs_vtxx_upborder",";Candidate Neutrino Vertex X [cm]; Selected Events");
+  leg = PlottingTools::DrawTHStack2(hs_vtxx_upborder_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_upborder_mc);
+  PlottingTools::DrawDataHisto(h_vtxx_upborder_data);
+  leg->AddEntry(h_vtxx_upborder_data,"Data (Beam-on - Beam-off)","lep");
+  PlottingTools::DrawPOT(bnbon_pot_meas);
+  leg->Draw();
+  
+  name = outdir + "vtxx_upborder";
+  canvas_vtxx_upborder->SaveAs(name + ".pdf");
+  canvas_vtxx_upborder->SaveAs(name + ".C","C");
 
 
   TCanvas* canvas_vtxcheck_angle = new TCanvas();

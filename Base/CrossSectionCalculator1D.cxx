@@ -225,6 +225,8 @@ namespace Base {
     l -> AddEntry(glow, "1#sigma Energy Range", "l");
     l -> Draw();
 
+    h_flux_numu->GetXaxis()->SetRangeUser(0, 4);
+    gPad->Update();
 
 
     TString name = _folder + "_flux";
@@ -483,15 +485,16 @@ namespace Base {
     f_out << "\\centering" << std::endl;
     f_out << "\\begin{tabular}{ccccccccc}" << std::endl;
     f_out << "\\toprule" << std::endl;
-    f_out << "Bin & Measured & $\\nu_\\mu$ CC & Cosmic & Cosmic & OUTFV & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
-    f_out << "               & Events       & Only   & in BNB &       &    &                           &                 \\\\" << std::endl;
+    f_out << "    & \\multicolumn{2}{c}{Data}    & \\multicolumn{6}{c}{MC} \\\\" << std::endl;
+    f_out << "Bin & Selected & Cosmic & $\\nu_\\mu$ CC & Cosmic  & OUTFV & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
+    f_out << "    & Events   & Only   & Signal       & in BNB  &       &    &                           &                 \\\\" << std::endl;
     f_out << "\\midrule" << std::endl;
     for (int i = 1; i < _h_bnbon->GetNbinsX()+1; i++) {
       f_out << std::setprecision(4) 
-            << i 
+            << i << " & "
             << _h_bnbon->GetBinContent(i) << " $\\pm$ " << _h_bnbon->GetBinError(i) << " & " 
-            << _hmap_bnbcosmic["signal"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["signal"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["beam-off"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["beam-off"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["signal"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["signal"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["cosmic"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["cosmic"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["outfv"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["outfv"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["nc"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nc"]->GetBinError(i) << " & "
