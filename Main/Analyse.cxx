@@ -1292,7 +1292,7 @@ std::cout << ">> here10" << std::endl;
   leg = PlottingTools::DrawTHStack2(hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc);
   leg->AddEntry(h_vtxx_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
   PlottingTools::DrawDataHisto(h_vtxx_total_bnbon);
-  hs_vtxx_mc->SetMaximum(600);
+  hs_vtxx_mc->SetMaximum(1300);
   PlottingTools::DrawPOT(bnbon_pot_meas);
   leg->Draw();
   
@@ -1307,7 +1307,7 @@ std::cout << ">> here10" << std::endl;
   leg = PlottingTools::DrawTHStack2(hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc);
   leg->AddEntry(h_vtxy_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxy_data);
   PlottingTools::DrawDataHisto(h_vtxy_total_bnbon);
-  hs_vtxy_mc->SetMaximum(650);
+  hs_vtxy_mc->SetMaximum(1800);
   PlottingTools::DrawPOT(bnbon_pot_meas);
   leg->Draw();
   
@@ -1321,7 +1321,7 @@ std::cout << ">> here10" << std::endl;
   leg = PlottingTools::DrawTHStack2(hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc);
   leg->AddEntry(h_vtxz_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxz_data);
   PlottingTools::DrawDataHisto(h_vtxz_total_bnbon);
-  hs_vtxz_mc->SetMaximum(900);
+  hs_vtxz_mc->SetMaximum(1400);
   PlottingTools::DrawPOT(bnbon_pot_meas);
   leg->Draw();
   

@@ -483,7 +483,7 @@ namespace Base {
     f_out << "\\caption{My caption}" << std::endl;
     f_out << "\\label{tab:mylabel}" << std::endl;
     f_out << "\\centering" << std::endl;
-    f_out << "\\begin{tabular}{ccccccccc}" << std::endl;
+    f_out << "\\begin{tabular}{c|cc|cccccc}" << std::endl;
     f_out << "\\toprule" << std::endl;
     f_out << "    & \\multicolumn{2}{c}{Data}    & \\multicolumn{6}{c}{MC} \\\\" << std::endl;
     f_out << "Bin & Selected & Cosmic & $\\nu_\\mu$ CC & Cosmic  & OUTFV & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
@@ -745,6 +745,8 @@ namespace Base {
   void CrossSectionCalculator1D::Draw() 
   {
 
+    bool bin_width_scale = false;
+
     TLegend* leg;
 
     if (_name.find("costheta") != std::string::npos) {
@@ -759,6 +761,13 @@ namespace Base {
     THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
 
     TH1D* data = ProcessDataHisto(_h_bnbon);
+
+    if (bin_width_scale) {
+      for (auto it : _hmap_bnbcosmic) {
+        it.second->Scale(1, "width");
+      }
+      data->Scale(1, "width");
+    } 
 
     hs_mc->Draw("hist");
     _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
