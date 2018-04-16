@@ -27,6 +27,7 @@
 #include <getopt.h>
 #include <fstream>
 #include <math.h>
+#include <iomanip>
 
 #include <TRandom1.h>
 #include <TSystem.h>
