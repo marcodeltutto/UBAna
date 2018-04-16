@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include <fstream>
 #include <math.h>
+#include <algorithm>
 
 #include <TRandom1.h>
 #include <TSystem.h>
