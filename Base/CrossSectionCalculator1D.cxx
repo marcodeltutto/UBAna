@@ -235,6 +235,8 @@ namespace Base {
     
     _flux = h_flux_numu->Integral();
 
+    f->Close();
+
     return _flux;
   }
 

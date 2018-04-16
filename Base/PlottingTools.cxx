@@ -11,7 +11,23 @@ namespace Base {
   sstm2 << "Accumulated POT: " << pot;
   std::string str = sstm2.str();
   
-  TLatex* pot_latex_2 = new TLatex(.10, .92, str.c_str());
+  TLatex* pot_latex_2 = new TLatex(.10, .92, str.c_str()); 
+  pot_latex_2->SetTextFont(62);
+  pot_latex_2->SetTextColor(kGray+2);
+  pot_latex_2->SetNDC();
+  pot_latex_2->SetTextSize(1/30.);
+  pot_latex_2->SetTextAlign(10);//left adjusted
+  pot_latex_2->Draw();
+  
+}
+
+void PlottingTools::DrawPOTRatio(double pot) {
+  
+  std::stringstream sstm2;
+  sstm2 << "Accumulated POT: " << pot;
+  std::string str = sstm2.str();
+  
+  TLatex* pot_latex_2 = new TLatex(.13, .92, str.c_str());
   pot_latex_2->SetTextFont(62);
   pot_latex_2->SetTextColor(kGray+2);
   pot_latex_2->SetNDC();
@@ -37,6 +53,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     themap["beam-off"]->SetFillColor(kBlue+2);
     themap["beam-off"]->SetFillStyle(3004);
     hs_trklen->Add(themap["beam-off"]);
+    themap["total"]->Add(themap["beam-off"]);
   }
 
   if (themap["intimecosmic"] != NULL) {
@@ -108,7 +125,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   //gStyle->SetHatchesLineWidth(1);
   themap["total"]->SetFillColor(kBlack);
   themap["total"]->SetFillStyle(3005);
-  //themap["total"]->Draw("E2 same");
+  themap["total"]->Draw("E2 same");
   
   
   
@@ -118,7 +135,8 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   
   TLegend* leg2;
   if (_breakdownPlots){
-    leg2 = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
+    // leg2 = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
+    leg2 = new TLegend(0.6015038,0.3101075,0.9235589,0.8468817,NULL,"brNDC");
   } else {
     leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
   }
@@ -168,7 +186,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     leg2->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
     sstm.str("");
   }
-  //leg2->AddEntry(themap["total"],"MC Stat Unc.","f");
+  
   leg2->Draw();
   
   return leg2;
@@ -369,15 +387,16 @@ TLegend* PlottingTools::DrawTHStack2(THStack *hs_trklen,
   
   hs_trklen->Draw("hist");
   
-  //themap["total"]->SetFillColor(kBlack);
-  //themap["total"]->SetFillStyle(3005);
-  //themap["total"]->Draw("E2 same");
+  themap["total"]->SetFillColor(kBlack);
+  themap["total"]->SetFillStyle(3005);
+  themap["total"]->Draw("E2 same");
   
   
   
   
   TLegend* leg2;
-  leg2 = new TLegend(0.13,0.69,0.45,0.87,NULL,"brNDC");
+  // leg2 = new TLegend(0.13,0.69,0.45,0.87,NULL,"brNDC");
+  leg2 = new TLegend(0.1582915,0.6798623,0.5,0.8760757,NULL,"brNDC");
 
   std::stringstream sstm;
   

@@ -67,7 +67,9 @@ void Main::Maker::PrintConfig()
 
   std::cout << "--- _breakdownPlots: " << _breakdownPlots << std::endl;
   std::cout << "--- _makePlots " << _makePlots << std::endl;
-  std::cout << "--- _fill_bootstrap " << _fill_bootstrap << std::endl;
+  std::cout << "--- _fill_bootstrap_flux " << _fill_bootstrap_flux << std::endl;
+  std::cout << "--- _fill_bootstrap_genie " << _fill_bootstrap_genie << std::endl;
+  std::cout << "--- _target_flux_syst " << _target_flux_syst << std::endl;
   std::cout << "--- _check_duplicate_events " << _check_duplicate_events << std::endl;
 
   std::cout << "--- _beamSpillStarts " << _beamSpillStarts << std::endl;

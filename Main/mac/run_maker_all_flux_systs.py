@@ -7,10 +7,7 @@ from ROOT import Main
 
 maker = Main.Maker()
 
-
-
-
-# BNBComisc - Flux Unisim
+# BNBComisc
 
 maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root")
 maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_fluxunisim.root");
@@ -23,116 +20,16 @@ maker.SetGainCalibration(198)
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
 
-maker.SetTargetFluxSystematic("FluxUnisim");
-
-maker.PrintConfig()
-
-maker.MakeFile()
 
 
+# flux_syst_list = ["FluxUnisim", "kminus", "kplus", "kzero", "piminus", "piplus", "total"]
+flux_syst_list = ["total"]
 
-# BNBComisc - Flux K-
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kminus.root");
-  
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
-
-maker.SetTargetFluxSystematic("kminus");
-
-maker.PrintConfig()
-
-maker.MakeFile()
-
-
-
-# BNBComisc - Flux K+
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kplus.root");
-  
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
-
-maker.SetTargetFluxSystematic("kplus");
-
-maker.PrintConfig()
-
-maker.MakeFile()
-
-
-
-# BNBComisc - Flux K0
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kzero.root");
-  
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
-
-maker.SetTargetFluxSystematic("kzero");
-
-maker.PrintConfig()
-
-maker.MakeFile()
-
-
-
-# BNBComisc - Flux Pi-
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_piminus.root");
-  
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
-
-maker.SetTargetFluxSystematic("piminus");
-
-maker.PrintConfig()
-
-maker.MakeFile()
-
-
-
-# BNBComisc - Flux Pi+
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_piplus.root");
-  
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
-
-maker.SetTargetFluxSystematic("piplus");
-
-maker.PrintConfig()
-
-maker.MakeFile()
-
+for systname in flux_syst_list:
+  file_name = "/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_" + systname + ".root"
+  maker.SetOutputFile(file_name)
+  maker.SetTargetFluxSystematic(systname);
+  maker.PrintConfig()
+  maker.MakeFile()
 
 

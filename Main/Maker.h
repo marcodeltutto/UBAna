@@ -137,8 +137,8 @@ namespace Main {
     const bool _breakdownPlots = true;
     const bool _makePlots = false;
 
-    const bool _fill_bootstrap = true;
-    const bool _fill_bootstrap_flux = false;
+    //const bool _fill_bootstrap = true;
+    const bool _fill_bootstrap_flux = true;
     const bool _fill_bootstrap_genie = false;
 
     std::string _target_flux_syst = "";

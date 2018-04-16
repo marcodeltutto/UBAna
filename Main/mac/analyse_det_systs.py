@@ -16,6 +16,8 @@ analyser.SetBNBPOT(4.852e+19)
 analyser.SetBNBONTriggers(10820589)
 analyser.SetEXTBNBTriggers(15482261)
 analyser.SetTargetFluxSystematic("total")
+analyser.DoFluxSystematics(False)
+analyser.ImportFluxSystematics(False)
 
 
 #det_syst_list = ["nospacecharge", "dicharge", "lightyeild", "nodeltaray", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "birksrecomb", "nohadronic"]

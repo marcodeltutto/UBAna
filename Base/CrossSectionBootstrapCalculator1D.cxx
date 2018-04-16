@@ -128,9 +128,16 @@ namespace Base {
   }
 
 
-  void CrossSectionBootstrapCalculator1D::SetSavePrefix(std::string s)
+  void CrossSectionBootstrapCalculator1D::SetSavePrefix(std::string s, std::string folder)
   {
-  	_save_prefix = s;
+    if (folder != "") {
+      auto now = std::time(nullptr);
+      char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
+      std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
+      
+      system(("mkdir -p " + folder /*+ "_" + timestamp*/).c_str());    
+    }
+  	_save_prefix = folder + "/" + s;
   }
 
   void CrossSectionBootstrapCalculator1D::SetFluxHistogramType(bool rwgt_flux, std::string flux_unc_type)
@@ -336,7 +343,7 @@ namespace Base {
     // Plot all the xsec in one plot
     //
 
-    TCanvas * genie_multisim_xsec_canvas = new TCanvas();
+    TCanvas * multisim_xsec_canvas = new TCanvas();
     for (auto it : xsec_mumom_per_universe) {
       if (it.first == "nominal") {
         continue;
@@ -346,7 +353,7 @@ namespace Base {
           it.second->GetXaxis()->SetTitle("p_{#mu} [GeV]");
           it.second->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
           it.second->SetMinimum(0.);
-          it.second->SetMaximum(1.5);
+          it.second->SetMaximum(1.6);
         } else if (_save_prefix.find("onebin") != std::string::npos) {
           it.second->GetXaxis()->SetTickLength(0);
           it.second->GetXaxis()->SetLabelSize(0);
@@ -357,7 +364,7 @@ namespace Base {
         }else {
           it.second->GetXaxis()->SetTitle("cos(#theta_{#mu})");
           it.second->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
-          it.second->SetMaximum(2);
+          it.second->SetMaximum(2.2);
         }
         it.second->GetYaxis()->SetTitleOffset(0.8);
       }
@@ -381,15 +388,103 @@ namespace Base {
     l->AddEntry(xsec_mumom_per_universe["universe0"], "Other Universes", "l");
     l->Draw();
 
-    TLatex* genie_label = new TLatex(.10, .92, _upper_label.c_str());
-    genie_label->SetTextFont(62);
-    genie_label->SetTextColor(kRed+2);
-    genie_label->SetNDC();
-    genie_label->SetTextSize(1/30.);
-    genie_label->SetTextAlign(10);//left adjusted
-    genie_label->Draw();
-    genie_multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.pdf").c_str());
-    genie_multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.C").c_str());
+    TLatex* label = new TLatex(.10, .92, _upper_label.c_str());
+    label->SetTextFont(62);
+    label->SetTextColor(kRed+2);
+    label->SetNDC();
+    label->SetTextSize(1/30.);
+    label->SetTextAlign(10);//left adjusted
+    label->Draw();
+    multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.pdf").c_str());
+    multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.C").c_str());
+
+
+    // Make the fancy plot
+    int n_bins_y = 60;
+    double bins_y[61];
+    for (int i = 0; i < n_bins_y+1; i++) { 
+      if(_save_prefix.find("mumom") != std::string::npos) {
+        bins_y[i] = (double)i/(double)n_bins_y * 1.6; 
+      } else if (_save_prefix.find("onebin") != std::string::npos) {
+        bins_y[i] = (double)i/(double)n_bins_y * 1.2; 
+      } else {
+        bins_y[i] = (double)i/(double)n_bins_y * 2.2; 
+      }
+    }
+    TH2D *h_2d_all_xsec = new TH2D("h_2d_all_xsec", "", xsec_mumom_per_universe["nominal"]->GetNbinsX(), 
+                                                        xsec_mumom_per_universe["nominal"]->GetXaxis()->GetXbins()->GetArray(),
+                                                        n_bins_y,
+                                                        bins_y);
+
+    for (auto it : xsec_mumom_per_universe) {
+      if (it.first == "nominal") {
+        continue;
+      }
+      for (int bin = 1; bin < it.second->GetNbinsX()+1; bin++) {
+        h_2d_all_xsec->Fill(h_2d_all_xsec->GetXaxis()->GetBinLowEdge(bin), it.second->GetBinContent(bin));
+      }
+    }
+
+    TH1D * h_nominal_werror = (TH1D*) xsec_mumom_per_universe["nominal"]->Clone("h_nominal_werror");
+    for (int bin = 1; bin < h_nominal_werror->GetNbinsX()+1; bin++) {
+      h_nominal_werror->SetBinError(bin, std::sqrt(_cov_matrix.GetBinContent(bin, bin)));
+    }
+
+    gStyle->SetPalette(kBlueGreenYellow);
+
+    TCanvas * multisim_xsec_fancy_canvas = new TCanvas();
+
+    if (_save_prefix.find("mumom") != std::string::npos) {
+      h_2d_all_xsec->GetXaxis()->SetTitle("p_{#mu} [GeV]");
+      h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+      h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
+      h_2d_all_xsec->SetMaximum(50);
+    } else if (_save_prefix.find("onebin") != std::string::npos) {
+      h_2d_all_xsec->GetXaxis()->SetTitle("");
+      h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}");
+      h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
+    } else {
+      h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu})");
+      h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
+      h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
+      h_2d_all_xsec->SetMaximum(50);
+    }
+
+    h_2d_all_xsec->Draw("colz");
+
+    h_nominal_werror->SetLineColor(kRed+2);
+    h_nominal_werror->SetMarkerColor(kRed+2);
+    h_nominal_werror->Draw("E1 same");
+
+    label->Draw();
+
+    TLegend *l2;
+    if (_save_prefix.find("mumom") != std::string::npos) {
+      l2 = new TLegend(0.5931232,0.7284211,0.8166189,0.8589474,NULL,"brNDC");
+    } else if (_save_prefix.find("onebin") != std::string::npos) {
+      l2 = new TLegend(0.5931232,0.7284211,0.8166189,0.8589474,NULL,"brNDC");
+    } else {
+      l2 = new TLegend(0.1962751,0.6863158,0.4197708,0.8168421,NULL,"brNDC");
+    }
+     
+    l2->SetBorderSize(0);
+    l2->SetTextSize(0.03789474);
+    l2->SetLineColor(1);
+    l2->SetLineStyle(1);
+    l2->SetLineWidth(1);
+    l2->SetFillColor(0);
+    l2->SetFillStyle(1001);
+    l2->AddEntry(h_nominal_werror, "Central Value", "lep");
+    l2->AddEntry(h_2d_all_xsec, "Color map shows", "");
+    l2->AddEntry(h_2d_all_xsec, "other universes", "");
+    l2->Draw();
+
+    multisim_xsec_fancy_canvas->SaveAs((_save_prefix + "_xsec_all_fancy.pdf").c_str());
+    multisim_xsec_fancy_canvas->SaveAs((_save_prefix + "_xsec_all_fancy.C").c_str());
+
+    gStyle->SetPalette(kRainBow);
+
+
 
 
     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;

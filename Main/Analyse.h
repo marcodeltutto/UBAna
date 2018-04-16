@@ -103,6 +103,15 @@ namespace Main {
     ///
     void SetPrefix(std::string);
 
+    /// Calculates the flux covariance matrix and saves it to a file for a particular flux syst
+    void DoFluxSystematics(bool option) {_do_flux_systs = option;}
+
+    /// Imports all the flux systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
+    void ImportFluxSystematics(bool option) {_import_flux_systs = option;}
+
+    ///
+    void DrawDataMC(TCanvas *c, THStack *hs_mc, double scale_factor_mc_bnbcosmic, bool breakdown_plots, std::map<std::string,TH1D*> hmap_mc, TH1D* h_data_bnbon, double bnbon_pot_meas);
+
     ///
     void DoAnalise();
 
@@ -120,8 +129,9 @@ namespace Main {
     double bnbon_triggers        = -1;
     double extbnb_triggers       = -1;
 
-    bool _do_flux_systs = false;
+    bool _do_flux_systs = true;
     std::string _target_flux_syst = "";
+    bool _import_flux_systs = false;
 
     bool _do_genie_systs = false;
 

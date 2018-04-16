@@ -116,7 +116,7 @@ namespace Base {
     void Reset();
  
     ///
-    void SetSavePrefix(std::string s);
+    void SetSavePrefix(std::string s, std::string folder = "covariance_plots");
 
     ///
     void SetUpperLabel(std::string s) {_upper_label = s;}

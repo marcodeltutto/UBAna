@@ -71,6 +71,9 @@ namespace Base {
     static void DrawPOT(double pot);
 
     ///
+    static void DrawPOTRatio(double pot);
+
+    ///
     static TLegend* DrawTHStack(THStack *hs_trklen,
                    double pot_scaling,
                    bool _breakdownPlots,

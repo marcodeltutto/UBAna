@@ -19,6 +19,8 @@ analyser.SetEXTBNBTriggers(33320382);
 analyser.SetPrefix("cv");
 
 
+analyser.DoFluxSystematics(False)
+analyser.ImportFluxSystematics(False)
 #analyser.SetTargetFluxSystematic("FluxUnisim");
 #analyser.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
 #analyser.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");

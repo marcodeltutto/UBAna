@@ -18,7 +18,8 @@ analyser.SetBNBONTriggers(10820589);
 analyser.SetEXTBNBTriggers(15482261);
 analyser.SetPrefix("cv");
 
-
+analyser.DoFluxSystematics(False)
+analyser.ImportFluxSystematics(False)
 #analyser.SetTargetFluxSystematic("FluxUnisim");
 #analyser.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
 #analyser.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
@@ -26,24 +27,6 @@ analyser.SetPrefix("cv");
 #analyser.SetTargetFluxSystematic("piminus_PrimaryHadronSWCentral");
 #analyser.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
 analyser.SetTargetFluxSystematic("total");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_piplus.root");
-#analyser.SetTargetFluxSystematic("piplus");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_piminus.root");
-#analyser.SetTargetFluxSystematic("piminus");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kzero.root");
-#analyser.SetTargetFluxSystematic("kzero");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kplus.root");
-#analyser.SetTargetFluxSystematic("kplus");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kminus.root");
-#analyser.SetTargetFluxSystematic("kminus");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_fluxunisim.root");
-#analyser.SetTargetFluxSystematic("FluxUnisim");
 
 analyser.DoAnalise();
 
