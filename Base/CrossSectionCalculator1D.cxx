@@ -757,12 +757,14 @@ namespace Base {
       leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
     }
 
-    TCanvas* canvas = new TCanvas();
+    TCanvas* canvas = new TCanvas("canvas", "canvas", 800, 800);
 
     std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
     THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
 
     TH1D* data = ProcessDataHisto(_h_bnbon);
+
+    this->DrawDataMC(canvas, hs_mc, data, leg);
 
     if (bin_width_scale) {
       for (auto it : _hmap_bnbcosmic) {
@@ -771,31 +773,19 @@ namespace Base {
       data->Scale(1, "width");
     } 
 
-    hs_mc->Draw("hist");
-    _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
-    data->Draw("same");
+    // hs_mc->Draw("hist");
+    // _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
+    // data->Draw("same");
 
-    leg->AddEntry(data, "Data (Beam-on)", "lep");
-    leg->Draw();
-
-
-    TLatex* l = this->GetPOTLatex(_pot);
-    l->Draw();
+    // leg->AddEntry(data, "Data (Beam-on)", "lep");
+    // leg->Draw();
 
 
+    // TLatex* l = this->GetPOTLatex(_pot);
+    // l->Draw();
 
-    /*
-    THStack *hs_mc = new THStack("hs",";Test [cm]; Selected Events");
-    //hmap_trklen_mc["beam-off"] = h_trklen_total_extbnb;
-    leg = this->DrawTHStack(hs_mc, 1, true, _hmap_bnbcosmic);
-    std::cout << "\t             MC BNBCOSMIC: " << _hmap_bnbcosmic["total"]->Integral() << std::endl;
-    //DrawDataHisto(h_trklen_total_bnbon);
-    //leg->AddEntry(hmap_trklen_mc["beam-off"],"Data (Beam-off)","f");
-    //leg->AddEntry(h_trklen_total_bnbon,"Data (Beam-on)","lep");
-    this->DrawDataHisto(_h_data_sub);
-    leg->AddEntry(_h_data_sub,"Data (Beam-on - Beam-off)","lep");
-    //DrawPOT(_pot);
-*/
+
+
 
     TString name = _folder +_name + "_selectedevents";
     canvas->SaveAs(name + ".pdf");
@@ -803,6 +793,112 @@ namespace Base {
 
 
   } 
+
+
+  void CrossSectionCalculator1D::DrawDataMC(TCanvas* c, THStack *hs_mc, TH1D* h_data_bnbon, TLegend* leg)
+  {
+
+    // Upper plot will be in pad1
+    TPad *pad1 = new TPad("pad1", "pad1", 0, 0.25, 1, 1.0);
+    pad1->SetBottomMargin(0); // Upper and lower plot are joined
+    pad1->SetRightMargin(0.06);
+    pad1->SetLeftMargin(0.13);
+    pad1->SetGridx();         // Vertical grid
+    pad1->Draw();             // Draw the upper pad: pad1
+    pad1->cd();               // pad1 becomes the current pad
+    //if (variable == 0 || variable == 1) histo_p1->SetMaximum(1.);
+
+    // histo_p1->Draw("histo");               // Draw h1
+    // histo->Draw("histo same");         // Draw h2 on top of h1
+    // histo_m1->Draw("histo same");
+
+    hs_mc->Draw("hist");
+    _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
+    h_data_bnbon->Draw("same");
+
+    leg->AddEntry(_hmap_bnbcosmic["total"],"Stat. Unc.","f");
+    leg->AddEntry(h_data_bnbon,"Data (Beam-on)","lep");
+    leg->Draw();
+
+    PlottingTools::DrawPOTRatio(_pot);
+
+
+    // Do not draw the Y axis label on the upper plot and redraw a small
+    // axis instead, in order to avoid the first label (0) to be clipped.
+    // hs_mc->GetYaxis()->SetLabelSize(0.);
+    // TGaxis *axis = new TGaxis( -5, 0.1, -5, 4000, 0.1,4000,510,"");
+    // axis->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    // axis->SetLabelSize(15);
+    // axis->Draw();
+    hs_mc->SetMinimum(0.01);
+    hs_mc->GetYaxis()->SetTitleOffset(1.18);
+    hs_mc->GetYaxis()->CenterTitle(true);
+
+    double max_up = _hmap_bnbcosmic["total"]->GetBinContent(_hmap_bnbcosmic["total"]->GetMaximumBin());
+    hs_mc->SetMaximum(max_up+max_up*0.4);
+
+    // lower plot will be in pad
+    c->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2 = new TPad("pad2", "pad2", 0, 0.01, 1, 0.25);
+    pad2->SetTopMargin(0);
+    pad2->SetFrameFillStyle(4000);
+    pad2->SetBottomMargin(0.35);
+    pad2->SetRightMargin(0.06);
+    pad2->SetLeftMargin(0.13);
+    pad2->SetGridx(); // vertical grid
+    //pad2->SetGridy(); // orizontal grid
+    pad2->Draw();
+    pad2->cd();       // pad2 becomes the current pad
+
+    // Define the first ratio plot
+    TH1D *ratio = (TH1D*)h_data_bnbon->Clone("ratio");
+    //ratio->SetMinimum(0.92);  // Define Y ..
+    //ratio->SetMaximum(1.08); // .. range
+    //ratio->Sumw2();
+    ratio->SetStats(0);      // No statistics on lower plot
+    ratio->Divide(_hmap_bnbcosmic["total"]);
+    ratio->SetLineWidth(2);
+    ratio->SetLineColor(kBlack);
+    ratio->SetMarkerStyle(kFullCircle);
+    ratio->SetMarkerSize(0.6);
+
+    ratio->GetYaxis()->SetTitle("Ratio");
+    ratio->GetXaxis()->SetTitle(hs_mc->GetXaxis()->GetTitle());
+
+    ratio->GetXaxis()->CenterTitle(true);
+    ratio->GetXaxis()->SetLabelFont(42);
+    ratio->GetXaxis()->SetLabelSize(0.12);
+    ratio->GetXaxis()->SetTitleSize(0.18);
+    ratio->GetXaxis()->SetTickLength(0.09);
+    ratio->GetXaxis()->SetTitleOffset(0.8);
+    ratio->GetXaxis()->SetTitleFont(42);
+
+    ratio->GetYaxis()->CenterTitle(true);
+    ratio->GetYaxis()->SetLabelFont(42);
+    ratio->GetYaxis()->SetLabelSize(0.12);
+    ratio->GetYaxis()->SetTitleSize(0.16);
+    ratio->GetYaxis()->SetTitleOffset(0.27);
+    ratio->GetYaxis()->SetTitleFont(42);
+
+    ratio->Draw("E1");       // Draw the ratio plot
+
+    double max = ratio->GetBinContent(ratio->GetMaximumBin());
+    double min = ratio->GetBinContent(ratio->GetMinimumBin());
+
+    // std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> max: " << max << std::endl;
+    // std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> min: " << min << std::endl;
+
+    ratio->SetMaximum(max+max*0.1);
+    ratio->SetMinimum(min-min*0.1);
+
+    gPad->Update();
+
+    TLine *line = new TLine(ratio->GetXaxis()->GetXmin(),1,ratio->GetXaxis()->GetXmax(),1);
+    line->SetLineColor(kBlack);
+    line->SetLineStyle(9); // dashed
+    line->Draw();
+
+  }
 
 
 

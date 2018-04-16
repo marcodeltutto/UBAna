@@ -9,18 +9,18 @@ analyser = Main.Analyse()
 
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
-analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.7_test6.root")    
-analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.7_test6.root")
-analyser.SetBNBPOT(4.852e+19);    
-analyser.SetBNBONTriggers(10820589);    
-analyser.SetEXTBNBTriggers(15482261);
+analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root")    
+analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root")
+analyser.SetBNBPOT(1.627e+20);    
+analyser.SetBNBONTriggers(36177265);    
+analyser.SetEXTBNBTriggers(33320382);
 analyser.DoFluxSystematics(True)
 analyser.ImportFluxSystematics(False)
 
 
 
 # flux_syst_list = ["FluxUnisim", "kminus", "kplus", "kzero", "piminus", "piplus"]
-flux_syst_list = ["total"]
+flux_syst_list = ["piplus"]
 
 for systname in flux_syst_list:
   file_name = "/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_" + systname + ".root"

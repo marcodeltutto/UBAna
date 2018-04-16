@@ -40,6 +40,7 @@
 #include <TChain.h>
 #include "TThread.h"
 #include "THStack.h"
+#include "TLine.h"
 #include "TLegend.h"
 #include "TEfficiency.h"
 #include "TGraph.h"
@@ -51,6 +52,8 @@
 #include "Math/SMatrix.h"
 #include "TMatrix.h"
 #include "TGraphAsymmErrors.h"
+
+#include "PlottingTools.h"
 
 namespace Base {
 
@@ -137,6 +140,9 @@ namespace Base {
 
     ///
     TLatex* GetPOTLatex(double pot); 
+
+    ///
+    void DrawDataMC(TCanvas* c, THStack *hs_mc, TH1D* h_data_bnbon, TLegend* leg);
 
     ///
     void Reset();
