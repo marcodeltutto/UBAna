@@ -907,7 +907,7 @@ namespace Base {
 
     THStack *hs_trklen = new THStack("hs",_label.c_str());
 
-    bool _breakdownPlots = false;
+    bool _breakdownPlots = true;
 
     bool _draw_beamoff = true, _draw_cosmic = true, _draw_outfv = true, _draw_nue = true, _draw_nc = true, _draw_anumu = true;
 
@@ -1067,7 +1067,7 @@ namespace Base {
       if (_draw_cosmic) leg->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
       sstm.str("");
     }
-    leg->AddEntry(themap["total"],"Stat Unc.","f");
+    //leg->AddEntry(themap["total"],"Stat Unc.","f");
 
     if (themap["beam-off"] != NULL && _draw_beamoff){
       leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
