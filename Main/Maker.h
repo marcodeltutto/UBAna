@@ -140,7 +140,7 @@ namespace Main {
 
     //const bool _fill_bootstrap = true;
     const bool _fill_bootstrap_flux = true;
-    const bool _fill_bootstrap_genie = false;
+    const bool _fill_bootstrap_genie = true;
 
     std::string _target_flux_syst = "";
 
