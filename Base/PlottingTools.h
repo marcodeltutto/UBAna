@@ -69,6 +69,12 @@ namespace Base {
     ~PlottingTools(){}
 
     ///
+    static void DrawPreliminary();
+
+    ///
+    static void DrawSimulation();
+
+    ///
     static void DrawPOT(double pot);
 
     ///

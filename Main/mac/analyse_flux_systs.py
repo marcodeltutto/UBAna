@@ -16,6 +16,7 @@ analyser.SetBNBONTriggers(36177265);
 analyser.SetEXTBNBTriggers(33320382);
 analyser.DoFluxSystematics(True)
 analyser.ImportFluxSystematics(False)
+analyser.DoGenieSystematics(False)
 
 
 

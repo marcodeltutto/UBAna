@@ -789,7 +789,7 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.SetHistograms(hmap_trktheta_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);  
     _xsec_calc.SetTruthHistograms(h_eff_muangle_num, h_eff_muangle_den, h_true_reco_costheta);
     _xsec_calc.SetTruthXSec(h_truth_xsec_muangle);
-    _xsec_calc.SetNameAndLabel("trkcostheta", ";Candidate Track cos(#theta) [GeV]; Selected Events");
+    _xsec_calc.SetNameAndLabel("trkcostheta", ";Candidate Track cos(#theta); Selected Events");
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkcostheta_eventsperbin_table.tex");
     _xsec_calc.Draw();
@@ -1038,7 +1038,7 @@ std::cout << ">> here10" << std::endl;
   TString name;
   TString outdir = "./output_data_mc/";
   
-  TCanvas* canvas_trklen = new TCanvas("canvas_trklen", "canvas", 800, 800);
+  TCanvas* canvas_trklen = new TCanvas("canvas_trklen", "canvas", 800, 700);
   THStack *hs_trklen_mc = new THStack("hs_trklen",";Candidate Track Length [cm]; Selected Events");
   hmap_trklen_mc["beam-off"] = h_trklen_total_extbnb;
   // leg = PlottingTools::DrawTHStack(hs_trklen_mc, scale_factor_mc_bnbcosmic, true, hmap_trklen_mc);
@@ -1107,7 +1107,7 @@ std::cout << ">> here10" << std::endl;
   
 
 
-  TCanvas* canvas_trkphi = new TCanvas("canvas_trkphi", "canvas", 800, 800);
+  TCanvas* canvas_trkphi = new TCanvas("canvas_trkphi", "canvas", 800, 700);
   THStack *hs_trkphi_mc = new THStack("hs_trkphi",";Candidate Track #phi; Selected Events");
   hmap_trkphi_mc["beam-off"] = h_trkphi_total_extbnb;
   // leg = PlottingTools::DrawTHStack(hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc);
@@ -1123,7 +1123,7 @@ std::cout << ">> here10" << std::endl;
   canvas_trkphi->SaveAs(name + ".pdf");
   canvas_trkphi->SaveAs(name + ".C","C");
   
-  TCanvas* canvas_multpfp = new TCanvas("canvas_multpfp", "canvas", 800, 800);
+  TCanvas* canvas_multpfp = new TCanvas("canvas_multpfp", "canvas", 800, 700);
   THStack *hs_multpfp_mc = new THStack("hs_multpfp",";PFP Multiplicity; Selected Events");
   hmap_multpfp_mc["beam-off"] = h_multpfp_total_extbnb;
   // leg = PlottingTools::DrawTHStack(hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc);
@@ -1139,7 +1139,7 @@ std::cout << ">> here10" << std::endl;
   canvas_multpfp->SaveAs(name + ".pdf");
   canvas_multpfp->SaveAs(name + ".C","C");
   
-  TCanvas* canvas_multtracktol = new TCanvas("canvas_multtracktol", "canvas", 800, 800);
+  TCanvas* canvas_multtracktol = new TCanvas("canvas_multtracktol", "canvas", 800, 700);
   THStack *hs_multtracktol_mc = new THStack("hs_multtracktol",";Track Multiplicity (5 cm); Selected Events");
   hmap_multtracktol_mc["beam-off"] = h_multtracktol_total_extbnb;
   // leg = PlottingTools::DrawTHStack(hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc);
@@ -1302,7 +1302,7 @@ std::cout << ">> here10" << std::endl;
   canvas_mom_mcs_length->SaveAs(name + ".C","C");
   
   
-  TCanvas* canvas_vtxx = new TCanvas("canvas_vtxx", "canvas", 800, 800);
+  TCanvas* canvas_vtxx = new TCanvas("canvas_vtxx", "canvas", 800, 700);
   THStack *hs_vtxx_mc = new THStack("hs_vtxx",";Candidate Neutrino Vertex X [cm]; Selected Events");
   hmap_vtxx_mc["beam-off"] = h_vtxx_total_extbnb;
   this->DrawDataMC(canvas_vtxx, hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc, h_vtxx_total_bnbon, bnbon_pot_meas);
@@ -1318,7 +1318,7 @@ std::cout << ">> here10" << std::endl;
   canvas_vtxx->SaveAs(name + ".C","C");
 
    
-  TCanvas* canvas_vtxy = new TCanvas("canvas_vtxy", "canvas", 800, 800);
+  TCanvas* canvas_vtxy = new TCanvas("canvas_vtxy", "canvas", 800, 700);
   THStack *hs_vtxy_mc = new THStack("hs_vtxy",";Candidate Neutrino Vertex Y [cm]; Selected Events");
   hmap_vtxy_mc["beam-off"] = h_vtxy_total_extbnb;
   this->DrawDataMC(canvas_vtxy, hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc, h_vtxy_total_bnbon, bnbon_pot_meas);
@@ -1333,7 +1333,7 @@ std::cout << ">> here10" << std::endl;
   canvas_vtxy->SaveAs(name + ".pdf");
   canvas_vtxy->SaveAs(name + ".C","C");
   
-  TCanvas* canvas_vtxz = new TCanvas("canvas_vtxz", "canvas", 800, 800);
+  TCanvas* canvas_vtxz = new TCanvas("canvas_vtxz", "canvas", 800, 700);
   THStack *hs_vtxz_mc = new THStack("hs_vtxz",";Candidate Neutrino Vertex Z [cm]; Selected Events");
   hmap_vtxz_mc["beam-off"] = h_vtxz_total_extbnb;
   this->DrawDataMC(canvas_vtxz, hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc, h_vtxz_total_bnbon, bnbon_pot_meas);
@@ -1495,7 +1495,6 @@ std::cout << ">> here10" << std::endl;
     TLegend * leg;
     if (hmap_mc.find("outfv") != hmap_mc.end()) {
       leg = PlottingTools::DrawTHStack(hs_mc, scale_factor_mc_bnbcosmic, breakdown_plots, hmap_mc);
-      leg->AddEntry(hmap_mc["beam-off"],"Data (Beam-off)","f");
     } else {
     	leg = PlottingTools::DrawTHStack2(hs_mc, scale_factor_mc_bnbcosmic, breakdown_plots, hmap_mc);
     }
@@ -1506,6 +1505,7 @@ std::cout << ">> here10" << std::endl;
     leg->Draw();
 
     PlottingTools::DrawPOTRatio(bnbon_pot_meas);
+    PlottingTools::DrawPreliminary();
 
 
     // Do not draw the Y axis label on the upper plot and redraw a small
@@ -1582,6 +1582,8 @@ std::cout << ">> here10" << std::endl;
     line->SetLineColor(kBlack);
     line->SetLineStyle(9); // dashed
     line->Draw();
+
+
 
 	}
 

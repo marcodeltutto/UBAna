@@ -5,6 +5,27 @@
 
 namespace Base {
 
+  void PlottingTools::DrawPreliminary() {
+    TLatex* prelim = new TLatex(0.94,0.93, "MicroBooNE Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(32);
+    //prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
+  void PlottingTools::DrawSimulation() {
+    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Simulation");
+    prelim->SetTextColor(kGray+1);
+    prelim->SetNDC();
+    prelim->SetTextSize(2/30.);
+    prelim->SetTextAlign(32);
+    prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
 	void PlottingTools::DrawPOT(double pot) {
   
   std::stringstream sstm2;
@@ -143,8 +164,14 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   std::stringstream sstm;
   // numu
   if (_breakdownPlots) {
-    leg2->AddEntry(themap["signal_stopmu"],"#nu_{#mu} CC (stopping #mu)","f");
-    leg2->AddEntry(themap["signal_nostopmu"],"#nu_{#mu} CC (other)","f");
+    sstm << "#nu_{#mu} CC (stopping #mu), " << std::setprecision(2)  << themap["signal_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["signal_stopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    sstm << "#nu_{#mu} CC (other), " << std::setprecision(2)  << themap["signal_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["signal_nostopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["signal_stopmu"],"#nu_{#mu} CC (stopping #mu)","f");
+    // leg2->AddEntry(themap["signal_nostopmu"],"#nu_{#mu} CC (other)","f");
   } else {
     sstm << "#nu_{#mu} CC (signal), " << std::setprecision(2)  << themap["signal"]->Integral() / themap["total"]->Integral()*100. << "%";
     leg2->AddEntry(themap["signal"],sstm.str().c_str(),"f");
@@ -163,15 +190,46 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   
   // nc, outfv, cosmic
   if (_breakdownPlots) {
-    leg2->AddEntry(themap["nc_other"],"NC (other)","f");
-    leg2->AddEntry(themap["nc_pion"],"NC (pion)","f");
-    leg2->AddEntry(themap["nc_proton"],"NC (proton)","f");
-    leg2->AddEntry(themap["outfv_stopmu"],"OUTFV (stopping #mu)","f");
-    leg2->AddEntry(themap["outfv_nostopmu"],"OUTFV (other)","f");
-    leg2->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
-    leg2->AddEntry(themap["cosmic_nostopmu"],"Cosmic (other)","f");
+    sstm << "NC (other), " << std::setprecision(2)  << themap["nc_other"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["nc_other"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_other"],"NC (other)","f");
+
+    sstm << "NC (pion), " << std::setprecision(2)  << themap["nc_pion"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["nc_pion"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_pion"],"NC (pion)","f");
+
+    sstm << "NC (proton), " << std::setprecision(2)  << themap["nc_proton"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["nc_proton"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_proton"],"NC (proton)","f");
+
+    sstm << "OUTFV (stopping #mu), " << std::setprecision(2)  << themap["outfv_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["outfv_stopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["outfv_stopmu"],"OUTFV (stopping #mu)","f");
+
+    sstm << "OUTFV (other), " << std::setprecision(2)  << themap["outfv_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["outfv_nostopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["outfv_nostopmu"],"OUTFV (other)","f");
+
+    sstm << "Cosmic (stopping #mu), " << std::setprecision(2)  << themap["cosmic_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["cosmic_stopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
+
+    sstm << "Cosmic (other), " << std::setprecision(2)  << themap["cosmic_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["cosmic_nostopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["cosmic_nostopmu"],"Cosmic (other)","f");
+
     if (themap["intimecosmic"] != NULL) {
-      leg2->AddEntry(themap["intimecosmic"],"In-time cosmics","f");
+      // leg2->AddEntry(themap["intimecosmic"],"In-time cosmics","f");
+      sstm << "n-time cosmics, " << std::setprecision(2)  << themap["intimecosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg2->AddEntry(themap["intimecosmic"],sstm.str().c_str(),"f");
+      sstm.str("");
     }
   } else {
     sstm << "NC, " << std::setprecision(2)  << themap["nc"]->Integral() / themap["total"]->Integral()*100. << "%";
@@ -185,6 +243,13 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     sstm << "Cosmic, " << std::setprecision(2)  << themap["cosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
     leg2->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
     sstm.str("");
+  }
+
+  if (themap["beam-off"] != NULL) {
+    sstm << "Data (Beam-off), " << std::setprecision(2)  << themap["beam-off"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["beam-off"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
   }
   
   leg2->Draw();
@@ -510,7 +575,7 @@ TLegend* PlottingTools::DrawTHStack3(THStack *hs_trklen,
 void PlottingTools::DrawDataHisto(TH1D* histo) {
 
   histo->SetMarkerStyle(kFullCircle);
-  histo->SetMarkerSize(0.6);
+  histo->SetMarkerSize(0.9);
 
   histo->Draw("E1 same");
   
@@ -519,7 +584,7 @@ void PlottingTools::DrawDataHisto(TH1D* histo) {
 void PlottingTools::DrawDataHisto2D(TH2D* histo) {
 
   histo->SetMarkerStyle(kFullCircle);
-  histo->SetMarkerSize(0.6);
+  histo->SetMarkerSize(0.9);
 
   histo->Draw("E1 same");
   

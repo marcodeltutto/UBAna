@@ -757,7 +757,7 @@ namespace Base {
       leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
     }
 
-    TCanvas* canvas = new TCanvas("canvas", "canvas", 800, 800);
+    TCanvas* canvas = new TCanvas("canvas", "canvas", 800, 700);
 
     std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
     THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
@@ -821,6 +821,7 @@ namespace Base {
     leg->Draw();
 
     PlottingTools::DrawPOTRatio(_pot);
+    PlottingTools::DrawPreliminary();
 
 
     // Do not draw the Y axis label on the upper plot and redraw a small
@@ -907,7 +908,7 @@ namespace Base {
 
     THStack *hs_trklen = new THStack("hs",_label.c_str());
 
-    bool _breakdownPlots = true;
+    bool _breakdownPlots = false;
 
     bool _draw_beamoff = true, _draw_cosmic = true, _draw_outfv = true, _draw_nue = true, _draw_nc = true, _draw_anumu = true;
 
@@ -1024,8 +1025,14 @@ namespace Base {
     std::stringstream sstm;
   // numu
     if (_breakdownPlots) {
-      leg->AddEntry(themap["signal_stopmu"],"#nu_{#mu} CC (stopping #mu)","f");
-      leg->AddEntry(themap["signal_nostopmu"],"#nu_{#mu} CC (other)","f");
+      sstm << "#nu_{#mu} CC (stopping #mu), " << std::setprecision(2)  << themap["signal_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg->AddEntry(themap["signal_stopmu"],sstm.str().c_str(),"f");
+      sstm.str("");
+      sstm << "#nu_{#mu} CC (other), " << std::setprecision(2)  << themap["signal_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg->AddEntry(themap["signal_nostopmu"],sstm.str().c_str(),"f");
+      sstm.str("");
+      // leg->AddEntry(themap["signal_stopmu"],"#nu_{#mu} CC (stopping #mu)","f");
+      // leg->AddEntry(themap["signal_nostopmu"],"#nu_{#mu} CC (other)","f");
     } else {
       sstm << "#nu_{#mu} CC (signal), " << std::setprecision(2)  << themap["signal"]->Integral() / themap["total"]->Integral()*100. << "%";
       leg->AddEntry(themap["signal"],sstm.str().c_str(),"f");
@@ -1044,13 +1051,40 @@ namespace Base {
 
   // nc, outfv, cosmic
     if (_breakdownPlots) {
-      leg->AddEntry(themap["nc_other"],"NC (other)","f");
-      leg->AddEntry(themap["nc_pion"],"NC (pion)","f");
-      leg->AddEntry(themap["nc_proton"],"NC (proton)","f");
-      leg->AddEntry(themap["outfv_stopmu"],"OUTFV (stopping #mu)","f");
-      leg->AddEntry(themap["outfv_nostopmu"],"OUTFV (other)","f");
-      leg->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
-      leg->AddEntry(themap["cosmic_nostopmu"],"Cosmic (other)","f");
+      sstm << "NC (other), " << std::setprecision(2)  << themap["nc_other"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["nc_other"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_other"],"NC (other)","f");
+
+    sstm << "NC (pion), " << std::setprecision(2)  << themap["nc_pion"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["nc_pion"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_pion"],"NC (pion)","f");
+
+    sstm << "NC (proton), " << std::setprecision(2)  << themap["nc_proton"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["nc_proton"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_proton"],"NC (proton)","f");
+
+    sstm << "OUTFV (stopping #mu), " << std::setprecision(2)  << themap["outfv_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["outfv_stopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["outfv_stopmu"],"OUTFV (stopping #mu)","f");
+
+    sstm << "OUTFV (other), " << std::setprecision(2)  << themap["outfv_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["outfv_nostopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["outfv_nostopmu"],"OUTFV (other)","f");
+
+    sstm << "Cosmic (stopping #mu), " << std::setprecision(2)  << themap["cosmic_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["cosmic_stopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
+
+    sstm << "Cosmic (other), " << std::setprecision(2)  << themap["cosmic_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["cosmic_nostopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["cosmic_nostopmu"],"Cosmic (other)","f");
       if (themap["intimecosmic"] != NULL) {
         leg->AddEntry(themap["intimecosmic"],"In-time cosmics","f");
       }
@@ -1070,7 +1104,10 @@ namespace Base {
     //leg->AddEntry(themap["total"],"Stat Unc.","f");
 
     if (themap["beam-off"] != NULL && _draw_beamoff){
-      leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
+      sstm << "Data (Beam-off), " << std::setprecision(2)  << themap["beam-off"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg->AddEntry(themap["beam-off"],sstm.str().c_str(),"f");
+      sstm.str("");
+      // leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
     }
     
 

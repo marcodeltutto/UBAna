@@ -109,6 +109,9 @@ namespace Main {
     /// Imports all the flux systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
     void ImportFluxSystematics(bool option) {_import_flux_systs = option;}
 
+    /// Calculates the flux covariance matrix and saves it to a file for a particular flux syst
+    void DoGenieSystematics(bool option) {_do_genie_systs = option;}
+
     ///
     void DrawDataMC(TCanvas *c, THStack *hs_mc, double scale_factor_mc_bnbcosmic, bool breakdown_plots, std::map<std::string,TH1D*> hmap_mc, TH1D* h_data_bnbon, double bnbon_pot_meas);
 

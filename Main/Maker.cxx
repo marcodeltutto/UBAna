@@ -172,7 +172,7 @@ void Main::Maker::FillBootstrap(double fill_value,
   }
   std::map<std::string,TH1D*> this_map = iter->second;
 
-  this_map["nominal"]->Fill(fill_value * evt_wgt);
+  this_map["nominal"]->Fill(fill_value, evt_wgt);
 
   for (size_t i = 0; i < fname.size(); i++) {
 
@@ -1142,6 +1142,7 @@ void Main::Maker::MakeFile()
     // ************************
 
     double event_weight = t->bnb_weight;
+    if (isdata) event_weight = 1.;
 
 
 
@@ -2007,10 +2008,10 @@ void Main::Maker::MakeFile()
       if(!isdata && _fill_bootstrap_genie) FillBootstrap(_mom_tree_true, _mom_tree_mcs, event_weight, bs_genie_pm1_true_reco_mom, fname_genie_pm1, wgts_genie_pm1);
       if(!isdata && _fill_bootstrap_genie) FillBootstrap(_mom_tree_true, _mom_tree_mcs, event_weight, bs_genie_multisim_reco_true_mumom, fname_genie_multisim, wgts_genie_multisim);
       //if(!isdata && _fill_bootstrap_flux) FillBootstrap(_mom_tree_true, _mom_tree_mcs, bs_flux_multisim_true_reco_mom, fname_flux_multisim, wgts_flux_multisim);
-      if(!isdata && _fill_bootstrap_genie) bs_genie_multisim_true_reco_mumom.Fill(_mom_tree_true, _mom_tree_mcs, 1., wgts_genie_multisim);
-      if(!isdata && _fill_bootstrap_genie) bs_genie_multisim_true_reco_muangle.Fill(_mom_tree_angle_true, _mom_tree_angle_reco, 1., wgts_genie_multisim);
-      if(!isdata && _fill_bootstrap_flux) bs_flux_multisim_true_reco_mumom.Fill(_mom_tree_true, _mom_tree_mcs, 1., wgts_flux_multisim);
-      if(!isdata && _fill_bootstrap_flux) bs_flux_multisim_true_reco_muangle.Fill(_mom_tree_angle_true, _mom_tree_angle_reco, 1., wgts_flux_multisim);
+      if(!isdata && _fill_bootstrap_genie) bs_genie_multisim_true_reco_mumom.Fill(_mom_tree_true, _mom_tree_mcs, event_weight, wgts_genie_multisim);
+      if(!isdata && _fill_bootstrap_genie) bs_genie_multisim_true_reco_muangle.Fill(_mom_tree_angle_true, _mom_tree_angle_reco, event_weight, wgts_genie_multisim);
+      if(!isdata && _fill_bootstrap_flux) bs_flux_multisim_true_reco_mumom.Fill(_mom_tree_true, _mom_tree_mcs, event_weight, wgts_flux_multisim);
+      if(!isdata && _fill_bootstrap_flux) bs_flux_multisim_true_reco_muangle.Fill(_mom_tree_angle_true, _mom_tree_angle_reco, event_weight, wgts_flux_multisim);
 
       h_true_reco_costheta->Fill(_mom_tree_angle_true, _mom_tree_angle_reco, event_weight);
     }
