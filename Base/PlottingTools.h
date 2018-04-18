@@ -78,6 +78,9 @@ namespace Base {
     static void DrawPOT(double pot);
 
     ///
+    static void DrawSimPOT(double pot, double target);
+
+    ///
     static void DrawPOTRatio(double pot);
 
     ///
@@ -103,6 +106,9 @@ namespace Base {
                       double pot_scaling,
                       bool _breakdownPlots,
                       std::map<std::string,TH1D*> themap);
+
+    ///
+    static void PlotMCTHStack(THStack *hs_trklen, std::map<std::string,TH1D*> themap);
 
     ///
     static void DrawDataHisto(TH1D* histo);

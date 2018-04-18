@@ -433,6 +433,84 @@ void Main::Maker::MakeFile()
   _mom_tree->Branch("mom_tree_angle_true", &_mom_tree_angle_true, "mom_tree_angle_true/D");
   _mom_tree->Branch("mom_tree_angle_reco", &_mom_tree_angle_reco, "mom_tree_angle_reco/D");
 
+  //
+  // Truth histograms stacked in interaction type - Selected
+  //
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy;
+  hmap_mctruth_nuenergy["total"] = new TH1D("h_mctruth_nuenergy_total", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy["qe"] = new TH1D("h_mctruth_nuenergy_qe", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy["res"] = new TH1D("h_mctruth_nuenergy_res", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy["dis"] = new TH1D("h_mctruth_nuenergy_dis", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy["coh"] = new TH1D("h_mctruth_nuenergy_coh", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy["mec"] = new TH1D("h_mctruth_nuenergy_mec", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy["other"] = new TH1D("h_mctruth_nuenergy_other", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+
+  std::map<std::string,TH1D*> hmap_mctruth_mumom;
+  hmap_mctruth_mumom["total"] = new TH1D("h_mctruth_mumom_total", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom["qe"] = new TH1D("h_mctruth_mumom_qe", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom["res"] = new TH1D("h_mctruth_mumom_res", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom["dis"] = new TH1D("h_mctruth_mumom_dis", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom["coh"] = new TH1D("h_mctruth_mumom_coh", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom["mec"] = new TH1D("h_mctruth_mumom_mec", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom["other"] = new TH1D("h_mctruth_mumom_other", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta;
+  hmap_mctruth_mucostheta["total"] = new TH1D("h_mctruth_mucostheta_total", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["qe"] = new TH1D("h_mctruth_mucostheta_qe", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["res"] = new TH1D("h_mctruth_mucostheta_res", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["dis"] = new TH1D("h_mctruth_mucostheta_dis", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["coh"] = new TH1D("h_mctruth_mucostheta_coh", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["mec"] = new TH1D("h_mctruth_mucostheta_mec", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["other"] = new TH1D("h_mctruth_mucostheta_other", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+
+  std::map<std::string,TH1D*> hmap_mctruth_muphi;
+  hmap_mctruth_muphi["total"] = new TH1D("h_mctruth_muphi_total", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["qe"] = new TH1D("h_mctruth_muphi_qe", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["res"] = new TH1D("h_mctruth_muphi_res", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["dis"] = new TH1D("h_mctruth_muphi_dis", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["coh"] = new TH1D("h_mctruth_muphi_coh", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["mec"] = new TH1D("h_mctruth_muphi_mec", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["other"] = new TH1D("h_mctruth_muphi_other", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+
+  //
+  // Truth histograms stacked in interaction type - Generated
+  //
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen;
+  hmap_mctruth_nuenergy_gen["total"] = new TH1D("h_mctruth_nuenergy_gen_total", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy_gen["qe"] = new TH1D("h_mctruth_nuenergy_gen_qe", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy_gen["res"] = new TH1D("h_mctruth_nuenergy_gen_res", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy_gen["dis"] = new TH1D("h_mctruth_nuenergy_gen_dis", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy_gen["coh"] = new TH1D("h_mctruth_nuenergy_gen_coh", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy_gen["mec"] = new TH1D("h_mctruth_nuenergy_gen_mec", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+  hmap_mctruth_nuenergy_gen["other"] = new TH1D("h_mctruth_nuenergy_gen_other", ";True Neutrino Energy [GeV];Selected Events", 20, 0, 3);
+
+  std::map<std::string,TH1D*> hmap_mctruth_mumom_gen;
+  hmap_mctruth_mumom_gen["total"] = new TH1D("h_mctruth_mumom_gen_total", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom_gen["qe"] = new TH1D("h_mctruth_mumom_gen_qe", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom_gen["res"] = new TH1D("h_mctruth_mumom_gen_res", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom_gen["dis"] = new TH1D("h_mctruth_mumom_gen_dis", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom_gen["coh"] = new TH1D("h_mctruth_mumom_gen_coh", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom_gen["mec"] = new TH1D("h_mctruth_mumom_gen_mec", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+  hmap_mctruth_mumom_gen["other"] = new TH1D("h_mctruth_mumom_gen_other", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
+
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen;
+  hmap_mctruth_mucostheta_gen["total"] = new TH1D("h_mctruth_mucostheta_gen_total", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["qe"] = new TH1D("h_mctruth_mucostheta_gen_qe", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["res"] = new TH1D("h_mctruth_mucostheta_gen_res", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["dis"] = new TH1D("h_mctruth_mucostheta_gen_dis", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["coh"] = new TH1D("h_mctruth_mucostheta_gen_coh", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["mec"] = new TH1D("h_mctruth_mucostheta_gen_mec", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["other"] = new TH1D("h_mctruth_mucostheta_gen_other", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+
+  std::map<std::string,TH1D*> hmap_mctruth_muphi_gen;
+  hmap_mctruth_muphi_gen["total"] = new TH1D("h_mctruth_muphi_gen_total", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["qe"] = new TH1D("h_mctruth_muphi_gen_qe", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["res"] = new TH1D("h_mctruth_muphi_gen_res", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["dis"] = new TH1D("h_mctruth_muphi_gen_dis", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["coh"] = new TH1D("h_mctruth_muphi_gen_coh", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["mec"] = new TH1D("h_mctruth_muphi_gen_mec", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["other"] = new TH1D("h_mctruth_muphi_gen_other", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+
 
   TH2D * h_true_reco_mom= new TH2D("h_true_reco_mom", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", n_bins_mumom, bins_mumom, n_bins_mumom, bins_mumom);
 
@@ -1566,6 +1644,43 @@ void Main::Maker::MakeFile()
       else{
         //std::cout << "This is a signal event but the muon was not reconstructed. Event: " << event << std::endl;
       }
+
+
+      // Also save themc truth histogram per interaction type
+      hmap_mctruth_nuenergy_gen["total"]->Fill(t->nu_e);
+      hmap_mctruth_mumom_gen["total"]->Fill(t->true_muon_mom);
+      hmap_mctruth_mucostheta_gen["total"]->Fill(t->lep_costheta);
+      hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi);
+      if (t->mode == 0) {
+        hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e);
+        hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta_gen["qe"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi);
+      }
+      if (t->mode == 1) {
+        hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e);
+        hmap_mctruth_mumom_gen["res"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta_gen["res"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi);
+      }
+      if (t->mode == 2) {
+        hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e);
+        hmap_mctruth_mumom_gen["dis"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta_gen["dis"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi);
+      }
+      if (t->mode == 3) {
+        hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e);
+        hmap_mctruth_mumom_gen["coh"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta_gen["coh"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi);
+      }
+      if (t->mode == 10) {
+        hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e);
+        hmap_mctruth_mumom_gen["mec"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi);
+      }
     }
     if(t->nupdg == 14 && t->ccnc == 0){
       nNumuCC++;
@@ -2161,6 +2276,42 @@ void Main::Maker::MakeFile()
       if (t->mode == 10) {
         h_eff_mec_num->Fill(t->nu_e, event_weight);
         signal_sel_mec++;
+      }
+
+      // Also save themc truth histogram per interaction type
+      hmap_mctruth_nuenergy["total"]->Fill(t->nu_e);
+      hmap_mctruth_mumom["total"]->Fill(t->true_muon_mom);
+      hmap_mctruth_mucostheta["total"]->Fill(t->lep_costheta);
+      hmap_mctruth_muphi["total"]->Fill(t->lep_phi);
+      if (t->mode == 0) {
+        hmap_mctruth_nuenergy["qe"]->Fill(t->nu_e);
+        hmap_mctruth_mumom["qe"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta["qe"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi["qe"]->Fill(t->lep_phi);
+      }
+      if (t->mode == 1) {
+        hmap_mctruth_nuenergy["res"]->Fill(t->nu_e);
+        hmap_mctruth_mumom["res"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta["res"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi["res"]->Fill(t->lep_phi);
+      }
+      if (t->mode == 2) {
+        hmap_mctruth_nuenergy["dis"]->Fill(t->nu_e);
+        hmap_mctruth_mumom["dis"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta["dis"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi["dis"]->Fill(t->lep_phi);
+      }
+      if (t->mode == 3) {
+        hmap_mctruth_nuenergy["coh"]->Fill(t->nu_e);
+        hmap_mctruth_mumom["coh"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta["coh"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi["coh"]->Fill(t->lep_phi);
+      }
+      if (t->mode == 10) {
+        hmap_mctruth_nuenergy["mec"]->Fill(t->nu_e);
+        hmap_mctruth_mumom["mec"]->Fill(t->true_muon_mom);
+        hmap_mctruth_mucostheta["mec"]->Fill(t->lep_costheta);
+        hmap_mctruth_muphi["mec"]->Fill(t->lep_phi);
       }
 
       pEff->Fill(true, t->nu_e);
@@ -3335,6 +3486,16 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_multpfp, "hmap_multpfp");
   file_out->WriteObject(&hmap_multtracktol, "hmap_multtracktol");
   file_out->WriteObject(&hmap_trktheta_trkmom, "hmap_trktheta_trkmom");
+
+  // Mc truth stacked in interaction type
+  file_out->WriteObject(&hmap_mctruth_nuenergy, "hmap_mctruth_nuenergy");
+  file_out->WriteObject(&hmap_mctruth_mumom, "hmap_mctruth_mumom");
+  file_out->WriteObject(&hmap_mctruth_mucostheta, "hmap_mctruth_mucostheta");
+  file_out->WriteObject(&hmap_mctruth_muphi, "hmap_mctruth_muphi");
+  file_out->WriteObject(&hmap_mctruth_nuenergy_gen, "hmap_mctruth_nuenergy_gen");
+  file_out->WriteObject(&hmap_mctruth_mumom_gen, "hmap_mctruth_mumom_gen");
+  file_out->WriteObject(&hmap_mctruth_mucostheta_gen, "hmap_mctruth_mucostheta_gen");
+  file_out->WriteObject(&hmap_mctruth_muphi_gen, "hmap_mctruth_muphi_gen");
 
 
 

@@ -438,7 +438,7 @@ namespace Base {
       h_2d_all_xsec->GetXaxis()->SetTitle("p_{#mu} [GeV]");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-      //h_2d_all_xsec->SetMaximum(50);
+      h_2d_all_xsec->SetMaximum(200); // was 50
     } else if (_save_prefix.find("onebin") != std::string::npos) {
       h_2d_all_xsec->GetXaxis()->SetTitle("");
       h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}");
@@ -447,7 +447,7 @@ namespace Base {
       h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu})");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-      //h_2d_all_xsec->SetMaximum(50);
+      h_2d_all_xsec->SetMaximum(200);
     }
 
     h_2d_all_xsec->Draw("colz");

@@ -42,6 +42,38 @@ namespace Base {
   
 }
 
+
+
+
+
+void PlottingTools::DrawSimPOT(double pot, double target) {
+  
+ std::stringstream sstm;
+  sstm << "Simulated POT: " << pot;
+  std::string str = sstm.str();
+  
+  TLatex* pot_latex = new TLatex(.10, .96, str.c_str());
+  pot_latex->SetTextColor(kGray+2);
+  pot_latex->SetNDC();
+  pot_latex->SetTextSize(1/30.);
+  pot_latex->SetTextAlign(10); //left adjusted
+  pot_latex->Draw();
+  
+  
+  std::stringstream sstm2;
+  sstm2 << "Scaled to POT: " << target;
+  str = sstm2.str();
+  
+  TLatex* pot_latex_2 = new TLatex(.10, .92, str.c_str());
+  pot_latex_2->SetTextFont(62);
+  pot_latex_2->SetTextColor(kGray+2);
+  pot_latex_2->SetNDC();
+  pot_latex_2->SetTextSize(1/30.);
+  pot_latex_2->SetTextAlign(10);//left adjusted
+  pot_latex_2->Draw();
+  
+}
+
 void PlottingTools::DrawPOTRatio(double pot) {
   
   std::stringstream sstm2;
@@ -57,6 +89,9 @@ void PlottingTools::DrawPOTRatio(double pot) {
   pot_latex_2->Draw();
   
 }
+
+
+
 
 TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
                    double pot_scaling,

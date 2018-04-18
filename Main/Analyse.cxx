@@ -193,6 +193,22 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_perc_used_hits_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mom_mcs_length", temp_map);
   std::map<std::string,TH1D*> hmap_mom_mcs_length_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mumom_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_muphi_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mumom_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc = *temp_map;
   TH1D* h_flsPe_wcut_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsPe_wcut");
 
   
@@ -1455,6 +1471,86 @@ std::cout << ">> here10" << std::endl;
   h_deltax_2d_mc->Draw("colz");
   new TCanvas();
   h_deltax_2d_data->Draw("colz");
+
+
+
+
+
+
+
+  // *************************************
+  // MC distributions only
+  // *************************************
+
+  TCanvas* canvas_mctruth_nuenergy = new TCanvas();
+  THStack *hs_mctruth_nuenergy = new THStack("hs_mctruth_nuenergy",";True Neutrino Energy [GeV];Selected Events");
+  this->PlotMCTHStack(hs_mctruth_nuenergy, hmap_mctruth_nuenergy_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_nuenergy";
+  canvas_mctruth_nuenergy->SaveAs(name + ".pdf");
+  canvas_mctruth_nuenergy->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_mumom = new TCanvas();
+  THStack *hs_mctruth_mumom = new THStack("hs_mctruth_mumom",";True Muon Momentum [GeV];Selected Events");
+  this->PlotMCTHStack(hs_mctruth_mumom, hmap_mctruth_mumom_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_mumom";
+  canvas_mctruth_mumom->SaveAs(name + ".pdf");
+  canvas_mctruth_mumom->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_mucostheta = new TCanvas();
+  THStack *hs_mctruth_mucostheta = new THStack("hs_mctruth_mucostheta",";True Muon cos(#theta);Selected Events");
+  this->PlotMCTHStack(hs_mctruth_mucostheta, hmap_mctruth_mucostheta_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_mucostheta";
+  canvas_mctruth_mucostheta->SaveAs(name + ".pdf");
+  canvas_mctruth_mucostheta->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_muphi = new TCanvas();
+  THStack *hs_mctruth_muphi = new THStack("hs_mctruth_muphi",";True Muon #phi;Selected Events");
+  this->PlotMCTHStack(hs_mctruth_muphi, hmap_mctruth_muphi_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_muphi";
+  canvas_mctruth_muphi->SaveAs(name + ".pdf");
+  canvas_mctruth_muphi->SaveAs(name + ".C","C");
+
+
+
+  TCanvas* canvas_mctruth_nuenergy_gen = new TCanvas();
+  THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Selected Events");
+  this->PlotMCTHStack(hs_mctruth_nuenergy_gen, hmap_mctruth_nuenergy_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_nuenergy";
+  canvas_mctruth_nuenergy_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_nuenergy_gen->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_mumom_gen = new TCanvas();
+  THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Selected Events");
+  this->PlotMCTHStack(hs_mctruth_mumom_gen, hmap_mctruth_mumom_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_mumom";
+  canvas_mctruth_mumom_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_mumom_gen->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_mucostheta_gen = new TCanvas();
+  THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Selected Events");
+  this->PlotMCTHStack(hs_mctruth_mucostheta_gen, hmap_mctruth_mucostheta_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_mucostheta";
+  canvas_mctruth_mucostheta_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_mucostheta_gen->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_muphi_gen = new TCanvas();
+  THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Selected Events");
+  this->PlotMCTHStack(hs_mctruth_muphi_gen, hmap_mctruth_muphi_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_muphi";
+  canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
+
+
+
+
   
   // Computing time
   clock_t end = clock();
@@ -1586,6 +1682,76 @@ std::cout << ">> here10" << std::endl;
 
 
 	}
+
+	void Analyse::PlotMCTHStack(THStack *hs_trklen, std::map<std::string,TH1D*> themap, double scale_factor_mc_bnbcosmic)
+{
+
+	for (auto iter : themap) {
+    iter.second->Scale(scale_factor_mc_bnbcosmic);
+  }
+
+  themap["total"]->SetFillColor(kBlack);
+  themap["total"]->SetFillStyle(3005);
+  themap["qe"]->SetLineColor(kGreen+2);
+  themap["qe"]->SetFillColor(kGreen+2);
+  themap["res"]->SetLineColor(kRed+1);
+  themap["res"]->SetFillColor(kRed+1);
+  themap["dis"]->SetLineColor(kBlue+2);
+  themap["dis"]->SetFillColor(kBlue+2);
+  themap["coh"]->SetLineColor(kMagenta+1);
+  themap["coh"]->SetFillColor(kMagenta+1);
+  themap["mec"]->SetLineColor(kOrange-3);
+  themap["mec"]->SetFillColor(kOrange-3);
+
+  hs_trklen->Add(themap["qe"]);
+  hs_trklen->Add(themap["mec"]);
+  hs_trklen->Add(themap["res"]);
+  hs_trklen->Add(themap["coh"]);
+  hs_trklen->Add(themap["dis"]);
+  
+  
+
+  hs_trklen->Draw("hist");
+
+  themap["total"]->Draw("E2 same");
+
+  TLegend* leg2;
+  leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+
+  std::stringstream sstm;
+
+  sstm << "QE, " << std::setprecision(2)  << themap["qe"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["qe"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  sstm << "MEC, " << std::setprecision(2)  << themap["mec"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["mec"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  sstm << "RES, " << std::setprecision(2)  << themap["res"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["res"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  sstm << "COH, " << std::setprecision(2)  << themap["coh"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["coh"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  sstm << "DIS, " << std::setprecision(2)  << themap["dis"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["dis"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  
+
+  
+
+  leg2->AddEntry(themap["total"],"Stat. Unc., ","f");
+  sstm.str("");
+
+  leg2->Draw();
+
+  return;
+
+}
 
 
 }
