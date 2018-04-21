@@ -97,6 +97,10 @@ namespace Base {
   {
 
     _hmap_bnbcosmic = bnbcosmic;
+    for (auto it : bnbcosmic) {
+      std::string this_name = it.second->GetName();
+      _hmap_bnbcosmic[it.first] = (TH1D*)it.second->Clone((this_name + it.first + "_xsec_int").c_str());
+    }
     
     if (bnbon != NULL) {
       _h_bnbon = (TH1D*)bnbon->Clone("_h_bnbon");
@@ -619,7 +623,7 @@ namespace Base {
 
 
     // Do it also for the truth xsec
-    _truth_xsec_smeared->Scale(1. / den, "width");
+    if (_fake_data_mode) _truth_xsec_smeared->Scale(1. / den, "width");
 
 
     std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
@@ -652,7 +656,7 @@ namespace Base {
     h_mc_main->SetFillColor(0); // fully transparent
     h_mc_main->Draw("histo same");
 
-    _truth_xsec_smeared->SetLineColor(kOrange);
+    if (_fake_data_mode) _truth_xsec_smeared->SetLineColor(kOrange);
     if (_fake_data_mode) _truth_xsec_smeared->Draw("hist same");
 
     h_data->SetMarkerStyle(kFullCircle);

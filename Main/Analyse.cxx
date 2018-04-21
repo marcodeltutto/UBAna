@@ -153,9 +153,13 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("hmap_onebin", temp_map);
   std::map<std::string,TH1D*> hmap_onebin_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkmom", temp_map);
-  std::map<std::string,TH1D*> hmap_trkmom_mc = *temp_map;
+  std::map<std::string,TH1D*> hmap_onebin_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_trkmom_classic", temp_map);
+  std::map<std::string,TH1D*> hmap_trkmom_classic_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trktheta", temp_map);
   std::map<std::string,TH1D*> hmap_trktheta_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_trktheta_classic", temp_map);
+  std::map<std::string,TH1D*> hmap_trktheta_classic_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkphi", temp_map);
   std::map<std::string,TH1D*> hmap_trkphi_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_multpfp", temp_map);
@@ -403,8 +407,12 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_onebin_total_extbnb = (TH1D*)extbnb_file->Get("h_onebin_total");
   TH1D* h_trkmom_total_bnbon = (TH1D*)bnbon_file->Get("h_trkmom_total");
   TH1D* h_trkmom_total_extbnb = (TH1D*)extbnb_file->Get("h_trkmom_total");
+  TH1D* h_trkmom_classic_total_bnbon = (TH1D*)bnbon_file->Get("h_trkmom_classic_total");
+  TH1D* h_trkmom_classic_total_extbnb = (TH1D*)extbnb_file->Get("h_trkmom_classic_total");
   TH1D* h_trktheta_total_bnbon = (TH1D*)bnbon_file->Get("h_trktheta_total");
   TH1D* h_trktheta_total_extbnb = (TH1D*)extbnb_file->Get("h_trktheta_total");
+  TH1D* h_trktheta_classic_total_bnbon = (TH1D*)bnbon_file->Get("h_trktheta_classic_total");
+  TH1D* h_trktheta_classic_total_extbnb = (TH1D*)extbnb_file->Get("h_trktheta_classic_total");
   TH1D* h_trkphi_total_bnbon = (TH1D*)bnbon_file->Get("h_trkphi_total");
   TH1D* h_trkphi_total_extbnb = (TH1D*)extbnb_file->Get("h_trkphi_total");
   TH1D* h_multpfp_total_bnbon = (TH1D*)bnbon_file->Get("h_multpfp_total");
@@ -1173,6 +1181,15 @@ std::cout << ">> here10" << std::endl;
 
   
 
+  TCanvas* canvas_trkmom_classic = new TCanvas("canvas_trkmom_classic", "canvas", 800, 700);
+  THStack *hs_trkmom_classic_mc = new THStack("hs_trkmom_classic",";Candidate Track Momentum [GeV]; Selected Events");
+  hmap_trkmom_classic_mc["beam-off"] = h_trkmom_classic_total_extbnb;
+  this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_total_bnbon, bnbon_pot_meas);
+
+  TCanvas* canvas_trktheta_classic = new TCanvas("canvas_trktheta_classic", "canvas", 800, 700);
+  THStack *hs_trktheta_classic_mc = new THStack("hs_trktheta_classic",";Candidate Track cos(#theta); Selected Events");
+  hmap_trktheta_classic_mc["beam-off"] = h_trktheta_classic_total_extbnb;
+  this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_total_bnbon, bnbon_pot_meas);
 
   TCanvas* canvas_trkphi = new TCanvas("canvas_trkphi", "canvas", 800, 700);
   THStack *hs_trkphi_mc = new THStack("hs_trkphi",";Candidate Track #phi; Selected Events");
@@ -1537,7 +1554,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_mctruth_nuenergy = new THStack("hs_mctruth_nuenergy",";True Neutrino Energy [GeV];Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_nuenergy, hmap_mctruth_nuenergy_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  name = outdir + "mctruth_nuenergy";
+  name = outdir + "mctruth_nuenergy_sel";
   canvas_mctruth_nuenergy->SaveAs(name + ".pdf");
   canvas_mctruth_nuenergy->SaveAs(name + ".C","C");
 
@@ -1545,7 +1562,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_mctruth_mumom = new THStack("hs_mctruth_mumom",";True Muon Momentum [GeV];Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_mumom, hmap_mctruth_mumom_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  name = outdir + "mctruth_mumom";
+  name = outdir + "mctruth_mumom_sel";
   canvas_mctruth_mumom->SaveAs(name + ".pdf");
   canvas_mctruth_mumom->SaveAs(name + ".C","C");
 
@@ -1553,7 +1570,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_mctruth_mucostheta = new THStack("hs_mctruth_mucostheta",";True Muon cos(#theta);Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_mucostheta, hmap_mctruth_mucostheta_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  name = outdir + "mctruth_mucostheta";
+  name = outdir + "mctruth_mucostheta_sel";
   canvas_mctruth_mucostheta->SaveAs(name + ".pdf");
   canvas_mctruth_mucostheta->SaveAs(name + ".C","C");
 
@@ -1561,7 +1578,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_mctruth_muphi = new THStack("hs_mctruth_muphi",";True Muon #phi;Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_muphi, hmap_mctruth_muphi_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  name = outdir + "mctruth_muphi";
+  name = outdir + "mctruth_muphi_sel";
   canvas_mctruth_muphi->SaveAs(name + ".pdf");
   canvas_mctruth_muphi->SaveAs(name + ".C","C");
 
@@ -1571,7 +1588,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_nuenergy_gen, hmap_mctruth_nuenergy_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  name = outdir + "mctruth_nuenergy";
+  name = outdir + "mctruth_nuenergy_gen";
   canvas_mctruth_nuenergy_gen->SaveAs(name + ".pdf");
   canvas_mctruth_nuenergy_gen->SaveAs(name + ".C","C");
 
@@ -1579,7 +1596,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_mumom_gen, hmap_mctruth_mumom_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  name = outdir + "mctruth_mumom";
+  name = outdir + "mctruth_mumom_gen";
   canvas_mctruth_mumom_gen->SaveAs(name + ".pdf");
   canvas_mctruth_mumom_gen->SaveAs(name + ".C","C");
 
@@ -1587,7 +1604,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_mucostheta_gen, hmap_mctruth_mucostheta_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  name = outdir + "mctruth_mucostheta";
+  name = outdir + "mctruth_mucostheta_gen";
   canvas_mctruth_mucostheta_gen->SaveAs(name + ".pdf");
   canvas_mctruth_mucostheta_gen->SaveAs(name + ".C","C");
 
@@ -1595,7 +1612,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_muphi_gen, hmap_mctruth_muphi_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  name = outdir + "mctruth_muphi";
+  name = outdir + "mctruth_muphi_gen";
   canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
   canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
 
@@ -1767,7 +1784,23 @@ std::cout << ">> here10" << std::endl;
   themap["total"]->Draw("E2 same");
 
   TLegend* leg2;
-  leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+
+  TString xaxis_title = hs_trklen->GetXaxis()->GetTitle();
+  if (xaxis_title.Contains("theta")) {
+  	leg2 = new TLegend(0.1747851,0.5431579,0.4355301,0.8231579,NULL,"brNDC");
+  	hs_trklen->SetMaximum(6200);
+  } else if (xaxis_title.Contains("phi")) {
+  	leg2 = new TLegend(0.6203438,0.5905263,0.8810888,0.8705263,NULL,"brNDC");
+  	hs_trklen->SetMaximum(2500);
+  } else if (xaxis_title.Contains("Energy")){
+  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+  	hs_trklen->SetMaximum(3600);
+  } else if (xaxis_title.Contains("Momentum")){
+  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+  	hs_trklen->SetMaximum(4200);
+  } else {
+  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+  }
 
   std::stringstream sstm;
 
