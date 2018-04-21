@@ -1170,6 +1170,10 @@ void Main::Maker::MakeFile()
   std::vector<std::string> fname_genie_pm1;
   std::vector<std::string> fname_genie_multisim;
   std::vector<std::string> fname_flux_multisim;
+
+  if(_maup_mecoff && !isdata) {
+    PrintMaUpMECOff();
+  }
   
   
   int barWidth = 70;
@@ -1238,7 +1242,6 @@ void Main::Maker::MakeFile()
     // ************************
 
     if(_maup_mecoff && !isdata) {
-      PrintMaUpMECOff();
 
       // Remove MEC events
       if (t->mode == 10) {
