@@ -1233,7 +1233,7 @@ void Main::Maker::MakeFile()
 
     // ************************
     //
-    // Check is running with Ma+1sigma and MEC off
+    // Check if running with Ma+1sigma and MEC off
     //
     // ************************
 

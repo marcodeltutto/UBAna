@@ -23,11 +23,13 @@ maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Ou
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)
 maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
+maker.SetBeamSpillEnd(4.8)
 maker.SetFlashShift(0.)    
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+
+maker.SetMaUpMECOff(False)
 
 #maker.SetTargetFluxSystematic("FluxUnisim");
 #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
