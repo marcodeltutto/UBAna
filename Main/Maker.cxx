@@ -2979,8 +2979,12 @@ void Main::Maker::MakeFile()
   new TCanvas();
   h_nslices->Draw("histo");
   
-  new TCanvas();
+  TCanvas * canvas_vtx_resolution = new TCanvas();
   h_vtx_resolution->Draw("histo");
+
+  temp2 = "./output/vtx_resolution";
+  canvas_vtx_resolution->SaveAs(temp2 + ".pdf");
+  canvas_vtx_resolution->SaveAs(temp2 + ".C","C");
   
   new TCanvas();
   h_frac_diff->Draw("colz");

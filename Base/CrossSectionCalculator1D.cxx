@@ -125,9 +125,10 @@ namespace Base {
 
   }
 
-  void CrossSectionCalculator1D::SetTruthXSec(TH1D* xsec) 
+  void CrossSectionCalculator1D::SetTruthXSec(TH1D* xsec, int n, int m) 
   {
     _truth_xsec = xsec;
+    if(_fake_data_mode) this->SmearTruth(m, m);
   }
 
   double CrossSectionCalculator1D::EstimateFlux(std::string flux_file_name, std::string histogram_file_name) 
@@ -254,6 +255,26 @@ namespace Base {
               << " - " << teff_reco->GetEfficiencyErrorLow(1) << std::endl;
 
     _eff = teff_reco;
+  }
+
+  void CrossSectionCalculator1D::SmearTruth(int n, int m) {
+
+    TMatrix xsec_truth; xsec_truth.Clear(); xsec_truth.ResizeTo(m, 1);
+
+    for (int bin = 1; bin < m+1; bin++) {
+      xsec_truth[bin-1] = _truth_xsec->GetBinContent(bin);
+      std::cout << "xsec_truth[bin-1] " << _truth_xsec->GetBinContent(bin) << std::endl;
+    }
+
+    TMatrix xsec_truth_smear = _S * xsec_truth;
+
+    _truth_xsec_smeared = (TH1D*) _truth_xsec->Clone("_truth_xsec_smeared");
+
+    for (int bin = 1; bin < n+1; bin++) {
+      _truth_xsec_smeared->SetBinContent(bin, xsec_truth_smear[bin-1][0]);
+      std::cout << "xsec_truth_smear[bin-1][0] " << _truth_xsec_smeared->GetBinContent(bin) << std::endl;
+    }
+
   }
 
   void CrossSectionCalculator1D::Smear(int n, int m)
@@ -441,6 +462,11 @@ namespace Base {
       _h_bnbon->Scale(1, "width");
     }
 
+    if (_fake_data_mode) {
+      this->PrintFakeDataMessage();
+      _h_bnbon->Add(_h_extbnb);
+    }
+
     // Get the beam-on - beam-off histogram
     _h_data_sub = (TH1D*)_h_bnbon->Clone("_h_data_sub");
     _h_data_sub->Sumw2();
@@ -464,14 +490,22 @@ namespace Base {
     if (_h_bnbon->GetNbinsX() == 1) {
       // If one bin means we are dealing with the total cross section, print the number of events
       std::cout << "Number of events for POT: " << _pot << std::endl;
-      std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << std::endl;
-      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << std::endl;
-      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << std::endl;
-      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << std::endl;
-      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << std::endl;
-      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << std::endl;
-      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << std::endl;
-      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << std::endl;
+      std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
+      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
+      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
+      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
+      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
+      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
+      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
+      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+
+      TH1D* total_bkg_temp = (TH1D*) _hmap_bnbcosmic["beam-off"]->Clone("total_bkg_temp");
+      total_bkg_temp->Add(_hmap_bnbcosmic["cosmic"]);
+      total_bkg_temp->Add(_hmap_bnbcosmic["outfv"]);
+      total_bkg_temp->Add(_hmap_bnbcosmic["nc"]);
+      total_bkg_temp->Add(_hmap_bnbcosmic["nue"]);
+      total_bkg_temp->Add(_hmap_bnbcosmic["anumu"]);
+      std::cout << "total backround " << total_bkg_temp->GetBinContent(1) << " +- " << total_bkg_temp->GetBinError(1) << std::endl;
     }
 
   }
@@ -585,7 +619,7 @@ namespace Base {
 
 
     // Do it also for the truth xsec
-    //_truth_xsec->Scale(1. / den, "width");
+    _truth_xsec_smeared->Scale(1. / den, "width");
 
 
     std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
@@ -595,8 +629,10 @@ namespace Base {
     // Plot the cross section
 
     TCanvas * c = new TCanvas();
+    c->SetBottomMargin(0.15);
     h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
     h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    h_mc->GetXaxis()->SetTitleOffset(0.95);
     h_mc->GetYaxis()->SetTitleOffset(0.77);
 
     h_mc->SetLineColor(kGreen+2);
@@ -616,8 +652,8 @@ namespace Base {
     h_mc_main->SetFillColor(0); // fully transparent
     h_mc_main->Draw("histo same");
 
-    //_truth_xsec->SetLineColor(kGreen+2);
-    //_truth_xsec->Draw("hist same");
+    _truth_xsec_smeared->SetLineColor(kOrange);
+    if (_fake_data_mode) _truth_xsec_smeared->Draw("hist same");
 
     h_data->SetMarkerStyle(kFullCircle);
     h_data->SetMarkerSize(0.6);
@@ -653,25 +689,39 @@ namespace Base {
 
 
 
-    TLegend *l = new TLegend(0.44,0.74, 0.87,0.85,NULL,"brNDC");
+    TLegend *l = new TLegend(0.42,0.71, 0.87,0.85,NULL,"brNDC");
     l->AddEntry(h_mc, "MC (Stat. Uncertainty)");
     //l->AddEntry(_truth_xsec, "Monte Carlo (Truth)", "l");
-    if (_covariance_matrix_is_set) {
-      //l->AddEntry(h_data, "Measured (Stat. #oplus Syst Uncertainty)", "lep");
-      l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
+    if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
+      l->AddEntry(h_data, "Measured (Stat. #oplus Syst Uncertainty)", "lep");
+      ///l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
+      if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     } else {
       l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
+      if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     }
     l->Draw();
 
-    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
-    prelim->SetTextColor(kGray+1);
-    prelim->SetNDC();
-    prelim->SetTextSize(2/30.);
-    prelim->SetTextAlign(32);
-    prelim->SetTextSize(0.04631579);
-    prelim->Draw();
+    // TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
+    // prelim->SetTextColor(kGray+1);
+    // prelim->SetNDC();
+    // prelim->SetTextSize(2/30.);
+    // prelim->SetTextAlign(32);
+    // prelim->SetTextSize(0.04631579);
+    // prelim->Draw();
 
+    if (!_fake_data_mode) PlottingTools::DrawPreliminary();
+    else PlottingTools::DrawSimulation();
+
+    if (_fake_data_mode) {
+      TLatex* tex = new TLatex(0.5773639,0.6547368, "FAKE DATA");
+      tex->SetNDC();
+      tex->SetTextAlign(32);
+      tex->SetTextColor(2);
+      tex->SetTextSize(0.04210526);
+      tex->SetLineWidth(2);
+      tex->Draw();
+    }
 
     TString name = _folder +_name + "_xsec";
     c->SaveAs(name + ".pdf");
@@ -1141,6 +1191,12 @@ namespace Base {
 
     return pot_latex_2;
   
+  }
+
+  void CrossSectionCalculator1D::PrintFakeDataMessage() {
+    for (int i = 0; i < 10; i++) {   
+      std::cout << "****************************** RUNNING WITH FAKE DATA ******************************" << std::endl;
+    }
   }
 }
 

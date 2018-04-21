@@ -107,16 +107,26 @@ namespace Main {
     void DoFluxSystematics(bool option) {_do_flux_systs = option;}
 
     /// Imports all the flux systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
-    void ImportFluxSystematics(bool option) {_import_flux_systs = option;}
+    void ImportFluxSystematics(bool option, std::string file = "file.root") {_import_flux_systs = option; _flux_syst_file = file;}
 
-    /// Calculates the flux covariance matrix and saves it to a file for a particular flux syst
+    /// Calculates the genie covariance matrix and saves it to a file for a particular flux syst
     void DoGenieSystematics(bool option) {_do_genie_systs = option;}
+
+    /// Imports all the genie systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
+    void ImportGenieSystematics(bool option, std::string file = "file.root") {_import_genie_systs = option; _genie_syst_file = file;}
 
     ///
     void DrawDataMC(TCanvas *c, THStack *hs_mc, double scale_factor_mc_bnbcosmic, bool breakdown_plots, std::map<std::string,TH1D*> hmap_mc, TH1D* h_data_bnbon, double bnbon_pot_meas);
 
     ///
     void PlotMCTHStack(THStack *hs_trklen, std::map<std::string,TH1D*> themap, double scale_factor_mc_bnbcosmic);
+
+    ///
+    void SetFakeDataMode(bool option = false) {_fake_data_mode = option;};
+
+    ///
+    void PrintFakeDataMessage();
+
     ///
     void DoAnalise();
 
@@ -134,11 +144,16 @@ namespace Main {
     double bnbon_triggers        = -1;
     double extbnb_triggers       = -1;
 
-    bool _do_flux_systs = true;
+    bool _do_flux_systs = false;
     std::string _target_flux_syst = "";
     bool _import_flux_systs = false;
+    std::string _flux_syst_file;
 
     bool _do_genie_systs = false;
+    bool _import_genie_systs = false;
+    std::string _genie_syst_file;
+
+    bool _fake_data_mode = false;
 
     std::string _prefix = "";
     

@@ -139,8 +139,8 @@ namespace Main {
     const bool _makePlots = false;
 
     //const bool _fill_bootstrap = true;
-    const bool _fill_bootstrap_flux = true;
-    const bool _fill_bootstrap_genie = true;
+    const bool _fill_bootstrap_flux = false;
+    const bool _fill_bootstrap_genie = false;
 
     std::string _target_flux_syst = "";
 
@@ -155,7 +155,7 @@ namespace Main {
     std::string fileoutn  = "ubxsecana_output.root";
     bool evalPOT          = false;
     int maxEntries        = -1;
-    int _initial_entry    = 0; ///< Entry in Tree to beging with
+    int _initial_entry    = 0; ///< Entry in Tree to begin with
     bool isdata           = false;
 
     const double _pe_cut = 50;
