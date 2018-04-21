@@ -105,6 +105,12 @@ namespace Main {
     void SetTargetFluxSystematic(std::string);
 
     ///
+    void SetMaUpMECOff(bool option) {_maup_mecoff = option};
+
+    ///
+    void PrintMaUpMECOff();
+
+    ///
     void PrintConfig();
 
 
@@ -134,6 +140,8 @@ namespace Main {
                    std::map<std::string,TH2D*> hmap_trkmom_genie_pm1_bs, 
                    std::vector<std::string> fname, 
                    std::vector<double> wgts_genie);
+
+    bool _maup_mecoff = false;
 
     const bool _breakdownPlots = true;
     const bool _makePlots = false;

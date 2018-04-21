@@ -87,6 +87,12 @@ void Main::Maker::PrintConfig()
   std::cout << "--- targetPOT " << targetPOT << std::endl;
 }
 
+void Main::Maker::PrintMaUpMECOff()
+{
+  for (int i = 0; i < 10; i++) {
+    std::cout << "**************************** RUNNING WITH MA+1SIGMA AND MEC OFF ****************************" << std::endl;
+  }
+}
 
 
 
@@ -1227,6 +1233,31 @@ void Main::Maker::MakeFile()
 
     // ************************
     //
+    // Check is running with Ma+1sigma and MEC off
+    //
+    // ************************
+
+    if(_maup_mecoff && !isdata) {
+      PrintMaUpMECOff();
+
+      // Remove MEC events
+      if (t->mode == 10) {
+        continue;
+      }
+
+      // Scale up Ma CCQE
+      for (size_t i = 0; i < t->evtwgt_genie_pm1_weight.size(); i++) {
+        if (t->evtwgt_genie_pm1_funcname.at(i) == "genie_qema_Genie") {
+          event_weight *= t->evtwgt_genie_pm1_weight.at(i).at(0);
+        }
+      }
+    }
+
+
+
+
+    // ************************
+    //
     // Set weight names, prepare bootstraps -- PM1SIGMA
     //
     // ************************
@@ -1502,7 +1533,7 @@ void Main::Maker::MakeFile()
  
 
 
-    
+
     // ************************
     //
     // Preliminary - Truth
