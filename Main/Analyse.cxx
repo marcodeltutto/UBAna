@@ -153,7 +153,7 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("hmap_onebin", temp_map);
   std::map<std::string,TH1D*> hmap_onebin_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkmom", temp_map);
-  std::map<std::string,TH1D*> hmap_onebin_mc = *temp_map;
+  std::map<std::string,TH1D*> hmap_trkmom_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkmom_classic", temp_map);
   std::map<std::string,TH1D*> hmap_trkmom_classic_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trktheta", temp_map);
