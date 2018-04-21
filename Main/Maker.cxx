@@ -1637,40 +1637,40 @@ void Main::Maker::MakeFile()
       }
 
 
-      // Also save themc truth histogram per interaction type
-      hmap_mctruth_nuenergy_gen["total"]->Fill(t->nu_e);
-      hmap_mctruth_mumom_gen["total"]->Fill(t->true_muon_mom);
-      hmap_mctruth_mucostheta_gen["total"]->Fill(t->lep_costheta);
-      hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi);
+      // Also save the mc truth histogram per interaction type
+      hmap_mctruth_nuenergy_gen["total"]->Fill(t->nu_e, event_weight);
+      hmap_mctruth_mumom_gen["total"]->Fill(t->true_muon_mom, event_weight);
+      hmap_mctruth_mucostheta_gen["total"]->Fill(t->lep_costheta, event_weight);
+      hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi, event_weight);
       if (t->mode == 0) {
-        hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e);
-        hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta_gen["qe"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta_gen["qe"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi, event_weight);
       }
       if (t->mode == 1) {
-        hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e);
-        hmap_mctruth_mumom_gen["res"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta_gen["res"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom_gen["res"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta_gen["res"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi, event_weight);
       }
       if (t->mode == 2) {
-        hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e);
-        hmap_mctruth_mumom_gen["dis"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta_gen["dis"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom_gen["dis"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta_gen["dis"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi, event_weight);
       }
       if (t->mode == 3) {
-        hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e);
-        hmap_mctruth_mumom_gen["coh"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta_gen["coh"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom_gen["coh"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta_gen["coh"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi, event_weight);
       }
       if (t->mode == 10) {
-        hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e);
-        hmap_mctruth_mumom_gen["mec"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom_gen["mec"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
       }
     }
     if(t->nupdg == 14 && t->ccnc == 0){
@@ -2270,39 +2270,39 @@ void Main::Maker::MakeFile()
       }
 
       // Also save themc truth histogram per interaction type
-      hmap_mctruth_nuenergy["total"]->Fill(t->nu_e);
-      hmap_mctruth_mumom["total"]->Fill(t->true_muon_mom);
-      hmap_mctruth_mucostheta["total"]->Fill(t->lep_costheta);
-      hmap_mctruth_muphi["total"]->Fill(t->lep_phi);
+      hmap_mctruth_nuenergy["total"]->Fill(t->nu_e, event_weight);
+      hmap_mctruth_mumom["total"]->Fill(t->true_muon_mom, event_weight);
+      hmap_mctruth_mucostheta["total"]->Fill(t->lep_costheta, event_weight);
+      hmap_mctruth_muphi["total"]->Fill(t->lep_phi, event_weight);
       if (t->mode == 0) {
-        hmap_mctruth_nuenergy["qe"]->Fill(t->nu_e);
-        hmap_mctruth_mumom["qe"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta["qe"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi["qe"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy["qe"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom["qe"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta["qe"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi["qe"]->Fill(t->lep_phi, event_weight);
       }
       if (t->mode == 1) {
-        hmap_mctruth_nuenergy["res"]->Fill(t->nu_e);
-        hmap_mctruth_mumom["res"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta["res"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi["res"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy["res"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom["res"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta["res"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi["res"]->Fill(t->lep_phi, event_weight);
       }
       if (t->mode == 2) {
-        hmap_mctruth_nuenergy["dis"]->Fill(t->nu_e);
-        hmap_mctruth_mumom["dis"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta["dis"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi["dis"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy["dis"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom["dis"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta["dis"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi["dis"]->Fill(t->lep_phi, event_weight);
       }
       if (t->mode == 3) {
-        hmap_mctruth_nuenergy["coh"]->Fill(t->nu_e);
-        hmap_mctruth_mumom["coh"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta["coh"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi["coh"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy["coh"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom["coh"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta["coh"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi["coh"]->Fill(t->lep_phi, event_weight);
       }
       if (t->mode == 10) {
-        hmap_mctruth_nuenergy["mec"]->Fill(t->nu_e);
-        hmap_mctruth_mumom["mec"]->Fill(t->true_muon_mom);
-        hmap_mctruth_mucostheta["mec"]->Fill(t->lep_costheta);
-        hmap_mctruth_muphi["mec"]->Fill(t->lep_phi);
+        hmap_mctruth_nuenergy["mec"]->Fill(t->nu_e, event_weight);
+        hmap_mctruth_mumom["mec"]->Fill(t->true_muon_mom, event_weight);
+        hmap_mctruth_mucostheta["mec"]->Fill(t->lep_costheta, event_weight);
+        hmap_mctruth_muphi["mec"]->Fill(t->lep_phi, event_weight);
       }
 
       pEff->Fill(true, t->nu_e);

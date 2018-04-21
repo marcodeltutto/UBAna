@@ -1534,7 +1534,7 @@ std::cout << ">> here10" << std::endl;
   // *************************************
 
   TCanvas* canvas_mctruth_nuenergy = new TCanvas();
-  THStack *hs_mctruth_nuenergy = new THStack("hs_mctruth_nuenergy",";True Neutrino Energy [GeV];Selected Events");
+  THStack *hs_mctruth_nuenergy = new THStack("hs_mctruth_nuenergy",";True Neutrino Energy [GeV];Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_nuenergy, hmap_mctruth_nuenergy_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_nuenergy";
@@ -1542,7 +1542,7 @@ std::cout << ">> here10" << std::endl;
   canvas_mctruth_nuenergy->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mctruth_mumom = new TCanvas();
-  THStack *hs_mctruth_mumom = new THStack("hs_mctruth_mumom",";True Muon Momentum [GeV];Selected Events");
+  THStack *hs_mctruth_mumom = new THStack("hs_mctruth_mumom",";True Muon Momentum [GeV];Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_mumom, hmap_mctruth_mumom_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_mumom";
@@ -1550,7 +1550,7 @@ std::cout << ">> here10" << std::endl;
   canvas_mctruth_mumom->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mctruth_mucostheta = new TCanvas();
-  THStack *hs_mctruth_mucostheta = new THStack("hs_mctruth_mucostheta",";True Muon cos(#theta);Selected Events");
+  THStack *hs_mctruth_mucostheta = new THStack("hs_mctruth_mucostheta",";True Muon cos(#theta);Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_mucostheta, hmap_mctruth_mucostheta_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_mucostheta";
@@ -1558,7 +1558,7 @@ std::cout << ">> here10" << std::endl;
   canvas_mctruth_mucostheta->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mctruth_muphi = new TCanvas();
-  THStack *hs_mctruth_muphi = new THStack("hs_mctruth_muphi",";True Muon #phi;Selected Events");
+  THStack *hs_mctruth_muphi = new THStack("hs_mctruth_muphi",";True Muon #phi;Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_muphi, hmap_mctruth_muphi_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_muphi";
@@ -1568,7 +1568,7 @@ std::cout << ">> here10" << std::endl;
 
 
   TCanvas* canvas_mctruth_nuenergy_gen = new TCanvas();
-  THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Selected Events");
+  THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_nuenergy_gen, hmap_mctruth_nuenergy_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_nuenergy";
@@ -1576,7 +1576,7 @@ std::cout << ">> here10" << std::endl;
   canvas_mctruth_nuenergy_gen->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mctruth_mumom_gen = new TCanvas();
-  THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Selected Events");
+  THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_mumom_gen, hmap_mctruth_mumom_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_mumom";
@@ -1584,7 +1584,7 @@ std::cout << ">> here10" << std::endl;
   canvas_mctruth_mumom_gen->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mctruth_mucostheta_gen = new TCanvas();
-  THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Selected Events");
+  THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_mucostheta_gen, hmap_mctruth_mucostheta_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_mucostheta";
@@ -1592,7 +1592,7 @@ std::cout << ">> here10" << std::endl;
   canvas_mctruth_mucostheta_gen->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mctruth_muphi_gen = new TCanvas();
-  THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Selected Events");
+  THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_muphi_gen, hmap_mctruth_muphi_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_muphi";
@@ -1795,7 +1795,7 @@ std::cout << ">> here10" << std::endl;
 
   
 
-  leg2->AddEntry(themap["total"],"Stat. Unc., ","f");
+  leg2->AddEntry(themap["total"],"Stat. Unc. ","f");
   sstm.str("");
 
   leg2->Draw();
