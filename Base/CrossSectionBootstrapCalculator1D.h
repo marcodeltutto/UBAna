@@ -124,6 +124,9 @@ namespace Base {
     ///
     void GetCovarianceMatrix(TH2D &);
 
+    ///
+    void SaveCovarianceMatrix(std::string file_name, std::string name);
+
   private:
 
     bool _configured = false;

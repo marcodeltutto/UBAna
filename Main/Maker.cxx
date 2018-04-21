@@ -87,6 +87,12 @@ void Main::Maker::PrintConfig()
   std::cout << "--- targetPOT " << targetPOT << std::endl;
 }
 
+void Main::Maker::PrintMaUpMECOff()
+{
+  for (int i = 0; i < 10; i++) {
+    std::cout << "**************************** RUNNING WITH MA+1SIGMA AND MEC OFF ****************************" << std::endl;
+  }
+}
 
 
 
@@ -1227,6 +1233,31 @@ void Main::Maker::MakeFile()
 
     // ************************
     //
+    // Check if running with Ma+1sigma and MEC off
+    //
+    // ************************
+
+    if(_maup_mecoff && !isdata) {
+      PrintMaUpMECOff();
+
+      // Remove MEC events
+      if (t->mode == 10) {
+        continue;
+      }
+
+      // Scale up Ma CCQE
+      for (size_t i = 0; i < t->evtwgt_genie_pm1_weight.size(); i++) {
+        if (t->evtwgt_genie_pm1_funcname.at(i) == "genie_qema_Genie") {
+          event_weight *= t->evtwgt_genie_pm1_weight.at(i).at(0);
+        }
+      }
+    }
+
+
+
+
+    // ************************
+    //
     // Set weight names, prepare bootstraps -- PM1SIGMA
     //
     // ************************
@@ -1267,11 +1298,7 @@ void Main::Maker::MakeFile()
       for (size_t i = 0; i < fname_genie_pm1.size(); i++) {
         double this_bins_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
         std::string histo_name;// = "bs_genie_pm1_eff_mumom_num_" + fname_genie_pm1.at(i);
-        /*
-        bs_genie_pm1_eff_mumom_num[fname_genie_pm1.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom);
-        histo_name = "bs_genie_pm1_eff_mumom_den_" + fname_genie_pm1.at(i);
-        bs_genie_pm1_eff_mumom_den[fname_genie_pm1.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom);
-*/
+
         histo_name = "bs_genie_pm1_true_reco_mom_" + fname_genie_pm1.at(i);
         bs_genie_pm1_true_reco_mom[fname_genie_pm1.at(i)] = new TH2D(histo_name.c_str(), ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", 6, this_bins_mumom, 6, this_bins_mumom);
       }
@@ -1318,10 +1345,6 @@ void Main::Maker::MakeFile()
           fname_genie_multisim.at(i_wgt) = oss.str();
         }
 
-
-        //for (auto n : fname_genie_multisim) 
-          //std::cout << "Universe name " << n << std::endl;
-
         std::cout << "GENIE Multisim Number of universes: " << fname_genie_multisim.size() << std::endl;
 
 
@@ -1329,9 +1352,6 @@ void Main::Maker::MakeFile()
         for (auto & iter : map_bs_trkmom_genie_multisim) {
 
           std::string this_name = iter.first;
-          //std::cout << "this is name " << this_name << std::endl;
-          //m std::map<std::string, TH1D*> bs_map = iter.second;
-          //BootstrapTH1D this_bs = iter.second;
 
           iter.second.SetWeightNames(fname_genie_multisim);
 
@@ -1340,7 +1360,6 @@ void Main::Maker::MakeFile()
 
             std::string histo_name = "h_genie_multisim_trkmom_" + this_name + "_" + fname_genie_multisim.at(i);
             double this_bins_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
-            //std::cout << "Generating histo with name " << histo_name << std::endl;
             hmap_trkmom_genie_multisim_bs[this_name][fname_genie_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom);
 
             histo_name = "h_genie_multisim_trkangle_" + this_name + "_" + fname_genie_multisim.at(i); 
@@ -1355,18 +1374,13 @@ void Main::Maker::MakeFile()
         // Efficiency
         for (size_t i = 0; i < fname_genie_multisim.size(); i++) {
           double this_bins_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
-          std::string histo_name;// = "bs_genie_pm1_eff_mumom_num_" + fname_genie_multisim.at(i);
-          //m bs_genie_multisim_eff_mumom_num[fname_genie_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom);
+          std::string histo_name;
           histo_name = "bs_genie_multisimeff_mumom_den_" + fname_genie_multisim.at(i);
-          //m bs_genie_multisim_eff_mumom_den[fname_genie_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom);
 
           histo_name = "bs_genie_multisimtrue_reco_mom_" + fname_genie_multisim.at(i);
           bs_genie_multisim_reco_true_mumom[fname_genie_multisim.at(i)] = new TH2D(histo_name.c_str(), ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", 6, this_bins_mumom, 6, this_bins_mumom);
         } 
       }
-      
-      //std::vector<std::string> str_v = {"uni1", "uni2", "uni3"};
-	    //mytako.SetWeightNames(str_v);
 
       bs_genie_multisim_eff_onebin_num.SetWeightNames(fname_genie_multisim);
       bs_genie_multisim_eff_onebin_den.SetWeightNames(fname_genie_multisim);
@@ -1390,11 +1404,6 @@ void Main::Maker::MakeFile()
       }
     }
 
-    //std::vector<double> wgts = {0.9, 1.1, 1.01};
-
-		//mytako.Fill(i, 1., wgts);
-
-		//h_eff_mumom_num_bs.Fill(i, 1., wgts);//wgts_genie_multisim);
 
 
 
@@ -1417,12 +1426,7 @@ void Main::Maker::MakeFile()
         fname_flux_multisim.at(i_wgt) = oss.str();
       }
 
-
-      //for (auto n : fname_flux_multisim) 
-       //std::cout << "Flux - Universe name " << n << std::endl;
-
       std::cout << "FLUX Multisim Number of universes: " << fname_flux_multisim.size() << std::endl;
-
 
       // Number of events
       for (auto iter : hmap_trkmom_flux_multisim_bs) {
@@ -1435,7 +1439,6 @@ void Main::Maker::MakeFile()
 
           std::string histo_name = "h_flux_multisim_trkmom_" + this_name + "_" + fname_flux_multisim.at(i);
           double this_bins_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
-          //std::cout << "Generating histo with name " << histo_name << std::endl;
           hmap_trkmom_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom); 
 
           histo_name = "h_flux_multisim_trkangle_" + this_name + "_" + fname_flux_multisim.at(i);
@@ -1449,19 +1452,7 @@ void Main::Maker::MakeFile()
       }
 
       // Efficiency
-      /* to be removed
-     for (size_t i = 0; i < fname_flux_multisim.size(); i++) {
-       double this_bins_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
-       std::string histo_name = "bs_flux_multisimeff_mumom_num_" + fname_flux_multisim.at(i);
-       bs_flux_multisim_eff_mumom_num[fname_flux_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom);
-       histo_name = "bs_flux_multisimeff_mumom_den_" + fname_flux_multisim.at(i);
-       bs_flux_multisim_eff_mumom_den[fname_flux_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom);
-
-        histo_name = "bs_flux_multisimtrue_reco_mom_" + fname_flux_multisim.at(i);
-        bs_flux_multisim_true_reco_mom[fname_flux_multisim.at(i)] = new TH2D(histo_name.c_str(), ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", 6, this_bins_mumom, 6, this_bins_mumom);
-      }
-      */ 
-
+      
       bs_flux_multisim_eff_onebin_num.SetWeightNames(fname_flux_multisim);
       bs_flux_multisim_eff_onebin_den.SetWeightNames(fname_flux_multisim);
 
@@ -1479,7 +1470,6 @@ void Main::Maker::MakeFile()
     std::vector<double> wgts_flux_multisim;
     wgts_flux_multisim.clear();
     wgts_flux_multisim.resize(fname_flux_multisim.size(), 1.);
-    //for (size_t i = 0; i < fname_flux_multisim.size(); i++) wgts_flux_multisim.at(i) = 1.;
 
     if (!isdata && _fill_bootstrap_flux) {
 
@@ -1493,8 +1483,6 @@ void Main::Maker::MakeFile()
 
         std::string func_name = t->evtwgt_flux_multisim_funcname.at(i_func);
 
-        //std::cout << "This is func name: " << func_name << std::endl;
-
         size_t found = std::string::npos;
 
         if (keep_all) {
@@ -1504,7 +1492,6 @@ void Main::Maker::MakeFile()
         }
 
         if (found == std::string::npos) {
-          //std::cout << "Not what we want, continue." << std::endl;
           continue;
         }
 
@@ -1524,8 +1511,6 @@ void Main::Maker::MakeFile()
     }
 
 
-
-    
 /*
 *        0 *        0 *         bnbcorrection_FluxHist *                              1 *
 *        0 *        1 *             expskin_FluxUnisim *                            100 *
@@ -1545,7 +1530,10 @@ void Main::Maker::MakeFile()
 
 
     
-    
+ 
+
+
+
     // ************************
     //
     // Preliminary - Truth
@@ -2979,8 +2967,12 @@ void Main::Maker::MakeFile()
   new TCanvas();
   h_nslices->Draw("histo");
   
-  new TCanvas();
+  TCanvas * canvas_vtx_resolution = new TCanvas();
   h_vtx_resolution->Draw("histo");
+
+  temp2 = "./output/vtx_resolution";
+  canvas_vtx_resolution->SaveAs(temp2 + ".pdf");
+  canvas_vtx_resolution->SaveAs(temp2 + ".C","C");
   
   new TCanvas();
   h_frac_diff->Draw("colz");

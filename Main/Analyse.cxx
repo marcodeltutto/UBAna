@@ -77,6 +77,7 @@ namespace Main {
   //int intimecosmic_total_events = 1000;
   int bnbcosmic_total_events = 1000;
   double mc_pot_sim = 6.e19;
+
   
   // *************************************
   // Opening files
@@ -86,7 +87,7 @@ namespace Main {
   TFile* bnbon_file = TFile::Open(bnbon_file_name.c_str(), "READ");
   TFile* extbnb_file = TFile::Open(extbnb_file_name.c_str(), "READ");
   
-  
+
   // *************************************
   // Getting number of events for bnbon
   // *************************************
@@ -443,6 +444,10 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_mom_mcs_length_total_bnbon = (TH1D*)bnbon_file->Get("h_mom_mcs_length_total");
   TH1D* h_mom_mcs_length_total_extbnb = (TH1D*)extbnb_file->Get("h_mom_mcs_length_total");
 
+  // Get the true histo from the data file, for when we run in fake data mode
+  TH1D * h_truth_xsec_mumom_fake = (TH1D*)bnbon_file->Get("h_truth_xsec_mumom");
+  TH1D * h_truth_xsec_muangle_fake = (TH1D*)bnbon_file->Get("h_truth_xsec_muangle");
+
   TH1D* h_flsPe_wcut_bnbon = (TH1D*)bnbon_file->Get("h_flsPe_wcut");
   TH1D* h_flsPe_wcut_extbnb = (TH1D*)extbnb_file->Get("h_flsPe_wcut");
 
@@ -481,9 +486,12 @@ std::cout << ">> here10" << std::endl;
   TH2D* h_eff_muangle_mumom_den = (TH2D*)mc_bnbcosmic_file->Get("h_eff_muangle_mumom_den");
 
 
-  std::cout << ">> here11" << std::endl;
 
   gROOT->SetBatch(kTRUE);
+
+  if (_fake_data_mode) {
+  	this->PrintFakeDataMessage();
+  }
 
   std::string xsec_file_name = "xsec_file_" + _prefix + ".root";
   std::cout << "Opening output file with name " << xsec_file_name << std::endl;
@@ -502,6 +510,11 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.SetPOT(bnbon_pot_meas);
     _xsec_calc.SetOutDir("output_data_mc");
     std::cout << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
+
+    if (_fake_data_mode) {
+    	this->PrintFakeDataMessage();
+    	_xsec_calc.SetFakeDataMode(true);
+    }
 
 
     // Create a list of the backgrounds that will be subtracted
@@ -621,11 +634,20 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
 
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_mumom");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
 
         for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
       	  std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
+      }
+
+      if (_import_genie_systs) {
+
+      	TFile* cov_file = TFile::Open("covariance_genie.root", "WRITE");
+        TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_mumom");
+        covariance_matrix_genie = *m;
+
       }
 
       
@@ -648,6 +670,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
 
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_mumom");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
 
         file_out->cd();
@@ -659,6 +682,10 @@ std::cout << ">> here10" << std::endl;
       }
 
       if (_import_flux_systs) {
+
+      	TFile* cov_file = TFile::Open("covariance_flux.root", "WRITE");
+        TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_mumom");
+        covariance_matrix_flux = *m;
       }
 
 
@@ -687,22 +714,27 @@ std::cout << ">> here10" << std::endl;
     migrationmatrix2d.SetOutputFileName("migration_matrix_2d_trkmom.tex");
     migrationmatrix2d.PrintSmearingMatrixLatex();
     _xsec_calc.Reset();
+    _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.SetHistograms(hmap_trkmom_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb);  
     _xsec_calc.SetTruthHistograms(h_eff_mumom_num, h_eff_mumom_den, h_true_reco_mom);
     _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
+    if (_fake_data_mode) {
+    	_xsec_calc.SetTruthXSec(h_truth_xsec_mumom_fake, 7, 6);
+    }
     _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkmom_eventsperbin_table.tex");
     _xsec_calc.Draw();
     _xsec_calc.Draw(hist_to_subtract);
-    _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(7, 6);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
     TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
-    save_name = "xsec_mumom_" + _prefix;
     file_out->cd();
+    save_name = "xsec_mumom_" + _prefix;
     xsec_mumom->Write(save_name.c_str());
+    save_name = "covariance_matrix_mumom_" + _prefix;
+    covariance_matrix_mumom.Write(save_name.c_str());
 
 
 
@@ -731,7 +763,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
+        _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";Candidate Track cos(#theta); Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
@@ -740,11 +772,20 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
 
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
 
         for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
       	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
+      }
+
+      if (_import_genie_systs) {
+
+      	TFile* cov_file = TFile::Open("covariance_genie.root", "WRITE");
+        TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_muangle");
+        covariance_matrix_genie = *m;
+      	
       }
 
 
@@ -765,6 +806,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
 
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_muangle");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
 
         file_out->cd();
@@ -776,6 +818,10 @@ std::cout << ">> here10" << std::endl;
       }
 
       if (_import_flux_systs) {
+
+      	TFile* cov_file = TFile::Open("covariance_flux.root", "WRITE");
+        TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_muangle");
+        covariance_matrix_flux = *m;
 
       }
 
@@ -802,22 +848,27 @@ std::cout << ">> here10" << std::endl;
     migrationmatrix2d.SetOutputFileName("migration_matrix_2d_trkangle.tex");
     migrationmatrix2d.PrintSmearingMatrixLatex();
     _xsec_calc.Reset();
+    _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.SetHistograms(hmap_trktheta_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);  
     _xsec_calc.SetTruthHistograms(h_eff_muangle_num, h_eff_muangle_den, h_true_reco_costheta);
     _xsec_calc.SetTruthXSec(h_truth_xsec_muangle);
+    if (_fake_data_mode) {
+    	_xsec_calc.SetTruthXSec(h_truth_xsec_muangle_fake, 9, 9);
+    }
     _xsec_calc.SetNameAndLabel("trkcostheta", ";Candidate Track cos(#theta); Selected Events");
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkcostheta_eventsperbin_table.tex");
     _xsec_calc.Draw();
     _xsec_calc.Draw(hist_to_subtract);
-    _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(9, 9);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
     TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
 
-    save_name = "xsec_muangle_" + _prefix;
     file_out->cd();
+    save_name = "xsec_muangle_" + _prefix;
     xsec_muangle->Write(save_name.c_str());
+    save_name = "covariance_matrix_muangle_" + _prefix;
+    covariance_matrix_muangle.Write(save_name.c_str());
 
 
 
@@ -1751,6 +1802,12 @@ std::cout << ">> here10" << std::endl;
 
   return;
 
+}
+
+void Analyse::PrintFakeDataMessage() {
+  for (int i = 0; i < 100; i++) {  	
+  	std::cout << "****************************** RUNNING WITH FAKE DATA ******************************" << std::endl;
+  }
 }
 
 

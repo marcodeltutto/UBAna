@@ -94,7 +94,7 @@ namespace Base {
     void SetTruthHistograms(TH1D*, TH1D*);
 
     /// Sets truth XSec
-    void SetTruthXSec(TH1D* xsec);
+    void SetTruthXSec(TH1D* xsec, int n = 0, int m = 0);
 
     ///
     void SetMigrationMatrix(TMatrix);
@@ -130,6 +130,9 @@ namespace Base {
     void Smear(int n, int m);
 
     ///
+    void SmearTruth(int n, int m);
+
+    ///
     void DoNotSmear();
 
     ///
@@ -143,6 +146,12 @@ namespace Base {
 
     ///
     void DrawDataMC(TCanvas* c, THStack *hs_mc, TH1D* h_data_bnbon, TLegend* leg);
+
+    ///
+    void SetFakeDataMode(bool option) {_fake_data_mode = option;};
+
+    ///
+    void PrintFakeDataMessage();
 
     ///
     void Reset();
@@ -177,6 +186,7 @@ namespace Base {
     TH2D* _h_true_reco_mom;
 
     TH1D* _truth_xsec;
+    TH1D* _truth_xsec_smeared;
 
     TH1D* _h_data_sub;
 
@@ -187,6 +197,7 @@ namespace Base {
     TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
     
+    bool _fake_data_mode = false;
   };
 }
 

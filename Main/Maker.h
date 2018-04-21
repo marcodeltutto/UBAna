@@ -105,6 +105,12 @@ namespace Main {
     void SetTargetFluxSystematic(std::string);
 
     ///
+    void SetMaUpMECOff(bool option) {_maup_mecoff = option;};
+
+    ///
+    void PrintMaUpMECOff();
+
+    ///
     void PrintConfig();
 
 
@@ -135,6 +141,8 @@ namespace Main {
                    std::vector<std::string> fname, 
                    std::vector<double> wgts_genie);
 
+    bool _maup_mecoff = false;
+
     const bool _breakdownPlots = true;
     const bool _makePlots = false;
 
@@ -155,7 +163,7 @@ namespace Main {
     std::string fileoutn  = "ubxsecana_output.root";
     bool evalPOT          = false;
     int maxEntries        = -1;
-    int _initial_entry    = 0; ///< Entry in Tree to beging with
+    int _initial_entry    = 0; ///< Entry in Tree to begin with
     bool isdata           = false;
 
     const double _pe_cut = 50;
