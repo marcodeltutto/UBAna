@@ -18,8 +18,12 @@ maker = Main.Maker()
 # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux
 # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux
 maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsec_output_mc_bnbcosmic_mcc8.9_test6.root") # tune 1 high stat weights
-maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6.root"); # tune 1 high stat weights
-  
+#maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6.root"); # tune 1 high stat weights
+#maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsec_output_mc_bnbcosmic_mcc8.9_test6_tune3.root"); # tune 3 with flux syst
+#maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_tune3.root"); # tune 3 with flux syst
+#maker.SetInputFile("/uboone/data/users/wketchum/det_var_files_Apr19/ubxsec_output_mc_bnbcosmic.root") # wes test
+maker.SetOutputFile("./ubxsecanatemp_output_mc_bnbcosmic.root")
+
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)
 maker.SetBeamSpillStart(3.2)    
