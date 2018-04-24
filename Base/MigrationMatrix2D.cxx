@@ -7,7 +7,24 @@ namespace Base {
 
 	void MigrationMatrix2D::SetOutputFileName(std::string name) 
   {
-    _f_out.open(name, std::ios::out | std::ios::trunc);
+    if (_f_out.is_open()) {
+      _f_out.close();
+    }
+    _f_out.open(_folder+name, std::ios::out | std::ios::trunc);
+  }
+
+  void MigrationMatrix2D::SetOutDir(std::string dir)
+  {
+    _outdir = dir;
+
+    auto now = std::time(nullptr);
+    char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
+    std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
+
+    _folder = _outdir + "_" + timestamp + "/";
+
+    system(("mkdir " + _folder).c_str());
+
   }
 
   void MigrationMatrix2D::SetTrueRecoHistogram(TH2D *h)
@@ -134,7 +151,7 @@ namespace Base {
     for (int i = 0; i < _n; i++) {
       for (int j = 0; j < _m; j++) {
 
-        _f_out << _S[i][j] << "  &  ";
+        _f_out << std::setprecision(3) << _S[i][j] << "  &  ";
 
       }
 

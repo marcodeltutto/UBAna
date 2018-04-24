@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include <fstream>
 #include <math.h>
+#include <algorithm>
 
 #include <TRandom1.h>
 #include <TSystem.h>
@@ -104,6 +105,12 @@ namespace Main {
     void SetTargetFluxSystematic(std::string);
 
     ///
+    void SetMaUpMECOff(bool option) {_maup_mecoff = option;};
+
+    ///
+    void PrintMaUpMECOff();
+
+    ///
     void PrintConfig();
 
 
@@ -116,26 +123,30 @@ namespace Main {
     double eff_uncertainty(int _n, int _N);
 
     void FillBootstrap(double fill_value,
+                   double evt_wgt,
                    std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_pm1_bs, 
                    std::string channel_namel, 
                    std::vector<std::string> fname, 
                    std::vector<double> wgts_genie);
 
-    void FillBootstrap(double fill_value,
-                   std::map<std::string,TH1D*> hmap_trkmom_genie_pm1_bs, 
-                   std::vector<std::string> fname, 
-                   std::vector<double> wgts_genie);
+    // void FillBootstrap(double fill_value,
+    //                std::map<std::string,TH1D*> hmap_trkmom_genie_pm1_bs, 
+    //                std::vector<std::string> fname, 
+    //                std::vector<double> wgts_genie);
 
     void FillBootstrap(double fill_value1,
                    double fill_value2,
+                   double evt_wgt,
                    std::map<std::string,TH2D*> hmap_trkmom_genie_pm1_bs, 
                    std::vector<std::string> fname, 
                    std::vector<double> wgts_genie);
 
+    bool _maup_mecoff = false;
+
     const bool _breakdownPlots = true;
     const bool _makePlots = false;
 
-    const bool _fill_bootstrap = true;
+    //const bool _fill_bootstrap = true;
     const bool _fill_bootstrap_flux = false;
     const bool _fill_bootstrap_genie = false;
 
@@ -152,12 +163,22 @@ namespace Main {
     std::string fileoutn  = "ubxsecana_output.root";
     bool evalPOT          = false;
     int maxEntries        = -1;
-    int _initial_entry    = 0; ///< Entry in Tree to beging with
+    int _initial_entry    = 0; ///< Entry in Tree to begin with
     bool isdata           = false;
 
     const double _pe_cut = 50;
 
     const double targetPOT = 4.95e19;
+
+    double bins_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
+    double bins_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00};
+    // double bins_mumom[21] = {0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.125, 1.25, 1.375, 1.5, 1.625, 1.75, 1.875, 2, 2.125, 2.25, 2.375, 2.5};
+    // double bins_mucostheta[26] = {-1, -0.92, -0.84, -0.76, -0.68, -0.6, -0.52, -0.44, -0.36, -0.28, -0.2, -0.12, -0.04, 0.04, 0.12, 0.2, 0.28, 0.36, 0.44, 0.52, 0.6, 0.68, 0.76, 0.84, 0.92, 1};
+
+    int n_bins_mumom = 6;
+    int n_bins_mucostheta = 9;
+    // int n_bins_mumom = 20;
+    // int n_bins_mucostheta = 25;
     
   };
 }

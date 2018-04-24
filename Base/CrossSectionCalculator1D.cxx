@@ -97,6 +97,10 @@ namespace Base {
   {
 
     _hmap_bnbcosmic = bnbcosmic;
+    for (auto it : bnbcosmic) {
+      std::string this_name = it.second->GetName();
+      _hmap_bnbcosmic[it.first] = (TH1D*)it.second->Clone((this_name + it.first + "_xsec_int").c_str());
+    }
     
     if (bnbon != NULL) {
       _h_bnbon = (TH1D*)bnbon->Clone("_h_bnbon");
@@ -125,9 +129,10 @@ namespace Base {
 
   }
 
-  void CrossSectionCalculator1D::SetTruthXSec(TH1D* xsec) 
+  void CrossSectionCalculator1D::SetTruthXSec(TH1D* xsec, int n, int m) 
   {
     _truth_xsec = xsec;
+    if(_fake_data_mode) this->SmearTruth(m, m);
   }
 
   double CrossSectionCalculator1D::EstimateFlux(std::string flux_file_name, std::string histogram_file_name) 
@@ -225,6 +230,8 @@ namespace Base {
     l -> AddEntry(glow, "1#sigma Energy Range", "l");
     l -> Draw();
 
+    h_flux_numu->GetXaxis()->SetRangeUser(0, 4);
+    gPad->Update();
 
 
     TString name = _folder + "_flux";
@@ -232,6 +239,8 @@ namespace Base {
     c_flux->SaveAs(name + ".C","C");
     
     _flux = h_flux_numu->Integral();
+
+    f->Close();
 
     return _flux;
   }
@@ -250,6 +259,26 @@ namespace Base {
               << " - " << teff_reco->GetEfficiencyErrorLow(1) << std::endl;
 
     _eff = teff_reco;
+  }
+
+  void CrossSectionCalculator1D::SmearTruth(int n, int m) {
+
+    TMatrix xsec_truth; xsec_truth.Clear(); xsec_truth.ResizeTo(m, 1);
+
+    for (int bin = 1; bin < m+1; bin++) {
+      xsec_truth[bin-1] = _truth_xsec->GetBinContent(bin);
+      std::cout << "xsec_truth[bin-1] " << _truth_xsec->GetBinContent(bin) << std::endl;
+    }
+
+    TMatrix xsec_truth_smear = _S * xsec_truth;
+
+    _truth_xsec_smeared = (TH1D*) _truth_xsec->Clone("_truth_xsec_smeared");
+
+    for (int bin = 1; bin < n+1; bin++) {
+      _truth_xsec_smeared->SetBinContent(bin, xsec_truth_smear[bin-1][0]);
+      std::cout << "xsec_truth_smear[bin-1][0] " << _truth_xsec_smeared->GetBinContent(bin) << std::endl;
+    }
+
   }
 
   void CrossSectionCalculator1D::Smear(int n, int m)
@@ -328,7 +357,7 @@ namespace Base {
 
     TCanvas * c = new TCanvas;
     _h_eff_mumom_den->SetTitle("");
-    _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");
+    _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");//->SetTitle("p_{#mu}^{truth} [GeV]");
     _h_eff_mumom_den->GetYaxis()->SetTitle("Events");
     _h_eff_mumom_den->SetFillColorAlpha(30, 0.35);
     _h_eff_mumom_den->SetLineColor(30);
@@ -364,7 +393,7 @@ namespace Base {
 
     TCanvas * c_smear = new TCanvas;
     h_eff_mumom_den_smear->SetTitle("");
-    h_eff_mumom_den_smear->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
+    h_eff_mumom_den_smear->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");//->SetTitle("p_{#mu}^{reco} [GeV]");
     h_eff_mumom_den_smear->GetYaxis()->SetTitle("Events");
     h_eff_mumom_den_smear->Draw("histo");
     h_eff_mumom_num_smear->Draw("histo same");
@@ -385,7 +414,7 @@ namespace Base {
     TEfficiency* teff_reco = new TEfficiency(*h_eff_mumom_num_smear,*h_eff_mumom_den_smear);
 
     TCanvas * c_eff_reco = new TCanvas;
-    teff_reco->SetTitle(";Reco Muon cos(#theta);Efficiency");
+    teff_reco->SetTitle(";Reco Muon cos(#theta);Efficiency");//->SetTitle(";Reco Muon Momentum [GeV];Efficiency");
     teff_reco->SetLineColor(kGreen+3);
     teff_reco->SetMarkerColor(kGreen+3);
     teff_reco->SetMarkerStyle(20);
@@ -401,6 +430,9 @@ namespace Base {
     name = _folder +_name + "_efficiecy_reco";
     c_eff_reco->SaveAs(name + ".pdf");
 
+    std::cout << "Statistic option used for efficiency calculation: " << teff_reco->GetStatisticOption() << ", check https://root.cern.ch/doc/v608/classTEfficiency.html#af27fb4e93a1b16ed7a5b593398f86312." << std::endl;
+    std::cout << "Efficiency bin 1: " << teff_reco->GetEfficiency(1) << " - " << teff_reco->GetEfficiencyErrorLow(1) << " + " << teff_reco->GetEfficiencyErrorUp(1) << std::endl;
+    std::cout << "Efficiency bin 2: " << teff_reco->GetEfficiency(2) << " - " << teff_reco->GetEfficiencyErrorLow(2) << " + " << teff_reco->GetEfficiencyErrorUp(2) << std::endl;
 
     _eff = teff_reco;
 
@@ -411,11 +443,16 @@ namespace Base {
   void CrossSectionCalculator1D::ProcessPlots() 
   {
 
+    bool bin_width_scale = false;
+
     // Scale mc histograms
     for (auto iter : _hmap_bnbcosmic) {
       if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
       iter.second->Sumw2();
       iter.second->Scale(_scale_factor_mc_bnbcosmic);
+      if (bin_width_scale) {
+        iter.second->Scale(1, "width");
+      }
     }
 
     // Scale data histograms
@@ -423,6 +460,16 @@ namespace Base {
     _h_bnbon->Sumw2();
     _h_extbnb->Scale(_scale_factor_extbnb);
     _h_bnbon->Scale(_scale_factor_bnbon);
+
+    if (bin_width_scale) {
+      _h_extbnb->Scale(1, "width");
+      _h_bnbon->Scale(1, "width");
+    }
+
+    if (_fake_data_mode) {
+      this->PrintFakeDataMessage();
+      _h_bnbon->Add(_h_extbnb);
+    }
 
     // Get the beam-on - beam-off histogram
     _h_data_sub = (TH1D*)_h_bnbon->Clone("_h_data_sub");
@@ -444,7 +491,76 @@ namespace Base {
     std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
     std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
 
+    if (_h_bnbon->GetNbinsX() == 1) {
+      // If one bin means we are dealing with the total cross section, print the number of events
+      std::cout << "Number of events for POT: " << _pot << std::endl;
+      std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
+      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
+      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
+      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
+      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
+      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
+      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
+      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+
+      TH1D* total_bkg_temp = (TH1D*) _hmap_bnbcosmic["beam-off"]->Clone("total_bkg_temp");
+      total_bkg_temp->Add(_hmap_bnbcosmic["cosmic"]);
+      total_bkg_temp->Add(_hmap_bnbcosmic["outfv"]);
+      total_bkg_temp->Add(_hmap_bnbcosmic["nc"]);
+      total_bkg_temp->Add(_hmap_bnbcosmic["nue"]);
+      total_bkg_temp->Add(_hmap_bnbcosmic["anumu"]);
+      std::cout << "total backround " << total_bkg_temp->GetBinContent(1) << " +- " << total_bkg_temp->GetBinError(1) << std::endl;
+    }
+
   }
+
+  void CrossSectionCalculator1D::SaveEventNumbers(std::string file_name)
+  {
+    std::ofstream f_out;
+    f_out.open(_folder+file_name, std::ios::out | std::ios::trunc);
+
+    f_out << "\\begin{table}[]" << std::endl;
+    f_out << "\\caption{My caption}" << std::endl;
+    f_out << "\\label{tab:mylabel}" << std::endl;
+    f_out << "\\centering" << std::endl;
+    f_out << "\\begin{tabular}{c|cc|cccccc}" << std::endl;
+    f_out << "\\toprule" << std::endl;
+    f_out << "    & \\multicolumn{2}{c}{Data}    & \\multicolumn{6}{c}{MC} \\\\" << std::endl;
+    f_out << "Bin & Selected & Cosmic & $\\nu_\\mu$ CC & Cosmic  & OUTFV & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
+    f_out << "    & Events   & Only   & Signal       & in BNB  &       &    &                           &                 \\\\" << std::endl;
+    f_out << "\\midrule" << std::endl;
+    for (int i = 1; i < _h_bnbon->GetNbinsX()+1; i++) {
+      f_out << std::setprecision(4) 
+            << i << " & "
+            << _h_bnbon->GetBinContent(i) << " $\\pm$ " << _h_bnbon->GetBinError(i) << " & " 
+            << _hmap_bnbcosmic["beam-off"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["beam-off"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["signal"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["signal"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["cosmic"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["cosmic"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["outfv"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["outfv"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["nc"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nc"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["nue"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nue"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["anumu"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["anumu"]->GetBinError(i) << " \\\\ " << std::endl;
+    }
+    f_out << "\\bottomrule" << std::endl;
+    f_out << "\\end{tabular}" << std::endl;
+    f_out << "\\end{table}" << std::endl;
+  }
+
+  
+  void CrossSectionCalculator1D::PrintOnFile(std::string name)
+  {
+    std::ofstream fout; 
+    fout.open("xsec_out.txt", std::ofstream::app);
+    fout << name << " & " << _hmap_bnbcosmic["signal"]->Integral()
+                 << " & " << _hmap_bnbcosmic["cosmic"]->Integral() 
+                 << " & " << _hmap_bnbcosmic["outfv"]->Integral()
+                 << " & " << _hmap_bnbcosmic["nc"]->Integral()
+                 << " & " << _hmap_bnbcosmic["nue"]->Integral()
+                 << " & " << _hmap_bnbcosmic["anumu"]->Integral()
+                 << " & " << _eff->GetEfficiency(1) 
+                 << " & " << _hmap_bnbcosmic["beam-off"]->Integral()
+                 << " & " << _h_bnbon->Integral() << "\\\\" << std::endl;
+  }  
 
 
   TH1D* CrossSectionCalculator1D::ExtractCrossSection(std::string xaxis_label, std::string yaxis_label) 
@@ -507,7 +623,7 @@ namespace Base {
 
 
     // Do it also for the truth xsec
-    //_truth_xsec->Scale(1. / den, "width");
+    if (_fake_data_mode) _truth_xsec_smeared->Scale(1. / den, "width");
 
 
     std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
@@ -517,8 +633,10 @@ namespace Base {
     // Plot the cross section
 
     TCanvas * c = new TCanvas();
+    c->SetBottomMargin(0.15);
     h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
     h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    h_mc->GetXaxis()->SetTitleOffset(0.95);
     h_mc->GetYaxis()->SetTitleOffset(0.77);
 
     h_mc->SetLineColor(kGreen+2);
@@ -538,8 +656,8 @@ namespace Base {
     h_mc_main->SetFillColor(0); // fully transparent
     h_mc_main->Draw("histo same");
 
-    //_truth_xsec->SetLineColor(kGreen+2);
-    //_truth_xsec->Draw("hist same");
+    if (_fake_data_mode) _truth_xsec_smeared->SetLineColor(kOrange);
+    if (_fake_data_mode) _truth_xsec_smeared->Draw("hist same");
 
     h_data->SetMarkerStyle(kFullCircle);
     h_data->SetMarkerSize(0.6);
@@ -575,24 +693,39 @@ namespace Base {
 
 
 
-    TLegend *l = new TLegend(0.44,0.74, 0.87,0.85,NULL,"brNDC");
+    TLegend *l = new TLegend(0.42,0.71, 0.87,0.85,NULL,"brNDC");
     l->AddEntry(h_mc, "MC (Stat. Uncertainty)");
     //l->AddEntry(_truth_xsec, "Monte Carlo (Truth)", "l");
-    if (_covariance_matrix_is_set) {
+    if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
       l->AddEntry(h_data, "Measured (Stat. #oplus Syst Uncertainty)", "lep");
+      ///l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
+      if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     } else {
       l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
+      if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     }
     l->Draw();
 
-    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
-    prelim->SetTextColor(kGray+1);
-    prelim->SetNDC();
-    prelim->SetTextSize(2/30.);
-    prelim->SetTextAlign(32);
-    prelim->SetTextSize(0.04631579);
-    prelim->Draw();
+    // TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
+    // prelim->SetTextColor(kGray+1);
+    // prelim->SetNDC();
+    // prelim->SetTextSize(2/30.);
+    // prelim->SetTextAlign(32);
+    // prelim->SetTextSize(0.04631579);
+    // prelim->Draw();
 
+    if (!_fake_data_mode) PlottingTools::DrawPreliminary();
+    else PlottingTools::DrawSimulation();
+
+    if (_fake_data_mode) {
+      TLatex* tex = new TLatex(0.5773639,0.6547368, "FAKE DATA");
+      tex->SetNDC();
+      tex->SetTextAlign(32);
+      tex->SetTextColor(2);
+      tex->SetTextSize(0.04210526);
+      tex->SetLineWidth(2);
+      tex->Draw();
+    }
 
     TString name = _folder +_name + "_xsec";
     c->SaveAs(name + ".pdf");
@@ -612,6 +745,8 @@ namespace Base {
   void CrossSectionCalculator1D::Draw(std::vector<std::string> histos_to_subtract)
   {
 
+    bool bin_width_scale = false;
+
     TH1D* _h_data_subtracted = (TH1D*)_h_bnbon->Clone("_h_data_subtracted");
     _h_data_subtracted->Sumw2();
 
@@ -625,13 +760,25 @@ namespace Base {
     }
 
 
-    TLegend* leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");;
+    TLegend* leg;
+
+    if (_name.find("costheta") != std::string::npos) {
+      leg = new TLegend(0.1733524,0.3936842,0.4340974,0.8442105,NULL,"brNDC");
+    } else {
+      leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
+    }
 
     TCanvas* canvas = new TCanvas();
 
     THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
 
     TH1D* data = ProcessDataHisto(_h_data_subtracted);
+
+    if (bin_width_scale) {
+      _hmap_bnbcosmic["signal"]->Scale(1, "width");
+      _hmap_bnbcosmic["total"]->Scale(1, "width");
+      data->Scale(1, "width");
+    } 
 
     hs_mc->Draw("hist");
     _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
@@ -644,7 +791,7 @@ namespace Base {
     TLatex* l = this->GetPOTLatex(_pot);
     l->Draw();
 
-    TString name = _folder +_name + "_test2";
+    TString name = _folder +_name + "_selectedevents_bkgsubtracted";
     canvas->SaveAs(name + ".pdf");
     canvas->SaveAs(name + ".C","C");
 
@@ -654,47 +801,159 @@ namespace Base {
   void CrossSectionCalculator1D::Draw() 
   {
 
-    TLegend* leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");;
+    bool bin_width_scale = false;
 
-    TCanvas* canvas = new TCanvas();
+    TLegend* leg;
+
+    if (_name.find("costheta") != std::string::npos) {
+      leg = new TLegend(0.1733524,0.3936842,0.4340974,0.8442105,NULL,"brNDC");
+    } else {
+      leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
+    }
+
+    TCanvas* canvas = new TCanvas("canvas", "canvas", 800, 700);
 
     std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
     THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
 
     TH1D* data = ProcessDataHisto(_h_bnbon);
 
-    hs_mc->Draw("hist");
-    _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
-    data->Draw("same");
+    this->DrawDataMC(canvas, hs_mc, data, leg);
 
-    leg->AddEntry(data, "Data (Beam-on)", "lep");
-    leg->Draw();
+    if (bin_width_scale) {
+      for (auto it : _hmap_bnbcosmic) {
+        it.second->Scale(1, "width");
+      }
+      data->Scale(1, "width");
+    } 
+
+    // hs_mc->Draw("hist");
+    // _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
+    // data->Draw("same");
+
+    // leg->AddEntry(data, "Data (Beam-on)", "lep");
+    // leg->Draw();
 
 
-    TLatex* l = this->GetPOTLatex(_pot);
-    l->Draw();
+    // TLatex* l = this->GetPOTLatex(_pot);
+    // l->Draw();
 
 
 
-    /*
-    THStack *hs_mc = new THStack("hs",";Test [cm]; Selected Events");
-    //hmap_trklen_mc["beam-off"] = h_trklen_total_extbnb;
-    leg = this->DrawTHStack(hs_mc, 1, true, _hmap_bnbcosmic);
-    std::cout << "\t             MC BNBCOSMIC: " << _hmap_bnbcosmic["total"]->Integral() << std::endl;
-    //DrawDataHisto(h_trklen_total_bnbon);
-    //leg->AddEntry(hmap_trklen_mc["beam-off"],"Data (Beam-off)","f");
-    //leg->AddEntry(h_trklen_total_bnbon,"Data (Beam-on)","lep");
-    this->DrawDataHisto(_h_data_sub);
-    leg->AddEntry(_h_data_sub,"Data (Beam-on - Beam-off)","lep");
-    //DrawPOT(_pot);
-*/
 
-    TString name = _folder +_name + "_test";
+    TString name = _folder +_name + "_selectedevents";
     canvas->SaveAs(name + ".pdf");
     canvas->SaveAs(name + ".C","C");
 
 
   } 
+
+
+  void CrossSectionCalculator1D::DrawDataMC(TCanvas* c, THStack *hs_mc, TH1D* h_data_bnbon, TLegend* leg)
+  {
+
+    // Upper plot will be in pad1
+    TPad *pad1 = new TPad("pad1", "pad1", 0, 0.25, 1, 1.0);
+    pad1->SetBottomMargin(0); // Upper and lower plot are joined
+    pad1->SetRightMargin(0.06);
+    pad1->SetLeftMargin(0.13);
+    pad1->SetGridx();         // Vertical grid
+    pad1->Draw();             // Draw the upper pad: pad1
+    pad1->cd();               // pad1 becomes the current pad
+    //if (variable == 0 || variable == 1) histo_p1->SetMaximum(1.);
+
+    // histo_p1->Draw("histo");               // Draw h1
+    // histo->Draw("histo same");         // Draw h2 on top of h1
+    // histo_m1->Draw("histo same");
+
+    hs_mc->Draw("hist");
+    _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
+    h_data_bnbon->Draw("same");
+
+    leg->AddEntry(_hmap_bnbcosmic["total"],"Stat. Unc.","f");
+    leg->AddEntry(h_data_bnbon,"Data (Beam-on)","lep");
+    leg->Draw();
+
+    PlottingTools::DrawPOTRatio(_pot);
+    PlottingTools::DrawPreliminary();
+
+
+    // Do not draw the Y axis label on the upper plot and redraw a small
+    // axis instead, in order to avoid the first label (0) to be clipped.
+    // hs_mc->GetYaxis()->SetLabelSize(0.);
+    // TGaxis *axis = new TGaxis( -5, 0.1, -5, 4000, 0.1,4000,510,"");
+    // axis->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    // axis->SetLabelSize(15);
+    // axis->Draw();
+    hs_mc->SetMinimum(0.01);
+    hs_mc->GetYaxis()->SetTitleOffset(1.18);
+    hs_mc->GetYaxis()->CenterTitle(true);
+
+    double max_up = _hmap_bnbcosmic["total"]->GetBinContent(_hmap_bnbcosmic["total"]->GetMaximumBin());
+    hs_mc->SetMaximum(max_up+max_up*0.4);
+
+    // lower plot will be in pad
+    c->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2 = new TPad("pad2", "pad2", 0, 0.01, 1, 0.25);
+    pad2->SetTopMargin(0);
+    pad2->SetFrameFillStyle(4000);
+    pad2->SetBottomMargin(0.35);
+    pad2->SetRightMargin(0.06);
+    pad2->SetLeftMargin(0.13);
+    pad2->SetGridx(); // vertical grid
+    //pad2->SetGridy(); // orizontal grid
+    pad2->Draw();
+    pad2->cd();       // pad2 becomes the current pad
+
+    // Define the first ratio plot
+    TH1D *ratio = (TH1D*)h_data_bnbon->Clone("ratio");
+    //ratio->SetMinimum(0.92);  // Define Y ..
+    //ratio->SetMaximum(1.08); // .. range
+    //ratio->Sumw2();
+    ratio->SetStats(0);      // No statistics on lower plot
+    ratio->Divide(_hmap_bnbcosmic["total"]);
+    ratio->SetLineWidth(2);
+    ratio->SetLineColor(kBlack);
+    ratio->SetMarkerStyle(kFullCircle);
+    ratio->SetMarkerSize(0.6);
+
+    ratio->GetYaxis()->SetTitle("Ratio");
+    ratio->GetXaxis()->SetTitle(hs_mc->GetXaxis()->GetTitle());
+
+    ratio->GetXaxis()->CenterTitle(true);
+    ratio->GetXaxis()->SetLabelFont(42);
+    ratio->GetXaxis()->SetLabelSize(0.12);
+    ratio->GetXaxis()->SetTitleSize(0.18);
+    ratio->GetXaxis()->SetTickLength(0.09);
+    ratio->GetXaxis()->SetTitleOffset(0.8);
+    ratio->GetXaxis()->SetTitleFont(42);
+
+    ratio->GetYaxis()->CenterTitle(true);
+    ratio->GetYaxis()->SetLabelFont(42);
+    ratio->GetYaxis()->SetLabelSize(0.12);
+    ratio->GetYaxis()->SetTitleSize(0.16);
+    ratio->GetYaxis()->SetTitleOffset(0.27);
+    ratio->GetYaxis()->SetTitleFont(42);
+
+    ratio->Draw("E1");       // Draw the ratio plot
+
+    double max = ratio->GetBinContent(ratio->GetMaximumBin());
+    double min = ratio->GetBinContent(ratio->GetMinimumBin());
+
+    // std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> max: " << max << std::endl;
+    // std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> min: " << min << std::endl;
+
+    ratio->SetMaximum(max+max*0.1);
+    ratio->SetMinimum(min-min*0.1);
+
+    gPad->Update();
+
+    TLine *line = new TLine(ratio->GetXaxis()->GetXmin(),1,ratio->GetXaxis()->GetXmax(),1);
+    line->SetLineColor(kBlack);
+    line->SetLineStyle(9); // dashed
+    line->Draw();
+
+  }
 
 
 
@@ -820,8 +1079,14 @@ namespace Base {
     std::stringstream sstm;
   // numu
     if (_breakdownPlots) {
-      leg->AddEntry(themap["signal_stopmu"],"#nu_{#mu} CC (stopping #mu)","f");
-      leg->AddEntry(themap["signal_nostopmu"],"#nu_{#mu} CC (other)","f");
+      sstm << "#nu_{#mu} CC (stopping #mu), " << std::setprecision(2)  << themap["signal_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg->AddEntry(themap["signal_stopmu"],sstm.str().c_str(),"f");
+      sstm.str("");
+      sstm << "#nu_{#mu} CC (other), " << std::setprecision(2)  << themap["signal_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg->AddEntry(themap["signal_nostopmu"],sstm.str().c_str(),"f");
+      sstm.str("");
+      // leg->AddEntry(themap["signal_stopmu"],"#nu_{#mu} CC (stopping #mu)","f");
+      // leg->AddEntry(themap["signal_nostopmu"],"#nu_{#mu} CC (other)","f");
     } else {
       sstm << "#nu_{#mu} CC (signal), " << std::setprecision(2)  << themap["signal"]->Integral() / themap["total"]->Integral()*100. << "%";
       leg->AddEntry(themap["signal"],sstm.str().c_str(),"f");
@@ -840,13 +1105,40 @@ namespace Base {
 
   // nc, outfv, cosmic
     if (_breakdownPlots) {
-      leg->AddEntry(themap["nc_other"],"NC (other)","f");
-      leg->AddEntry(themap["nc_pion"],"NC (pion)","f");
-      leg->AddEntry(themap["nc_proton"],"NC (proton)","f");
-      leg->AddEntry(themap["outfv_stopmu"],"OUTFV (stopping #mu)","f");
-      leg->AddEntry(themap["outfv_nostopmu"],"OUTFV (other)","f");
-      leg->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
-      leg->AddEntry(themap["cosmic_nostopmu"],"Cosmic (other)","f");
+      sstm << "NC (other), " << std::setprecision(2)  << themap["nc_other"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["nc_other"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_other"],"NC (other)","f");
+
+    sstm << "NC (pion), " << std::setprecision(2)  << themap["nc_pion"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["nc_pion"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_pion"],"NC (pion)","f");
+
+    sstm << "NC (proton), " << std::setprecision(2)  << themap["nc_proton"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["nc_proton"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["nc_proton"],"NC (proton)","f");
+
+    sstm << "OUTFV (stopping #mu), " << std::setprecision(2)  << themap["outfv_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["outfv_stopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["outfv_stopmu"],"OUTFV (stopping #mu)","f");
+
+    sstm << "OUTFV (other), " << std::setprecision(2)  << themap["outfv_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["outfv_nostopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["outfv_nostopmu"],"OUTFV (other)","f");
+
+    sstm << "Cosmic (stopping #mu), " << std::setprecision(2)  << themap["cosmic_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["cosmic_stopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
+
+    sstm << "Cosmic (other), " << std::setprecision(2)  << themap["cosmic_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg->AddEntry(themap["cosmic_nostopmu"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["cosmic_nostopmu"],"Cosmic (other)","f");
       if (themap["intimecosmic"] != NULL) {
         leg->AddEntry(themap["intimecosmic"],"In-time cosmics","f");
       }
@@ -863,7 +1155,14 @@ namespace Base {
       if (_draw_cosmic) leg->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
       sstm.str("");
     }
-    leg->AddEntry(themap["total"],"MC Stat Unc.","f");
+    //leg->AddEntry(themap["total"],"Stat Unc.","f");
+
+    if (themap["beam-off"] != NULL && _draw_beamoff){
+      sstm << "Data (Beam-off), " << std::setprecision(2)  << themap["beam-off"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg->AddEntry(themap["beam-off"],sstm.str().c_str(),"f");
+      sstm.str("");
+      // leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
+    }
     
 
     return hs_trklen;
@@ -896,6 +1195,12 @@ namespace Base {
 
     return pot_latex_2;
   
+  }
+
+  void CrossSectionCalculator1D::PrintFakeDataMessage() {
+    for (int i = 0; i < 10; i++) {   
+      std::cout << "****************************** RUNNING WITH FAKE DATA ******************************" << std::endl;
+    }
   }
 }
 

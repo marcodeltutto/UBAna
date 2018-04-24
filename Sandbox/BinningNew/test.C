@@ -1,0 +1,140 @@
+void test()
+{
+//=========Macro generated from canvas: c1_n1094/c1_n1094
+//=========  (Mon Feb 19 16:15:33 2018) by ROOT version6.06/06
+   TCanvas *c1_n1094 = new TCanvas("c1_n1094", "c1_n1094",0,0,700,500);
+   gStyle->SetOptStat(0);
+   c1_n1094->Range(-0.5,-46.33125,4.5,416.9813);
+   c1_n1094->SetFillColor(10);
+   c1_n1094->SetBorderMode(0);
+   c1_n1094->SetBorderSize(2);
+   c1_n1094->SetFrameLineWidth(2);
+   c1_n1094->SetFrameBorderMode(0);
+   c1_n1094->SetFrameLineWidth(2);
+   c1_n1094->SetFrameBorderMode(0);
+   
+   TH1D *h_reco_mom_pre_truth__3 = new TH1D("h_reco_mom_pre_truth__3","",60,0,4);
+   h_reco_mom_pre_truth__3->SetBinContent(1,3);
+   h_reco_mom_pre_truth__3->SetBinContent(2,12);
+   h_reco_mom_pre_truth__3->SetBinContent(3,31);
+   h_reco_mom_pre_truth__3->SetBinContent(4,55);
+   h_reco_mom_pre_truth__3->SetBinContent(5,159);
+   h_reco_mom_pre_truth__3->SetBinContent(6,353);
+   h_reco_mom_pre_truth__3->SetBinContent(7,323);
+   h_reco_mom_pre_truth__3->SetBinContent(8,291);
+   h_reco_mom_pre_truth__3->SetBinContent(9,212);
+   h_reco_mom_pre_truth__3->SetBinContent(10,91);
+   h_reco_mom_pre_truth__3->SetBinContent(11,57);
+   h_reco_mom_pre_truth__3->SetBinContent(12,41);
+   h_reco_mom_pre_truth__3->SetBinContent(13,32);
+   h_reco_mom_pre_truth__3->SetBinContent(14,16);
+   h_reco_mom_pre_truth__3->SetBinContent(15,18);
+   h_reco_mom_pre_truth__3->SetBinContent(16,5);
+   h_reco_mom_pre_truth__3->SetBinContent(17,9);
+   h_reco_mom_pre_truth__3->SetBinContent(18,9);
+   h_reco_mom_pre_truth__3->SetBinContent(19,5);
+   h_reco_mom_pre_truth__3->SetBinContent(20,3);
+   h_reco_mom_pre_truth__3->SetBinContent(21,3);
+   h_reco_mom_pre_truth__3->SetBinContent(22,2);
+   h_reco_mom_pre_truth__3->SetBinContent(23,2);
+   h_reco_mom_pre_truth__3->SetBinContent(25,2);
+   h_reco_mom_pre_truth__3->SetBinContent(27,1);
+   h_reco_mom_pre_truth__3->SetBinContent(28,2);
+   h_reco_mom_pre_truth__3->SetBinContent(30,1);
+   h_reco_mom_pre_truth__3->SetBinContent(34,1);
+   h_reco_mom_pre_truth__3->SetBinContent(61,1);
+   h_reco_mom_pre_truth__3->SetEntries(1740);
+   h_reco_mom_pre_truth__3->SetStats(0);
+   
+   TF1 *gaus3 = new TF1("gaus","gaus",0,4);
+   gaus3->SetFillColor(10);
+   gaus3->SetFillStyle(0);
+
+   Int_t ci;      // for color index setting
+   TColor *color; // for color definition with alpha
+   ci = TColor::GetColor("#ff0000");
+   gaus3->SetLineColor(ci);
+   gaus3->SetLineWidth(2);
+   gaus3->SetChisquare(162.2047);
+   gaus3->SetNDF(25);
+   gaus3->GetXaxis()->SetNdivisions(506);
+   gaus3->GetXaxis()->SetLabelFont(42);
+   gaus3->GetXaxis()->SetTitleSize(0.055);
+   gaus3->GetXaxis()->SetTitleOffset(0.8);
+   gaus3->GetXaxis()->SetTitleFont(42);
+   gaus3->GetYaxis()->SetNdivisions(506);
+   gaus3->GetYaxis()->SetLabelFont(42);
+   gaus3->GetYaxis()->SetTitleSize(0.055);
+   gaus3->GetYaxis()->SetTitleOffset(0.9);
+   gaus3->GetYaxis()->SetTitleFont(42);
+   gaus3->SetParameter(0,324.7977);
+   gaus3->SetParError(0,11.59541);
+   gaus3->SetParLimits(0,0,0);
+   gaus3->SetParameter(1,0.4501394);
+   gaus3->SetParError(1,0.003441674);
+   gaus3->SetParLimits(1,0,0);
+   gaus3->SetParameter(2,0.1291438);
+   gaus3->SetParError(2,0.003274946);
+   gaus3->SetParLimits(2,0,2.058316);
+   h_reco_mom_pre_truth__3->GetListOfFunctions()->Add(gaus3);
+   h_reco_mom_pre_truth__3->SetLineWidth(2);
+   h_reco_mom_pre_truth__3->GetXaxis()->SetTitle("Muon Momentum (Truth) [GeV]");
+   h_reco_mom_pre_truth__3->GetXaxis()->SetNdivisions(506);
+   h_reco_mom_pre_truth__3->GetXaxis()->SetLabelFont(42);
+   h_reco_mom_pre_truth__3->GetXaxis()->SetTitleSize(0.055);
+   h_reco_mom_pre_truth__3->GetXaxis()->SetTitleOffset(0.8);
+   h_reco_mom_pre_truth__3->GetXaxis()->SetTitleFont(42);
+   h_reco_mom_pre_truth__3->GetYaxis()->SetNdivisions(506);
+   h_reco_mom_pre_truth__3->GetYaxis()->SetLabelFont(42);
+   h_reco_mom_pre_truth__3->GetYaxis()->SetTitleSize(0.055);
+   h_reco_mom_pre_truth__3->GetYaxis()->SetTitleOffset(0.9);
+   h_reco_mom_pre_truth__3->GetYaxis()->SetTitleFont(42);
+   h_reco_mom_pre_truth__3->GetZaxis()->SetNdivisions(506);
+   h_reco_mom_pre_truth__3->GetZaxis()->SetLabelFont(42);
+   h_reco_mom_pre_truth__3->GetZaxis()->SetTitleSize(0.055);
+   h_reco_mom_pre_truth__3->GetZaxis()->SetTitleOffset(0.8);
+   h_reco_mom_pre_truth__3->GetZaxis()->SetTitleFont(42);
+   h_reco_mom_pre_truth__3->Draw("histo");
+   
+   TF1 *gaus4 = new TF1("gaus","gaus",0,4);
+   gaus4->SetFillColor(10);
+   gaus4->SetFillStyle(0);
+
+   ci = TColor::GetColor("#ff0000");
+   gaus4->SetLineColor(ci);
+   gaus4->SetLineWidth(2);
+   gaus4->SetChisquare(162.2047);
+   gaus4->SetNDF(25);
+   gaus4->GetXaxis()->SetNdivisions(506);
+   gaus4->GetXaxis()->SetLabelFont(42);
+   gaus4->GetXaxis()->SetTitleSize(0.055);
+   gaus4->GetXaxis()->SetTitleOffset(0.8);
+   gaus4->GetXaxis()->SetTitleFont(42);
+   gaus4->GetYaxis()->SetNdivisions(506);
+   gaus4->GetYaxis()->SetLabelFont(42);
+   gaus4->GetYaxis()->SetTitleSize(0.055);
+   gaus4->GetYaxis()->SetTitleOffset(0.9);
+   gaus4->GetYaxis()->SetTitleFont(42);
+   gaus4->SetParameter(0,324.7977);
+   gaus4->SetParError(0,11.59541);
+   gaus4->SetParLimits(0,0,0);
+   gaus4->SetParameter(1,0.4501394);
+   gaus4->SetParError(1,0.003441674);
+   gaus4->SetParLimits(1,0,0);
+   gaus4->SetParameter(2,0.1291438);
+   gaus4->SetParError(2,0.003274946);
+   gaus4->SetParLimits(2,0,2.058316);
+   gaus4->Draw("same");
+   TLatex *   tex = new TLatex(0.9,0.95,"Reco Momentum: 0.3-0.56 GeV");
+tex->SetNDC();
+   tex->SetTextAlign(32);
+
+   ci = TColor::GetColor("#666666");
+   tex->SetTextColor(ci);
+   tex->SetTextFont(42);
+   tex->SetLineWidth(2);
+   tex->Draw();
+   c1_n1094->Modified();
+   c1_n1094->cd();
+   c1_n1094->SetSelected(c1_n1094);
+}

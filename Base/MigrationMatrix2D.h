@@ -86,6 +86,9 @@ namespace Base {
     void SetOutputFileName(std::string name);
 
     ///
+    void SetOutDir(std::string dir);
+
+    ///
     void PrintSmearingMatrixLatex();
 
     /// Plots S as an histogram
@@ -108,6 +111,8 @@ namespace Base {
     TMatrix _S; ///< The smearing matrix
 
     std::ofstream _f_out; ///< The output file
+
+    std::string _outdir = "";
 
     std::string _folder = "MigrationMatrix2DPlots/";
 

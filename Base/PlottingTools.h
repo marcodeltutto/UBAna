@@ -27,6 +27,7 @@
 #include <getopt.h>
 #include <fstream>
 #include <math.h>
+#include <iomanip>
 
 #include <TRandom1.h>
 #include <TSystem.h>
@@ -68,7 +69,19 @@ namespace Base {
     ~PlottingTools(){}
 
     ///
+    static void DrawPreliminary();
+
+    ///
+    static void DrawSimulation();
+
+    ///
     static void DrawPOT(double pot);
+
+    ///
+    static void DrawSimPOT(double pot, double target);
+
+    ///
+    static void DrawPOTRatio(double pot);
 
     ///
     static TLegend* DrawTHStack(THStack *hs_trklen,
@@ -93,6 +106,9 @@ namespace Base {
                       double pot_scaling,
                       bool _breakdownPlots,
                       std::map<std::string,TH1D*> themap);
+
+    ///
+    static void PlotMCTHStack(THStack *hs_trklen, std::map<std::string,TH1D*> themap);
 
     ///
     static void DrawDataHisto(TH1D* histo);

@@ -69,7 +69,7 @@ namespace Main {
 
   system("mkdir -p output_data_mc/");
   
-  gROOT->SetBatch(kTRUE);
+  //gROOT->SetBatch(kTRUE);
   gROOT->ProcessLine("gErrorIgnoreLevel = 2001;"); // 1001: INFO, 2001: WARNINGS, 3001: ERRORS
 
   int bnbon_total_events = 1000;
@@ -77,6 +77,7 @@ namespace Main {
   //int intimecosmic_total_events = 1000;
   int bnbcosmic_total_events = 1000;
   double mc_pot_sim = 6.e19;
+
   
   // *************************************
   // Opening files
@@ -86,7 +87,7 @@ namespace Main {
   TFile* bnbon_file = TFile::Open(bnbon_file_name.c_str(), "READ");
   TFile* extbnb_file = TFile::Open(extbnb_file_name.c_str(), "READ");
   
-  
+
   // *************************************
   // Getting number of events for bnbon
   // *************************************
@@ -153,8 +154,12 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_onebin_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkmom", temp_map);
   std::map<std::string,TH1D*> hmap_trkmom_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_trkmom_classic", temp_map);
+  std::map<std::string,TH1D*> hmap_trkmom_classic_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trktheta", temp_map);
   std::map<std::string,TH1D*> hmap_trktheta_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_trktheta_classic", temp_map);
+  std::map<std::string,TH1D*> hmap_trktheta_classic_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkphi", temp_map);
   std::map<std::string,TH1D*> hmap_trkphi_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_multpfp", temp_map);
@@ -175,6 +180,10 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_vtxy_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_vtxz", temp_map);
   std::map<std::string,TH1D*> hmap_vtxz_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_vtxz_upborder", temp_map);
+  std::map<std::string,TH1D*> hmap_vtxz_upborder_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_vtxx_upborder", temp_map);
+  std::map<std::string,TH1D*> hmap_vtxx_upborder_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_flsmatch_score", temp_map);
   std::map<std::string,TH1D*> hmap_flsmatch_score_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_ntpcobj", temp_map);
@@ -189,6 +198,23 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_perc_used_hits_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mom_mcs_length", temp_map);
   std::map<std::string,TH1D*> hmap_mom_mcs_length_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mumom_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_muphi_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mumom_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc = *temp_map;
+  TH1D* h_flsPe_wcut_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsPe_wcut");
 
   
   mc_bnbcosmic_file->GetObject("hmap_dqdx_trunc", temp_map);
@@ -381,8 +407,12 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_onebin_total_extbnb = (TH1D*)extbnb_file->Get("h_onebin_total");
   TH1D* h_trkmom_total_bnbon = (TH1D*)bnbon_file->Get("h_trkmom_total");
   TH1D* h_trkmom_total_extbnb = (TH1D*)extbnb_file->Get("h_trkmom_total");
+  TH1D* h_trkmom_classic_total_bnbon = (TH1D*)bnbon_file->Get("h_trkmom_classic_total");
+  TH1D* h_trkmom_classic_total_extbnb = (TH1D*)extbnb_file->Get("h_trkmom_classic_total");
   TH1D* h_trktheta_total_bnbon = (TH1D*)bnbon_file->Get("h_trktheta_total");
   TH1D* h_trktheta_total_extbnb = (TH1D*)extbnb_file->Get("h_trktheta_total");
+  TH1D* h_trktheta_classic_total_bnbon = (TH1D*)bnbon_file->Get("h_trktheta_classic_total");
+  TH1D* h_trktheta_classic_total_extbnb = (TH1D*)extbnb_file->Get("h_trktheta_classic_total");
   TH1D* h_trkphi_total_bnbon = (TH1D*)bnbon_file->Get("h_trkphi_total");
   TH1D* h_trkphi_total_extbnb = (TH1D*)extbnb_file->Get("h_trkphi_total");
   TH1D* h_multpfp_total_bnbon = (TH1D*)bnbon_file->Get("h_multpfp_total");
@@ -403,6 +433,10 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_vtxy_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxy_total");
   TH1D* h_vtxz_total_bnbon = (TH1D*)bnbon_file->Get("h_vtxz_total");
   TH1D* h_vtxz_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxz_total");
+  TH1D* h_vtxz_upborder_total_bnbon = (TH1D*)bnbon_file->Get("h_vtxz_upborder_total");
+  TH1D* h_vtxz_upborder_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxz_upborder_total");
+  TH1D* h_vtxx_upborder_total_bnbon = (TH1D*)bnbon_file->Get("h_vtxx_upborder_total");
+  TH1D* h_vtxx_upborder_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxx_upborder_total");
   TH1D* h_flsmatch_score_total_bnbon = (TH1D*)bnbon_file->Get("h_flsmatch_score_total");
   TH1D* h_flsmatch_score_total_extbnb = (TH1D*)extbnb_file->Get("h_flsmatch_score_total");
   TH1D* h_ntpcobj_total_bnbon = (TH1D*)bnbon_file->Get("h_ntpcobj_total");
@@ -417,6 +451,13 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_perc_used_hits_total_extbnb = (TH1D*)extbnb_file->Get("h_perc_used_hits_total");
   TH1D* h_mom_mcs_length_total_bnbon = (TH1D*)bnbon_file->Get("h_mom_mcs_length_total");
   TH1D* h_mom_mcs_length_total_extbnb = (TH1D*)extbnb_file->Get("h_mom_mcs_length_total");
+
+  // Get the true histo from the data file, for when we run in fake data mode
+  TH1D * h_truth_xsec_mumom_fake = (TH1D*)bnbon_file->Get("h_truth_xsec_mumom");
+  TH1D * h_truth_xsec_muangle_fake = (TH1D*)bnbon_file->Get("h_truth_xsec_muangle");
+
+  TH1D* h_flsPe_wcut_bnbon = (TH1D*)bnbon_file->Get("h_flsPe_wcut");
+  TH1D* h_flsPe_wcut_extbnb = (TH1D*)extbnb_file->Get("h_flsPe_wcut");
 
   TH1D* h_dqdx_trunc_total_bnbon = (TH1D*)bnbon_file->Get("h_dqdx_trunc_total");
   TH1D* h_dqdx_trunc_total_extbnb = (TH1D*)extbnb_file->Get("h_dqdx_trunc_total");
@@ -453,9 +494,12 @@ std::cout << ">> here10" << std::endl;
   TH2D* h_eff_muangle_mumom_den = (TH2D*)mc_bnbcosmic_file->Get("h_eff_muangle_mumom_den");
 
 
-  std::cout << ">> here11" << std::endl;
 
   gROOT->SetBatch(kTRUE);
+
+  if (_fake_data_mode) {
+  	this->PrintFakeDataMessage();
+  }
 
   std::string xsec_file_name = "xsec_file_" + _prefix + ".root";
   std::cout << "Opening output file with name " << xsec_file_name << std::endl;
@@ -474,6 +518,11 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.SetPOT(bnbon_pot_meas);
     _xsec_calc.SetOutDir("output_data_mc");
     std::cout << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
+
+    if (_fake_data_mode) {
+    	this->PrintFakeDataMessage();
+    	_xsec_calc.SetFakeDataMode(true);
+    }
 
 
     // Create a list of the backgrounds that will be subtracted
@@ -498,11 +547,14 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.Draw();
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.DoNotSmear(); // No smearing for total cross section
+    _xsec_calc.PrintOnFile(_prefix);
     TH1D * xsec = _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
 
     save_name = "xsec_onebin_" + _prefix;
     file_out->cd();
     xsec->Write(save_name.c_str());
+
+
 
 
     // 
@@ -590,11 +642,20 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
 
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_mumom");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
 
         for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
       	  std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
+      }
+
+      if (_import_genie_systs) {
+
+      	TFile* cov_file = TFile::Open("covariance_genie.root", "WRITE");
+        TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_mumom");
+        covariance_matrix_genie = *m;
+
       }
 
       
@@ -617,11 +678,22 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
 
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_mumom");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
+
+        file_out->cd();
+        covariance_matrix_flux.Write(("flux_syst_covariance_matrix_mumom_" + _target_flux_syst).c_str());
 
         for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
       	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
         }
+      }
+
+      if (_import_flux_systs) {
+
+      	TFile* cov_file = TFile::Open("covariance_flux.root", "WRITE");
+        TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_mumom");
+        covariance_matrix_flux = *m;
       }
 
 
@@ -642,26 +714,35 @@ std::cout << ">> here10" << std::endl;
     //
     TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 6);
     MigrationMatrix2D migrationmatrix2d;
+    migrationmatrix2d.SetOutDir("migration_matrix_2d_trkmom");
     migrationmatrix2d.SetNBins(7, 6);
     migrationmatrix2d.SetTrueRecoHistogram(h_true_reco_mom);
     S_2d = migrationmatrix2d.CalculateMigrationMatrix();
     migrationmatrix2d.PlotMatrix();
+    migrationmatrix2d.SetOutputFileName("migration_matrix_2d_trkmom.tex");
+    migrationmatrix2d.PrintSmearingMatrixLatex();
     _xsec_calc.Reset();
+    _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.SetHistograms(hmap_trkmom_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb);  
     _xsec_calc.SetTruthHistograms(h_eff_mumom_num, h_eff_mumom_den, h_true_reco_mom);
     _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
+    if (_fake_data_mode) {
+    	_xsec_calc.SetTruthXSec(h_truth_xsec_mumom_fake, 7, 6);
+    }
     _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
     _xsec_calc.ProcessPlots();
+    _xsec_calc.SaveEventNumbers("trkmom_eventsperbin_table.tex");
     _xsec_calc.Draw();
     _xsec_calc.Draw(hist_to_subtract);
-    _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(7, 6);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
     TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
-    save_name = "xsec_mumom_" + _prefix;
     file_out->cd();
+    save_name = "xsec_mumom_" + _prefix;
     xsec_mumom->Write(save_name.c_str());
+    save_name = "covariance_matrix_mumom_" + _prefix;
+    covariance_matrix_mumom.Write(save_name.c_str());
 
 
 
@@ -690,7 +771,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
+        _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";Candidate Track cos(#theta); Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
@@ -699,11 +780,20 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
 
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
 
         for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
       	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
+      }
+
+      if (_import_genie_systs) {
+
+      	TFile* cov_file = TFile::Open("covariance_genie.root", "WRITE");
+        TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_muangle");
+        covariance_matrix_genie = *m;
+      	
       }
 
 
@@ -724,11 +814,23 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
 
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_muangle");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
+
+        file_out->cd();
+        covariance_matrix_flux.Write(("flux_syst_covariance_matrix_muangle_" + _target_flux_syst).c_str());
 
         for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
       	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
         }
+      }
+
+      if (_import_flux_systs) {
+
+      	TFile* cov_file = TFile::Open("covariance_flux.root", "WRITE");
+        TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_muangle");
+        covariance_matrix_flux = *m;
+
       }
 
     } // _do_reweighting_plots
@@ -746,26 +848,35 @@ std::cout << ">> here10" << std::endl;
     // Muon CosTheta Cross Section
     // 
     S_2d.Clear(); S_2d.ResizeTo(9, 9);
+    migrationmatrix2d.SetOutDir("migration_matrix_2d_trkcostheta");
     migrationmatrix2d.SetNBins(9, 9);
     migrationmatrix2d.SetTrueRecoHistogram(h_true_reco_costheta);
     S_2d = migrationmatrix2d.CalculateMigrationMatrix();
     migrationmatrix2d.PlotMatrix();
+    migrationmatrix2d.SetOutputFileName("migration_matrix_2d_trkangle.tex");
+    migrationmatrix2d.PrintSmearingMatrixLatex();
     _xsec_calc.Reset();
+    _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.SetHistograms(hmap_trktheta_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);  
     _xsec_calc.SetTruthHistograms(h_eff_muangle_num, h_eff_muangle_den, h_true_reco_costheta);
     _xsec_calc.SetTruthXSec(h_truth_xsec_muangle);
-    _xsec_calc.SetNameAndLabel("trkcostheta", ";Candidate Track cos(#theta) [GeV]; Selected Events");
+    if (_fake_data_mode) {
+    	_xsec_calc.SetTruthXSec(h_truth_xsec_muangle_fake, 9, 9);
+    }
+    _xsec_calc.SetNameAndLabel("trkcostheta", ";Candidate Track cos(#theta); Selected Events");
     _xsec_calc.ProcessPlots();
+    _xsec_calc.SaveEventNumbers("trkcostheta_eventsperbin_table.tex");
     _xsec_calc.Draw();
     _xsec_calc.Draw(hist_to_subtract);
-    _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.Smear(9, 9);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
     TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
 
-    save_name = "xsec_muangle_" + _prefix;
     file_out->cd();
+    save_name = "xsec_muangle_" + _prefix;
     xsec_muangle->Write(save_name.c_str());
+    save_name = "covariance_matrix_muangle_" + _prefix;
+    covariance_matrix_muangle.Write(save_name.c_str());
 
 
 
@@ -806,6 +917,9 @@ std::cout << ">> here10" << std::endl;
 
   //file_out->Write();
   file_out->Close();
+
+
+  gROOT->SetBatch(kFALSE);
 
   
   // *************************************
@@ -910,6 +1024,18 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_vtxz_data = (TH1D*)h_vtxz_total_bnbon->Clone("h_vtxx_data");
   h_vtxz_data->Sumw2();
   h_vtxz_data->Add(h_vtxz_total_extbnb, -1.);
+
+  h_vtxz_upborder_total_extbnb->Scale(scale_factor_extbnb);
+  h_vtxz_upborder_total_bnbon->Scale(scale_factor_bnbon);
+  TH1D* h_vtxz_upborder_data = (TH1D*)h_vtxz_upborder_total_bnbon->Clone("h_vtxz_upborder_data");
+  h_vtxz_upborder_data->Sumw2();
+  h_vtxz_upborder_data->Add(h_vtxz_upborder_total_extbnb, -1.);
+
+  h_vtxx_upborder_total_extbnb->Scale(scale_factor_extbnb);
+  h_vtxx_upborder_total_bnbon->Scale(scale_factor_bnbon);
+  TH1D* h_vtxx_upborder_data = (TH1D*)h_vtxx_upborder_total_bnbon->Clone("h_vtxx_upborder_data");
+  h_vtxx_upborder_data->Sumw2();
+  h_vtxx_upborder_data->Add(h_vtxx_upborder_total_extbnb, -1.);
   
   h_flsmatch_score_total_extbnb->Scale(scale_factor_extbnb);
   h_flsmatch_score_total_bnbon->Scale(scale_factor_bnbon);
@@ -972,6 +1098,13 @@ std::cout << ">> here10" << std::endl;
   h_mom_mcs_length_total_data->Sumw2();
   h_mom_mcs_length_total_data->Add(h_mom_mcs_length_total_extbnb, -1.);
 
+  h_flsPe_wcut_extbnb->Scale(scale_factor_extbnb);
+  h_flsPe_wcut_bnbon->Scale(scale_factor_bnbon);
+  TH1D* h_flsPe_wcut_data = (TH1D*)h_flsPe_wcut_bnbon->Clone("h_flsPe_wcut_bnbon");
+  h_flsPe_wcut_data->Sumw2();
+  h_flsPe_wcut_data->Add(h_flsPe_wcut_extbnb, -1.);
+
+
   // *************************************
   // Plotting data and MC distribution
   // *************************************
@@ -980,16 +1113,16 @@ std::cout << ">> here10" << std::endl;
   TString name;
   TString outdir = "./output_data_mc/";
   
-  TCanvas* canvas_trklen = new TCanvas();
+  TCanvas* canvas_trklen = new TCanvas("canvas_trklen", "canvas", 800, 700);
   THStack *hs_trklen_mc = new THStack("hs_trklen",";Candidate Track Length [cm]; Selected Events");
   hmap_trklen_mc["beam-off"] = h_trklen_total_extbnb;
-  leg = PlottingTools::DrawTHStack(hs_trklen_mc, scale_factor_mc_bnbcosmic, true, hmap_trklen_mc);
-  PlottingTools::DrawDataHisto(h_trklen_total_bnbon);
-  leg->AddEntry(hmap_trklen_mc["beam-off"],"Data (Beam-off)","f");
-  leg->AddEntry(h_trklen_total_bnbon,"Data (Beam-on)","lep");
+  // leg = PlottingTools::DrawTHStack(hs_trklen_mc, scale_factor_mc_bnbcosmic, true, hmap_trklen_mc);
+  // PlottingTools::DrawDataHisto(h_trklen_total_bnbon);
+  // leg->AddEntry(hmap_trklen_mc["beam-off"],"Data (Beam-off)","f");
+  // leg->AddEntry(h_trklen_total_bnbon,"Data (Beam-on)","lep");
+  this->DrawDataMC(canvas_trklen, hs_trklen_mc, scale_factor_mc_bnbcosmic, true, hmap_trklen_mc, h_trklen_total_bnbon, bnbon_pot_meas);
   //DrawDataHisto(h_trklen_data);
   //leg->AddEntry(h_trklen_data,"Data (Beam-on - Beam-off)","lep");
-  PlottingTools::DrawPOT(bnbon_pot_meas);
   
   std::cout << "\t             MC BNBCOSMIC: " << hmap_trklen_mc["total"]->Integral(0, hmap_trklen_mc["total"]->GetNbinsX()+1) << std::endl;
   std::cout << "\t             DATA (on-off): " << h_trklen_data->Integral(0, h_trklen_data->GetNbinsX()+1) << std::endl;
@@ -1048,41 +1181,59 @@ std::cout << ">> here10" << std::endl;
 
   
 
+  TCanvas* canvas_trkmom_classic = new TCanvas("canvas_trkmom_classic", "canvas", 800, 700);
+  THStack *hs_trkmom_classic_mc = new THStack("hs_trkmom_classic",";Candidate Track Momentum [GeV]; Selected Events");
+  hmap_trkmom_classic_mc["beam-off"] = h_trkmom_classic_total_extbnb;
+  this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_total_bnbon, bnbon_pot_meas);
 
-  TCanvas* canvas_trkphi = new TCanvas();
+  TCanvas* canvas_trktheta_classic = new TCanvas("canvas_trktheta_classic", "canvas", 800, 700);
+  THStack *hs_trktheta_classic_mc = new THStack("hs_trktheta_classic",";Candidate Track cos(#theta); Selected Events");
+  hmap_trktheta_classic_mc["beam-off"] = h_trktheta_classic_total_extbnb;
+  this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_total_bnbon, bnbon_pot_meas);
+
+  TCanvas* canvas_trkphi = new TCanvas("canvas_trkphi", "canvas", 800, 700);
   THStack *hs_trkphi_mc = new THStack("hs_trkphi",";Candidate Track #phi; Selected Events");
   hmap_trkphi_mc["beam-off"] = h_trkphi_total_extbnb;
-  leg = PlottingTools::DrawTHStack(hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc);
-  PlottingTools::DrawDataHisto(h_trkphi_total_bnbon);
-  leg->AddEntry(hmap_trkphi_mc["beam-off"],"Data (Beam-off)","f");
-  leg->AddEntry(h_trkphi_total_bnbon,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
-  //leg->AddEntry(h_trkphi_data,"Data (Beam-on - Beam-off)","lep");
-  PlottingTools::DrawPOT(bnbon_pot_meas);
-  leg->Draw();
+  // leg = PlottingTools::DrawTHStack(hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc);
+  // PlottingTools::DrawDataHisto(h_trkphi_total_bnbon);
+  // leg->AddEntry(hmap_trkphi_mc["beam-off"],"Data (Beam-off)","f");
+  // leg->AddEntry(h_trkphi_total_bnbon,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
+  // //leg->AddEntry(h_trkphi_data,"Data (Beam-on - Beam-off)","lep");
+  // PlottingTools::DrawPOT(bnbon_pot_meas);
+  //leg->Draw();
+  this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "trkphi";
   canvas_trkphi->SaveAs(name + ".pdf");
   canvas_trkphi->SaveAs(name + ".C","C");
   
-  TCanvas* canvas_multpfp = new TCanvas();
+  TCanvas* canvas_multpfp = new TCanvas("canvas_multpfp", "canvas", 800, 700);
   THStack *hs_multpfp_mc = new THStack("hs_multpfp",";PFP Multiplicity; Selected Events");
-  leg = PlottingTools::DrawTHStack(hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc);
-  PlottingTools::DrawDataHisto(h_multpfp_data);
-  leg->AddEntry(h_multpfp_data,"Data (Beam-on - Beam-off)","lep");
-  PlottingTools::DrawPOT(bnbon_pot_meas);
-  leg->Draw();
+  hmap_multpfp_mc["beam-off"] = h_multpfp_total_extbnb;
+  // leg = PlottingTools::DrawTHStack(hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc);
+  // PlottingTools::DrawDataHisto(h_multpfp_total_bnbon);
+  // leg->AddEntry(hmap_multpfp_mc["beam-off"],"Data (Beam-off)","f");
+  // leg->AddEntry(h_multpfp_total_bnbon,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
+  // //leg->AddEntry(h_multpfp_data,"Data (Beam-on - Beam-off)","lep");
+  // PlottingTools::DrawPOT(bnbon_pot_meas);
+  // leg->Draw();
+  this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc, h_multpfp_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "multpfp";
   canvas_multpfp->SaveAs(name + ".pdf");
   canvas_multpfp->SaveAs(name + ".C","C");
   
-  TCanvas* canvas_multtracktol = new TCanvas();
+  TCanvas* canvas_multtracktol = new TCanvas("canvas_multtracktol", "canvas", 800, 700);
   THStack *hs_multtracktol_mc = new THStack("hs_multtracktol",";Track Multiplicity (5 cm); Selected Events");
-  leg = PlottingTools::DrawTHStack(hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc);
-  PlottingTools::DrawDataHisto(h_multtracktol_data);
-  leg->AddEntry(h_multtracktol_data,"Data (Beam-on - Beam-off)","lep");
-  PlottingTools::DrawPOT(bnbon_pot_meas);
-  leg->Draw();
+  hmap_multtracktol_mc["beam-off"] = h_multtracktol_total_extbnb;
+  // leg = PlottingTools::DrawTHStack(hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc);
+  // PlottingTools::DrawDataHisto(h_multtracktol_total_bnbon);
+  // leg->AddEntry(hmap_multtracktol_mc["beam-off"],"Data (Beam-off)","f");
+  // leg->AddEntry(h_multtracktol_data,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
+  // //leg->AddEntry(h_multtracktol_data,"Data (Beam-on - Beam-off)","lep");
+  // PlottingTools::DrawPOT(bnbon_pot_meas);
+  // leg->Draw();
+  this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc, h_multtracktol_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "multtracktol";
   canvas_multtracktol->SaveAs(name + ".pdf");
@@ -1136,7 +1287,29 @@ std::cout << ">> here10" << std::endl;
   canvas_zdiff->SaveAs(name + ".pdf");
   canvas_zdiff->SaveAs(name + ".C","C");
 
+  TCanvas* canvas_vtxz_upborder = new TCanvas();
+  THStack *hs_vtxz_upborder_mc = new THStack("hs_vtxz_upborder",";Candidate Neutrino Vertex Z [cm]; Selected Events");
+  leg = PlottingTools::DrawTHStack2(hs_vtxz_upborder_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_upborder_mc);
+  PlottingTools::DrawDataHisto(h_vtxz_upborder_data);
+  leg->AddEntry(h_vtxz_upborder_data,"Data (Beam-on - Beam-off)","lep");
+  PlottingTools::DrawPOT(bnbon_pot_meas);
+  leg->Draw();
+  
+  name = outdir + "vtxz_upborder";
+  canvas_vtxz_upborder->SaveAs(name + ".pdf");
+  canvas_vtxz_upborder->SaveAs(name + ".C","C");
 
+  TCanvas* canvas_vtxx_upborder = new TCanvas();
+  THStack *hs_vtxx_upborder_mc = new THStack("hs_vtxx_upborder",";Candidate Neutrino Vertex X [cm]; Selected Events");
+  leg = PlottingTools::DrawTHStack2(hs_vtxx_upborder_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_upborder_mc);
+  PlottingTools::DrawDataHisto(h_vtxx_upborder_data);
+  leg->AddEntry(h_vtxx_upborder_data,"Data (Beam-on - Beam-off)","lep");
+  PlottingTools::DrawPOT(bnbon_pot_meas);
+  leg->Draw();
+  
+  name = outdir + "vtxx_upborder";
+  canvas_vtxx_upborder->SaveAs(name + ".pdf");
+  canvas_vtxx_upborder->SaveAs(name + ".C","C");
 
 
   TCanvas* canvas_vtxcheck_angle = new TCanvas();
@@ -1213,44 +1386,47 @@ std::cout << ">> here10" << std::endl;
   canvas_mom_mcs_length->SaveAs(name + ".C","C");
   
   
-  TCanvas* canvas_vtxx = new TCanvas();
+  TCanvas* canvas_vtxx = new TCanvas("canvas_vtxx", "canvas", 800, 700);
   THStack *hs_vtxx_mc = new THStack("hs_vtxx",";Candidate Neutrino Vertex X [cm]; Selected Events");
   hmap_vtxx_mc["beam-off"] = h_vtxx_total_extbnb;
-  leg = PlottingTools::DrawTHStack2(hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc);
-  leg->AddEntry(h_vtxx_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
-  PlottingTools::DrawDataHisto(h_vtxx_total_bnbon);
-  hs_vtxx_mc->SetMaximum(600);
-  PlottingTools::DrawPOT(bnbon_pot_meas);
-  leg->Draw();
+  this->DrawDataMC(canvas_vtxx, hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc, h_vtxx_total_bnbon, bnbon_pot_meas);
+  // leg = PlottingTools::DrawTHStack2(hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc);
+  // leg->AddEntry(h_vtxx_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
+  // PlottingTools::DrawDataHisto(h_vtxx_total_bnbon);
+  // hs_vtxx_mc->SetMaximum(1300);
+  // PlottingTools::DrawPOT(bnbon_pot_meas);
+  // leg->Draw();
   
   name = outdir + "vtxx";
   canvas_vtxx->SaveAs(name + ".pdf");
   canvas_vtxx->SaveAs(name + ".C","C");
 
    
-  TCanvas* canvas_vtxy = new TCanvas();
+  TCanvas* canvas_vtxy = new TCanvas("canvas_vtxy", "canvas", 800, 700);
   THStack *hs_vtxy_mc = new THStack("hs_vtxy",";Candidate Neutrino Vertex Y [cm]; Selected Events");
   hmap_vtxy_mc["beam-off"] = h_vtxy_total_extbnb;
-  leg = PlottingTools::DrawTHStack2(hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc);
-  leg->AddEntry(h_vtxy_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxy_data);
-  PlottingTools::DrawDataHisto(h_vtxy_total_bnbon);
-  hs_vtxy_mc->SetMaximum(650);
-  PlottingTools::DrawPOT(bnbon_pot_meas);
-  leg->Draw();
+  this->DrawDataMC(canvas_vtxy, hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc, h_vtxy_total_bnbon, bnbon_pot_meas);
+  // leg = PlottingTools::DrawTHStack2(hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc);
+  // leg->AddEntry(h_vtxy_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxy_data);
+  // PlottingTools::DrawDataHisto(h_vtxy_total_bnbon);
+  // hs_vtxy_mc->SetMaximum(1800);
+  // PlottingTools::DrawPOT(bnbon_pot_meas);
+  // leg->Draw();
   
   name = outdir + "vtxy";
   canvas_vtxy->SaveAs(name + ".pdf");
   canvas_vtxy->SaveAs(name + ".C","C");
   
-  TCanvas* canvas_vtxz = new TCanvas();
+  TCanvas* canvas_vtxz = new TCanvas("canvas_vtxz", "canvas", 800, 700);
   THStack *hs_vtxz_mc = new THStack("hs_vtxz",";Candidate Neutrino Vertex Z [cm]; Selected Events");
   hmap_vtxz_mc["beam-off"] = h_vtxz_total_extbnb;
-  leg = PlottingTools::DrawTHStack2(hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc);
-  leg->AddEntry(h_vtxz_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxz_data);
-  PlottingTools::DrawDataHisto(h_vtxz_total_bnbon);
-  hs_vtxz_mc->SetMaximum(900);
-  PlottingTools::DrawPOT(bnbon_pot_meas);
-  leg->Draw();
+  this->DrawDataMC(canvas_vtxz, hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc, h_vtxz_total_bnbon, bnbon_pot_meas);
+  // leg = PlottingTools::DrawTHStack2(hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc);
+  // leg->AddEntry(h_vtxz_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxz_data);
+  // PlottingTools::DrawDataHisto(h_vtxz_total_bnbon);
+  // hs_vtxz_mc->SetMaximum(1400);
+  // PlottingTools::DrawPOT(bnbon_pot_meas);
+  // leg->Draw();
   
   name = outdir + "vtxz";
   canvas_vtxz->SaveAs(name + ".pdf");
@@ -1305,6 +1481,16 @@ std::cout << ">> here10" << std::endl;
   name = outdir + "dqdx_trunc_length_data";
   canvas_dqdx_trunc_length_data->SaveAs(name + ".pdf");
   canvas_dqdx_trunc_length_data->SaveAs(name + ".C","C");
+
+
+  TCanvas* canvas_flsPe_wcut_data = new TCanvas();
+  h_flsPe_wcut_mc->Scale(scale_factor_mc_bnbcosmic);
+  h_flsPe_wcut_mc->Draw("histo");
+  h_flsPe_wcut_data->Draw("E1 same");
+
+  name = outdir + "flsPe_wcut";
+  canvas_flsPe_wcut_data->SaveAs(name + ".pdf");
+  canvas_flsPe_wcut_data->SaveAs(name + ".C","C");
  
 
   
@@ -1353,6 +1539,86 @@ std::cout << ">> here10" << std::endl;
   h_deltax_2d_mc->Draw("colz");
   new TCanvas();
   h_deltax_2d_data->Draw("colz");
+
+
+
+
+
+
+
+  // *************************************
+  // MC distributions only
+  // *************************************
+
+  TCanvas* canvas_mctruth_nuenergy = new TCanvas();
+  THStack *hs_mctruth_nuenergy = new THStack("hs_mctruth_nuenergy",";True Neutrino Energy [GeV];Selected Signal Events");
+  this->PlotMCTHStack(hs_mctruth_nuenergy, hmap_mctruth_nuenergy_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_nuenergy_sel";
+  canvas_mctruth_nuenergy->SaveAs(name + ".pdf");
+  canvas_mctruth_nuenergy->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_mumom = new TCanvas();
+  THStack *hs_mctruth_mumom = new THStack("hs_mctruth_mumom",";True Muon Momentum [GeV];Selected Signal Events");
+  this->PlotMCTHStack(hs_mctruth_mumom, hmap_mctruth_mumom_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_mumom_sel";
+  canvas_mctruth_mumom->SaveAs(name + ".pdf");
+  canvas_mctruth_mumom->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_mucostheta = new TCanvas();
+  THStack *hs_mctruth_mucostheta = new THStack("hs_mctruth_mucostheta",";True Muon cos(#theta);Selected Signal Events");
+  this->PlotMCTHStack(hs_mctruth_mucostheta, hmap_mctruth_mucostheta_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_mucostheta_sel";
+  canvas_mctruth_mucostheta->SaveAs(name + ".pdf");
+  canvas_mctruth_mucostheta->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_muphi = new TCanvas();
+  THStack *hs_mctruth_muphi = new THStack("hs_mctruth_muphi",";True Muon #phi;Selected Signal Events");
+  this->PlotMCTHStack(hs_mctruth_muphi, hmap_mctruth_muphi_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_muphi_sel";
+  canvas_mctruth_muphi->SaveAs(name + ".pdf");
+  canvas_mctruth_muphi->SaveAs(name + ".C","C");
+
+
+
+  TCanvas* canvas_mctruth_nuenergy_gen = new TCanvas();
+  THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Generated Signal Events");
+  this->PlotMCTHStack(hs_mctruth_nuenergy_gen, hmap_mctruth_nuenergy_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_nuenergy_gen";
+  canvas_mctruth_nuenergy_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_nuenergy_gen->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_mumom_gen = new TCanvas();
+  THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Generated Signal Events");
+  this->PlotMCTHStack(hs_mctruth_mumom_gen, hmap_mctruth_mumom_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_mumom_gen";
+  canvas_mctruth_mumom_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_mumom_gen->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_mucostheta_gen = new TCanvas();
+  THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Generated Signal Events");
+  this->PlotMCTHStack(hs_mctruth_mucostheta_gen, hmap_mctruth_mucostheta_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_mucostheta_gen";
+  canvas_mctruth_mucostheta_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_mucostheta_gen->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mctruth_muphi_gen = new TCanvas();
+  THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Generated Signal Events");
+  this->PlotMCTHStack(hs_mctruth_muphi_gen, hmap_mctruth_muphi_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  name = outdir + "mctruth_muphi_gen";
+  canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
+
+
+
+
   
   // Computing time
   clock_t end = clock();
@@ -1364,6 +1630,218 @@ std::cout << ">> here10" << std::endl;
   
   return;
 	}
+
+	void Analyse::DrawDataMC(TCanvas *c,
+		                       THStack *hs_mc, 
+		                       double scale_factor_mc_bnbcosmic, 
+		                       bool breakdown_plots, 
+		                       std::map<std::string,TH1D*> hmap_mc, 
+		                       TH1D* h_data_bnbon,
+		                       double bnbon_pot_meas) 
+	{
+		// Define the Canvas
+    //TCanvas *c = new TCanvas("c", "canvas", 800, 800);
+
+    // Upper plot will be in pad1
+    TPad *pad1 = new TPad("pad1", "pad1", 0, 0.25, 1, 1.0);
+    pad1->SetBottomMargin(0); // Upper and lower plot are joined
+    pad1->SetRightMargin(0.06);
+    pad1->SetLeftMargin(0.13);
+    pad1->SetGridx();         // Vertical grid
+    pad1->Draw();             // Draw the upper pad: pad1
+    pad1->cd();               // pad1 becomes the current pad
+    //if (variable == 0 || variable == 1) histo_p1->SetMaximum(1.);
+
+    // histo_p1->Draw("histo");               // Draw h1
+    // histo->Draw("histo same");         // Draw h2 on top of h1
+    // histo_m1->Draw("histo same");
+
+    TLegend * leg;
+    if (hmap_mc.find("outfv") != hmap_mc.end()) {
+      leg = PlottingTools::DrawTHStack(hs_mc, scale_factor_mc_bnbcosmic, breakdown_plots, hmap_mc);
+    } else {
+    	leg = PlottingTools::DrawTHStack2(hs_mc, scale_factor_mc_bnbcosmic, breakdown_plots, hmap_mc);
+    }
+    PlottingTools::DrawDataHisto(h_data_bnbon);
+
+    leg->AddEntry(hmap_mc["total"],"Stat. Unc.","f");
+    leg->AddEntry(h_data_bnbon,"Data (Beam-on)","lep");
+    leg->Draw();
+
+    PlottingTools::DrawPOTRatio(bnbon_pot_meas);
+    PlottingTools::DrawPreliminary();
+
+
+    // Do not draw the Y axis label on the upper plot and redraw a small
+    // axis instead, in order to avoid the first label (0) to be clipped.
+    // hs_mc->GetYaxis()->SetLabelSize(0.);
+    // TGaxis *axis = new TGaxis( -5, 0.1, -5, 4000, 0.1,4000,510,"");
+    // axis->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    // axis->SetLabelSize(15);
+    // axis->Draw();
+    hs_mc->SetMinimum(0.01);
+    hs_mc->GetYaxis()->SetTitleOffset(1.18);
+    hs_mc->GetYaxis()->CenterTitle(true);
+
+    double max_up = hmap_mc["total"]->GetBinContent(hmap_mc["total"]->GetMaximumBin());
+    hs_mc->SetMaximum(max_up+max_up*0.4);
+
+    // lower plot will be in pad
+    c->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2 = new TPad("pad2", "pad2", 0, 0.01, 1, 0.25);
+    pad2->SetTopMargin(0);
+    pad2->SetFrameFillStyle(4000);
+    pad2->SetBottomMargin(0.35);
+    pad2->SetRightMargin(0.06);
+    pad2->SetLeftMargin(0.13);
+    pad2->SetGridx(); // vertical grid
+    //pad2->SetGridy(); // orizontal grid
+    pad2->Draw();
+    pad2->cd();       // pad2 becomes the current pad
+
+    // Define the first ratio plot
+    TH1D *ratio = (TH1D*)h_data_bnbon->Clone("ratio");
+    //ratio->SetMinimum(0.92);  // Define Y ..
+    //ratio->SetMaximum(1.08); // .. range
+    //ratio->Sumw2();
+    ratio->SetStats(0);      // No statistics on lower plot
+    ratio->Divide(hmap_mc["total"]);
+    ratio->SetLineWidth(2);
+    ratio->SetLineColor(kBlack);
+    ratio->SetMarkerStyle(kFullCircle);
+    ratio->SetMarkerSize(0.6);
+
+    ratio->GetYaxis()->SetTitle("Ratio");
+    ratio->GetXaxis()->SetTitle(hs_mc->GetXaxis()->GetTitle());
+
+    ratio->GetXaxis()->CenterTitle(true);
+    ratio->GetXaxis()->SetLabelFont(42);
+    ratio->GetXaxis()->SetLabelSize(0.12);
+    ratio->GetXaxis()->SetTitleSize(0.18);
+    ratio->GetXaxis()->SetTickLength(0.09);
+    ratio->GetXaxis()->SetTitleOffset(0.8);
+    ratio->GetXaxis()->SetTitleFont(42);
+
+    ratio->GetYaxis()->CenterTitle(true);
+    ratio->GetYaxis()->SetLabelFont(42);
+    ratio->GetYaxis()->SetLabelSize(0.12);
+    ratio->GetYaxis()->SetTitleSize(0.16);
+    ratio->GetYaxis()->SetTitleOffset(0.27);
+    ratio->GetYaxis()->SetTitleFont(42);
+
+    ratio->Draw("E1");       // Draw the ratio plot
+
+    double max = ratio->GetBinContent(ratio->GetMaximumBin());
+    double min = ratio->GetBinContent(ratio->GetMinimumBin());
+
+    // std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> max: " << max << std::endl;
+    // std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> min: " << min << std::endl;
+
+    ratio->SetMaximum(max+max*0.1);
+    ratio->SetMinimum(min-min*0.1);
+
+    gPad->Update();
+
+    TLine *line = new TLine(ratio->GetXaxis()->GetXmin(),1,ratio->GetXaxis()->GetXmax(),1);
+    line->SetLineColor(kBlack);
+    line->SetLineStyle(9); // dashed
+    line->Draw();
+
+
+
+	}
+
+	void Analyse::PlotMCTHStack(THStack *hs_trklen, std::map<std::string,TH1D*> themap, double scale_factor_mc_bnbcosmic)
+{
+
+	for (auto iter : themap) {
+    iter.second->Scale(scale_factor_mc_bnbcosmic);
+  }
+
+  themap["total"]->SetFillColor(kBlack);
+  themap["total"]->SetFillStyle(3005);
+  themap["qe"]->SetLineColor(kGreen+2);
+  themap["qe"]->SetFillColor(kGreen+2);
+  themap["res"]->SetLineColor(kRed+1);
+  themap["res"]->SetFillColor(kRed+1);
+  themap["dis"]->SetLineColor(kBlue+2);
+  themap["dis"]->SetFillColor(kBlue+2);
+  themap["coh"]->SetLineColor(kMagenta+1);
+  themap["coh"]->SetFillColor(kMagenta+1);
+  themap["mec"]->SetLineColor(kOrange-3);
+  themap["mec"]->SetFillColor(kOrange-3);
+
+  hs_trklen->Add(themap["qe"]);
+  hs_trklen->Add(themap["mec"]);
+  hs_trklen->Add(themap["res"]);
+  hs_trklen->Add(themap["coh"]);
+  hs_trklen->Add(themap["dis"]);
+  
+  
+
+  hs_trklen->Draw("hist");
+
+  themap["total"]->Draw("E2 same");
+
+  TLegend* leg2;
+
+  TString xaxis_title = hs_trklen->GetXaxis()->GetTitle();
+  if (xaxis_title.Contains("theta")) {
+  	leg2 = new TLegend(0.1747851,0.5431579,0.4355301,0.8231579,NULL,"brNDC");
+  	hs_trklen->SetMaximum(6200);
+  } else if (xaxis_title.Contains("phi")) {
+  	leg2 = new TLegend(0.6203438,0.5905263,0.8810888,0.8705263,NULL,"brNDC");
+  	hs_trklen->SetMaximum(2500);
+  } else if (xaxis_title.Contains("Energy")){
+  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+  	hs_trklen->SetMaximum(3600);
+  } else if (xaxis_title.Contains("Momentum")){
+  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+  	hs_trklen->SetMaximum(4200);
+  } else {
+  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+  }
+
+  std::stringstream sstm;
+
+  sstm << "QE, " << std::setprecision(2)  << themap["qe"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["qe"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  sstm << "MEC, " << std::setprecision(2)  << themap["mec"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["mec"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  sstm << "RES, " << std::setprecision(2)  << themap["res"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["res"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  sstm << "COH, " << std::setprecision(2)  << themap["coh"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["coh"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  sstm << "DIS, " << std::setprecision(2)  << themap["dis"]->Integral() / themap["total"]->Integral()*100. << "%";
+  leg2->AddEntry(themap["dis"],sstm.str().c_str(),"f");
+  sstm.str("");
+
+  
+
+  
+
+  leg2->AddEntry(themap["total"],"Stat. Unc. ","f");
+  sstm.str("");
+
+  leg2->Draw();
+
+  return;
+
+}
+
+void Analyse::PrintFakeDataMessage() {
+  for (int i = 0; i < 100; i++) {  	
+  	std::cout << "****************************** RUNNING WITH FAKE DATA ******************************" << std::endl;
+  }
+}
 
 
 }

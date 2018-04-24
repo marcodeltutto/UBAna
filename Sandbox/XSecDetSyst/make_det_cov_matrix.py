@@ -14,6 +14,13 @@ file_cv = TFile("xsec_file_cv.root");
 xsec_onebin_cv = file_cv.Get("xsec_onebin_cv")
 xsec_mumom_cv = file_cv.Get("xsec_mumom_cv")
 
+print "CV cross section", xsec_onebin_cv.GetBinContent(1)
+
+print "Systematic parameter & Cross section & Total xsec perc difference \\\\"
+
+print "cv & ", xsec_onebin_cv.GetBinContent(1), " &  0.0  \\\\"
+
+
 
 for i in xrange(0, xsec_mumom_cv.GetNbinsX()):
 	for j in xrange(0, xsec_mumom_cv.GetNbinsX()):
@@ -21,7 +28,7 @@ for i in xrange(0, xsec_mumom_cv.GetNbinsX()):
 		cov_matrix_frac.SetBinContent(i+1, j+1, 0)
 
 
-det_syst_list = ["nospacecharge", "dicharge", "lightyeild", "nodeltaray", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "birksrecomb", "nohadronic"]
+det_syst_list = ["nospacecharge", "dicharge", "lightyeild", "nodeltaray", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "dt0", "birksrecomb", "nohadronic"]
 
 stat_err_perbin_mumom = [0.0041, 0.013, 0.010, 0.0048, 0.0028, 0.00067]
 stat_err_perbin_muangle = [0.0034, 0.0026, 0.0060, 0.0038, 0.0055, 0.0087, 0.0080, 0.011, 0.018]
@@ -48,9 +55,9 @@ for syst_name in det_syst_list:
 
 
 	perc_diff = (xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1)) / xsec_onebin_cv.GetBinContent(1)
-	print "Systematic", syst_name, "=> Total xsec perc difference", perc_diff, "-", perc_diff*100
+	print syst_name, " & ", xsec_onebin.GetBinContent(1), " & ", perc_diff*100, "  \\\\"
 	syst_total_xsec = syst_total_xsec + abs(xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1))
-	print "diff is ", abs(xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1))
+	#print "diff is ", abs(xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1))
 
 	
 
