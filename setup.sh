@@ -2,8 +2,7 @@
 
 # clean up previously set env
 if [[ -z $FORCE_MYSW_DIR ]]; then
-    where="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    export MYSW_DIR=${where}
+    export MYSW_DIR=`pwd`
 else
     export MYSW_DIR=$FORCE_MYSW_DIR
 fi

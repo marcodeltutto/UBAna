@@ -64,7 +64,7 @@ namespace Main {
 	{
 
 	clock_t begin = clock();
-  
+
 
 
   system("mkdir -p output_data_mc/");
@@ -186,6 +186,10 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_vtxx_upborder_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_flsmatch_score", temp_map);
   std::map<std::string,TH1D*> hmap_flsmatch_score_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_flsmatch_score_second", temp_map);
+  std::map<std::string,TH1D*> hmap_flsmatch_score_second_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_flsmatch_score_difference", temp_map);
+  std::map<std::string,TH1D*> hmap_flsmatch_score_difference_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_ntpcobj", temp_map);
   std::map<std::string,TH1D*> hmap_ntpcobj_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_vtxcheck_angle", temp_map);
@@ -439,6 +443,10 @@ std::cout << ">> here10" << std::endl;
   TH1D* h_vtxx_upborder_total_extbnb = (TH1D*)extbnb_file->Get("h_vtxx_upborder_total");
   TH1D* h_flsmatch_score_total_bnbon = (TH1D*)bnbon_file->Get("h_flsmatch_score_total");
   TH1D* h_flsmatch_score_total_extbnb = (TH1D*)extbnb_file->Get("h_flsmatch_score_total");
+  TH1D* h_flsmatch_score_second_total_bnbon = (TH1D*)bnbon_file->Get("h_flsmatch_score_second_total");
+  TH1D* h_flsmatch_score_second_total_extbnb = (TH1D*)extbnb_file->Get("h_flsmatch_score_second_total");
+  TH1D* h_flsmatch_score_difference_total_bnbon = (TH1D*)bnbon_file->Get("h_flsmatch_score_difference_total");
+  TH1D* h_flsmatch_score_difference_total_extbnb = (TH1D*)extbnb_file->Get("h_flsmatch_score_difference_total");
   TH1D* h_ntpcobj_total_bnbon = (TH1D*)bnbon_file->Get("h_ntpcobj_total");
   TH1D* h_ntpcobj_total_extbnb = (TH1D*)extbnb_file->Get("h_ntpcobj_total");
   TH1D* h_vtxcheck_angle_total_bnbon = (TH1D*)bnbon_file->Get("h_vtxcheck_angle_total");
@@ -959,6 +967,18 @@ std::cout << ">> here10" << std::endl;
   h_trktheta_data->Add(h_trktheta_total_extbnb, -1.);
   */
 
+  h_trkmom_classic_total_extbnb->Scale(scale_factor_extbnb);
+  h_trkmom_classic_total_bnbon->Scale(scale_factor_bnbon);
+  TH1D* h_trkmom_classic_data = (TH1D*)h_trkmom_classic_total_bnbon->Clone("h_trkmom_classic_data");
+  h_trkmom_classic_data->Sumw2();
+  h_trkmom_classic_data->Add(h_trkmom_classic_total_extbnb, -1.);
+  
+  h_trktheta_classic_total_extbnb->Scale(scale_factor_extbnb);
+  h_trktheta_classic_total_bnbon->Scale(scale_factor_bnbon);
+  TH1D* h_trktheta_classic_data = (TH1D*)h_trktheta_classic_total_bnbon->Clone("h_trktheta_classic_data");
+  h_trktheta_classic_data->Sumw2();
+  h_trktheta_classic_data->Add(h_trktheta_classic_total_extbnb, -1.);
+
   h_trktheta_trkmom_total_extbnb->Scale(scale_factor_extbnb);
   h_trktheta_trkmom_total_bnbon->Scale(scale_factor_bnbon);
   TH1D* h_trktheta_trkmom_data = (TH1D*)h_trktheta_trkmom_total_bnbon->Clone("h_trktheta_trkmom_data");
@@ -1179,61 +1199,78 @@ std::cout << ">> here10" << std::endl;
   canvas_trklen->SaveAs(name + ".C","C");
 
 
+  // TCanvas* canvas_trkmom_classic_sub = new TCanvas("canvas_trkmom_classic_sub", "canvas", 800, 700);
+  // THStack *hs_trkmom_classic_mc_sub = new THStack("hs_trkmom_classic_sub",";Candidate Track Momentum [GeV]; Selected Events");
+  // this->DrawDataMC(canvas_trkmom_classic_sub, hs_trkmom_classic_mc_sub, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_data, bnbon_pot_meas);
   
+  // name = outdir + "trkmomclassic_sub";
+  // canvas_trkmom_classic_sub->SaveAs(name + ".pdf");
+  // canvas_trkmom_classic_sub->SaveAs(name + ".C","C");
+
 
   TCanvas* canvas_trkmom_classic = new TCanvas("canvas_trkmom_classic", "canvas", 800, 700);
   THStack *hs_trkmom_classic_mc = new THStack("hs_trkmom_classic",";Candidate Track Momentum [GeV]; Selected Events");
-  hmap_trkmom_classic_mc["beam-off"] = h_trkmom_classic_total_extbnb;
-  this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_total_bnbon, bnbon_pot_meas);
+  if (!_beamoff_sub) hmap_trkmom_classic_mc["beam-off"] = h_trkmom_classic_total_extbnb;
+  if (_beamoff_sub) this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_total_bnbon, bnbon_pot_meas);
+
+  name = outdir + "trkmomclassic";
+  if (_beamoff_sub) name = outdir + "trkmomclassic_sub";
+  canvas_trkmom_classic->SaveAs(name + ".pdf");
+  canvas_trkmom_classic->SaveAs(name + ".C","C");
+
 
   TCanvas* canvas_trktheta_classic = new TCanvas("canvas_trktheta_classic", "canvas", 800, 700);
   THStack *hs_trktheta_classic_mc = new THStack("hs_trktheta_classic",";Candidate Track cos(#theta); Selected Events");
-  hmap_trktheta_classic_mc["beam-off"] = h_trktheta_classic_total_extbnb;
-  this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_total_bnbon, bnbon_pot_meas);
+  if (!_beamoff_sub) hmap_trktheta_classic_mc["beam-off"] = h_trktheta_classic_total_extbnb;
+  if (_beamoff_sub) this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_total_bnbon, bnbon_pot_meas);
+
+  name = outdir + "trkthetaclassic";
+  canvas_trktheta_classic->SaveAs(name + ".pdf");
+  canvas_trktheta_classic->SaveAs(name + ".C","C");
+
+
 
   TCanvas* canvas_trkphi = new TCanvas("canvas_trkphi", "canvas", 800, 700);
   THStack *hs_trkphi_mc = new THStack("hs_trkphi",";Candidate Track #phi; Selected Events");
-  hmap_trkphi_mc["beam-off"] = h_trkphi_total_extbnb;
-  // leg = PlottingTools::DrawTHStack(hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc);
-  // PlottingTools::DrawDataHisto(h_trkphi_total_bnbon);
-  // leg->AddEntry(hmap_trkphi_mc["beam-off"],"Data (Beam-off)","f");
-  // leg->AddEntry(h_trkphi_total_bnbon,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
-  // //leg->AddEntry(h_trkphi_data,"Data (Beam-on - Beam-off)","lep");
-  // PlottingTools::DrawPOT(bnbon_pot_meas);
-  //leg->Draw();
-  this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
+  if (!_beamoff_sub) hmap_trkphi_mc["beam-off"] = h_trkphi_total_extbnb;
+  if (_beamoff_sub) this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc, h_trkphi_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "trkphi";
   canvas_trkphi->SaveAs(name + ".pdf");
   canvas_trkphi->SaveAs(name + ".C","C");
+
+
+
+  TH2D* test = new TH2D("test", "test", 20, -3.15, 3.15, 1, 0, 1);
+  for (int i = 1; i < test->GetNbinsX()+1; i++) {
+    test->SetBinContent(i, 1, h_trkphi_total_bnbon->GetBinContent(i));
+  }
+
+   TCanvas* canvas_trkphi_test = new TCanvas("canvas_trkphi_test", "canvas", 800, 700);
+test->Draw("LEGO1 CYL");
+name = outdir + "trkphi_test";
+  canvas_trkphi_test->SaveAs(name + ".pdf");
+  canvas_trkphi_test->SaveAs(name + ".C","C");
   
   TCanvas* canvas_multpfp = new TCanvas("canvas_multpfp", "canvas", 800, 700);
   THStack *hs_multpfp_mc = new THStack("hs_multpfp",";PFP Multiplicity; Selected Events");
-  hmap_multpfp_mc["beam-off"] = h_multpfp_total_extbnb;
-  // leg = PlottingTools::DrawTHStack(hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc);
-  // PlottingTools::DrawDataHisto(h_multpfp_total_bnbon);
-  // leg->AddEntry(hmap_multpfp_mc["beam-off"],"Data (Beam-off)","f");
-  // leg->AddEntry(h_multpfp_total_bnbon,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
-  // //leg->AddEntry(h_multpfp_data,"Data (Beam-on - Beam-off)","lep");
-  // PlottingTools::DrawPOT(bnbon_pot_meas);
-  // leg->Draw();
-  this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc, h_multpfp_total_bnbon, bnbon_pot_meas);
+  if (!_beamoff_sub) hmap_multpfp_mc["beam-off"] = h_multpfp_total_extbnb;
+  if (_beamoff_sub) this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc, h_multpfp_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc, h_multpfp_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "multpfp";
   canvas_multpfp->SaveAs(name + ".pdf");
   canvas_multpfp->SaveAs(name + ".C","C");
-  
+
+
   TCanvas* canvas_multtracktol = new TCanvas("canvas_multtracktol", "canvas", 800, 700);
   THStack *hs_multtracktol_mc = new THStack("hs_multtracktol",";Track Multiplicity (5 cm); Selected Events");
-  hmap_multtracktol_mc["beam-off"] = h_multtracktol_total_extbnb;
-  // leg = PlottingTools::DrawTHStack(hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc);
-  // PlottingTools::DrawDataHisto(h_multtracktol_total_bnbon);
-  // leg->AddEntry(hmap_multtracktol_mc["beam-off"],"Data (Beam-off)","f");
-  // leg->AddEntry(h_multtracktol_data,"Data (Beam-on)","lep");  //DrawDataHisto(h_trkphi_data);
-  // //leg->AddEntry(h_multtracktol_data,"Data (Beam-on - Beam-off)","lep");
-  // PlottingTools::DrawPOT(bnbon_pot_meas);
-  // leg->Draw();
-  this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc, h_multtracktol_total_bnbon, bnbon_pot_meas);
+  if (!_beamoff_sub) hmap_multtracktol_mc["beam-off"] = h_multtracktol_total_extbnb;
+  if (_beamoff_sub) this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc, h_multtracktol_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc, h_multtracktol_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "multtracktol";
   canvas_multtracktol->SaveAs(name + ".pdf");
@@ -1390,13 +1427,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_vtxx_mc = new THStack("hs_vtxx",";Candidate Neutrino Vertex X [cm]; Selected Events");
   hmap_vtxx_mc["beam-off"] = h_vtxx_total_extbnb;
   this->DrawDataMC(canvas_vtxx, hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc, h_vtxx_total_bnbon, bnbon_pot_meas);
-  // leg = PlottingTools::DrawTHStack2(hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc);
-  // leg->AddEntry(h_vtxx_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
-  // PlottingTools::DrawDataHisto(h_vtxx_total_bnbon);
-  // hs_vtxx_mc->SetMaximum(1300);
-  // PlottingTools::DrawPOT(bnbon_pot_meas);
-  // leg->Draw();
-  
+
   name = outdir + "vtxx";
   canvas_vtxx->SaveAs(name + ".pdf");
   canvas_vtxx->SaveAs(name + ".C","C");
@@ -1406,12 +1437,6 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_vtxy_mc = new THStack("hs_vtxy",";Candidate Neutrino Vertex Y [cm]; Selected Events");
   hmap_vtxy_mc["beam-off"] = h_vtxy_total_extbnb;
   this->DrawDataMC(canvas_vtxy, hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc, h_vtxy_total_bnbon, bnbon_pot_meas);
-  // leg = PlottingTools::DrawTHStack2(hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc);
-  // leg->AddEntry(h_vtxy_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxy_data);
-  // PlottingTools::DrawDataHisto(h_vtxy_total_bnbon);
-  // hs_vtxy_mc->SetMaximum(1800);
-  // PlottingTools::DrawPOT(bnbon_pot_meas);
-  // leg->Draw();
   
   name = outdir + "vtxy";
   canvas_vtxy->SaveAs(name + ".pdf");
@@ -1421,29 +1446,38 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_vtxz_mc = new THStack("hs_vtxz",";Candidate Neutrino Vertex Z [cm]; Selected Events");
   hmap_vtxz_mc["beam-off"] = h_vtxz_total_extbnb;
   this->DrawDataMC(canvas_vtxz, hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc, h_vtxz_total_bnbon, bnbon_pot_meas);
-  // leg = PlottingTools::DrawTHStack2(hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc);
-  // leg->AddEntry(h_vtxz_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxz_data);
-  // PlottingTools::DrawDataHisto(h_vtxz_total_bnbon);
-  // hs_vtxz_mc->SetMaximum(1400);
-  // PlottingTools::DrawPOT(bnbon_pot_meas);
-  // leg->Draw();
-  
+
   name = outdir + "vtxz";
   canvas_vtxz->SaveAs(name + ".pdf");
   canvas_vtxz->SaveAs(name + ".C","C");
   
-  TCanvas* canvas_flsmatch_score = new TCanvas();
-  THStack *hs_flsmatch_score_mc = new THStack("hs_flsmatch_score",";1/(-log(L)); Selected Events");
-  leg = PlottingTools::DrawTHStack2(hs_flsmatch_score_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_mc);
-  PlottingTools::DrawDataHisto(h_flsmatch_score_data);
-  leg->AddEntry(h_flsmatch_score_data,"Data (Beam-on - Beam-off)","lep");
-  PlottingTools::DrawPOT(bnbon_pot_meas);
-  leg->Draw();
-  
+  TCanvas* canvas_flsmatch_score = new TCanvas("canvas_flsmatch_score", "canvas", 800, 700);
+  THStack *hs_flsmatch_score_mc = new THStack("hs_flsmatch_score",";1/(-log(L_{1})); Selected Events");
+  hmap_flsmatch_score_mc["beam-off"] = h_flsmatch_score_total_extbnb;
+  this->DrawDataMC(canvas_flsmatch_score, hs_flsmatch_score_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_mc, h_flsmatch_score_total_bnbon, bnbon_pot_meas);  
   name = outdir + "flsmatch_score";
   canvas_flsmatch_score->SaveAs(name + ".pdf");
   canvas_flsmatch_score->SaveAs(name + ".C","C");
+
+
+  TCanvas* canvas_flsmatch_score_second = new TCanvas("canvas_flsmatch_score_second", "canvas", 800, 700);
+  THStack *hs_flsmatch_score_second_mc = new THStack("hs_flsmatch_score_second",";1/(-log(L_{2})); Selected Events");
+  hmap_flsmatch_score_second_mc["beam-off"] = h_flsmatch_score_second_total_extbnb;
+  this->DrawDataMC(canvas_flsmatch_score_second, hs_flsmatch_score_second_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_second_mc, h_flsmatch_score_second_total_bnbon, bnbon_pot_meas);
+  name = outdir + "flsmatch_score_second";
+  canvas_flsmatch_score_second->SaveAs(name + ".pdf");
+  canvas_flsmatch_score_second->SaveAs(name + ".C","C");
+
+
+  TCanvas* canvas_flsmatch_score_difference = new TCanvas("canvas_flsmatch_score_difference", "canvas", 800, 700);
+  THStack *hs_flsmatch_score_difference_mc = new THStack("hs_flsmatch_score_difference",";1/(-log(L_{1})) - 1/(-log(L_{2})); Selected Events");
+  hmap_flsmatch_score_difference_mc["beam-off"] = h_flsmatch_score_difference_total_extbnb;
+  this->DrawDataMC(canvas_flsmatch_score_difference, hs_flsmatch_score_difference_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_difference_mc, h_flsmatch_score_difference_total_bnbon, bnbon_pot_meas);
+  name = outdir + "flsmatch_score_difference";
+  canvas_flsmatch_score->SaveAs(name + ".pdf");
+  canvas_flsmatch_score->SaveAs(name + ".C","C");
   
+
   TCanvas* canvas_ntpcobj = new TCanvas();
   THStack *hs_ntpcobj_mc = new THStack("hs_ntpcobj",";Number of TPCObjects per events; ");
   leg = PlottingTools::DrawTHStack2(hs_ntpcobj_mc, scale_factor_mc_bnbcosmic, true, hmap_ntpcobj_mc);
@@ -1518,6 +1552,11 @@ std::cout << ">> here10" << std::endl;
   leg2->AddEntry(h_flsTime_data,"Data (Beam-on - Beam-off)","lep");
   leg2->Draw();
   PlottingTools::DrawPOT(bnbon_pot_meas);
+
+  std::cout << "Flash Plot - MC Integral: " << h_flsTime_mc->Integral() << std::endl;
+  std::cout << "Flash Plot - Data (on-off) Integral: " << h_flsTime_data->Integral() << std::endl;
+  std::cout << "Flash Plot - DATA/MC: " << h_flsTime_data->Integral() / h_flsTime_mc->Integral() << std::endl;
+  std::cout << "Flash Plot - On/(Off+MC): " << h_flsTime_bnbon->Integral() / (h_flsTime_extbnb->Integral() + h_flsTime_mc->Integral())<< std::endl;
 
   new TCanvas();
   h_flsTime_mc->SetLineColor(kBlack);
@@ -1665,7 +1704,11 @@ std::cout << ">> here10" << std::endl;
     PlottingTools::DrawDataHisto(h_data_bnbon);
 
     leg->AddEntry(hmap_mc["total"],"Stat. Unc.","f");
-    leg->AddEntry(h_data_bnbon,"Data (Beam-on)","lep");
+    if (hmap_mc["beam-off"] != NULL) {
+      leg->AddEntry(h_data_bnbon,"Data (Beam-on)","lep");
+    } else {
+      leg->AddEntry(h_data_bnbon,"Data (Beam-on - Beam-off)","lep");
+    }
     leg->Draw();
 
     PlottingTools::DrawPOTRatio(bnbon_pot_meas);
@@ -1842,6 +1885,8 @@ void Analyse::PrintFakeDataMessage() {
   	std::cout << "****************************** RUNNING WITH FAKE DATA ******************************" << std::endl;
   }
 }
+
+
 
 
 }

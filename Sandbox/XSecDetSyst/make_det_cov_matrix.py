@@ -1,4 +1,5 @@
 import sys, os
+import math
 
 from ROOT import *
 gROOT.ProcessLine(".x " + os.environ['MYSW_DIR'] + "/Utils/rootlogon.C")
@@ -52,11 +53,9 @@ for syst_name in det_syst_list:
  	xsec_onebin = file.Get("xsec_onebin_" + syst_name)
  	xsec_mumom = file.Get("xsec_mumom_" + syst_name)
 
-
-
 	perc_diff = (xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1)) / xsec_onebin_cv.GetBinContent(1)
 	print syst_name, " & ", xsec_onebin.GetBinContent(1), " & ", perc_diff*100, "  \\\\"
-	syst_total_xsec = syst_total_xsec + abs(xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1))
+	syst_total_xsec = syst_total_xsec + abs(xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1))**2
 	#print "diff is ", abs(xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1))
 
 	
@@ -75,8 +74,8 @@ for syst_name in det_syst_list:
 
 
 
-print "Total onebin syst err:", syst_total_xsec
-print "Total onebin syst err (relative):", syst_total_xsec / xsec_onebin.GetBinContent(1)
+print "Total onebin syst err:", math.sqrt(syst_total_xsec)
+print "Total onebin syst err (relative):", math.sqrt(syst_total_xsec) / xsec_onebin.GetBinContent(1)
 
 gStyle.SetPaintTextFormat("4.2f");
 gStyle.SetPalette(kDeepSea);

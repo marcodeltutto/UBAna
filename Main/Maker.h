@@ -45,6 +45,7 @@
 #include <TH2D.h>
 #include <TLatex.h>
 #include <TCanvas.h>
+#include "TMath.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"

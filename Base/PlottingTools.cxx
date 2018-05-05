@@ -560,7 +560,7 @@ TLegend* PlottingTools::DrawTHStack3(THStack *hs_trklen,
   themap["muon"]->SetFillColor(kRed+2);
   hs_trklen->Add(themap["muon"]);
   
-  hs_trklen->Draw();
+  hs_trklen->Draw("histo");
   
   themap["total"]->SetFillColor(kBlack);
   themap["total"]->SetFillStyle(3005);

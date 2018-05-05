@@ -128,6 +128,9 @@ namespace Main {
     void PrintFakeDataMessage();
 
     ///
+    void SetBeamOffSubtraction(bool option = false) {_beamoff_sub = option;};
+
+    ///
     void DoAnalise();
 
   private:
@@ -154,6 +157,8 @@ namespace Main {
     std::string _genie_syst_file;
 
     bool _fake_data_mode = false;
+
+    bool _beamoff_sub = false;
 
     std::string _prefix = "";
     
