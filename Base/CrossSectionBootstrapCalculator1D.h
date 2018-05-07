@@ -127,6 +127,9 @@ namespace Base {
     ///
     void SaveCovarianceMatrix(std::string file_name, std::string name);
 
+    /// Not squared
+    void AddExtraDiagonalUncertainty(double value) {_extra_relative_uncertainty = value;};
+
   private:
 
     bool _configured = false;
@@ -177,6 +180,8 @@ namespace Base {
     std::string _flux_unc_type = "total"; ///< Specifies what flux rewegthing to pick
 
     TH2D _cov_matrix; ///< The 2d histo representing the covariance matrix, available after calling Run()
+
+    double _extra_relative_uncertainty = 0.; ///< Extra uncertainty to be added to the diagonal
     
   };
 }

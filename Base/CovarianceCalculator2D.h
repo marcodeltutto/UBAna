@@ -67,7 +67,10 @@ namespace Base {
     ///
     void CalculateCovarianceMatrix();
 
-    ///
+    /// Not squared
+    void AddExtraDiagonalUncertainty(double);
+
+    /// 
     void GetCovarianceMatrix(TH2D &);
 
     ///
@@ -93,6 +96,8 @@ namespace Base {
     TH2D _RHO_h;     ///< The correlation matrix in histogram form
 
     bool _verbose = true;
+
+    double _extra_relative_uncertainty = 0.; ///< Extra uncertainty to be added to the diagonal
     
   };
 }

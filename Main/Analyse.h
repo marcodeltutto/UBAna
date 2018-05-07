@@ -125,6 +125,12 @@ namespace Main {
     void SetFakeDataMode(bool option = false) {_fake_data_mode = option;};
 
     ///
+    void SetOverlayMode(bool option = false) {_overlay_mode = option;};
+
+    ///
+    void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
+
+    ///
     void PrintFakeDataMessage();
 
     ///
@@ -157,10 +163,13 @@ namespace Main {
     std::string _genie_syst_file;
 
     bool _fake_data_mode = false;
+    bool _overlay_mode = false;
 
     bool _beamoff_sub = false;
 
     std::string _prefix = "";
+
+    double _flux_correction_weight = 1.; ///< Flux correction weight
     
   };
 }

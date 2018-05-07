@@ -13,17 +13,18 @@ analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # tune 1- genie and flux styst (no high stat)
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
-analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_overlay_mcc8.9_test9.root") # fake data! Overlay
+analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_overlay_mcc8.9_test10.root") # fake data! Overlay
 analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root") 
-analyser.SetBNBPOT(9.34861e+19);    #88601
-analyser.SetBNBONTriggers(20787162.9595);    
-analyser.SetEXTBNBTriggers(33320382);
-analyser.SetFakeDataMode(True)
+analyser.SetBNBPOT(1.01969e+20)    #88601
+analyser.SetBNBONTriggers(22673383.741764)    
+analyser.SetEXTBNBTriggers(33320382)
+analyser.SetFakeDataMode(False)
+analyser.SetOverlayMode(True)
 # 36177265 bnbon triggers corrspond to 1.627e+20 POT
 # and for bnbext we have 33320382, bnbext stays the same
-# for bnbon we have to increase the triggers to 36177265/1.627e+20*9.34861e+19 = 20787162.9595
-analyser.SetPrefix("cv");
-
+# for bnbon we have to increase the triggers to 36177265/1.627e+20*1.01969e+20 = 22673383.741764
+analyser.SetPrefix("cv")
+analyser.SetFluxCorrectionWeight(1.028)
 
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)

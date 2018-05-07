@@ -151,6 +151,12 @@ namespace Base {
     void SetFakeDataMode(bool option) {_fake_data_mode = option;};
 
     ///
+    void SetOverlayMode(bool option) {_overlay_mode = option;};
+
+    ///
+    void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
+
+    ///
     void PrintFakeDataMessage();
 
     ///
@@ -198,6 +204,9 @@ namespace Base {
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
     
     bool _fake_data_mode = false;
+    bool _overlay_mode = false;
+
+    double _flux_correction_weight = 1.; ///< Flux correction weight
   };
 }
 

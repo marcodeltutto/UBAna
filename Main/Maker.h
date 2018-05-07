@@ -114,6 +114,9 @@ namespace Main {
     ///
     void PrintConfig();
 
+    /// 
+    void SetExtraWeight(double w) {_extra_weight = w;};
+
 
   private:
 
@@ -166,6 +169,8 @@ namespace Main {
     int maxEntries        = -1;
     int _initial_entry    = 0; ///< Entry in Tree to begin with
     bool isdata           = false;
+
+    double _extra_weight = 1.; ///Extra weight to be applied to the events
 
     const double _pe_cut = 50;
 

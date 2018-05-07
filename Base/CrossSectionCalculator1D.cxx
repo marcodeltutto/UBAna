@@ -143,13 +143,16 @@ namespace Base {
     flux_file += flux_file_name;
     std::cout << "[CrossSectionCalculator1D] Using flux file: " << flux_file << std::endl;
 
+    std::cout << "[CrossSectionCalculator1D] Flux correction weight: " << _flux_correction_weight << std::endl;
+
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
     TH1D * h_flux_numu = (TH1D*) f->Get(histogram_file_name.c_str());//f->Get("numu");
     //h_flux_numu->Scale(_pot/1.e20);
-    double scale_factor = 2.43e11 * 256.35 * 233.;
-    h_flux_numu->Scale(_pot / scale_factor);
-
+    double scale_factor = _pot;
+    scale_factor /= 2.43e11 * 256.35 * 233.;
+    scale_factor *= _flux_correction_weight;
+    h_flux_numu->Scale(scale_factor);
 
     TCanvas * c_flux = new TCanvas();
 
@@ -466,7 +469,7 @@ namespace Base {
       _h_bnbon->Scale(1, "width");
     }
 
-    if (_fake_data_mode) {
+    if (_fake_data_mode || _overlay_mode) {
       this->PrintFakeDataMessage();
       _h_bnbon->Add(_h_extbnb);
     }
@@ -659,9 +662,9 @@ namespace Base {
     if (_fake_data_mode) _truth_xsec_smeared->SetLineColor(kOrange);
     if (_fake_data_mode) _truth_xsec_smeared->Draw("hist same");
 
-    h_data->SetMarkerStyle(kFullCircle);
-    h_data->SetMarkerSize(0.6);
-    h_data->Draw("E1 same");
+    // h_data->SetMarkerStyle(kFullCircle);
+    // h_data->SetMarkerSize(0.6);
+    // h_data->Draw("E1 same");
 
 
     //
@@ -687,9 +690,17 @@ namespace Base {
 
     }
 
+    // Draw the systematic error bars
     h_syst_unc->SetMarkerStyle(kFullCircle);
     h_syst_unc->SetMarkerSize(0.1);
+    h_syst_unc->SetMarkerColor(kGray+2);
+    h_syst_unc->SetLineColor(kGray+2);
     h_syst_unc->Draw("E1 same");
+
+    // Draw the statistic error bars
+    h_data->SetMarkerStyle(kFullCircle);
+    h_data->SetMarkerSize(0.6);
+    h_data->Draw("E1 same");
 
 
 
@@ -714,8 +725,9 @@ namespace Base {
     // prelim->SetTextSize(0.04631579);
     // prelim->Draw();
 
-    if (!_fake_data_mode) PlottingTools::DrawPreliminary();
-    else PlottingTools::DrawSimulation();
+    if (_fake_data_mode) PlottingTools::DrawSimulation();
+    else if (_overlay_mode) PlottingTools::DrawOverlay();
+    else PlottingTools::DrawPreliminaryXSec();
 
     if (_fake_data_mode) {
       TLatex* tex = new TLatex(0.5773639,0.6547368, "FAKE DATA");
@@ -726,6 +738,7 @@ namespace Base {
       tex->SetLineWidth(2);
       tex->Draw();
     }
+    
 
     TString name = _folder +_name + "_xsec";
     c->SaveAs(name + ".pdf");

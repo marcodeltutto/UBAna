@@ -505,7 +505,7 @@ std::cout << ">> here10" << std::endl;
 
   gROOT->SetBatch(kTRUE);
 
-  if (_fake_data_mode) {
+  if (_fake_data_mode || _overlay_mode) {
   	this->PrintFakeDataMessage();
   }
 
@@ -525,11 +525,16 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
     _xsec_calc.SetPOT(bnbon_pot_meas);
     _xsec_calc.SetOutDir("output_data_mc");
+    _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
     std::cout << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
 
     if (_fake_data_mode) {
     	this->PrintFakeDataMessage();
     	_xsec_calc.SetFakeDataMode(true);
+    }
+    if (_overlay_mode) {
+      this->PrintFakeDataMessage();
+      _xsec_calc.SetOverlayMode(true);
     }
 
 
@@ -684,6 +689,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetSavePrefix("flux_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
+        _xsec_bs_calc.AddExtraDiagonalUncertainty(0.02); // For POT uncertainty
         _xsec_bs_calc.Run();
 
         _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_mumom");
@@ -820,6 +826,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
+        _xsec_bs_calc.AddExtraDiagonalUncertainty(0.02); // For POT uncertainty
         _xsec_bs_calc.Run();
 
         _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_muangle");
@@ -1136,13 +1143,9 @@ std::cout << ">> here10" << std::endl;
   TCanvas* canvas_trklen = new TCanvas("canvas_trklen", "canvas", 800, 700);
   THStack *hs_trklen_mc = new THStack("hs_trklen",";Candidate Track Length [cm]; Selected Events");
   hmap_trklen_mc["beam-off"] = h_trklen_total_extbnb;
-  // leg = PlottingTools::DrawTHStack(hs_trklen_mc, scale_factor_mc_bnbcosmic, true, hmap_trklen_mc);
-  // PlottingTools::DrawDataHisto(h_trklen_total_bnbon);
-  // leg->AddEntry(hmap_trklen_mc["beam-off"],"Data (Beam-off)","f");
-  // leg->AddEntry(h_trklen_total_bnbon,"Data (Beam-on)","lep");
+  if (_fake_data_mode || _overlay_mode) h_trklen_total_bnbon->Add(h_trklen_total_extbnb);
   this->DrawDataMC(canvas_trklen, hs_trklen_mc, scale_factor_mc_bnbcosmic, true, hmap_trklen_mc, h_trklen_total_bnbon, bnbon_pot_meas);
-  //DrawDataHisto(h_trklen_data);
-  //leg->AddEntry(h_trklen_data,"Data (Beam-on - Beam-off)","lep");
+
   
   std::cout << "\t             MC BNBCOSMIC: " << hmap_trklen_mc["total"]->Integral(0, hmap_trklen_mc["total"]->GetNbinsX()+1) << std::endl;
   std::cout << "\t             DATA (on-off): " << h_trklen_data->Integral(0, h_trklen_data->GetNbinsX()+1) << std::endl;
@@ -1211,6 +1214,7 @@ std::cout << ">> here10" << std::endl;
   TCanvas* canvas_trkmom_classic = new TCanvas("canvas_trkmom_classic", "canvas", 800, 700);
   THStack *hs_trkmom_classic_mc = new THStack("hs_trkmom_classic",";Candidate Track Momentum [GeV]; Selected Events");
   if (!_beamoff_sub) hmap_trkmom_classic_mc["beam-off"] = h_trkmom_classic_total_extbnb;
+  if (_fake_data_mode || _overlay_mode) h_trkmom_classic_total_bnbon->Add(h_trkmom_classic_total_extbnb);
   if (_beamoff_sub) this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_data, bnbon_pot_meas);
   else this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_total_bnbon, bnbon_pot_meas);
 
@@ -1223,6 +1227,7 @@ std::cout << ">> here10" << std::endl;
   TCanvas* canvas_trktheta_classic = new TCanvas("canvas_trktheta_classic", "canvas", 800, 700);
   THStack *hs_trktheta_classic_mc = new THStack("hs_trktheta_classic",";Candidate Track cos(#theta); Selected Events");
   if (!_beamoff_sub) hmap_trktheta_classic_mc["beam-off"] = h_trktheta_classic_total_extbnb;
+  if (_fake_data_mode || _overlay_mode) h_trktheta_classic_total_bnbon->Add(h_trktheta_classic_total_extbnb);
   if (_beamoff_sub) this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_data, bnbon_pot_meas);
   else this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_total_bnbon, bnbon_pot_meas);
 
@@ -1235,6 +1240,7 @@ std::cout << ">> here10" << std::endl;
   TCanvas* canvas_trkphi = new TCanvas("canvas_trkphi", "canvas", 800, 700);
   THStack *hs_trkphi_mc = new THStack("hs_trkphi",";Candidate Track #phi; Selected Events");
   if (!_beamoff_sub) hmap_trkphi_mc["beam-off"] = h_trkphi_total_extbnb;
+  if (_fake_data_mode || _overlay_mode) h_trkphi_total_bnbon->Add(h_trkphi_total_extbnb);
   if (_beamoff_sub) this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc, h_trkphi_data, bnbon_pot_meas);
   else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
   
@@ -1258,6 +1264,7 @@ name = outdir + "trkphi_test";
   TCanvas* canvas_multpfp = new TCanvas("canvas_multpfp", "canvas", 800, 700);
   THStack *hs_multpfp_mc = new THStack("hs_multpfp",";PFP Multiplicity; Selected Events");
   if (!_beamoff_sub) hmap_multpfp_mc["beam-off"] = h_multpfp_total_extbnb;
+  if (_fake_data_mode || _overlay_mode) h_multpfp_total_bnbon->Add(h_multpfp_total_extbnb);
   if (_beamoff_sub) this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc, h_multpfp_data, bnbon_pot_meas);
   else this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc, h_multpfp_total_bnbon, bnbon_pot_meas);
   
@@ -1269,6 +1276,7 @@ name = outdir + "trkphi_test";
   TCanvas* canvas_multtracktol = new TCanvas("canvas_multtracktol", "canvas", 800, 700);
   THStack *hs_multtracktol_mc = new THStack("hs_multtracktol",";Track Multiplicity (5 cm); Selected Events");
   if (!_beamoff_sub) hmap_multtracktol_mc["beam-off"] = h_multtracktol_total_extbnb;
+  if (_fake_data_mode || _overlay_mode) h_multtracktol_total_bnbon->Add(h_multtracktol_total_extbnb);
   if (_beamoff_sub) this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc, h_multtracktol_data, bnbon_pot_meas);
   else this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc, h_multtracktol_total_bnbon, bnbon_pot_meas);
   
@@ -1558,6 +1566,12 @@ name = outdir + "trkphi_test";
   std::cout << "Flash Plot - DATA/MC: " << h_flsTime_data->Integral() / h_flsTime_mc->Integral() << std::endl;
   std::cout << "Flash Plot - On/(Off+MC): " << h_flsTime_bnbon->Integral() / (h_flsTime_extbnb->Integral() + h_flsTime_mc->Integral())<< std::endl;
 
+  std::cout << std::endl;
+  std::cout << "Flash lost in 3.2 to 3.3 us in data: " << h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(3.29999)) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
+  std::cout << "Flash lost in 4.9 to 5.0 us in data: " << h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(4.9001), h_flsTime_data->GetXaxis()->FindBin(5.0)) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
+  std::cout << "Flash lost in 4.9 to 5.0 us and in 3.2 to 3.3 us in data: " << (h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(4.9001), h_flsTime_data->GetXaxis()->FindBin(5.0)) + h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(3.29999))) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
+  std::cout << "In MC, in 4.8 to 4.85 us, we loose: " << h_flsTime_mc->Integral(h_flsTime_data->GetXaxis()->FindBin(4.8001), h_flsTime_data->GetXaxis()->FindBin(4.85)) /h_flsTime_mc->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(4.8)) << std::endl;
+
   new TCanvas();
   h_flsTime_mc->SetLineColor(kBlack);
   h_flsTime_bnbon->SetLineColor(kRed);
@@ -1705,14 +1719,19 @@ name = outdir + "trkphi_test";
 
     leg->AddEntry(hmap_mc["total"],"Stat. Unc.","f");
     if (hmap_mc["beam-off"] != NULL) {
-      leg->AddEntry(h_data_bnbon,"Data (Beam-on)","lep");
+      if (_overlay_mode) {
+        leg->AddEntry(h_data_bnbon,"Overlay + Beam-off","lep");
+      } else {
+        leg->AddEntry(h_data_bnbon,"Data (Beam-on)","lep");
+      }
     } else {
       leg->AddEntry(h_data_bnbon,"Data (Beam-on - Beam-off)","lep");
     }
     leg->Draw();
 
     PlottingTools::DrawPOTRatio(bnbon_pot_meas);
-    PlottingTools::DrawPreliminary();
+    if (_overlay_mode) PlottingTools::DrawOverlay();
+
 
 
     // Do not draw the Y axis label on the upper plot and redraw a small

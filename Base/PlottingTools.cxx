@@ -16,6 +16,17 @@ namespace Base {
     prelim->Draw();
   }
 
+  void PlottingTools::DrawPreliminaryXSec() {
+    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(32);
+    //prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
   void PlottingTools::DrawSimulation() {
     TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Simulation");
     prelim->SetTextColor(kGray+1);
@@ -23,6 +34,17 @@ namespace Base {
     prelim->SetTextSize(2/30.);
     prelim->SetTextAlign(32);
     prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
+  void PlottingTools::DrawOverlay() {
+    TLatex* prelim = new TLatex(0.94,0.93, "BNB#nu MC + Cosmic Data Overlay");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kRed+1);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(32);
+    //prelim->SetTextSize(0.04631579);
     prelim->Draw();
   }
 

@@ -1277,6 +1277,7 @@ void Main::Maker::MakeFile()
     // ************************
 
     double event_weight = t->bnb_weight;
+    event_weight *= _extra_weight;
     if (isdata) event_weight = 1.;
 
 

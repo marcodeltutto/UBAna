@@ -16,9 +16,10 @@ analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.7_test6.root")    
 analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.7_test6.root")
 analyser.SetBNBPOT(4.852e+19);    
-analyser.SetBNBONTriggers(10820589);    
-analyser.SetEXTBNBTriggers(15482261);
+analyser.SetBNBONTriggers(10820589)
+analyser.SetEXTBNBTriggers(15482261)
 analyser.SetPrefix("cv");
+analyser.SetFluxCorrectionWeight(1.028)
 
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)

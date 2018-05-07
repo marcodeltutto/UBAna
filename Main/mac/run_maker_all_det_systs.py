@@ -21,6 +21,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -40,6 +41,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -59,6 +61,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -78,6 +81,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -97,6 +101,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -116,6 +121,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -135,6 +141,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -153,6 +160,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -161,22 +169,22 @@ maker.PrintConfig()
 maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_nodeltaray.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_nodeltaray.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_nodeltaray.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_nodeltaray.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
 maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_stretchRes.root")
@@ -189,6 +197,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -207,6 +216,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -225,6 +235,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -243,6 +254,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -261,6 +273,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -280,6 +293,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -298,6 +312,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 
@@ -316,6 +331,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total"); # not needed here
 

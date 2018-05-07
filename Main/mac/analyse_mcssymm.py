@@ -13,10 +13,11 @@ analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.9_test7.root")    
 analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.9_test7.root")
-analyser.SetBNBPOT(4.851e+19);    
-analyser.SetBNBONTriggers(10821593);    
-analyser.SetEXTBNBTriggers(15400719);
+analyser.SetBNBPOT(4.851e+19)    
+analyser.SetBNBONTriggers(10821593)    
+analyser.SetEXTBNBTriggers(15400719)
 analyser.SetPrefix("cv");
+analyser.SetFluxCorrectionWeight(1.028)
 
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)

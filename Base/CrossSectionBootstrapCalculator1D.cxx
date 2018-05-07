@@ -340,6 +340,7 @@ namespace Base {
     CovarianceCalculator2D _cov_calc;
     _cov_calc.SetPrefix(_save_prefix);
     _cov_calc.SetBootstrap(xsec_mumom_bs);
+    _cov_calc.AddExtraDiagonalUncertainty(_extra_relative_uncertainty);
     _cov_calc.CalculateCovarianceMatrix();
     _cov_calc.PlotMatrices();
 
