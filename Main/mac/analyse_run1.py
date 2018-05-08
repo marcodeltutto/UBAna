@@ -23,7 +23,7 @@ analyser.SetBNBPOT(1.627e+20)
 analyser.SetBNBONTriggers(36177265)   
 analyser.SetEXTBNBTriggers(33320382)
 analyser.SetPrefix("cv");
-analyser.SetFluxCorrectionWeight(1.028)
+# analyser.SetFluxCorrectionWeight(1.028)
 
 analyser.SetBeamOffSubtraction(True)
 

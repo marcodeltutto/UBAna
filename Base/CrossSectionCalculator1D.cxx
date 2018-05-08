@@ -690,17 +690,21 @@ namespace Base {
 
     }
 
+    gStyle->SetEndErrorSize(5);
+
     // Draw the systematic error bars
     h_syst_unc->SetMarkerStyle(kFullCircle);
     h_syst_unc->SetMarkerSize(0.1);
-    h_syst_unc->SetMarkerColor(kGray+2);
-    h_syst_unc->SetLineColor(kGray+2);
+    // h_syst_unc->SetMarkerColor(kGray+2);
+    // h_syst_unc->SetLineColor(kGray+2);
     h_syst_unc->Draw("E1 same");
 
     // Draw the statistic error bars
     h_data->SetMarkerStyle(kFullCircle);
     h_data->SetMarkerSize(0.6);
     h_data->Draw("E1 same");
+
+
 
 
 
@@ -748,6 +752,8 @@ namespace Base {
       std::cout << "Total cross section - DATA: " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
       std::cout << "Total cross section - MC  : " << h_mc->GetBinContent(1)   << " +- " << h_mc->GetBinError(1) << std::endl;
     }
+
+    gStyle->SetEndErrorSize(3);
 
     return h_data;
 
