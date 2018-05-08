@@ -135,6 +135,11 @@ namespace Base {
     if(_fake_data_mode) this->SmearTruth(m, m);
   }
 
+  TH1D* CrossSectionCalculator1D::GetMCCrossSection()
+  {
+    return _h_mc;
+  }
+
   double CrossSectionCalculator1D::EstimateFlux(std::string flux_file_name, std::string histogram_file_name) 
   {
     std::string flux_file = std::getenv("MYSW_DIR");
@@ -573,16 +578,17 @@ namespace Base {
     // The two histograms we acually need: MC and data (bkg subtracted)
     //
 
-    TH1D* h_mc = _hmap_bnbcosmic["signal"];
-    TH1D* h_data = (TH1D*)_h_bnbon->Clone("h_data");
-    h_mc->SetTitle(_label.c_str());
-    h_data->Sumw2();
+    _h_mc = _hmap_bnbcosmic["signal"];
+    _h_data = (TH1D*)_h_bnbon->Clone("h_data");
+
+    _h_mc->SetTitle(_label.c_str());
+    _h_data->Sumw2();
 
     std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
 
     for (auto name : bkg_names) 
     {
-      h_data->Add(_hmap_bnbcosmic[name], -1.);
+      _h_data->Add(_hmap_bnbcosmic[name], -1.);
     }
 
     //
@@ -592,9 +598,9 @@ namespace Base {
     //TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
     //_eff = teff_true;
 
-    TH1D * h_eff = (TH1D*)h_mc->Clone("h_eff");
+    TH1D * h_eff = (TH1D*)_h_mc->Clone("h_eff");
     h_eff->Sumw2();
-    for (int b = 1; b < h_mc->GetNbinsX() + 1; b++)
+    for (int b = 1; b < _h_mc->GetNbinsX() + 1; b++)
     {
       h_eff->SetBinContent(b, _eff->GetEfficiency(_eff->GetGlobalBin(b)));
       double unc = 0.;
@@ -609,8 +615,8 @@ namespace Base {
     // Divide by efficiency
     //
 
-    h_mc->Divide(h_eff);
-    h_data->Divide(h_eff);
+    _h_mc->Divide(h_eff);
+    _h_data->Divide(h_eff);
 
     //
     // Divide by flux, and N_target and bin width
@@ -621,40 +627,40 @@ namespace Base {
     << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
     double den = _flux * _n_target * 1e-38;
 
-    h_mc->Scale(1. / den, "width");
-    h_data->Scale(1. / den, "width");
+    _h_mc->Scale(1. / den, "width");
+    _h_data->Scale(1. / den, "width");
 
 
     // Do it also for the truth xsec
     if (_fake_data_mode) _truth_xsec_smeared->Scale(1. / den, "width");
 
 
-    std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
-    std::cout << "Data Integral: " << h_data->Integral() << std::endl;
+    std::cout << "MC Integral: " << _h_mc->Integral() << std::endl;
+    std::cout << "Data Integral: " << _h_data->Integral() << std::endl;
 
 
     // Plot the cross section
 
     TCanvas * c = new TCanvas();
     c->SetBottomMargin(0.15);
-    h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
-    h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
-    h_mc->GetXaxis()->SetTitleOffset(0.95);
-    h_mc->GetYaxis()->SetTitleOffset(0.77);
+    _h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
+    _h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    _h_mc->GetXaxis()->SetTitleOffset(0.95);
+    _h_mc->GetYaxis()->SetTitleOffset(0.77);
 
-    h_mc->SetLineColor(kGreen+2);
-    h_mc->SetFillColor(29);
+    _h_mc->SetLineColor(kGreen+2);
+    _h_mc->SetFillColor(29);
 
     if (_name.find("mom") != std::string::npos) {
-      h_mc->SetMinimum(0.);
-      h_mc->SetMaximum(1.5);
+      _h_mc->SetMinimum(0.);
+      _h_mc->SetMaximum(1.6);
     } else {
-      h_mc->SetMinimum(0.);
-      h_mc->SetMaximum(2.8);
+      _h_mc->SetMinimum(0.);
+      _h_mc->SetMaximum(2.8);
     }
-    h_mc->Draw("E2");
+    _h_mc->Draw("E2");
 
-    TH1D* h_mc_main = (TH1D*) h_mc->Clone("h_mc_main");
+    TH1D* h_mc_main = (TH1D*) _h_mc->Clone("h_mc_main");
     h_mc_main->SetLineColor(kGreen+2);
     h_mc_main->SetFillColor(0); // fully transparent
     h_mc_main->Draw("histo same");
@@ -667,17 +673,29 @@ namespace Base {
     // h_data->Draw("E1 same");
 
 
+    if (_add_alt_mc_xsec) {
+      _h_alt_mc_xsec.SetLineColor(kBlue+1);
+      _h_alt_mc_xsec.SetFillColor(38);
+      _h_alt_mc_xsec.Draw("E2 same");
+
+      TH1D* _h_alt_mc_xsec_main = (TH1D*) _h_alt_mc_xsec.Clone("_h_alt_mc_xsec_main");
+      _h_alt_mc_xsec_main->SetLineColor(kBlue+1);
+      _h_alt_mc_xsec_main->SetFillColor(0); // fully transparent
+      _h_alt_mc_xsec_main->Draw("histo same");
+    }
+
+
     //
     // Add systs uncertainties (if cov. matrix is set)
     //
 
-    TH1D * h_syst_unc = (TH1D*) h_data->Clone("h_syst_unc");
+    TH1D * h_syst_unc = (TH1D*) _h_data->Clone("h_syst_unc");
 
     if (_covariance_matrix_is_set) {
  
       for (int i = 0; i < _covariance_matrix.GetNbinsX(); i++) {
 
-        double unc_stat = h_data->GetBinError(i+1);
+        double unc_stat = _h_data->GetBinError(i+1);
 
         double unc_syst = std::sqrt(_covariance_matrix.GetBinContent(i+1, i+1));
 
@@ -697,26 +715,35 @@ namespace Base {
     h_syst_unc->SetMarkerSize(0.1);
     // h_syst_unc->SetMarkerColor(kGray+2);
     // h_syst_unc->SetLineColor(kGray+2);
-    h_syst_unc->Draw("E1 same");
+    h_syst_unc->Draw("E1 X0 same");
 
     // Draw the statistic error bars
-    h_data->SetMarkerStyle(kFullCircle);
-    h_data->SetMarkerSize(0.6);
-    h_data->Draw("E1 same");
+    _h_data->SetMarkerStyle(kFullCircle);
+    _h_data->SetMarkerSize(0.6);
+    _h_data->Draw("E1 X0 same");
 
 
 
+    TLegend *l;
 
-
-    TLegend *l = new TLegend(0.42,0.71, 0.87,0.85,NULL,"brNDC");
-    l->AddEntry(h_mc, "MC (Stat. Uncertainty)");
+    if (xaxis_label.find("cos") != std::string::npos) {
+      l = new TLegend(0.1532951,0.6884211,0.6031519,0.8273684,NULL,"brNDC");
+    }
+    else {
+      l = new TLegend(0.42,0.71, 0.87,0.85,NULL,"brNDC");
+    }
+    if (!_add_alt_mc_xsec) l->AddEntry(_h_mc, "MC (Stat. Uncertainty)");
     //l->AddEntry(_truth_xsec, "Monte Carlo (Truth)", "l");
+    if (_add_alt_mc_xsec) {
+      l->AddEntry(_h_mc, "MC Tune 1 (Stat. Unc.)");
+      l->AddEntry(&_h_alt_mc_xsec, "MC Tune 3 (Stat. Unc.)");
+    }
     if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
-      l->AddEntry(h_data, "Measured (Stat. #oplus Syst Uncertainty)", "lep");
+      l->AddEntry(_h_data, "Measured (Stat. #oplus Syst. Unc.)", "ep");
       ///l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
       if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     } else {
-      l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
+      l->AddEntry(_h_data, "Measured (Stat. Unc.)", "lep");
       if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     }
     l->Draw();
@@ -748,14 +775,14 @@ namespace Base {
     c->SaveAs(name + ".pdf");
     c->SaveAs(name + ".C","C");
 
-    if (h_data->GetNbinsX() == 1) {
-      std::cout << "Total cross section - DATA: " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
-      std::cout << "Total cross section - MC  : " << h_mc->GetBinContent(1)   << " +- " << h_mc->GetBinError(1) << std::endl;
+    if (_h_data->GetNbinsX() == 1) {
+      std::cout << "Total cross section - DATA: " << _h_data->GetBinContent(1) << " +- " << _h_data->GetBinError(1) << std::endl;
+      std::cout << "Total cross section - MC  : " << _h_mc->GetBinContent(1)   << " +- " << _h_mc->GetBinError(1) << std::endl;
     }
 
     gStyle->SetEndErrorSize(3);
 
-    return h_data;
+    return _h_data;
 
   }
 

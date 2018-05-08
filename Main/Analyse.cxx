@@ -537,6 +537,15 @@ std::cout << ">> here10" << std::endl;
       _xsec_calc.SetOverlayMode(true);
     }
 
+    TFile *file_alt_mc;
+    if (_import_alternative_mc) {
+      file_alt_mc = TFile::Open(_alternative_mc_file.c_str(),"READ");
+      if ( !file_alt_mc->IsOpen() ) {
+        std::cout << "Cannot open file containing alternative MC with name " << _alternative_mc_file << std::endl;
+        exit(0);
+      }
+    }
+
 
     // Create a list of the backgrounds that will be subtracted
     std::vector<std::string> hist_to_subtract = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
@@ -759,11 +768,18 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.Smear(7, 6);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
+    if (_import_alternative_mc) {
+      TH1D* h = (TH1D*)file_alt_mc->Get("xsec_mumom_mc_cv_tune3");
+      _xsec_calc.ImportAlternativeMC(*h);
+    }
     TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+    TH1D * xsec_mumom_mc = _xsec_calc.GetMCCrossSection();
 
     file_out->cd();
     save_name = "xsec_mumom_" + _prefix;
     xsec_mumom->Write(save_name.c_str());
+    save_name = "xsec_mumom_mc_" + _prefix;
+    xsec_mumom_mc->Write(save_name.c_str());
     save_name = "covariance_matrix_mumom_" + _prefix;
     covariance_matrix_mumom.Write(save_name.c_str());
 
@@ -904,11 +920,19 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.Smear(9, 9);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
+    if (_import_alternative_mc) {
+      TH1D* h = (TH1D*)file_alt_mc->Get("xsec_muangle_mc_cv_tune3");
+      _xsec_calc.ImportAlternativeMC(*h);
+    }
     TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
+    TH1D * xsec_muangle_mc = _xsec_calc.GetMCCrossSection();
+
 
     file_out->cd();
     save_name = "xsec_muangle_" + _prefix;
     xsec_muangle->Write(save_name.c_str());
+    save_name = "xsec_muangle_mc_" + _prefix;
+    xsec_muangle_mc->Write(save_name.c_str());
     save_name = "covariance_matrix_muangle_" + _prefix;
     covariance_matrix_muangle.Write(save_name.c_str());
 

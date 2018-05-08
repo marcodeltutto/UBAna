@@ -140,6 +140,9 @@ namespace Main {
     void SetBeamOffSubtraction(bool option = false) {_beamoff_sub = option;};
 
     ///
+    void ImportAlternativeMC(std::string filen = "xsec_file_cv_tune3.root") {_import_alternative_mc = true; _alternative_mc_file = filen;};
+
+    ///
     void DoAnalise();
 
   private:
@@ -175,6 +178,9 @@ namespace Main {
     std::string _prefix = "";
 
     double _flux_correction_weight = 1.; ///< Flux correction weight
+
+    bool _import_alternative_mc = false;
+    std::string _alternative_mc_file = ""; ///< The name of the root file that contains the alternative MC 
     
   };
 }

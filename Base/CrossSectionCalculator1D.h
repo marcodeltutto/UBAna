@@ -126,6 +126,9 @@ namespace Base {
     ///
     TH1D* ExtractCrossSection(std::string, std::string);
 
+    /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
+    TH1D* GetMCCrossSection();
+
     ///
     void Smear(int n, int m);
 
@@ -158,6 +161,9 @@ namespace Base {
 
     ///
     void PrintFakeDataMessage();
+
+    ///
+    void ImportAlternativeMC(TH1D h) {_add_alt_mc_xsec = true; _h_alt_mc_xsec = h;};
 
     ///
     void Reset();
@@ -207,6 +213,12 @@ namespace Base {
     bool _overlay_mode = false;
 
     double _flux_correction_weight = 1.; ///< Flux correction weight
+
+    TH1D* _h_mc = NULL; ///< The to-be extracted MC cross section
+    TH1D* _h_data = NULL; ///< The to-be extracted data cross section
+
+    bool _add_alt_mc_xsec = false; ///< If true draws an alternative MC cross section from ImportAlternativeMC
+    TH1D _h_alt_mc_xsec; ///< Stores an alternative MC cross section (from Tune3, or theory, in the latter has to be smeared)
   };
 }
 

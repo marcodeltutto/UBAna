@@ -272,6 +272,12 @@ void Main::Maker::MakeFile()
     std::cout << "Is mc." << std::endl;
 
   
+
+  if (_scale_cosmics) {
+    for (int i = 0; i < 10; i++) {
+      std::cout << "****** Scaling cosmic background by " << _scale_factor_cosmic << "******" << std::endl;
+    }
+  }
   
 
   //*************************
@@ -2682,8 +2688,9 @@ void Main::Maker::MakeFile()
     //
     else {
       bkg_cosmic_sel ++;
-      if (t->slc_crosses_top_boundary.at(scl_ll_max) == 1 )
-        bkg_cosmic_top_sel++;
+      // Add extra weight to event_weight if we are scaling the cosmic background (for example from overlays)
+      if (_scale_cosmics) event_weight *= _scale_factor_cosmic;
+      if (t->slc_crosses_top_boundary.at(scl_ll_max) == 1 ) bkg_cosmic_top_sel++;
       pEff->Fill(false, t->nu_e);
       hmap_onebin["cosmic"]->Fill(0.5, event_weight);
       hmap_trklen["cosmic"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
@@ -2751,7 +2758,12 @@ void Main::Maker::MakeFile()
         hmap_multtracktol["cosmic_nostopmu"]->Fill(t->slc_mult_track_tolerance.at(scl_ll_max), event_weight);
         hmap_trktheta_trkmom["cosmic_nostopmu"]->Fill(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight);
       }
+
+      // Restore the event weight
+      if (_scale_cosmics) event_weight /= _scale_factor_cosmic;
     }
+
+
     
 
     

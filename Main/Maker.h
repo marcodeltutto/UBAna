@@ -117,6 +117,9 @@ namespace Main {
     /// 
     void SetExtraWeight(double w) {_extra_weight = w;};
 
+    ///
+    void ScaleCosmics(double w) {_scale_cosmics = true; _scale_factor_cosmic = w;};
+
 
   private:
 
@@ -185,6 +188,9 @@ namespace Main {
     int n_bins_mucostheta = 9;
     // int n_bins_mumom = 20;
     // int n_bins_mucostheta = 25;
+
+    bool _scale_cosmics = false; ///< If true scales the cosmic background by _scale_factor_cosmic
+    double _scale_factor_cosmic = 1.; ///< Factor used to scale the cosmic background (used only if _scale_cosmics is true)
     
   };
 }
