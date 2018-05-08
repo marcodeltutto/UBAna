@@ -109,6 +109,9 @@ namespace Main {
     /// Imports all the flux systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
     void ImportFluxSystematics(bool option, std::string file = "file.root") {_import_flux_systs = option; _flux_syst_file = file;}
 
+    /// Imports all the detector systs from files (previously calculated via external macro, and adds them togheter)
+    void ImportDetectorSystematics(bool option, std::string file = "file.root") {_import_detector_systs = option; _detector_syst_file = file;}
+
     /// Calculates the genie covariance matrix and saves it to a file for a particular flux syst
     void DoGenieSystematics(bool option) {_do_genie_systs = option;}
 
@@ -156,7 +159,9 @@ namespace Main {
     bool _do_flux_systs = false;
     std::string _target_flux_syst = "";
     bool _import_flux_systs = false;
-    std::string _flux_syst_file;
+    std::string _flux_syst_file = "";
+    bool _import_detector_systs = false;
+    std::string _detector_syst_file = "";
 
     bool _do_genie_systs = false;
     bool _import_genie_systs = false;

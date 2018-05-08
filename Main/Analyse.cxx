@@ -627,7 +627,7 @@ std::cout << ">> here10" << std::endl;
 
     TH2D covariance_matrix_genie;
     TH2D covariance_matrix_flux;
-
+    TH2D covariance_matrix_detector;
 
 
     // 
@@ -715,8 +715,17 @@ std::cout << ">> here10" << std::endl;
     } // _do_reweighting_plots
 
 
+    if (_import_detector_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_detector_mumom");
+      covariance_matrix_detector = *m;
+    }
+
+
     TH2D covariance_matrix_mumom = * ((TH2D*)covariance_matrix_genie.Clone("covariance_matrix"));
     covariance_matrix_mumom.Add(&covariance_matrix_flux);
+    covariance_matrix_mumom.Add(&covariance_matrix_detector);
 
     for (int i = 0; i < covariance_matrix_mumom.GetNbinsX(); i++) {
       std::cout << "TOTAL - Momentum - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_mumom.GetBinContent(i+1, i+1) << std::endl;
@@ -851,8 +860,18 @@ std::cout << ">> here10" << std::endl;
     } // _do_reweighting_plots
 
 
+    if (_import_detector_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_detector_muangle");
+      covariance_matrix_detector = *m;
+    }
+
+
+
     TH2D covariance_matrix_muangle = * ((TH2D*)covariance_matrix_genie.Clone("covariance_matrix"));
     covariance_matrix_muangle.Add(&covariance_matrix_flux);
+    covariance_matrix_muangle.Add(&covariance_matrix_detector);
 
     for (int i = 0; i < covariance_matrix_muangle.GetNbinsX(); i++) {
       std::cout << "TOTAL - Angle - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_muangle.GetBinContent(i+1, i+1) << std::endl;
