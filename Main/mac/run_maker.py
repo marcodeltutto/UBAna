@@ -25,8 +25,6 @@ maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Ou
 # maker.SetOutputFile("./ubxsecanatemp_output_mc_bnbcosmic.root")
 # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_mcc8.9_test7.root") # tune 1 mcs symm
 # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_test7.root"); # tune 1 mcs symm
-# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_overlay_mcc8.9_test10.root") # Overlay
-# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_overlay_mcc8.9_test10.root"); # Overlay
 
 
 maker.SetEntries(-1)
@@ -40,7 +38,7 @@ maker.SetIsData(False)
 maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetMaUpMECOff(False)
-# maker.ScaleCosmics(0.54548)
+# maker.ScaleCosmics(0.54548) # For overlay systematics
 
 #maker.SetTargetFluxSystematic("FluxUnisim");
 #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
@@ -60,10 +58,10 @@ maker.MakeFile()
 
 # BNBON
 
-# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_bnbon_mcc8.7_test6.root") # 5e19
-# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.7_test6.root") # 5e19
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_bnbon_a_mcc8.9_test4.root") # 1.6e20
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root") # 1.6e20
+maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_bnbon_mcc8.7_test6.root") # 5e19
+maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.7_test6.root") # 5e19
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_bnbon_a_mcc8.9_test4.root") # 1.6e20
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root") # 1.6e20
 # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_bnbon_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_bnbon_mcc8.9_test7.root")
@@ -87,10 +85,10 @@ maker.MakeFile()
 
 # EXTBNB
 
-# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_extbnb_mcc8.7_test6.root") # 5e19
-# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.7_test6.root") # 5e19
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_extbnb_a_mcc8.9_test4.root") # 1.6e20
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root") # 1.6e20
+maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_extbnb_mcc8.7_test6.root") # 5e19
+maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.7_test6.root") # 5e19
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_extbnb_a_mcc8.9_test4.root") # 1.6e20
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root") # 1.6e20
 # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_extbnb_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_extbnb_mcc8.9_test7.root")
@@ -101,7 +99,7 @@ maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Ou
 maker.SetEntries(-1)
 maker.SetBeamSpillStart(3.65)    
 maker.SetBeamSpillEnd(5.25)    
-maker.SetFlashShift(0.406)    
+maker.SetFlashShift(0.406+0.05)    
 maker.SetGainCalibration(243)    
 maker.SetCalculatePOT(False)    
 maker.SetIsData(True)

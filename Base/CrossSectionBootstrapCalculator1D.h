@@ -130,6 +130,9 @@ namespace Base {
     /// Not squared
     void AddExtraDiagonalUncertainty(double value) {_extra_relative_uncertainty = value;};
 
+    ///
+    void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
+
   private:
 
     bool _configured = false;
@@ -182,7 +185,9 @@ namespace Base {
     TH2D _cov_matrix; ///< The 2d histo representing the covariance matrix, available after calling Run()
 
     double _extra_relative_uncertainty = 0.; ///< Extra uncertainty to be added to the diagonal
-    
+
+    double _flux_correction_weight = 1.; ///< Flux correction weight
+        
   };
 }
 

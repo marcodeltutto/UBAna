@@ -124,6 +124,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   for (auto iter : themap) {
     if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
     iter.second->Scale(pot_scaling);
+    // if (iter.first == "cosmic_nostopmu" || iter.first == "cosmic_nostopmu" || iter.first == "cosmic") iter.second->Scale(0.45);
   }
   
   if (themap["beam-off"] != NULL) {
@@ -140,6 +141,16 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     themap["intimecosmic"]->SetFillStyle(3004);
     hs_trklen->Add(themap["intimecosmic"]);
   }
+
+//   themap["total"]->Reset();
+//   themap["total"]->Add(themap["beam-off"]);
+// themap["total"]->Add(themap["cosmic"]);
+// themap["total"]->Add(themap["outfv"]);
+// themap["total"]->Add(themap["nc"]);
+
+// themap["total"]->Add(themap["nue"]);
+// themap["total"]->Add(themap["anumu"]);
+// themap["total"]->Add(themap["signal"]);
 
   if (_breakdownPlots) {
     themap["cosmic_nostopmu"]->SetLineColor(kBlue+2);

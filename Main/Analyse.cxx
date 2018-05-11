@@ -58,6 +58,17 @@ namespace Main {
 	}
 
 
+  // void Analyse::AddExtraDiagonalUncertainty(TH2D & matrix, double frac_unc)
+  // {
+
+  //   for (int i = 0; i < matrix.GetNbinsX(); i++) {
+  //     double current_content = matrix.GetBinContent(i+1, i+1);
+  //     matrix.SetBinContent(i+1, i+1, current_content + )
+  //   }
+
+  // }
+
+
 
 
 	void Analyse::DoAnalise() 
@@ -591,6 +602,7 @@ std::cout << ">> here10" << std::endl;
       //
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
+      _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
       if (_do_genie_systs) {
         _xsec_bs_calc.Reset();
@@ -637,6 +649,7 @@ std::cout << ">> here10" << std::endl;
     TH2D covariance_matrix_genie;
     TH2D covariance_matrix_flux;
     TH2D covariance_matrix_detector;
+    TH2D covariance_matrix_cosmic;
 
 
     // 
@@ -650,6 +663,7 @@ std::cout << ">> here10" << std::endl;
       //
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
+      _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
       if (_do_genie_systs) {
         _xsec_bs_calc.Reset();
@@ -680,7 +694,6 @@ std::cout << ">> here10" << std::endl;
 
       }
 
-      
 
 
       //
@@ -698,7 +711,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetSavePrefix("flux_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
-        _xsec_bs_calc.AddExtraDiagonalUncertainty(0.02); // For POT uncertainty
+        _xsec_bs_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
         _xsec_bs_calc.Run();
 
         _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_mumom");
@@ -731,10 +744,24 @@ std::cout << ">> here10" << std::endl;
       covariance_matrix_detector = *m;
     }
 
+    if (_import_cosmic_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_cosmic.root", "WRITE");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_cosmic_mumom");
+      covariance_matrix_cosmic = *m;
+
+    }
+
 
     TH2D covariance_matrix_mumom = * ((TH2D*)covariance_matrix_genie.Clone("covariance_matrix"));
     covariance_matrix_mumom.Add(&covariance_matrix_flux);
     covariance_matrix_mumom.Add(&covariance_matrix_detector);
+    covariance_matrix_mumom.Add(&covariance_matrix_cosmic);
+
+    // if (_extra_fractional_uncertainty != 0.) {
+    //   std::cout << "Adding extra uncertainty of " << _extra_fractional_uncertainty << std::endl;
+    //   this->AddExtraDiagonalUncertainty(covariance_matrix_mumom, _extra_fractional_uncertainty);
+    // }
 
     for (int i = 0; i < covariance_matrix_mumom.GetNbinsX(); i++) {
       std::cout << "TOTAL - Momentum - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_mumom.GetBinContent(i+1, i+1) << std::endl;
@@ -768,6 +795,7 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.Smear(7, 6);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
+    _xsec_calc.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
     if (_import_alternative_mc) {
       TH1D* h = (TH1D*)file_alt_mc->Get("xsec_mumom_mc_cv_tune3");
       _xsec_calc.ImportAlternativeMC(*h);
@@ -805,6 +833,7 @@ std::cout << ">> here10" << std::endl;
       //
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
+      _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
       if (_do_genie_systs) {
         _xsec_bs_calc.Reset();
@@ -851,7 +880,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
-        _xsec_bs_calc.AddExtraDiagonalUncertainty(0.02); // For POT uncertainty
+        _xsec_bs_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
         _xsec_bs_calc.Run();
 
         _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_muangle");
@@ -876,6 +905,16 @@ std::cout << ">> here10" << std::endl;
     } // _do_reweighting_plots
 
 
+
+    if (_import_cosmic_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_cosmic.root", "WRITE");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_cosmic_muangle");
+      covariance_matrix_cosmic = *m;
+        
+    }
+
+
     if (_import_detector_systs) {
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
@@ -888,6 +927,7 @@ std::cout << ">> here10" << std::endl;
     TH2D covariance_matrix_muangle = * ((TH2D*)covariance_matrix_genie.Clone("covariance_matrix"));
     covariance_matrix_muangle.Add(&covariance_matrix_flux);
     covariance_matrix_muangle.Add(&covariance_matrix_detector);
+    covariance_matrix_muangle.Add(&covariance_matrix_cosmic);
 
     for (int i = 0; i < covariance_matrix_muangle.GetNbinsX(); i++) {
       std::cout << "TOTAL - Angle - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_muangle.GetBinContent(i+1, i+1) << std::endl;
@@ -920,6 +960,7 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.Draw(hist_to_subtract);
     _xsec_calc.Smear(9, 9);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
+    _xsec_calc.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
     if (_import_alternative_mc) {
       TH1D* h = (TH1D*)file_alt_mc->Get("xsec_muangle_mc_cv_tune3");
       _xsec_calc.ImportAlternativeMC(*h);
@@ -1525,21 +1566,29 @@ name = outdir + "trkphi_test";
   hmap_flsmatch_score_difference_mc["beam-off"] = h_flsmatch_score_difference_total_extbnb;
   this->DrawDataMC(canvas_flsmatch_score_difference, hs_flsmatch_score_difference_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_difference_mc, h_flsmatch_score_difference_total_bnbon, bnbon_pot_meas);
   name = outdir + "flsmatch_score_difference";
-  canvas_flsmatch_score->SaveAs(name + ".pdf");
-  canvas_flsmatch_score->SaveAs(name + ".C","C");
+  canvas_flsmatch_score_difference->SaveAs(name + ".pdf");
+  canvas_flsmatch_score_difference->SaveAs(name + ".C","C");
   
 
-  TCanvas* canvas_ntpcobj = new TCanvas();
-  THStack *hs_ntpcobj_mc = new THStack("hs_ntpcobj",";Number of TPCObjects per events; ");
-  leg = PlottingTools::DrawTHStack2(hs_ntpcobj_mc, scale_factor_mc_bnbcosmic, true, hmap_ntpcobj_mc);
-  PlottingTools::DrawDataHisto(h_ntpcobj_data);
-  leg->AddEntry(h_ntpcobj_data,"Data (Beam-on - Beam-off)","lep");
-  PlottingTools::DrawPOT(bnbon_pot_meas);
-  leg->Draw();
-  
+  TCanvas* canvas_ntpcobj = new TCanvas("canvas_ntpcobj", "canvas", 800, 700);
+  THStack *hs_ntpcobj_mc = new THStack("hs_ntpcobj",";Number of TPCObjects per Event;");
+  hmap_ntpcobj_mc["beam-off"] = h_ntpcobj_total_extbnb;
+  this->DrawDataMC(canvas_ntpcobj, hs_ntpcobj_mc, scale_factor_mc_bnbcosmic, true, hmap_ntpcobj_mc, h_ntpcobj_total_bnbon, bnbon_pot_meas);
   name = outdir + "ntpcobj";
   canvas_ntpcobj->SaveAs(name + ".pdf");
   canvas_ntpcobj->SaveAs(name + ".C","C");
+
+  // TCanvas* canvas_ntpcobj = new TCanvas();
+  // THStack *hs_ntpcobj_mc = new THStack("hs_ntpcobj",";Number of TPCObjects per events; ");
+  // leg = PlottingTools::DrawTHStack2(hs_ntpcobj_mc, scale_factor_mc_bnbcosmic, true, hmap_ntpcobj_mc);
+  // PlottingTools::DrawDataHisto(h_ntpcobj_data);
+  // leg->AddEntry(h_ntpcobj_data,"Data (Beam-on - Beam-off)","lep");
+  // PlottingTools::DrawPOT(bnbon_pot_meas);
+  // leg->Draw();
+  
+  // name = outdir + "ntpcobj";
+  // canvas_ntpcobj->SaveAs(name + ".pdf");
+  // canvas_ntpcobj->SaveAs(name + ".C","C");
   
   TCanvas* canvas_dqdx_trunc = new TCanvas();
   THStack *hs_dqdx_trunc_mc = new THStack("hs_dqdx_trunc",";Candidate Track <dQ/dx>_{trunc};");

@@ -1794,8 +1794,8 @@ void Main::Maker::MakeFile()
     // ***********************
 
 
-    if (isSignal) selected_signal_events_percut["initial"]++;
-    selected_events_percut["initial"]++;
+    if (isSignal) selected_signal_events_percut["initial"]+=event_weight;
+    selected_events_percut["initial"]+=event_weight;
     
     
     //
@@ -1840,8 +1840,8 @@ void Main::Maker::MakeFile()
     
     if (isSignal) h_true_nu_eng_afterflash->Fill(t->nu_e, event_weight);
 
-    if (isSignal) selected_signal_events_percut["beamflash"]++;
-    selected_events_percut["beamflash"]++;
+    if (isSignal) selected_signal_events_percut["beamflash"]+=event_weight;
+    selected_events_percut["beamflash"]+=event_weight;
     
     
     if (t->nslices > 0) h_trklen_first->Fill(t->slc_longesttrack_length.at(0));
@@ -2002,8 +2002,8 @@ void Main::Maker::MakeFile()
     if (std::isinf(score_max)) continue;
 
 
-    if (isSignal && nu_origin) selected_signal_events_percut["flash_match"]++;
-    selected_events_percut["flash_match"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match"]+=event_weight;
+    selected_events_percut["flash_match"]+=event_weight;
     
     
     h_flsTime_wcut_4->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
@@ -2019,8 +2019,8 @@ void Main::Maker::MakeFile()
 
     if(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max) < -100) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltax"]++;
-    selected_events_percut["flash_match_deltax"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltax"]+=event_weight;
+    selected_events_percut["flash_match_deltax"]+=event_weight;
     
     h_flsTime_wcut_6->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
     h_deltaz_6->Fill(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill), event_weight);
@@ -2032,8 +2032,8 @@ void Main::Maker::MakeFile()
 
     if(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill) < -75) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltaz"]++;
-    selected_events_percut["flash_match_deltaz"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltaz"]+=event_weight;
+    selected_events_percut["flash_match_deltaz"]+=event_weight;
     
     h_flsTime_wcut_8->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
 
@@ -2063,15 +2063,15 @@ void Main::Maker::MakeFile()
     
     //if(!t->slc_passed_min_vertex_quality.at(scl_ll_max)) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["quality"]++;
-    selected_events_percut["quality"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["quality"]+=event_weight;
+    selected_events_percut["quality"]+=event_weight;
     
     //if (!t->slc_muoncandidate_contained.at(scl_ll_max)) continue;
     
     if(t->slc_muoncandidate_contained.at(scl_ll_max) && (t->slc_muoncandidate_mom_mcs.at(scl_ll_max) - t->slc_muoncandidate_mom_range.at(scl_ll_max) > 0.2)) continue;
     
-    if (isSignal && nu_origin) selected_signal_events_percut["mcs_length_quality"]++;
-    selected_events_percut["mcs_length_quality"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["mcs_length_quality"]+=event_weight;
+    selected_events_percut["mcs_length_quality"]+=event_weight;
 
 
     // DqDx cut
@@ -2086,8 +2086,8 @@ void Main::Maker::MakeFile()
     if (dqdx_calib > dqdx_cut) continue;
     // if(t->slc_nuvtx_z.at(scl_ll_max) <= 500) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["mip_consistency"]++;
-    selected_events_percut["mip_consistency"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["mip_consistency"]+=event_weight;
+    selected_events_percut["mip_consistency"]+=event_weight;
 
 
 
@@ -2110,8 +2110,8 @@ void Main::Maker::MakeFile()
     if(t->slc_nuvtx_z.at(scl_ll_max) > 675 && t->slc_nuvtx_z.at(scl_ll_max) < 775) continue;
     //if(t->slc_nuvtx_z.at(scl_ll_max) < 300) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["fiducial_volume"]++;
-    selected_events_percut["fiducial_volume"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["fiducial_volume"]+=event_weight;
+    selected_events_percut["fiducial_volume"]+=event_weight;
     
     
 
@@ -2142,6 +2142,8 @@ void Main::Maker::MakeFile()
     
     //if (isSignal && nu_origin)std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
     
+    if (_scale_cosmics) event_weight *= _scale_factor_cosmic;
+
     hmap_onebin["total"]->Fill(0.5, event_weight);
     hmap_trklen["total"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
     hmap_trkmom["total"]->Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight);
@@ -3471,15 +3473,15 @@ void Main::Maker::MakeFile()
   //TH1D * generated_percut = new TH1D("generated_percut", "generated_percut", 8, 0, 7);
   TH1D * generated_signal_percut = new TH1D("generated_signal_percut", "generated_percut", 9, 0, 9);
 
-  selected_percut->SetBinContent(1, selected_events_percut["initial"] + 1.28031e+06);
-  selected_percut->SetBinContent(2, selected_events_percut["beamflash"] + 821708);
-  selected_percut->SetBinContent(3, selected_events_percut["flash_match"] + 194732);
-  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"] + 154545);
-  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"] + 106803);
-  selected_percut->SetBinContent(6, selected_events_percut["quality"] + 76023.9);
-  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"] + 72577.9);
-  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"] + 69692.3);
-  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"] + 22657.5);
+  selected_percut->SetBinContent(1, selected_events_percut["initial"]);
+  selected_percut->SetBinContent(2, selected_events_percut["beamflash"]);
+  selected_percut->SetBinContent(3, selected_events_percut["flash_match"]);
+  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"]);
+  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"]);
+  selected_percut->SetBinContent(6, selected_events_percut["quality"]);
+  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"]);
+  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"]);
+  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"]);
 
   selected_signal_percut->SetBinContent(1, selected_signal_events_percut["initial"]);
   selected_signal_percut->SetBinContent(2, selected_signal_events_percut["beamflash"]);

@@ -178,6 +178,8 @@ namespace Base {
     _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb);
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
+    _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
+    std::cout << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
     std::cout << "CrossSectionBootstrapCalculator1D FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
 
     std::vector<std::string> hist_to_subtract = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
@@ -331,7 +333,7 @@ namespace Base {
     BootstrapTH1D xsec_mumom_bs;
     xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
 
-    std::cout << "xsec_mumom_bs.GetNbinsX() " <<xsec_mumom_bs.GetNbinsX() << std::endl;
+    std::cout << "xsec_mumom_bs.GetNbinsX() " << xsec_mumom_bs.GetNbinsX() << std::endl;
 
     //genie_rw_plotter.SetXSecBootstrap(xsec_mumom_bs);
     //genie_rw_plotter.MakeXsecDiffPlots(true);

@@ -166,6 +166,9 @@ namespace Base {
     void ImportAlternativeMC(TH1D h) {_add_alt_mc_xsec = true; _h_alt_mc_xsec = h;};
 
     ///
+    void AddExtraDiagonalUncertainty(double v) {_extra_fractional_uncertainty = v;};
+
+    ///
     void Reset();
 
   private:
@@ -219,6 +222,8 @@ namespace Base {
 
     bool _add_alt_mc_xsec = false; ///< If true draws an alternative MC cross section from ImportAlternativeMC
     TH1D _h_alt_mc_xsec; ///< Stores an alternative MC cross section (from Tune3, or theory, in the latter has to be smeared)
+
+    double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
   };
 }
 

@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, math
 
 from ROOT import gROOT
 gROOT.ProcessLine(".x " + os.environ['MYSW_DIR'] + "/Utils/rootlogon.C")
@@ -22,17 +22,21 @@ analyser.SetBNBONTriggers(36177265)
 analyser.SetEXTBNBTriggers(33320382)
 analyser.SetFluxCorrectionWeight(1.028)
 
+extra_unc = math.sqrt(0.02*0.02 + 0.06*0.06) # POT counting, beam window
+analyser.SetExtraUncertainty(extra_unc)
+
 analyser.SetTargetFluxSystematic("total")
 analyser.DoFluxSystematics(False)
 analyser.ImportFluxSystematics(False)
 analyser.DoGenieSystematics(False)
 analyser.ImportFluxSystematics(False)
+analyser.SetExtraFluxUncertainty(0.)
 
 
 #det_syst_list = ["nospacecharge", "dicharge", "lightyeild", "nodeltaray", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "birksrecomb", "nohadronic"]
 det_syst_list = ["cv", "nospacecharge", "dicharge", "lightyeild", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "dt0", "birksrecomb", "nohadronic"]
 
-det_syst_list = ["dicharge"]
+# det_syst_list = ["dicharge"]
 
 for systname in det_syst_list:
   file_name = "/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_" + systname + ".root"

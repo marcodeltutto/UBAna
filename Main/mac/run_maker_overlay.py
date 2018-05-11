@@ -22,7 +22,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(243)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
-maker.SetExtraWeight(1.028); # Flux correction
+# maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetMaUpMECOff(False)
 

@@ -25,6 +25,8 @@ analyser.SetFakeDataMode(True)
 analyser.SetPrefix("cv");
 analyser.SetFluxCorrectionWeight(1.028)
 
+extra_unc = math.sqrt(0.02*0.02 + 0.06*0.06 + 0.0699*0.0699) # POT counting, beam window, cosmics (overlay)
+analyser.SetExtraUncertainty(extra_unc)
 
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(True)

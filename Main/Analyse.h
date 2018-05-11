@@ -118,6 +118,9 @@ namespace Main {
     /// Imports all the genie systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
     void ImportGenieSystematics(bool option, std::string file = "file.root") {_import_genie_systs = option; _genie_syst_file = file;}
 
+    /// Imports  the cosmic systs from files (previously calculated via external macro, and adds them togheter)
+    void ImportCosmicSystematics(bool option, std::string file = "file.root") {_import_cosmic_systs = option; _cosmic_syst_file = file;}
+
     ///
     void DrawDataMC(TCanvas *c, THStack *hs_mc, double scale_factor_mc_bnbcosmic, bool breakdown_plots, std::map<std::string,TH1D*> hmap_mc, TH1D* h_data_bnbon, double bnbon_pot_meas);
 
@@ -142,6 +145,12 @@ namespace Main {
     ///
     void ImportAlternativeMC(std::string filen = "xsec_file_cv_tune3.root") {_import_alternative_mc = true; _alternative_mc_file = filen;};
 
+    /// Sets an extra uncertainty on the diagonal of the flux covariance matrix
+    void SetExtraFluxUncertainty(double unc) {_extra_flux_fractional_uncertainty = unc;};
+
+    /// Sets an extra uncertainty on the diagonal of the total covariance matrix
+    void SetExtraUncertainty(double unc) {_extra_fractional_uncertainty = unc;};
+
     ///
     void DoAnalise();
 
@@ -163,8 +172,12 @@ namespace Main {
     std::string _target_flux_syst = "";
     bool _import_flux_systs = false;
     std::string _flux_syst_file = "";
+
     bool _import_detector_systs = false;
     std::string _detector_syst_file = "";
+
+    bool _import_cosmic_systs = false;
+    std::string _cosmic_syst_file = "";
 
     bool _do_genie_systs = false;
     bool _import_genie_systs = false;
@@ -181,6 +194,9 @@ namespace Main {
 
     bool _import_alternative_mc = false;
     std::string _alternative_mc_file = ""; ///< The name of the root file that contains the alternative MC 
+
+    double _extra_flux_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal of the flux covariance matrix
+    double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal of the total covariance matrix
     
   };
 }

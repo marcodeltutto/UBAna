@@ -689,6 +689,10 @@ namespace Base {
     // Add systs uncertainties (if cov. matrix is set)
     //
 
+    if (_extra_fractional_uncertainty != 0) {
+      std::cout << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
+    }
+
     TH1D * h_syst_unc = (TH1D*) _h_data->Clone("h_syst_unc");
 
     if (_covariance_matrix_is_set) {
@@ -699,7 +703,9 @@ namespace Base {
 
         double unc_syst = std::sqrt(_covariance_matrix.GetBinContent(i+1, i+1));
 
-        double unc_tot = std::sqrt(unc_stat * unc_stat + unc_syst * unc_syst);
+        double extra_unc = _extra_fractional_uncertainty * _h_data->GetBinContent(i+1);
+
+        double unc_tot = std::sqrt(unc_stat * unc_stat + unc_syst * unc_syst + extra_unc * extra_unc);
 
         std::cout << "Bin " << i << " - stat: " << unc_stat << ", syst: " << unc_syst << ", tot: " << unc_tot << std::endl;
 
