@@ -127,23 +127,37 @@ c_mumom = TCanvas()
 cov_matrix_mumom_frac.SetMarkerColor(kWhite);
 cov_matrix_mumom_frac.SetMarkerSize(1.6);
 cov_matrix_mumom_frac.GetXaxis().SetTitle("Bin i");
-cov_matrix_mumom_frac.GetXaxis().SetTitle("Bin j");
+cov_matrix_mumom_frac.GetYaxis().SetTitle("Bin j");
 cov_matrix_mumom_frac.GetXaxis().CenterTitle();
 cov_matrix_mumom_frac.GetYaxis().CenterTitle();
-cov_matrix_mumom_frac
-cov_matrix_mumom_frac
 cov_matrix_mumom_frac.Draw("colz TEXT")
 
 c_muangle = TCanvas()
 cov_matrix_muangle_frac.SetMarkerColor(kWhite);
 cov_matrix_muangle_frac.SetMarkerSize(1.6);
 cov_matrix_muangle_frac.GetXaxis().SetTitle("Bin i");
-cov_matrix_muangle_frac.GetXaxis().SetTitle("Bin j");
+cov_matrix_muangle_frac.GetYaxis().SetTitle("Bin j");
 cov_matrix_muangle_frac.GetXaxis().CenterTitle();
 cov_matrix_muangle_frac.GetYaxis().CenterTitle();
-cov_matrix_muangle_frac
-cov_matrix_muangle_frac
 cov_matrix_muangle_frac.Draw("colz TEXT")
+
+# c_mumom = TCanvas()
+# cov_matrix_mumom.SetMarkerColor(kWhite);
+# cov_matrix_mumom.SetMarkerSize(1.6);
+# cov_matrix_mumom.GetXaxis().SetTitle("Bin i");
+# cov_matrix_mumom.GetYaxis().SetTitle("Bin j");
+# cov_matrix_mumom.GetXaxis().CenterTitle();
+# cov_matrix_mumom.GetYaxis().CenterTitle();
+# cov_matrix_mumom.Draw("colz TEXT")
+
+# c_muangle = TCanvas()
+# cov_matrix_muangle.SetMarkerColor(kWhite);
+# cov_matrix_muangle.SetMarkerSize(1.6);
+# cov_matrix_muangle.GetXaxis().SetTitle("Bin i");
+# cov_matrix_muangle.GetYaxis().SetTitle("Bin j");
+# cov_matrix_muangle.GetXaxis().CenterTitle();
+# cov_matrix_muangle.GetYaxis().CenterTitle();
+# cov_matrix_muangle.Draw("colz TEXT")
 
 raw_input("Please press enter to exit.")
 
