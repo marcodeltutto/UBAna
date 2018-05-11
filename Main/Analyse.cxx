@@ -1591,7 +1591,7 @@ name = outdir + "trkphi_test";
   // canvas_ntpcobj->SaveAs(name + ".C","C");
   
   TCanvas* canvas_dqdx_trunc = new TCanvas();
-  THStack *hs_dqdx_trunc_mc = new THStack("hs_dqdx_trunc",";Candidate Track <dQ/dx>_{trunc};");
+  THStack *hs_dqdx_trunc_mc = new THStack("hs_dqdx_trunc",";Candidate Track <dQ/dx>_{trunc} [e^{-}/cm];");
   leg = PlottingTools::DrawTHStack3(hs_dqdx_trunc_mc, scale_factor_mc_bnbcosmic, true, hmap_dqdx_trunc_mc);
   PlottingTools::DrawDataHisto(h_dqdx_trunc_data);
   leg->AddEntry(h_dqdx_trunc_data,"Data (Beam-on - Beam-off)","lep");

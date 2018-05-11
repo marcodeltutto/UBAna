@@ -2865,6 +2865,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulation();
   
   temp2 = "./output/efficiency";
   canvas_efficiency->SaveAs(temp2 + ".pdf");
@@ -2879,6 +2880,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulation();
   
   temp2 = "./output/muon_reco_efficiency";
   canvas_muon_reco_efficiency->SaveAs(temp2 + ".pdf");
@@ -2893,6 +2895,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulation();
   
   temp2 = "./output/muon_reco_efficiency_angle";
   canvas_muon_reco_efficiency_angle->SaveAs(temp2 + ".pdf");
@@ -2912,6 +2915,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulation();
 
   temp2 = "./output/efficiency_mumom";
   canvas_efficiency_mumom->SaveAs(temp2 + ".pdf");
@@ -2931,6 +2935,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulation();
   
   temp2 = "./output/efficiency_muangle";
   canvas_efficiency_muangle->SaveAs(temp2 + ".pdf");
@@ -2945,6 +2950,7 @@ void Main::Maker::MakeFile()
   pEff5_3->SetMarkerStyle(20);
   pEff5_3->SetMarkerSize(0.5);
   pEff5_3->Draw("colz");
+  PlottingTools::DrawSimulation();
 
   
   temp2 = "./output/efficiency_muangle_mumom";
@@ -2965,6 +2971,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulation();
   
   temp2 = "./output/efficiency_muphi";
   canvas_efficiency_muphi->SaveAs(temp2 + ".pdf");
@@ -2984,6 +2991,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulation();
   
   temp2 = "./output/efficiency_mult";
   canvas_efficiency_mult->SaveAs(temp2 + ".pdf");
@@ -3003,6 +3011,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulation();
   
   temp2 = "./output/efficiency_mult_ch";
   canvas_efficiency_mult_ch->SaveAs(temp2 + ".pdf");
@@ -3025,8 +3034,8 @@ void Main::Maker::MakeFile()
   gPad->Update();
 
   TEfficiency* pEff_res = new TEfficiency(*h_eff_res_num,*h_eff_res_den);
-  pEff_res->SetLineColor(kRed+2);
-  pEff_res->SetMarkerColor(kRed+2);
+  pEff_res->SetLineColor(kRed+1);
+  pEff_res->SetMarkerColor(kRed+1);
   pEff_res->SetLineWidth(2);
   pEff_res->SetMarkerStyle(20);
   pEff_res->SetMarkerSize(0.5);
@@ -3060,9 +3069,11 @@ void Main::Maker::MakeFile()
   leg_mode->AddEntry(pEff_qe,"GENIE QE","lep");
   leg_mode->AddEntry(pEff_res,"GENIE RES","lep");  
   leg_mode->AddEntry(pEff_dis,"GENIE DIS","lep");  
-  leg_mode->AddEntry(pEff_coh,"GENIE COH","lep");  
+  // leg_mode->AddEntry(pEff_coh,"GENIE COH","lep");  
   leg_mode->AddEntry(pEff_mec,"GENIE MEC","lep");  
   leg_mode->Draw();
+
+  PlottingTools::DrawSimulation();
 
   temp2 = "./output/efficiency_mode";
   canvas_efficiency_mode->SaveAs(temp2 + ".pdf");
