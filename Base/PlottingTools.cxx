@@ -503,19 +503,19 @@ TLegend* PlottingTools::DrawTHStack2(THStack *hs_trklen,
   }
   
   if (themap["beam-off"] != NULL) {
-    themap["beam-off"]->SetLineColor(kBlue+2);
-    themap["beam-off"]->SetFillColor(kBlue+2);
+    themap["beam-off"]->SetLineColor(kBlue-3);
+    themap["beam-off"]->SetFillColor(kBlue-3);
     themap["beam-off"]->SetFillStyle(3004);
     themap["total"]->Add(themap["beam-off"]);
     hs_trklen->Add(themap["beam-off"]);
   }
   
-  themap["background"]->SetLineColor(kBlue+2);
-  themap["background"]->SetFillColor(kBlue+2);
+  themap["background"]->SetLineColor(kBlue-3);
+  themap["background"]->SetFillColor(kBlue-3);
   hs_trklen->Add(themap["background"]);
   
-  themap["signal"]->SetLineColor(kRed+2);
-  themap["signal"]->SetFillColor(kRed+2);
+  themap["signal"]->SetLineColor(kRed-3);
+  themap["signal"]->SetFillColor(kRed-3);
   hs_trklen->Add(themap["signal"]);
   
   hs_trklen->Draw("hist");
@@ -569,8 +569,8 @@ TLegend* PlottingTools::DrawTHStack3(THStack *hs_trklen,
     iter.second->Scale(pot_scaling);
   }
   
-  themap["proton"]->SetLineColor(kBlue+2);
-  themap["proton"]->SetFillColor(kBlue+2);
+  themap["proton"]->SetLineColor(kBlue-3);
+  themap["proton"]->SetFillColor(kBlue-3);
   hs_trklen->Add(themap["proton"]);
   
   themap["pion"]->SetLineColor(kGreen+2);
@@ -589,8 +589,8 @@ TLegend* PlottingTools::DrawTHStack3(THStack *hs_trklen,
   themap["else"]->SetFillColor(kGray+2);
   hs_trklen->Add(themap["else"]);
   
-  themap["muon"]->SetLineColor(kRed+2);
-  themap["muon"]->SetFillColor(kRed+2);
+  themap["muon"]->SetLineColor(kRed-3);
+  themap["muon"]->SetFillColor(kRed-3);
   hs_trklen->Add(themap["muon"]);
   
   hs_trklen->Draw("histo");
@@ -604,7 +604,7 @@ TLegend* PlottingTools::DrawTHStack3(THStack *hs_trklen,
   
   TLegend* leg2;
   
-  leg2 = new TLegend(0.6475645,0.5136842,0.8767908,0.8336842,NULL,"brNDC");
+  leg2 = new TLegend(0.4283668,0.4442105,0.8925501,0.8336842,NULL,"brNDC");
   
   std::stringstream sstm;
   

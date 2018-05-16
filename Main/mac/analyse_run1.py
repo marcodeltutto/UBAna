@@ -10,14 +10,16 @@ analyser = Main.Analyse()
 
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_500k.root") # tune 1
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6.root") # tune 1 high stat - genie and flux styst (from uboonegpvm)
-analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled.root") # tune 1 high stat - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%)
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled.root") # tune 1 high stat - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled_cosmicscaled.root") # tune 1 high stat - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%) (with comisc blue bkg scaled by 0.54548, from the overlay)
-# analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_tune3_mcc8.9_test5.root") # tune 3
+analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_tune3_mcc8.9_test5.root") # tune 3
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_tune3.root") # tune 3 - genie and flux styst (from uboonegpvm)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_tune3_fluxscaled.root") # tune 3 - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # tune 1 - genie and flux styst (no high stat)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_maup_mecoff.root") # tune 1 - ma up, mec off
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_tune3_maup_mecoff.root ") # tune 3 - ma up, mec off
+
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kaondown.root")
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root")    
@@ -25,7 +27,7 @@ analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 analyser.SetBNBPOT(1.627e+20)    
 analyser.SetBNBONTriggers(36177265)   
 analyser.SetEXTBNBTriggers(33320382)
-analyser.SetPrefix("cv")
+analyser.SetPrefix("tune3")
 # analyser.SetPrefix("cv_tune3")
 # analyser.SetPrefix("cv_c	osmicscaled_overlay")
 analyser.SetFluxCorrectionWeight(1.028)
@@ -37,13 +39,13 @@ analyser.SetBeamOffSubtraction(False)
 extra_unc = math.sqrt(0.02*0.02 + 0.04*0.04) # POT counting, beam window
 # analyser.SetExtraUncertainty(extra_unc)
 
-analyser.ImportDetectorSystematics(False)
+analyser.ImportDetectorSystematics(True)
 
 analyser.DoGenieSystematics(False)
-analyser.ImportGenieSystematics(False)
+analyser.ImportGenieSystematics(True)
 
 analyser.DoFluxSystematics(False)
-analyser.ImportFluxSystematics(False)
+analyser.ImportFluxSystematics(True)
 analyser.SetExtraFluxUncertainty(0.)
 #analyser.SetTargetFluxSystematic("FluxUnisim");
 #analyser.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");

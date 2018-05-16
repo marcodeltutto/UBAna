@@ -499,6 +499,16 @@ namespace Base {
     std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
     std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
 
+    std::cout << "First Bin only: " << std::endl;
+    std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
+    std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
+    std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
+    std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
+    std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
+    std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
+    std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
+    std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+
     if (_h_bnbon->GetNbinsX() == 1) {
       // If one bin means we are dealing with the total cross section, print the number of events
       std::cout << "Number of events for POT: " << _pot << std::endl;

@@ -673,7 +673,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_mumom_num, bs_genie_multisim_eff_mumom_den, bs_genie_multisim_reco_true_mumom);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
+        _xsec_bs_calc.SetMigrationMatrixDimensions(7, 7);
         _xsec_bs_calc.SetSavePrefix("genie_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -707,7 +707,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(7,6);
+        _xsec_bs_calc.SetMigrationMatrixDimensions(7, 7);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
@@ -771,10 +771,10 @@ std::cout << ">> here10" << std::endl;
     //
     // Muon Momentum Cross Section
     //
-    TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 6);
+    TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(7, 7);
     MigrationMatrix2D migrationmatrix2d;
     migrationmatrix2d.SetOutDir("migration_matrix_2d_trkmom");
-    migrationmatrix2d.SetNBins(7, 6);
+    migrationmatrix2d.SetNBins(7, 7);
     migrationmatrix2d.SetTrueRecoHistogram(h_true_reco_mom);
     S_2d = migrationmatrix2d.CalculateMigrationMatrix();
     migrationmatrix2d.PlotMatrix();
@@ -786,14 +786,14 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.SetTruthHistograms(h_eff_mumom_num, h_eff_mumom_den, h_true_reco_mom);
     _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
     if (_fake_data_mode) {
-    	_xsec_calc.SetTruthXSec(h_truth_xsec_mumom_fake, 7, 6);
+    	_xsec_calc.SetTruthXSec(h_truth_xsec_mumom_fake, 7, 7);
     }
     _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkmom_eventsperbin_table.tex");
     _xsec_calc.Draw();
     _xsec_calc.Draw(hist_to_subtract);
-    _xsec_calc.Smear(7, 6);
+    _xsec_calc.Smear(7, 7);
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
     _xsec_calc.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
     if (_import_alternative_mc) {

@@ -1287,7 +1287,7 @@ void Main::Maker::MakeFile()
     if (isdata) event_weight = 1.;
 
 
-
+    bool is_from_kaon = false;
 
     // ************************
     //
@@ -1561,11 +1561,25 @@ void Main::Maker::MakeFile()
 
           wgts_flux_multisim.at(i_wgt) *= t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt);
 
+          // if (t->evtwgt_flux_multisim_funcname.at(i_func) == "kminus_PrimaryHadronNormalization" 
+          //    || t->evtwgt_flux_multisim_funcname.at(i_func) == "kplus_PrimaryHadronFeynmanScaling" 
+          //    || t->evtwgt_flux_multisim_funcname.at(i_func) == "kzero_PrimaryHadronSanfordWang" ) {
+          //   std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+          //   if (t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt) != 1) {
+          //     is_from_kaon = true;
+          //   }
+          // }
+
         }
 
       }
 
     }
+
+    // if (is_from_kaon) {
+    //   // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+    //   event_weight *= 1.5;
+    // }
 
 
 /*
@@ -1895,7 +1909,7 @@ void Main::Maker::MakeFile()
         }
       }
       //  spec
-      if (t->event == -1/*150801 4990051 3099969*/) {
+      if (/*t->event==900 && t->run==5326*/t->event==-1 /*150801 4990051 3099969*/) {
         if (flashInBeamSpill > -1 && t->slc_flsmatch_score.at(slc) > -1){
           int instance = 0;
           std::cout << "tpcx " << t->slc_flsmatch_tpcx.at(instance) << std::endl;
@@ -2115,11 +2129,11 @@ void Main::Maker::MakeFile()
     
     
 
-    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi()/4)) continue;
-    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < (3./4.)*TMath::Pi())) continue;
-    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -(3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -TMath::Pi()/4)) continue;
+    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi()/4)) continue; // cathode
+    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < (3./4.)*TMath::Pi())) continue; // up
+    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -(3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -TMath::Pi()/4)) continue; // down
     // if (!((t->slc_longesttrack_phi.at(scl_ll_max) > (3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi())
-    //         || (t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -(3./4.)*TMath::Pi()))) continue;
+            // || (t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -(3./4.)*TMath::Pi()))) continue; // anode
 
 
     //if(t->slc_mult_track_tolerance.at(scl_ll_max) <= 1) continue;
@@ -2129,9 +2143,11 @@ void Main::Maker::MakeFile()
 
     //if(t->slc_longesttrack_length.at(scl_ll_max) < 25.) continue;
     
-    //if(!t->slc_iscontained.at(scl_ll_max)) continue;
+    // if(t->slc_iscontained.at(scl_ll_max)) continue;
     
     //if(t->slc_crosses_top_boundary.at(scl_ll_max) == 1) continue;
+
+    // if (t->slc_muoncandidate_mom_mcs.at(scl_ll_max) > 2.5) continue;
 
 
     
@@ -3120,7 +3136,7 @@ void Main::Maker::MakeFile()
   h_frac_diff_others->Draw("colz");
   
   // PE spec
-  new TCanvas();
+  TCanvas * canvas_fm_pe_comparison = new TCanvas();
   TGraph* gr = new TGraph(32,hypo_spec_x,hypo_spec_y);
   TGraph* gr2 = new TGraph(32,meas_spec_x,meas_spec_y);
   TGraph* gr3 = new TGraph(32,numc_spec_x,numc_spec_y);
@@ -3155,8 +3171,11 @@ void Main::Maker::MakeFile()
   leg->AddEntry(gr,"Hypo flash","l");
   leg->AddEntry(gr2,"Reco flash","l");
   //leg->AddEntry(gr3,"Neutrino MCFlash","l");
-  
   leg->Draw();
+  temp2 = "./output/fm_pe_comparison";
+  canvas_fm_pe_comparison->SaveAs(temp2 + ".pdf");
+  canvas_fm_pe_comparison->SaveAs(temp2 + ".C","C");
+
   
   TCanvas * canvas_vtxcheck = new TCanvas();
   h_vtxcheck_angle_good->Scale(1./h_vtxcheck_angle_good->Integral());
