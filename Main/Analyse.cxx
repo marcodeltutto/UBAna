@@ -669,7 +669,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
+        _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_mumom_num, bs_genie_multisim_eff_mumom_den, bs_genie_multisim_reco_true_mumom);
@@ -703,7 +703,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
+        _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
@@ -788,7 +788,7 @@ std::cout << ">> here10" << std::endl;
     if (_fake_data_mode) {
     	_xsec_calc.SetTruthXSec(h_truth_xsec_mumom_fake, 7, 7);
     }
-    _xsec_calc.SetNameAndLabel("trkmom", ";Candidate Track Momentum (MCS) [GeV]; Selected Events");
+    _xsec_calc.SetNameAndLabel("trkmom", ";p_{#mu}^{reco} [GeV]; Selected Events");
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkmom_eventsperbin_table.tex");
     _xsec_calc.Draw();
@@ -800,7 +800,7 @@ std::cout << ">> here10" << std::endl;
       TH1D* h = (TH1D*)file_alt_mc->Get("xsec_mumom_mc_cv_tune3");
       _xsec_calc.ImportAlternativeMC(*h);
     }
-    TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+    TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection("p_{#mu}^{reco} [GeV]", "d#sigma/dp_{#mu}^{reco} [10^{-38} cm^{2}/GeV]");
     TH1D * xsec_mumom_mc = _xsec_calc.GetMCCrossSection();
 
     file_out->cd();
@@ -839,7 +839,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";Candidate Track cos(#theta); Selected Events");
+        _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";cos(#theta_{#mu}^{reco}); Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
@@ -872,7 +872,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkcostheta_flux_multisim", ";Candidate Track cos(#theta) [GeV]; Selected Events");
+        _xsec_bs_calc.SetNameAndLabel("trkcostheta_flux_multisim", ";Candidate Track cos(#theta_{#mu}^{reco}) [GeV]; Selected Events");
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_trkangle_flux_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_num, bs_flux_multisim_eff_muangle_den, bs_flux_multisim_true_reco_muangle);
@@ -953,7 +953,7 @@ std::cout << ">> here10" << std::endl;
     if (_fake_data_mode) {
     	_xsec_calc.SetTruthXSec(h_truth_xsec_muangle_fake, 9, 9);
     }
-    _xsec_calc.SetNameAndLabel("trkcostheta", ";Candidate Track cos(#theta); Selected Events");
+    _xsec_calc.SetNameAndLabel("trkcostheta", ";cos(#theta_{#mu}^{reco}); Selected Events");
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkcostheta_eventsperbin_table.tex");
     _xsec_calc.Draw();
@@ -965,7 +965,7 @@ std::cout << ">> here10" << std::endl;
       TH1D* h = (TH1D*)file_alt_mc->Get("xsec_muangle_mc_cv_tune3");
       _xsec_calc.ImportAlternativeMC(*h);
     }
-    TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
+    TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu}^{reco})", "d#sigma/dcos(#theta_{#mu}^{reco}) [10^{-38} cm^{2}]");
     TH1D * xsec_muangle_mc = _xsec_calc.GetMCCrossSection();
 
 
@@ -1228,7 +1228,7 @@ std::cout << ">> here10" << std::endl;
   THStack *hs_trklen_mc = new THStack("hs_trklen",";Candidate Track Length [cm]; Selected Events");
   hmap_trklen_mc["beam-off"] = h_trklen_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_trklen_total_bnbon->Add(h_trklen_total_extbnb);
-  this->DrawDataMC(canvas_trklen, hs_trklen_mc, scale_factor_mc_bnbcosmic, true, hmap_trklen_mc, h_trklen_total_bnbon, bnbon_pot_meas);
+  this->DrawDataMC(canvas_trklen, hs_trklen_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trklen_mc, h_trklen_total_bnbon, bnbon_pot_meas);
 
   
   std::cout << "\t             MC BNBCOSMIC: " << hmap_trklen_mc["total"]->Integral(0, hmap_trklen_mc["total"]->GetNbinsX()+1) << std::endl;
@@ -1296,11 +1296,11 @@ std::cout << ">> here10" << std::endl;
 
 
   TCanvas* canvas_trkmom_classic = new TCanvas("canvas_trkmom_classic", "canvas", 800, 700);
-  THStack *hs_trkmom_classic_mc = new THStack("hs_trkmom_classic",";Candidate Track Momentum [GeV]; Selected Events");
+  THStack *hs_trkmom_classic_mc = new THStack("hs_trkmom_classic",";p_{#mu}^{reco} [GeV]; Selected Events");
   if (!_beamoff_sub) hmap_trkmom_classic_mc["beam-off"] = h_trkmom_classic_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_trkmom_classic_total_bnbon->Add(h_trkmom_classic_total_extbnb);
-  if (_beamoff_sub) this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_data, bnbon_pot_meas);
-  else this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trkmom_classic_mc, h_trkmom_classic_total_bnbon, bnbon_pot_meas);
+  if (_beamoff_sub) this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkmom_classic_mc, h_trkmom_classic_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_trkmom_classic, hs_trkmom_classic_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkmom_classic_mc, h_trkmom_classic_total_bnbon, bnbon_pot_meas);
 
   name = outdir + "trkmomclassic";
   if (_beamoff_sub) name = outdir + "trkmomclassic_sub";
@@ -1309,11 +1309,11 @@ std::cout << ">> here10" << std::endl;
 
 
   TCanvas* canvas_trktheta_classic = new TCanvas("canvas_trktheta_classic", "canvas", 800, 700);
-  THStack *hs_trktheta_classic_mc = new THStack("hs_trktheta_classic",";Candidate Track cos(#theta); Selected Events");
+  THStack *hs_trktheta_classic_mc = new THStack("hs_trktheta_classic",";cos(#theta_{#mu}^{reco}); Selected Events");
   if (!_beamoff_sub) hmap_trktheta_classic_mc["beam-off"] = h_trktheta_classic_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_trktheta_classic_total_bnbon->Add(h_trktheta_classic_total_extbnb);
-  if (_beamoff_sub) this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_data, bnbon_pot_meas);
-  else this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, true, hmap_trktheta_classic_mc, h_trktheta_classic_total_bnbon, bnbon_pot_meas);
+  if (_beamoff_sub) this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trktheta_classic_mc, h_trktheta_classic_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trktheta_classic_mc, h_trktheta_classic_total_bnbon, bnbon_pot_meas);
 
   name = outdir + "trkthetaclassic";
   canvas_trktheta_classic->SaveAs(name + ".pdf");
@@ -1322,11 +1322,11 @@ std::cout << ">> here10" << std::endl;
 
 
   TCanvas* canvas_trkphi = new TCanvas("canvas_trkphi", "canvas", 800, 700);
-  THStack *hs_trkphi_mc = new THStack("hs_trkphi",";Candidate Track #phi; Selected Events");
+  THStack *hs_trkphi_mc = new THStack("hs_trkphi",";#phi_{#mu}^{reco}; Selected Events");
   if (!_beamoff_sub) hmap_trkphi_mc["beam-off"] = h_trkphi_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_trkphi_total_bnbon->Add(h_trkphi_total_extbnb);
-  if (_beamoff_sub) this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc, h_trkphi_data, bnbon_pot_meas);
-  else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, true, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
+  if (_beamoff_sub) this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "trkphi";
   canvas_trkphi->SaveAs(name + ".pdf");
@@ -1346,11 +1346,11 @@ name = outdir + "trkphi_test";
   canvas_trkphi_test->SaveAs(name + ".C","C");
   
   TCanvas* canvas_multpfp = new TCanvas("canvas_multpfp", "canvas", 800, 700);
-  THStack *hs_multpfp_mc = new THStack("hs_multpfp",";PFP Multiplicity; Selected Events");
+  THStack *hs_multpfp_mc = new THStack("hs_multpfp",";Particle Multiplicity; Selected Events");
   if (!_beamoff_sub) hmap_multpfp_mc["beam-off"] = h_multpfp_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_multpfp_total_bnbon->Add(h_multpfp_total_extbnb);
-  if (_beamoff_sub) this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc, h_multpfp_data, bnbon_pot_meas);
-  else this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, true, hmap_multpfp_mc, h_multpfp_total_bnbon, bnbon_pot_meas);
+  if (_beamoff_sub) this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_multpfp_mc, h_multpfp_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_multpfp, hs_multpfp_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_multpfp_mc, h_multpfp_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "multpfp";
   canvas_multpfp->SaveAs(name + ".pdf");
@@ -1358,11 +1358,11 @@ name = outdir + "trkphi_test";
 
 
   TCanvas* canvas_multtracktol = new TCanvas("canvas_multtracktol", "canvas", 800, 700);
-  THStack *hs_multtracktol_mc = new THStack("hs_multtracktol",";Track Multiplicity (5 cm); Selected Events");
+  THStack *hs_multtracktol_mc = new THStack("hs_multtracktol",";Track Multiplicity; Selected Events");
   if (!_beamoff_sub) hmap_multtracktol_mc["beam-off"] = h_multtracktol_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_multtracktol_total_bnbon->Add(h_multtracktol_total_extbnb);
-  if (_beamoff_sub) this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc, h_multtracktol_data, bnbon_pot_meas);
-  else this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, true, hmap_multtracktol_mc, h_multtracktol_total_bnbon, bnbon_pot_meas);
+  if (_beamoff_sub) this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_multtracktol_mc, h_multtracktol_data, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_multtracktol, hs_multtracktol_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_multtracktol_mc, h_multtracktol_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "multtracktol";
   canvas_multtracktol->SaveAs(name + ".pdf");
@@ -1814,7 +1814,7 @@ name = outdir + "trkphi_test";
       if (_overlay_mode) {
         leg->AddEntry(h_data_bnbon,"Overlay + Beam-off","lep");
       } else {
-        leg->AddEntry(h_data_bnbon,"Data (Beam-on)","lep");
+        leg->AddEntry(h_data_bnbon,"Data (Beam-on, stat. only)","lep");
       }
     } else {
       leg->AddEntry(h_data_bnbon,"Data (Beam-on - Beam-off)","lep");
@@ -1823,6 +1823,7 @@ name = outdir + "trkphi_test";
 
     PlottingTools::DrawPOTRatio(bnbon_pot_meas);
     if (_overlay_mode) PlottingTools::DrawOverlay();
+    else PlottingTools::DrawPreliminary();
 
 
 

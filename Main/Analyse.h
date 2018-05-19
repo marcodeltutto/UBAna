@@ -143,6 +143,9 @@ namespace Main {
     void SetBeamOffSubtraction(bool option = false) {_beamoff_sub = option;};
 
     ///
+    void SetBreakdownPlots(bool option = false) {_breakdown_plots = option;};
+
+    ///
     void ImportAlternativeMC(std::string filen = "xsec_file_cv_tune3.root") {_import_alternative_mc = true; _alternative_mc_file = filen;};
 
     /// Sets an extra uncertainty on the diagonal of the flux covariance matrix
@@ -187,6 +190,8 @@ namespace Main {
     bool _overlay_mode = false;
 
     bool _beamoff_sub = false;
+
+    bool _breakdown_plots = true;
 
     std::string _prefix = "";
 

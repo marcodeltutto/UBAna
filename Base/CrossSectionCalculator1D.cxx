@@ -743,16 +743,19 @@ namespace Base {
     TLegend *l;
 
     if (xaxis_label.find("cos") != std::string::npos) {
-      l = new TLegend(0.1532951,0.6884211,0.6031519,0.8273684,NULL,"brNDC");
+      l = new TLegend(0.1590258,0.7052632,0.512894,0.8421053,NULL,"brNDC");
     }
     else {
-      l = new TLegend(0.42,0.71, 0.87,0.85,NULL,"brNDC");
+      l = new TLegend(0.3825215,0.7178947,0.7363897,0.8547368,NULL,"brNDC");
     }
+    l->SetFillColor(0);
+    l->SetFillStyle(0);
+    l->SetTextSize(0.03578947);
     if (!_add_alt_mc_xsec) l->AddEntry(_h_mc, "MC (Stat. Uncertainty)");
     //l->AddEntry(_truth_xsec, "Monte Carlo (Truth)", "l");
     if (_add_alt_mc_xsec) {
-      l->AddEntry(_h_mc, "MC Tune 1 (Stat. Unc.)");
-      l->AddEntry(&_h_alt_mc_xsec, "MC Tune 3 (Stat. Unc.)");
+      l->AddEntry(_h_mc, "GENIE Default + Emp. MEC (Stat. Unc.)");
+      l->AddEntry(&_h_alt_mc_xsec, "GENIE Alternative (Stat. Unc.)");
     }
     if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
       l->AddEntry(_h_data, "Measured (Stat. #oplus Syst. Unc.)", "ep");

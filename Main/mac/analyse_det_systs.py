@@ -46,4 +46,17 @@ for systname in det_syst_list:
   analyser.DoAnalise()
 
 
+
+analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_CV.root")
+analyser.SetPrefix("CV")
+analyser.DoAnalise()
+
+analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_dataSCE.root")
+analyser.SetPrefix("dataSCE")
+analyser.DoAnalise()
+
+analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_stretchResp.root")
+analyser.SetPrefix("stretchResp")
+analyser.DoAnalise()
+
 raw_input("Please press enter to exit.")

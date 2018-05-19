@@ -28,12 +28,13 @@ namespace Base {
   }
 
   void PlottingTools::DrawSimulation() {
-    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Simulation");
-    prelim->SetTextColor(kGray+1);
+    TLatex* prelim = new TLatex(0.94,0.93, "MicroBooNE Simulation, Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
     prelim->SetNDC();
-    prelim->SetTextSize(2/30.);
+    prelim->SetTextSize(1/30.);
     prelim->SetTextAlign(32);
-    prelim->SetTextSize(0.04631579);
+    // prelim->SetTextSize(0.04631579);
     prelim->Draw();
   }
 
@@ -176,8 +177,8 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     hs_trklen->Add(themap["nc_other"]);
   }
   else {
-    themap["cosmic"]->SetLineColor(kBlue+2);
-    themap["cosmic"]->SetFillColor(kBlue+2);
+    themap["cosmic"]->SetLineColor(kBlue-3);
+    themap["cosmic"]->SetFillColor(kBlue-3);
     hs_trklen->Add(themap["cosmic"]);
     themap["outfv"]->SetLineColor(kGreen+2);
     themap["outfv"]->SetFillColor(kGreen+2);
@@ -203,8 +204,8 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     hs_trklen->Add(themap["signal_stopmu"]);
   }
   else {
-    themap["signal"]->SetLineColor(kRed);
-    themap["signal"]->SetFillColor(kRed);
+    themap["signal"]->SetLineColor(kRed-4);
+    themap["signal"]->SetFillColor(kRed-4);
     hs_trklen->Add(themap["signal"]);
   }
   hs_trklen->Draw("hist");
@@ -227,7 +228,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     // leg2 = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
     leg2 = new TLegend(0.6015038,0.3101075,0.9235589,0.8468817,NULL,"brNDC");
   } else {
-    leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+    leg2 = new TLegend(0.5789474,0.4212346,0.8696742,0.8222222,NULL,"brNDC");
   }
   std::stringstream sstm;
   // numu
@@ -320,6 +321,9 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     // leg2->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
   }
   
+  leg2->SetTextSize(0.03753087);
+  // leg2->SetFillColor(0);
+  // leg2->SetFillStyle(0);
   leg2->Draw();
   
   return leg2;
