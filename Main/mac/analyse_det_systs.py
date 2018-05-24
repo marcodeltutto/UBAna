@@ -10,16 +10,19 @@ analyser = Main.Analyse()
 
 #analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_500k.root");
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
-# analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.7_test6.root")   
-# analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.7_test6.root")
-# analyser.SetBNBPOT(4.852e+19)
-# analyser.SetBNBONTriggers(10820589)
-# analyser.SetEXTBNBTriggers(15482261)
-analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root")    
-analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root")
-analyser.SetBNBPOT(1.627e+20)    
-analyser.SetBNBONTriggers(36177265)    
-analyser.SetEXTBNBTriggers(33320382)
+analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.7_test6.root")   
+analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.7_test6.root")
+analyser.SetBNBPOT(4.852e+19)
+analyser.SetBNBONTriggers(10820589)
+analyser.SetEXTBNBTriggers(15482261)
+
+# analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root")    
+# analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root")
+# analyser.SetBNBPOT(1.627e+20)    
+# analyser.SetBNBONTriggers(36177265)    
+# analyser.SetEXTBNBTriggers(33320382)
+
+
 analyser.SetFluxCorrectionWeight(1.028)
 
 extra_unc = math.sqrt(0.02*0.02 + 0.06*0.06) # POT counting, beam window
@@ -34,12 +37,15 @@ analyser.SetExtraFluxUncertainty(0.)
 
 
 #det_syst_list = ["nospacecharge", "dicharge", "lightyeild", "nodeltaray", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "birksrecomb", "nohadronic"]
-det_syst_list = ["cv", "nospacecharge", "dicharge", "lightyeild", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "dt0", "birksrecomb", "nohadronic"]
+# det_syst_list = ["cv", "nospacecharge", "dicharge", "lightyeild", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "dt0", "birksrecomb", "nohadronic"]
+det_syst_list = ["CV", "dataSCE", "withDIC", "stretchResp", "squeezeResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp"]
 
-det_syst_list = ["lightyeild"]
+
+det_syst_list = ["stretchResp"]
 
 for systname in det_syst_list:
-  file_name = "/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_" + systname + ".root"
+  # file_name = "/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_" + systname + ".root"
+  file_name = "/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_" + systname + ".root"
   print file_name
   analyser.SetBNBCosmicFile(file_name)
   analyser.SetPrefix(systname)
@@ -47,16 +53,20 @@ for systname in det_syst_list:
 
 
 
-analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_CV.root")
-analyser.SetPrefix("CV")
-analyser.DoAnalise()
+# analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_CV.root")
+# analyser.SetPrefix("CV")
+# analyser.DoAnalise()
 
-analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_dataSCE.root")
-analyser.SetPrefix("dataSCE")
-analyser.DoAnalise()
+# analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_dataSCE.root")
+# analyser.SetPrefix("dataSCE")
+# analyser.DoAnalise()
 
-analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_stretchResp.root")
-analyser.SetPrefix("stretchResp")
-analyser.DoAnalise()
+# analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_stretchResp.root")
+# analyser.SetPrefix("stretchResp")
+# analyser.DoAnalise()
+
+# analyser.SetBNBCosmicFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_squeezeResp.root")
+# analyser.SetPrefix("squeezeResp")
+# analyser.DoAnalise()
 
 raw_input("Please press enter to exit.")

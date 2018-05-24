@@ -732,8 +732,6 @@ std::cout << ">> here10" << std::endl;
         covariance_matrix_flux = *m;
       }
 
-
-
     } // _do_reweighting_plots
 
 

@@ -224,6 +224,10 @@ namespace Base {
     TH1D _h_alt_mc_xsec; ///< Stores an alternative MC cross section (from Tune3, or theory, in the latter has to be smeared)
 
     double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
+
+    TH2D *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    TH2D *_cov_matrix_total = NULL; ///< Total  covariance matrix
+    TH2D *_corr_matrix_total = NULL; ///< Total correlation matrix
   };
 }
 

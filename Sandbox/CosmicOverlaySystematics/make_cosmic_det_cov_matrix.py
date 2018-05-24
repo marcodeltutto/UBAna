@@ -89,7 +89,7 @@ gStyle.SetPaintTextFormat("4.5f");
 gStyle.SetPalette(kDeepSea);
 
 
-cov_file = TFile("covariance_cosmic.root", "UPDATE");
+cov_file = TFile("covariance_cosmic.root", "RECREATE");
 cov_file.cd();
 cov_matrix_mumom.Write("covariance_matrix_cosmic_mumom");
 cov_matrix_muangle.Write("covariance_matrix_cosmic_muangle");

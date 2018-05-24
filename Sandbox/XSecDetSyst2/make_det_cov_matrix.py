@@ -12,16 +12,16 @@ cov_matrix_muangle = TH2D("cov_matrix_muangle", "", 9, 0, 9, 9, 0, 9)
 cov_matrix_muangle_frac = TH2D("cov_matrix_muangle_frac", "", 9, 0, 9, 9, 0, 9)
 
 # Get the central value xsec
-file_cv = TFile("xsec_file_cv.root");
-xsec_onebin_cv = file_cv.Get("xsec_onebin_cv")
-xsec_mumom_cv = file_cv.Get("xsec_mumom_cv")
-xsec_muangle_cv = file_cv.Get("xsec_muangle_cv")
+file_cv = TFile("xsec_file_CV.root");
+xsec_onebin_cv = file_cv.Get("xsec_onebin_CV")
+xsec_mumom_cv = file_cv.Get("xsec_mumom_CV")
+xsec_muangle_cv = file_cv.Get("xsec_muangle_CV")
 
 print "CV cross section", xsec_onebin_cv.GetBinContent(1)
 
 print "Systematic parameter & Cross section & Total xsec perc difference \\\\"
 
-print "cv & ", xsec_onebin_cv.GetBinContent(1), " &  0.0  \\\\"
+print "CV & ", xsec_onebin_cv.GetBinContent(1), " &  0.0  \\\\"
 
 
 
@@ -36,8 +36,9 @@ for i in xrange(0, xsec_muangle_cv.GetNbinsX()):
 		cov_matrix_muangle_frac.SetBinContent(i+1, j+1, 0)
 
 
-det_syst_list = ["nospacecharge", "dicharge", "lightyeild", "nodeltaray", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "dt0", "birksrecomb", "nohadronic"]
-det_syst_list = ["altDeadChannels", "deadSaturatedChannels", "whitenoise", "lifetime10ms", "birksrecomb", "enhancedexttpcvis"]
+det_syst_list = ["CV", "dataSCE", "withDIC", "stretchResp", "squeezeResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp"]
+
+det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "DLdown", "DTup", "LArG4BugFix", "downPEnoise", "noiseAmpUp"]
 
 stat_err_perbin_mumom = [0.0041, 0.013, 0.010, 0.0048, 0.0028, 0.00067]
 stat_err_perbin_muangle = [0.0034, 0.0026, 0.0060, 0.0038, 0.0055, 0.0087, 0.0080, 0.011, 0.018]
@@ -52,7 +53,7 @@ syst_mumom = [0, 0, 0, 0, 0, 0]
 
 for syst_name in det_syst_list:
 
-	# if syst_name == "nodeltaray" or syst_name == "nospacecharge" or syst_name == "stretchRes" or syst_name == "noShortedResp":
+	# if syst_name == "nodeltaray" or syst_name == "nospacecharge" or syst_name == "stretchRes" or syst_name == "stretchResp" or syst_name == "noShortedResp":
 	# 	continue
 
 	file_name = "xsec_file_" + syst_name + ".root"
@@ -120,7 +121,7 @@ gStyle.SetPalette(kDeepSea);
 # cov_matrix_mumom
 # cov_matrix_mumom.Draw("colz TEXT")
 
-cov_file = TFile("covariance_detector_firstround.root", "RECREATE");
+cov_file = TFile("covariance_detector_secondround.root", "RECREATE");
 cov_file.cd();
 cov_matrix_mumom.Write("covariance_matrix_detector_mumom");
 cov_matrix_muangle.Write("covariance_matrix_detector_muangle");

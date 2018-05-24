@@ -1287,7 +1287,7 @@ void Main::Maker::MakeFile()
     if (isdata) event_weight = 1.;
 
 
-    bool is_from_kaon = false;
+    // bool is_from_kaon = false;
 
     // ************************
     //
@@ -2122,7 +2122,7 @@ void Main::Maker::MakeFile()
     // FV cut
     if(t->slc_nuvtx_fv.at(scl_ll_max) == 0) continue;
     if(t->slc_nuvtx_z.at(scl_ll_max) > 675 && t->slc_nuvtx_z.at(scl_ll_max) < 775) continue;
-    //if(t->slc_nuvtx_z.at(scl_ll_max) < 300) continue;
+    // if(t->slc_nuvtx_z.at(scl_ll_max) < 200) continue;
 
     if (isSignal && nu_origin) selected_signal_events_percut["fiducial_volume"]+=event_weight;
     selected_events_percut["fiducial_volume"]+=event_weight;
@@ -2156,10 +2156,8 @@ void Main::Maker::MakeFile()
     // EVENT IS SELECTED
     //
     
-    //if (isSignal && nu_origin)std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
+    // if (isSignal && nu_origin)std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
     
-    if (_scale_cosmics) event_weight *= _scale_factor_cosmic;
-
     hmap_onebin["total"]->Fill(0.5, event_weight);
     hmap_trklen["total"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
     hmap_trkmom["total"]->Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight);
@@ -3523,10 +3521,11 @@ void Main::Maker::MakeFile()
   selected_signal_percut->SetBinContent(8, selected_signal_events_percut["mip_consistency"]);
   selected_signal_percut->SetBinContent(9, selected_signal_events_percut["fiducial_volume"]);
 
-  for (int i = 0; i < 9; i++) {
-    std::cout << "cut " << i << " => " << selected_signal_percut->GetBinContent(i+1) 
-      << " => " << selected_percut->GetBinContent(i+1) 
+  std::vector<std::string> cut_names = {"initial", "beamflash", "flashmatch", "flashmatchdeltax", "flashmatchdeltaz", "quality", "mcslengthquality", "mipconsistency", "fiducialvolume"};
 
+  for (int i = 0; i < 9; i++) {
+    std::cout << cut_names.at(i) << " & " << selected_signal_percut->GetBinContent(i+1) 
+      // << " => " << selected_percut->GetBinContent(i+1) 
               << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(1) * 100 
               << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(i) * 100  << "\\\\" << std::endl;
     generated_signal_percut->SetBinContent(i+1, (double)nsignal);

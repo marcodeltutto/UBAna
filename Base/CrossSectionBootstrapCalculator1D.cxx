@@ -452,8 +452,10 @@ namespace Base {
       h_2d_all_xsec->SetMaximum(50); // was 200
     } else if (_save_prefix.find("onebin") != std::string::npos) {
       h_2d_all_xsec->GetXaxis()->SetTitle("");
-      h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}");
+      h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
+      h_2d_all_xsec->GetXaxis()->SetTickLength(0);
+      h_2d_all_xsec->GetXaxis()->SetLabelSize(0);
     } else {
       h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu})");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");

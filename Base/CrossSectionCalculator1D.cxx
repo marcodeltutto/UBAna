@@ -176,9 +176,13 @@ namespace Base {
 
     int n = h_flux_numu -> GetNbinsX();
 
+    std::cout << "Integral up to " << binmean << " is: " << h_flux_numu->Integral(1, binmean) << std::endl;
+    std::cout << "Integral from to " << binmean << " is: " << h_flux_numu->Integral(binmean, n) << std::endl;
+
+
     double lowerint = h_flux_numu -> Integral(1, binmean);
     std::cout << "Lower Integral: " << lowerint << std::endl;
-    double lowerborder = lowerint * 0.32;
+    double lowerborder = lowerint * 0.32; //h_flux_numu->Integral() * 0.16;
     std::cout << "Lower Border: " << lowerborder << std::endl;
     double lowersum = 0;
     int i = 0;
@@ -196,18 +200,23 @@ namespace Base {
 
     double upperint = h_flux_numu -> Integral(binmean, n);
     std::cout << upperint << std::endl;
-    double upperborder = upperint * 0.32;
+    double upperborder = upperint * 0.32; //h_flux_numu->Integral() * 0.16;
     double uppersum = 0;
-    i = 0;
+    int j = 0;
     while (uppersum < upperborder) {
-      uppersum += h_flux_numu -> GetBinContent(n+1 - i);
-      i++;
+      uppersum += h_flux_numu -> GetBinContent(n+1 - j);
+      j++;
     }
 
-    double up = h_flux_numu -> GetBinCenter(n+1 - (i-1));
-    std::cout << "The upper edge bin is: " << i-1 << std::endl;
+    double up = h_flux_numu -> GetBinCenter(n+1 - (j-1));
+    std::cout << "The upper edge bin is: " << j-1 << std::endl;
     std::cout << "The upper edge center energy is: " << up << std::endl;
     std::cout << "The upper energy error is: " << up - mean << std::endl;
+
+    std::cout << "This should be ~0.68: " << h_flux_numu->Integral(i-1, n+1 - (j-1)) / h_flux_numu->Integral() << std::endl;
+
+    std::cout << "Integral lower border: " << h_flux_numu->Integral(1, i-1) << " - " << h_flux_numu->Integral(1, i-1) / h_flux_numu->Integral() << std::endl;
+    std::cout << "Integral upper border: " << h_flux_numu->Integral(n+1 - (j-1), n) << " - " << h_flux_numu->Integral(n+1 - (j-1), n) / h_flux_numu->Integral() << std::endl;
 
     TGraph *gmean = new TGraph();
     gmean -> SetPoint(0, mean, 0);
@@ -240,6 +249,8 @@ namespace Base {
 
     h_flux_numu->GetXaxis()->SetRangeUser(0, 4);
     gPad->Update();
+
+    PlottingTools::DrawSimulationXSec();
 
 
     TString name = _folder + "_flux";
@@ -706,23 +717,49 @@ namespace Base {
     TH1D * h_syst_unc = (TH1D*) _h_data->Clone("h_syst_unc");
 
     if (_covariance_matrix_is_set) {
+
+      // Just to set the right bins:
+      _cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");
+      _frac_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_frac_cov_matrix_total");
+      _corr_matrix_total = (TH2D*)_covariance_matrix.Clone("_corr_matrix_total");
  
       for (int i = 0; i < _covariance_matrix.GetNbinsX(); i++) {
 
-        double unc_stat = _h_data->GetBinError(i+1);
+        for (int j = 0; j < _covariance_matrix.GetNbinsX(); j++) {
 
-        double unc_syst = std::sqrt(_covariance_matrix.GetBinContent(i+1, i+1));
+          // The statictial uncertainty squared
+          double unc_stat_2 = _h_data->GetBinError(i+1) * _h_data->GetBinError(j+1);
 
-        double extra_unc = _extra_fractional_uncertainty * _h_data->GetBinContent(i+1);
+          // The systematic uncertainty squared
+          double unc_syst_2 = _covariance_matrix.GetBinContent(i+1, j+1);
 
-        double unc_tot = std::sqrt(unc_stat * unc_stat + unc_syst * unc_syst + extra_unc * extra_unc);
+          // The extra systematic uncertainty squared (POT normalisation, ...)
+          double extra_unc_2 = _extra_fractional_uncertainty * _h_data->GetBinContent(i+1)   *    _extra_fractional_uncertainty * _h_data->GetBinContent(j+1);
 
-        std::cout << "Bin " << i << " - stat: " << unc_stat << ", syst: " << unc_syst << ", tot: " << unc_tot << std::endl;
+          // The total uncertainty (quadrature sum)
+          double unc_tot = std::sqrt(unc_stat_2 + unc_syst_2 + extra_unc_2);
 
-        h_syst_unc->SetBinError(i+1, unc_tot);
+          if (i == j) {
+            std::cout << "Bin " << i << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
+            h_syst_unc->SetBinError(i+1, unc_tot); 
+          }
+
+          // Also construct the total covariance matrix
+          double total_syst_unc_2 = unc_syst_2 + extra_unc_2;
+
+          _cov_matrix_total->SetBinContent(i+1, j+1, total_syst_unc_2);
+          _frac_cov_matrix_total->SetBinContent(i+1, j+1, (total_syst_unc_2) / (_h_data->GetBinContent(i+1) * _h_data->GetBinContent(j+1)));
+
+        } // j
+      } // i
+
+      // And also the correlation matrix
+      for (int i = 0; i < _covariance_matrix.GetNbinsX(); i++) {
+        for (int j = 0; j < _covariance_matrix.GetNbinsX(); j++) {
+          _corr_matrix_total->SetBinContent(i+1, j+1, _cov_matrix_total->GetBinContent(i+1, j+1) / (std::sqrt(_cov_matrix_total->GetBinContent(i+1, i+1)) * std::sqrt(_cov_matrix_total->GetBinContent(j+1, j+1))));
+        }
       }
-
-    }
+    } 
 
     gStyle->SetEndErrorSize(5);
 
@@ -798,6 +835,74 @@ namespace Base {
       std::cout << "Total cross section - DATA: " << _h_data->GetBinContent(1) << " +- " << _h_data->GetBinError(1) << std::endl;
       std::cout << "Total cross section - MC  : " << _h_mc->GetBinContent(1)   << " +- " << _h_mc->GetBinError(1) << std::endl;
     }
+
+
+    if (_covariance_matrix_is_set) {
+
+      gStyle->SetPalette(kDeepSea);
+      gStyle->SetPaintTextFormat("4.3f");
+
+      const Int_t NCont = 100;
+      const Int_t NRGBs = 5;
+      Double_t mainColour[NRGBs]   = { 1.00, 1.00, 1.00, 1.00, 1.00 };
+      Double_t otherColour[NRGBs]   = { 0.99,0.80, 0.60, 0.40, 0.20 };
+      //Double_t otherOtherColour[NRGBs]   = { 0.9,0.80, 0.80, 0.80, 0.80 };
+      Double_t stops[NRGBs] = { 0.00, 0.05, 0.1, 0.4, 1.00 };
+
+      TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
+      gStyle->SetNumberContours(NCont);
+
+      TCanvas * cov_c = new TCanvas();
+      cov_c->SetRightMargin(0.13);
+      cov_c->SetFixedAspectRatio();
+      _cov_matrix_total->SetMarkerColor(kBlack);
+      _cov_matrix_total->SetMarkerSize(1.8);
+      _cov_matrix_total->GetXaxis()->CenterTitle();
+      _cov_matrix_total->GetYaxis()->CenterTitle();
+      _cov_matrix_total->GetXaxis()->SetTitle("Bin i");
+      _cov_matrix_total->GetYaxis()->SetTitle("Bin j");
+      _cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _cov_matrix_total->GetYaxis()->SetTickLength(0);
+      _cov_matrix_total->Draw("colz text");
+      name = _folder +_name + "_tot_covariance";
+      cov_c->SaveAs(name + ".pdf");
+      cov_c->SaveAs(name + ".C","C");
+
+      TCanvas * cov_frac_c = new TCanvas();
+      cov_frac_c->SetRightMargin(0.13);
+      cov_frac_c->SetFixedAspectRatio();
+      _frac_cov_matrix_total->SetMarkerColor(kBlack);
+      _frac_cov_matrix_total->SetMarkerSize(1.8);
+      _frac_cov_matrix_total->GetXaxis()->CenterTitle();
+      _frac_cov_matrix_total->GetYaxis()->CenterTitle();
+      _frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i");
+      _frac_cov_matrix_total->GetYaxis()->SetTitle("Bin j");
+      _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
+      _frac_cov_matrix_total->Draw("colz text");
+      name = _folder +_name + "_tot_fractional_covariance";
+      cov_frac_c->SaveAs(name + ".pdf");
+      cov_frac_c->SaveAs(name + ".C","C");
+
+      TCanvas * corr_c = new TCanvas();
+      corr_c->SetRightMargin(0.13);
+      corr_c->SetFixedAspectRatio();
+      _corr_matrix_total->SetMarkerColor(kBlack);
+      _corr_matrix_total->SetMarkerSize(1.8);
+      _corr_matrix_total->GetXaxis()->CenterTitle();
+      _corr_matrix_total->GetYaxis()->CenterTitle();
+      _corr_matrix_total->GetXaxis()->SetTitle("Bin i");
+      _corr_matrix_total->GetYaxis()->SetTitle("Bin j");
+      _corr_matrix_total->GetXaxis()->SetTickLength(0);
+      _corr_matrix_total->GetYaxis()->SetTickLength(0);
+      _corr_matrix_total->Draw("colz text");
+      name = _folder +_name + "_tot_correlation";
+      corr_c->SaveAs(name + ".pdf");
+      corr_c->SaveAs(name + ".C","C");
+
+      gStyle->SetPalette(kRainBow);
+    }
+
 
     gStyle->SetEndErrorSize(3);
 

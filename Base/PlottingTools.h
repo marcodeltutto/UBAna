@@ -78,6 +78,9 @@ namespace Base {
     static void DrawSimulation();
 
     ///
+    static void DrawSimulationXSec();
+
+    ///
     static void DrawOverlay();
 
     ///
