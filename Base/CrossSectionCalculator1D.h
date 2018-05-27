@@ -26,6 +26,7 @@
 #include <map>
 #include <time.h>
 #include <fstream>
+#include <sstream>
 
 #include <TSystem.h>
 #include <TApplication.h>

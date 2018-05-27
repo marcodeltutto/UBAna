@@ -852,6 +852,28 @@ namespace Base {
       TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
       gStyle->SetNumberContours(NCont);
 
+      TH2F *h = new TH2F("h", "", _cov_matrix_total->GetNbinsX(), 0, _cov_matrix_total->GetNbinsX(),
+                                  _cov_matrix_total->GetNbinsY(), 0, _cov_matrix_total->GetNbinsY());
+      
+      h->SetMaximum(1);
+
+      for (int i = 0; i <  _cov_matrix_total->GetNbinsX()+1; i++) {
+        std::ostringstream oss;
+        oss << i;
+        std::string label = oss.str();
+        h->GetXaxis()->SetBinLabel(i,label.c_str());
+        h->GetYaxis()->SetBinLabel(i,label.c_str());
+      }
+      
+      h->GetXaxis()->SetLabelOffset(0.004);
+      h->GetXaxis()->SetLabelSize(0.06);
+      h->GetYaxis()->SetLabelOffset(0.004);
+      h->GetYaxis()->SetLabelSize(0.06);
+      h->GetXaxis()->SetTitle("Bin i");
+      h->GetYaxis()->SetTitle("Bin j");
+      h->GetXaxis()->CenterTitle();
+      h->GetYaxis()->CenterTitle();
+
       TCanvas * cov_c = new TCanvas();
       cov_c->SetRightMargin(0.13);
       cov_c->SetFixedAspectRatio();
@@ -863,7 +885,10 @@ namespace Base {
       _cov_matrix_total->GetYaxis()->SetTitle("Bin j");
       _cov_matrix_total->GetXaxis()->SetTickLength(0);
       _cov_matrix_total->GetYaxis()->SetTickLength(0);
-      _cov_matrix_total->Draw("colz text");
+      h->Draw();
+      // _cov_matrix_total->Draw("colz text same");
+      _cov_matrix_total->Draw("colz same");
+      PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_covariance";
       cov_c->SaveAs(name + ".pdf");
       cov_c->SaveAs(name + ".C","C");
@@ -879,7 +904,10 @@ namespace Base {
       _frac_cov_matrix_total->GetYaxis()->SetTitle("Bin j");
       _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
       _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
-      _frac_cov_matrix_total->Draw("colz text");
+      h->Draw();
+      // _frac_cov_matrix_total->Draw("colz text same");
+      _frac_cov_matrix_total->Draw("colz same");
+      PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_fractional_covariance";
       cov_frac_c->SaveAs(name + ".pdf");
       cov_frac_c->SaveAs(name + ".C","C");
@@ -895,7 +923,10 @@ namespace Base {
       _corr_matrix_total->GetYaxis()->SetTitle("Bin j");
       _corr_matrix_total->GetXaxis()->SetTickLength(0);
       _corr_matrix_total->GetYaxis()->SetTickLength(0);
-      _corr_matrix_total->Draw("colz text");
+      h->Draw();
+      // _corr_matrix_total->Draw("colz text same");
+      _corr_matrix_total->Draw("colz same");
+      PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_correlation";
       corr_c->SaveAs(name + ".pdf");
       corr_c->SaveAs(name + ".C","C");

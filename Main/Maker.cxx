@@ -352,13 +352,13 @@ void Main::Maker::MakeFile()
   UBXSecEvent * t = new UBXSecEvent(chain_ubxsec);
   //ActivateBranches(t);
 
-   int nsignal = 0;
+  double nsignal = 0;
 
-  int nsignal_qe = 0;
-  int nsignal_res = 0;
-  int nsignal_dis = 0;
-  int nsignal_coh = 0;
-  int nsignal_mec = 0;
+  double nsignal_qe = 0;
+  double nsignal_res = 0;
+  double nsignal_dis = 0;
+  double nsignal_coh = 0;
+  double nsignal_mec = 0;
   
   int signal_sel = 0;
   int bkg_anumu_sel = 0;
@@ -1616,14 +1616,14 @@ void Main::Maker::MakeFile()
 
     if (t->nupdg == 14 && t->ccnc == 0 && t->fv == 1 && (t->tvtx_z[0] < 675 || t->tvtx_z[0] > 775)){
 
-      nsignal++;
+      nsignal += event_weight;
       isSignal = true;
 
-      if (t->mode == 0) nsignal_qe++;
-      if (t->mode == 1) nsignal_res++;
-      if (t->mode == 2) nsignal_dis++;
-      if (t->mode == 3) nsignal_coh++;
-      if (t->mode == 10) nsignal_mec++;
+      if (t->mode == 0) nsignal_qe += event_weight;
+      if (t->mode == 1) nsignal_res += event_weight;
+      if (t->mode == 2) nsignal_dis += event_weight;
+      if (t->mode == 3) nsignal_coh += event_weight;
+      if (t->mode == 10) nsignal_mec += event_weight;
       
     }
     
@@ -2879,7 +2879,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency";
   canvas_efficiency->SaveAs(temp2 + ".pdf");
@@ -2894,7 +2894,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/muon_reco_efficiency";
   canvas_muon_reco_efficiency->SaveAs(temp2 + ".pdf");
@@ -2909,7 +2909,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/muon_reco_efficiency_angle";
   canvas_muon_reco_efficiency_angle->SaveAs(temp2 + ".pdf");
@@ -2929,7 +2929,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
 
   temp2 = "./output/efficiency_mumom";
   canvas_efficiency_mumom->SaveAs(temp2 + ".pdf");
@@ -2949,7 +2949,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency_muangle";
   canvas_efficiency_muangle->SaveAs(temp2 + ".pdf");
@@ -2964,7 +2964,7 @@ void Main::Maker::MakeFile()
   pEff5_3->SetMarkerStyle(20);
   pEff5_3->SetMarkerSize(0.5);
   pEff5_3->Draw("colz");
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
 
   
   temp2 = "./output/efficiency_muangle_mumom";
@@ -2985,7 +2985,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency_muphi";
   canvas_efficiency_muphi->SaveAs(temp2 + ".pdf");
@@ -3005,7 +3005,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency_mult";
   canvas_efficiency_mult->SaveAs(temp2 + ".pdf");
@@ -3025,7 +3025,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
-  PlottingTools::DrawSimulation();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency_mult_ch";
   canvas_efficiency_mult_ch->SaveAs(temp2 + ".pdf");
@@ -3498,18 +3498,18 @@ void Main::Maker::MakeFile()
 
   TH1D * selected_percut = new TH1D("selected_percut", "selected_percut", 9, 0, 9);
   TH1D * selected_signal_percut = new TH1D("selected_signal_percut", "selected_percut", 9, 0, 9);
-  //TH1D * generated_percut = new TH1D("generated_percut", "generated_percut", 8, 0, 7);
+  // TH1D * generated_percut = new TH1D("generated_percut", "generated_percut", 8, 0, 7);
   TH1D * generated_signal_percut = new TH1D("generated_signal_percut", "generated_percut", 9, 0, 9);
 
-  selected_percut->SetBinContent(1, selected_events_percut["initial"]);
-  selected_percut->SetBinContent(2, selected_events_percut["beamflash"]);
-  selected_percut->SetBinContent(3, selected_events_percut["flash_match"]);
-  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"]);
-  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"]);
-  selected_percut->SetBinContent(6, selected_events_percut["quality"]);
-  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"]);
-  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"]);
-  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"]);
+  selected_percut->SetBinContent(1, selected_events_percut["initial"]); // + 1280310);
+  selected_percut->SetBinContent(2, selected_events_percut["beamflash"]); // + 821708);
+  selected_percut->SetBinContent(3, selected_events_percut["flash_match"]); // + 194732);
+  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"]); // + 154544);
+  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"]); // + 106802);
+  selected_percut->SetBinContent(6, selected_events_percut["quality"]); // + 76023);
+  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"]); // + 72577);
+  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"]); // + 69692);
+  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"]); // + 22657);
 
   selected_signal_percut->SetBinContent(1, selected_signal_events_percut["initial"]);
   selected_signal_percut->SetBinContent(2, selected_signal_events_percut["beamflash"]);
@@ -3525,7 +3525,7 @@ void Main::Maker::MakeFile()
 
   for (int i = 0; i < 9; i++) {
     std::cout << cut_names.at(i) << " & " << selected_signal_percut->GetBinContent(i+1) 
-      // << " => " << selected_percut->GetBinContent(i+1) 
+       << " => " << selected_percut->GetBinContent(i+1) 
               << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(1) * 100 
               << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(i) * 100  << "\\\\" << std::endl;
     generated_signal_percut->SetBinContent(i+1, (double)nsignal);
@@ -3534,17 +3534,26 @@ void Main::Maker::MakeFile()
 
   TCanvas * canvas_eff_pur_graph_percut = new TCanvas();
 
+  canvas_eff_pur_graph_percut->SetLeftMargin(0.05157593);
+  canvas_eff_pur_graph_percut->SetRightMargin(0.1475645);
+  canvas_eff_pur_graph_percut->SetTopMargin(0.04210526);
+  canvas_eff_pur_graph_percut->SetBottomMargin(0.1578947);
+
   TH1F *h = new TH1F("h","",9, 0, 9);
   h->SetMaximum(1);
-  h->GetXaxis()->SetBinLabel(1,"initial");
-  h->GetXaxis()->SetBinLabel(2,"beamflash");
-  h->GetXaxis()->SetBinLabel(3,"flash_match");
-  h->GetXaxis()->SetBinLabel(4,"flash_match_deltax");
-  h->GetXaxis()->SetBinLabel(5,"flash_match_deltaz");
-  h->GetXaxis()->SetBinLabel(6,"quality");
-  h->GetXaxis()->SetBinLabel(7,"mcs_length_quality");
-  h->GetXaxis()->SetBinLabel(8,"mip_consistency");
-  h->GetXaxis()->SetBinLabel(9,"fiducial_volume");
+  h->GetXaxis()->SetBinLabel(1,"Initial");
+  h->GetXaxis()->SetBinLabel(2,"Beam Flash");
+  h->GetXaxis()->SetBinLabel(3,"Flash Match");
+  h->GetXaxis()->SetBinLabel(4,"Flash Match #Deltax");
+  h->GetXaxis()->SetBinLabel(5,"Flash Match #Deltaz");
+  h->GetXaxis()->SetBinLabel(6,"Track Quality");
+  h->GetXaxis()->SetBinLabel(7,"MCS-Length Quality");
+  h->GetXaxis()->SetBinLabel(8,"MIP Consistency");
+  h->GetXaxis()->SetBinLabel(9,"Fiducial Volume");
+
+  h->GetXaxis()->SetLabelOffset(0.009);
+  h->GetXaxis()->SetLabelSize(0.06);
+
   h->Draw();
 
   TEfficiency* pEff_percut = new TEfficiency(*selected_signal_percut,*generated_signal_percut);
@@ -3561,16 +3570,19 @@ void Main::Maker::MakeFile()
   auto axis = pEff_percut_graph->GetYaxis();
   axis->SetLimits(0.,1.); 
 
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(1,"initial");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(2,"beamflash");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(3,"flash_match");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(4,"flash_match_deltax");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(5,"flash_match_deltaz");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(6,"quality");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(7,"mcs_length_quality");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(8,"mip_consistency");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(9,"fiducial_volume");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(1,"Initial");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(2,"BeamFlash");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(3,"FlashMatch");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(4,"FlashMatch#Deltax");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(5,"FlashMatch#Deltaz");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(6,"TrackQuality");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(7,"MCS-LengthQuality");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(8,"MIPConsistency");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(9,"FiducialVolume");
 
+
+
+  // pEff_percut_graph->GetXaxis()->SetLabelSize(0.07);
   pEff_percut_graph->Draw("PL");
 
   
@@ -3586,14 +3598,26 @@ void Main::Maker::MakeFile()
     pPur_percut_graph->SetPointEXhigh(i, 0.);
     pPur_percut_graph->SetPointEXlow(i, 0.);
   }
+
   pPur_percut_graph->Draw("PL");
 
-  TLegend* l = new TLegend(0.5873926,0.7473684,0.8810888,0.8526316,NULL,"brNDC");
+  TLegend* l = new TLegend(0.4842407,0.8168421,0.777937,0.9221053,NULL,"brNDC");
   l->AddEntry(pEff_percut_graph,"Efficiency");
   l->AddEntry(pPur_percut_graph,"Purity");
   //leg->AddEntry(gr3,"Neutrino MCFlash","l");
   
   l->Draw();
+
+  // PlottingTools::DrawSimulationXSec();
+
+  TLatex* prelim = new TLatex(0.8524355,0.9810526, "MicroBooNE Simulation, Preliminary");
+  prelim->SetTextFont(62);
+  prelim->SetTextColor(kGray+2);
+  prelim->SetNDC();
+  prelim->SetTextSize(1/30.);
+  prelim->SetTextAlign(32);
+  // prelim->SetTextSize(0.04631579);
+  prelim->Draw();
 
   temp2 = "./output/eff_pur_graph_percut";
   canvas_eff_pur_graph_percut->SaveAs(temp2 + ".pdf");
