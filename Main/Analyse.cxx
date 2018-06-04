@@ -282,24 +282,12 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_muangle_den", temp_bs);
   BootstrapTH1D bs_flux_multisim_eff_muangle_den = *temp_bs;
 
-/* to remove
-  std::map<std::string,TH1D*>  map_bs_eff_mumom_num_mc = *temp_map;
-  std::cout << ">> here2" << std::endl;
-  mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_den", temp_map);
-  std::map<std::string,TH1D*>  map_bs_eff_mumom_den_mc = *temp_map;
-  std::cout << ">> here3" << std::endl;
-  BootstrapTH1D bs_eff_mumom_num;
-  bs_eff_mumom_num.SetAllHistograms(map_bs_eff_mumom_num_mc);
-  std::cout << ">> here4" << std::endl;
-  BootstrapTH1D bs_eff_mumom_den;
-  bs_eff_mumom_den.SetAllHistograms(map_bs_eff_mumom_den_mc);
-  std::cout << ">> here5" << std::endl;
-  */
   // Boostrap reco-true
   std::map<std::string,TH2D*>* temp_map_bs2;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_true_reco_mom", temp_map_bs2);
   std::map<std::string,TH2D*> bs_true_reco_mom_mc = *temp_map_bs2;
   std::cout << ">> here6" << std::endl;
+
   // Instantiate the GENIE reweighting plotter
   ReweightingPlotter genie_rw_plotter;
 
@@ -321,7 +309,7 @@ namespace Main {
     genie_rw_plotter.MakeBackgroundPlots(0, false, true);  
   }
 
-std::cout << ">> here7" << std::endl;
+  std::cout << ">> here7" << std::endl;
 
   // Events - GENIE Multisim
   mc_bnbcosmic_file->GetObject("hmap_onebin_genie_multisim_bs", temp_map_bs);
@@ -343,28 +331,7 @@ std::cout << ">> here7" << std::endl;
   mc_bnbcosmic_file->GetObject("hmap_onebin_flux_multisim_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_flux_multisim_bs_mc = *temp_map_bs;
 
-  //mc_bnbcosmic_file->GetObject("hmap_onebin_genie_multisim_bs", temp_map_bs);
-  //std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs_mc = *temp_map_bs;
-
-
-
-
-/*
-  BootstrapTH1D bs_genie_multisim_eff_mumom_num;
-  bs_genie_multisim_eff_mumom_num.SetAllHistograms(map_bs_genie_multisim_eff_mumom_num_mc);
-
-  BootstrapTH1D bs_genie_multisim_eff_mumom_den;
-  bs_genie_multisim_eff_mumom_den.SetAllHistograms(map_bs_genie_multisim_eff_mumom_den_mc);
-*/
-
-  //mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_onebin_num", temp_map);
-  //std::map<std::string,TH1D*>  map_bs_genie_multisim_eff_onebin_num_mc = *temp_map;
-  //mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_onebin_den", temp_map);
-  //std::map<std::string,TH1D*>  map_bs_genie_multisim_eff_onebin_den_mc = *temp_map;
-  //BootstrapTH1D bs_genie_multisim_eff_onebin_num;
-  //bs_genie_multisim_eff_mumom_num.SetAllHistograms(map_bs_genie_multisim_eff_onebin_num_mc);
-  //BootstrapTH1D bs_genie_multisim_eff_onebin_den;
-  //bs_genie_multisim_eff_mumom_den.SetAllHistograms(map_bs_genie_multisim_eff_onebin_den_mc);
+  
 
   BootstrapTH2D * temp_bs_2d;
 
@@ -377,7 +344,7 @@ std::cout << ">> here7" << std::endl;
   mc_bnbcosmic_file->GetObject("bs_genie_multisim_true_reco_muangle", temp_bs_2d);
   BootstrapTH2D bs_genie_multisim_true_reco_muangle = *temp_bs_2d;
 
-std::cout << ">> here8" << std::endl;
+  std::cout << ">> here8" << std::endl;
 
   // Events - FLUX Multisim
   mc_bnbcosmic_file->GetObject("hmap_trkmom_flux_multisim_bs", temp_map_bs);
@@ -393,16 +360,6 @@ std::cout << ">> here8" << std::endl;
 
 std::cout << ">> here9" << std::endl;
 
-/* to remove
-  mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_num", temp_map);
-  std::map<std::string,TH1D*>  map_bs_flux_multisim_eff_mumom_num_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_den", temp_map);
-  std::map<std::string,TH1D*>  map_bs_flux_multisim_eff_mumom_den_mc = *temp_map;
-  BootstrapTH1D bs_flux_multisim_eff_mumom_num;
-  bs_flux_multisim_eff_mumom_num.SetAllHistograms(map_bs_flux_multisim_eff_mumom_num_mc);
-  BootstrapTH1D bs_flux_multisim_eff_mumom_den;
-  bs_flux_multisim_eff_mumom_den.SetAllHistograms(map_bs_flux_multisim_eff_mumom_den_mc);
-*/
 
   // Boostrap reco-true - FLUX Multisim
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_mumom", temp_bs_2d);

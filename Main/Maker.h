@@ -120,6 +120,12 @@ namespace Main {
     ///
     void ScaleCosmics(double w) {_scale_cosmics = true; _scale_factor_cosmic = w;};
 
+    ///
+    void FillBootstrapFlux(bool option) {_fill_bootstrap_flux = option;}
+
+    ///
+    void FillBootstrapGenie(bool option) {_fill_bootstrap_genie = option;}
+
 
   private:
 
@@ -154,8 +160,8 @@ namespace Main {
     const bool _makePlots = false;
 
     //const bool _fill_bootstrap = true;
-    const bool _fill_bootstrap_flux = false;
-    const bool _fill_bootstrap_genie = false;
+    bool _fill_bootstrap_flux = false;
+    bool _fill_bootstrap_genie = false;
 
     std::string _target_flux_syst = "";
 
