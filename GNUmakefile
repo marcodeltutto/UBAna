@@ -1,6 +1,6 @@
 
 ifndef MYSW_DIR
-ERROR_MESSAGE := $(error MYSW_DIR is not set... run configure.sh!)
+ERROR_MESSAGE := $(error MYSW_DIR is not set... run setup.sh!)
 endif
 
 OSNAME          = $(shell uname -s)

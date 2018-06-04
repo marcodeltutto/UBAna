@@ -26,6 +26,7 @@
 #include <map>
 #include <time.h>
 #include <fstream>
+#include <sstream>
 
 #include <TSystem.h>
 #include <TApplication.h>
@@ -126,6 +127,9 @@ namespace Base {
     ///
     TH1D* ExtractCrossSection(std::string, std::string);
 
+    /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
+    TH1D* GetMCCrossSection();
+
     ///
     void Smear(int n, int m);
 
@@ -151,7 +155,19 @@ namespace Base {
     void SetFakeDataMode(bool option) {_fake_data_mode = option;};
 
     ///
+    void SetOverlayMode(bool option) {_overlay_mode = option;};
+
+    ///
+    void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
+
+    ///
     void PrintFakeDataMessage();
+
+    ///
+    void ImportAlternativeMC(TH1D h) {_add_alt_mc_xsec = true; _h_alt_mc_xsec = h;};
+
+    ///
+    void AddExtraDiagonalUncertainty(double v) {_extra_fractional_uncertainty = v;};
 
     ///
     void Reset();
@@ -198,6 +214,21 @@ namespace Base {
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
     
     bool _fake_data_mode = false;
+    bool _overlay_mode = false;
+
+    double _flux_correction_weight = 1.; ///< Flux correction weight
+
+    TH1D* _h_mc = NULL; ///< The to-be extracted MC cross section
+    TH1D* _h_data = NULL; ///< The to-be extracted data cross section
+
+    bool _add_alt_mc_xsec = false; ///< If true draws an alternative MC cross section from ImportAlternativeMC
+    TH1D _h_alt_mc_xsec; ///< Stores an alternative MC cross section (from Tune3, or theory, in the latter has to be smeared)
+
+    double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
+
+    TH2D *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    TH2D *_cov_matrix_total = NULL; ///< Total  covariance matrix
+    TH2D *_corr_matrix_total = NULL; ///< Total correlation matrix
   };
 }
 

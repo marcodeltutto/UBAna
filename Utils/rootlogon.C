@@ -9,6 +9,9 @@ void rootlogon()
   // Defaults to classic style, but that's OK, we can fix it
   TStyle* ubStyle = new TStyle("ubStyle", "MicroBooNE Style");
 
+  // End ticks of error bars
+  ubStyle->SetEndErrorSize(3);
+
   // Centre title
   ubStyle->SetTitleAlign(22);
   ubStyle->SetTitleX(.5);

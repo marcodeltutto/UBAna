@@ -45,6 +45,7 @@
 #include <TH2D.h>
 #include <TLatex.h>
 #include <TCanvas.h>
+#include "TMath.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
@@ -113,6 +114,18 @@ namespace Main {
     ///
     void PrintConfig();
 
+    /// 
+    void SetExtraWeight(double w) {_extra_weight = w;};
+
+    ///
+    void ScaleCosmics(double w) {_scale_cosmics = true; _scale_factor_cosmic = w;};
+
+    ///
+    void FillBootstrapFlux(bool option) {_fill_bootstrap_flux = option;}
+
+    ///
+    void FillBootstrapGenie(bool option) {_fill_bootstrap_genie = option;}
+
 
   private:
 
@@ -147,8 +160,8 @@ namespace Main {
     const bool _makePlots = false;
 
     //const bool _fill_bootstrap = true;
-    const bool _fill_bootstrap_flux = false;
-    const bool _fill_bootstrap_genie = false;
+    bool _fill_bootstrap_flux = false;
+    bool _fill_bootstrap_genie = false;
 
     std::string _target_flux_syst = "";
 
@@ -166,6 +179,8 @@ namespace Main {
     int _initial_entry    = 0; ///< Entry in Tree to begin with
     bool isdata           = false;
 
+    double _extra_weight = 1.; ///Extra weight to be applied to the events
+
     const double _pe_cut = 50;
 
     const double targetPOT = 4.95e19;
@@ -179,6 +194,9 @@ namespace Main {
     int n_bins_mucostheta = 9;
     // int n_bins_mumom = 20;
     // int n_bins_mucostheta = 25;
+
+    bool _scale_cosmics = false; ///< If true scales the cosmic background by _scale_factor_cosmic
+    double _scale_factor_cosmic = 1.; ///< Factor used to scale the cosmic background (used only if _scale_cosmics is true)
     
   };
 }

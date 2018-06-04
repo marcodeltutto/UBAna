@@ -23,6 +23,11 @@ namespace Base {
     h = _M_h;
   }
 
+  void CovarianceCalculator2D::AddExtraDiagonalUncertainty(double value) 
+  {
+    _extra_relative_uncertainty = value;
+  }
+
   void CovarianceCalculator2D::CalculateCovarianceMatrix() 
   {
 
@@ -82,11 +87,17 @@ namespace Base {
         //_M_frac[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / (number_of_universes * N_i_cv * N_j_cv);
         _M_frac[i][j] = _M[i][j] / (N_i_cv * N_j_cv);
 
+        if (i == j) {
+          _M_frac[i][j] += _extra_relative_uncertainty * _extra_relative_uncertainty;
+          _M[i][j] += (N_i_cv * _extra_relative_uncertainty) * (N_j_cv * _extra_relative_uncertainty);
+        }
+
         //if (_verbose) std::cout << "_M[" << i << "][" << j << "] = " << _M[i][j] << std::endl;
         //if (_verbose) std::cout << "_M_frac[" << i << "][" << j << "] = " << _M_frac[i][j] << std::endl;
 
       } // bin j loop
     } // bin i loop
+
 
 
     for (int i = 0; i < _bs.GetNbinsX(); i++) {

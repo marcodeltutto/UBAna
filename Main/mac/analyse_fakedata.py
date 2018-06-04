@@ -15,15 +15,18 @@ analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_tune3_mcc8.9_test5.root") # fake data! Tune 3
 analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root") 
-analyser.SetBNBPOT(3.37162e+20);    
-analyser.SetBNBONTriggers(74969877.21);    
-analyser.SetEXTBNBTriggers(33320382);
+analyser.SetBNBPOT(3.37162e+20)    
+analyser.SetBNBONTriggers(74969877.21)    
+analyser.SetEXTBNBTriggers(33320382)
 analyser.SetFakeDataMode(True)
 # 36177265 bnbon triggers corrspond to 1.627e+20 POT
 # and for bnbext we have 33320382, bnbext stays the same
 # for bnbon we have to increase the triggers to 36177265/1.627e+20*3.37162e+20 = 74969877.21
 analyser.SetPrefix("cv");
+analyser.SetFluxCorrectionWeight(1.028)
 
+extra_unc = math.sqrt(0.02*0.02 + 0.06*0.06 + 0.0699*0.0699) # POT counting, beam window, cosmics (overlay)
+analyser.SetExtraUncertainty(extra_unc)
 
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(True)

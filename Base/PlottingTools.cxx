@@ -16,13 +16,47 @@ namespace Base {
     prelim->Draw();
   }
 
-  void PlottingTools::DrawSimulation() {
-    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Simulation");
-    prelim->SetTextColor(kGray+1);
+  void PlottingTools::DrawPreliminaryXSec() {
+    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
     prelim->SetNDC();
-    prelim->SetTextSize(2/30.);
+    prelim->SetTextSize(1/30.);
     prelim->SetTextAlign(32);
-    prelim->SetTextSize(0.04631579);
+    //prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
+  void PlottingTools::DrawSimulation() {
+    TLatex* prelim = new TLatex(0.94,0.93, "MicroBooNE Simulation, Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(32);
+    // prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
+  void PlottingTools::DrawSimulationXSec() {
+    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Simulation, Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(32);
+    // prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
+  void PlottingTools::DrawOverlay() {
+    TLatex* prelim = new TLatex(0.94,0.93, "BNB#nu MC + Cosmic Data Overlay");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kRed+1);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(32);
+    //prelim->SetTextSize(0.04631579);
     prelim->Draw();
   }
 
@@ -102,6 +136,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   for (auto iter : themap) {
     if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
     iter.second->Scale(pot_scaling);
+    // if (iter.first == "cosmic_nostopmu" || iter.first == "cosmic_nostopmu" || iter.first == "cosmic") iter.second->Scale(0.45);
   }
   
   if (themap["beam-off"] != NULL) {
@@ -118,6 +153,16 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     themap["intimecosmic"]->SetFillStyle(3004);
     hs_trklen->Add(themap["intimecosmic"]);
   }
+
+//   themap["total"]->Reset();
+//   themap["total"]->Add(themap["beam-off"]);
+// themap["total"]->Add(themap["cosmic"]);
+// themap["total"]->Add(themap["outfv"]);
+// themap["total"]->Add(themap["nc"]);
+
+// themap["total"]->Add(themap["nue"]);
+// themap["total"]->Add(themap["anumu"]);
+// themap["total"]->Add(themap["signal"]);
 
   if (_breakdownPlots) {
     themap["cosmic_nostopmu"]->SetLineColor(kBlue+2);
@@ -143,8 +188,8 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     hs_trklen->Add(themap["nc_other"]);
   }
   else {
-    themap["cosmic"]->SetLineColor(kBlue+2);
-    themap["cosmic"]->SetFillColor(kBlue+2);
+    themap["cosmic"]->SetLineColor(kBlue-3);
+    themap["cosmic"]->SetFillColor(kBlue-3);
     hs_trklen->Add(themap["cosmic"]);
     themap["outfv"]->SetLineColor(kGreen+2);
     themap["outfv"]->SetFillColor(kGreen+2);
@@ -170,8 +215,8 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     hs_trklen->Add(themap["signal_stopmu"]);
   }
   else {
-    themap["signal"]->SetLineColor(kRed);
-    themap["signal"]->SetFillColor(kRed);
+    themap["signal"]->SetLineColor(kRed-4);
+    themap["signal"]->SetFillColor(kRed-4);
     hs_trklen->Add(themap["signal"]);
   }
   hs_trklen->Draw("hist");
@@ -194,7 +239,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     // leg2 = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
     leg2 = new TLegend(0.6015038,0.3101075,0.9235589,0.8468817,NULL,"brNDC");
   } else {
-    leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+    leg2 = new TLegend(0.5789474,0.4212346,0.8696742,0.8222222,NULL,"brNDC");
   }
   std::stringstream sstm;
   // numu
@@ -287,6 +332,9 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     // leg2->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
   }
   
+  leg2->SetTextSize(0.03753087);
+  // leg2->SetFillColor(0);
+  // leg2->SetFillStyle(0);
   leg2->Draw();
   
   return leg2;
@@ -470,19 +518,19 @@ TLegend* PlottingTools::DrawTHStack2(THStack *hs_trklen,
   }
   
   if (themap["beam-off"] != NULL) {
-    themap["beam-off"]->SetLineColor(kBlue+2);
-    themap["beam-off"]->SetFillColor(kBlue+2);
+    themap["beam-off"]->SetLineColor(kBlue-3);
+    themap["beam-off"]->SetFillColor(kBlue-3);
     themap["beam-off"]->SetFillStyle(3004);
     themap["total"]->Add(themap["beam-off"]);
     hs_trklen->Add(themap["beam-off"]);
   }
   
-  themap["background"]->SetLineColor(kBlue+2);
-  themap["background"]->SetFillColor(kBlue+2);
+  themap["background"]->SetLineColor(kBlue-3);
+  themap["background"]->SetFillColor(kBlue-3);
   hs_trklen->Add(themap["background"]);
   
-  themap["signal"]->SetLineColor(kRed+2);
-  themap["signal"]->SetFillColor(kRed+2);
+  themap["signal"]->SetLineColor(kRed-3);
+  themap["signal"]->SetFillColor(kRed-3);
   hs_trklen->Add(themap["signal"]);
   
   hs_trklen->Draw("hist");
@@ -536,8 +584,8 @@ TLegend* PlottingTools::DrawTHStack3(THStack *hs_trklen,
     iter.second->Scale(pot_scaling);
   }
   
-  themap["proton"]->SetLineColor(kBlue+2);
-  themap["proton"]->SetFillColor(kBlue+2);
+  themap["proton"]->SetLineColor(kBlue-3);
+  themap["proton"]->SetFillColor(kBlue-3);
   hs_trklen->Add(themap["proton"]);
   
   themap["pion"]->SetLineColor(kGreen+2);
@@ -556,11 +604,11 @@ TLegend* PlottingTools::DrawTHStack3(THStack *hs_trklen,
   themap["else"]->SetFillColor(kGray+2);
   hs_trklen->Add(themap["else"]);
   
-  themap["muon"]->SetLineColor(kRed+2);
-  themap["muon"]->SetFillColor(kRed+2);
+  themap["muon"]->SetLineColor(kRed-3);
+  themap["muon"]->SetFillColor(kRed-3);
   hs_trklen->Add(themap["muon"]);
   
-  hs_trklen->Draw();
+  hs_trklen->Draw("histo");
   
   themap["total"]->SetFillColor(kBlack);
   themap["total"]->SetFillStyle(3005);
@@ -571,7 +619,7 @@ TLegend* PlottingTools::DrawTHStack3(THStack *hs_trklen,
   
   TLegend* leg2;
   
-  leg2 = new TLegend(0.6475645,0.5136842,0.8767908,0.8336842,NULL,"brNDC");
+  leg2 = new TLegend(0.4283668,0.4442105,0.8925501,0.8336842,NULL,"brNDC");
   
   std::stringstream sstm;
   

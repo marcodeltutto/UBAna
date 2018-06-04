@@ -23,6 +23,7 @@ maker.SetFlashShift(0.)
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
 maker.SetIsData(False)
+maker.SetExtraWeight(1.028); # Flux correction
 
 maker.SetTargetFluxSystematic("total");
 

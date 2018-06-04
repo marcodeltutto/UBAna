@@ -9,318 +9,399 @@ maker = Main.Maker()
 
 
 
-# BNBComisc
+# det_syst_list = ["cv", "nospacecharge", "dicharge", "lightyeild", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "dt0", "birksrecomb"]
+det_syst_list = ["CV", "dataSCE", "withDIC", "stretchResp", "squeezeResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp"]
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_cv.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_cv.root");
+det_syst_list = ["CV"]
+
+
+for systname in det_syst_list:
+
+  # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_" + systname + ".root")
+  # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_" + systname + ".root");
+  maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_prod_v06_26_11_" + systname + ".root")
+  maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_" + systname + ".root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+  maker.SetEntries(-1)
+  maker.SetBeamSpillStart(3.2)    
+  maker.SetBeamSpillEnd(4.8)    
+  maker.SetFlashShift(0.)    
+  maker.SetGainCalibration(198)    
+  maker.SetCalculatePOT(True)    
+  maker.SetIsData(False)
+  maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+  maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+  maker.PrintConfig()
 
-maker.MakeFile()
+  maker.MakeFile()
 
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_nospacecharge.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_nospacecharge.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_prod_v06_26_11_CV.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_CV.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_altDeadChannels.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_altDeadChannels.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_prod_v06_26_11_dataSCE.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_dataSCE.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_deadSaturatedChannels.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_deadSaturatedChannels.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_prod_v06_26_11_stretchResp.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_stretchResp.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_enhancedexttpcvis.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_enhancedexttpcvis.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_prod_v06_26_11_squeezeResp.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_prod_v06_26_11_squeezeResp.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_noPEnoise.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_noPEnoise.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_altDeadChannels.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_altDeadChannels.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_dicharge.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_dicharge.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_deadSaturatedChannels.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_deadSaturatedChannels.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_lightyeild.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_lightyeild.root");
+
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_enhancedexttpcvis.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_enhancedexttpcvis.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_nodeltaray.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_nodeltaray.root");
+
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_noPEnoise.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_noPEnoise.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_stretchRes.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_stretchRes.root");
+
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_dicharge.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_dicharge.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_noShortedResp.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_noShortedResp.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_lightyeild.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_lightyeild.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_whitenoise.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_whitenoise.root");
+# # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_nodeltaray.root")
+# # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_nodeltaray.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# # maker.SetEntries(-1)
+# # maker.SetBeamSpillStart(3.2)    
+# # maker.SetBeamSpillEnd(4.8)    
+# # maker.SetFlashShift(0.)    
+# # maker.SetGainCalibration(198)    
+# # maker.SetCalculatePOT(True)    
+# # maker.SetIsData(False)
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# # maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# # maker.PrintConfig()
 
-maker.MakeFile()
+# # maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_lifetime10ms.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_lifetime10ms.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_stretchRes.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_stretchRes.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_dl0.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_dl0.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_noShortedResp.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_noShortedResp.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_dt0.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_dt0.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_whitenoise.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_whitenoise.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_birksrecomb.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_birksrecomb.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_lifetime10ms.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_lifetime10ms.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_nohadronic.root")
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_nohadronic.root");
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_dl0.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_dl0.root");
   
-maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(4.8)    
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
-maker.SetTargetFluxSystematic("total"); # not needed here
+# maker.SetTargetFluxSystematic("total"); # not needed here
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
+
+
+
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_dt0.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_dt0.root");
+  
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
+
+# maker.SetTargetFluxSystematic("total"); # not needed here
+
+# maker.PrintConfig()
+
+# maker.MakeFile()
+
+
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_birksrecomb.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_birksrecomb.root");
+  
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
+
+# maker.SetTargetFluxSystematic("total"); # not needed here
+
+# maker.PrintConfig()
+
+# maker.MakeFile()
+
+
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/DetSyst/ubxsec_output_mc_bnbcosmic_mcc8.9_detsyst_nohadronic.root")
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_nohadronic.root");
+  
+# maker.SetEntries(-1)
+# maker.SetBeamSpillStart(3.2)    
+# maker.SetBeamSpillEnd(4.8)    
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
+
+# maker.SetTargetFluxSystematic("total"); # not needed here
+
+# maker.PrintConfig()
+
+# maker.MakeFile()
 
 

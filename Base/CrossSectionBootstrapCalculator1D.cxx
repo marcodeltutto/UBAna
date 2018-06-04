@@ -178,6 +178,8 @@ namespace Base {
     _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb);
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
+    _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
+    std::cout << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
     std::cout << "CrossSectionBootstrapCalculator1D FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
 
     std::vector<std::string> hist_to_subtract = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
@@ -331,7 +333,7 @@ namespace Base {
     BootstrapTH1D xsec_mumom_bs;
     xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
 
-    std::cout << "xsec_mumom_bs.GetNbinsX() " <<xsec_mumom_bs.GetNbinsX() << std::endl;
+    std::cout << "xsec_mumom_bs.GetNbinsX() " << xsec_mumom_bs.GetNbinsX() << std::endl;
 
     //genie_rw_plotter.SetXSecBootstrap(xsec_mumom_bs);
     //genie_rw_plotter.MakeXsecDiffPlots(true);
@@ -340,6 +342,7 @@ namespace Base {
     CovarianceCalculator2D _cov_calc;
     _cov_calc.SetPrefix(_save_prefix);
     _cov_calc.SetBootstrap(xsec_mumom_bs);
+    _cov_calc.AddExtraDiagonalUncertainty(_extra_relative_uncertainty);
     _cov_calc.CalculateCovarianceMatrix();
     _cov_calc.PlotMatrices();
 
@@ -449,8 +452,10 @@ namespace Base {
       h_2d_all_xsec->SetMaximum(50); // was 200
     } else if (_save_prefix.find("onebin") != std::string::npos) {
       h_2d_all_xsec->GetXaxis()->SetTitle("");
-      h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}");
+      h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
+      h_2d_all_xsec->GetXaxis()->SetTickLength(0);
+      h_2d_all_xsec->GetXaxis()->SetLabelSize(0);
     } else {
       h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu})");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");

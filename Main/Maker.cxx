@@ -272,6 +272,12 @@ void Main::Maker::MakeFile()
     std::cout << "Is mc." << std::endl;
 
   
+
+  if (_scale_cosmics) {
+    for (int i = 0; i < 10; i++) {
+      std::cout << "****** Scaling cosmic background by " << _scale_factor_cosmic << "******" << std::endl;
+    }
+  }
   
 
   //*************************
@@ -346,13 +352,13 @@ void Main::Maker::MakeFile()
   UBXSecEvent * t = new UBXSecEvent(chain_ubxsec);
   //ActivateBranches(t);
 
-   int nsignal = 0;
+  double nsignal = 0;
 
-  int nsignal_qe = 0;
-  int nsignal_res = 0;
-  int nsignal_dis = 0;
-  int nsignal_coh = 0;
-  int nsignal_mec = 0;
+  double nsignal_qe = 0;
+  double nsignal_res = 0;
+  double nsignal_dis = 0;
+  double nsignal_coh = 0;
+  double nsignal_mec = 0;
   
   int signal_sel = 0;
   int bkg_anumu_sel = 0;
@@ -639,7 +645,7 @@ void Main::Maker::MakeFile()
   
   TH1D* h_chi2 = new TH1D("h_chi2", "h_chi2", 50, 0, 50);
   TH1D* h_flsTime = new TH1D("h_flsTime", ";Flash time w.r.t. trigger [#mus];Flashes", 125, 0, 25);
-  TH1D* h_flsTime_wcut = new TH1D("h_flsTime_wcut", ";Flash time w.r.t. trigger [#mus];Flashes (> 50PE)", 125, 0, 25);
+  TH1D* h_flsTime_wcut = new TH1D("h_flsTime_wcut", ";Flash time w.r.t. trigger [#mus];Flashes (> 50PE)", 500, 0, 25);
   TH1D* h_flsTime_wcut_2 = new TH1D("h_flsTime_wcut_2", "(2);Flash time w.r.t. trigger [#mus];Flashes (> 50PE)", 125, 0, 25);
   TH1D* h_flsTime_wcut_3 = new TH1D("h_flsTime_wcut_3", "(3);Flash time w.r.t. trigger [#mus];Flashes (> 50PE)", 125, 0, 25);
   TH1D* h_flsTime_wcut_4 = new TH1D("h_flsTime_wcut_4", "(4);Flash time w.r.t. trigger [#mus];Flashes (> 50PE)", 125, 0, 25);
@@ -1182,9 +1188,19 @@ void Main::Maker::MakeFile()
   hmap_vtxx_upborder["background"] = new TH1D("h_vtxx_upborder_background", ";Candidate Neutrino Vertex X [cm];", 5, 0, 275);
 
   std::map<std::string,TH1D*> hmap_flsmatch_score;
-  hmap_flsmatch_score["total"] = new TH1D("h_flsmatch_score_total", ";1/(-log(L));", 100, 0, 1.5);
-  hmap_flsmatch_score["signal"] = new TH1D("h_flsmatch_score_signal", ";1/(-log(L));", 100, 0, 1.5);
-  hmap_flsmatch_score["background"] = new TH1D("h_flsmatch_score_background", ";1/(-log(L));", 100, 0, 1.5);
+  hmap_flsmatch_score["total"] = new TH1D("h_flsmatch_score_total", ";1/(-log(L));", 80, 0, 1.5);
+  hmap_flsmatch_score["signal"] = new TH1D("h_flsmatch_score_signal", ";1/(-log(L));", 80, 0, 1.5);
+  hmap_flsmatch_score["background"] = new TH1D("h_flsmatch_score_background", ";1/(-log(L));", 80, 0, 1.5);
+
+  std::map<std::string,TH1D*> hmap_flsmatch_score_second;
+  hmap_flsmatch_score_second["total"] = new TH1D("h_flsmatch_score_second_total", ";1/(-log(L));", 80, 0, 1.5);
+  hmap_flsmatch_score_second["signal"] = new TH1D("h_flsmatch_score_second_signal", ";1/(-log(L));", 80, 0, 1.5);
+  hmap_flsmatch_score_second["background"] = new TH1D("h_flsmatch_score_second_background", ";1/(-log(L));", 80, 0, 1.5);
+
+  std::map<std::string,TH1D*> hmap_flsmatch_score_difference;
+  hmap_flsmatch_score_difference["total"] = new TH1D("h_flsmatch_score_difference_total", ";1/(-log(L));", 80, 0, 0.2);
+  hmap_flsmatch_score_difference["signal"] = new TH1D("h_flsmatch_score_difference_signal", ";1/(-log(L));", 80, 0, 0.2);
+  hmap_flsmatch_score_difference["background"] = new TH1D("h_flsmatch_score_difference_background", ";1/(-log(L));", 80, 0, 0.2);
 
   std::map<std::string,TH1D*> hmap_ntpcobj;
   hmap_ntpcobj["total"] = new TH1D("h_ntpcobj_total", ";1/(-log(L));", 10, 0, 10);
@@ -1202,6 +1218,8 @@ void Main::Maker::MakeFile()
   TH1D * h_deltall_nu = new TH1D("h_deltall_nu", "Neutrino origin;MCS Delta LL;", 400, -30, 30);
   TH2D * h_deltall_length_nu = new TH2D("h_deltall_length_nu", "Neutrino origin;MCS Delta LL;Track Length [cm]", 70, -30, 30, 70, 0, 700);
 
+  TH1D* h_trklen_first = new TH1D("h_trklen_first", "h_trklen_first", 60, 0, 700);
+  TH1D* h_trklen_second = new TH1D("h_trklen_second", "h_trklen_second", 60, 0, 700);
 
   std::vector<std::string> fname_genie_pm1;
   std::vector<std::string> fname_genie_multisim;
@@ -1210,8 +1228,7 @@ void Main::Maker::MakeFile()
   if(_maup_mecoff && !isdata) {
     PrintMaUpMECOff();
   }
-  
-  
+    
   int barWidth = 70;
   
   if(maxEntries > 0.) evts = maxEntries;
@@ -1223,9 +1240,8 @@ void Main::Maker::MakeFile()
   int total_events = 0;
 
   std::vector<int> run_numbers, subrun_numbers, event_numbers;
-  if (_check_duplicate_events) {
-    run_numbers.resize(evts); subrun_numbers.resize(evts); event_numbers.resize(evts);
-  }
+  run_numbers.resize(evts); subrun_numbers.resize(evts); event_numbers.resize(evts);
+  
   
   for(int i = _initial_entry; i < evts; i++) {
     
@@ -1237,12 +1253,13 @@ void Main::Maker::MakeFile()
     
     //cout << "***** Event " << i << endl;
     //cout << "***** Event Number " << t->event << endl;
+    run_numbers.at(i) = t->run;
+    subrun_numbers.at(i) = t->subrun;
+    event_numbers.at(i) = t->event;
 
     // Check for duplicate MC events
     if (_check_duplicate_events){
-      run_numbers.at(i) = t->run;
-      subrun_numbers.at(i) = t->subrun;
-      event_numbers.at(i) = t->event;
+      
       if (std::count (event_numbers.begin(), event_numbers.end(), t->event) > 1) {
 
         // Now check the subrun
@@ -1266,10 +1283,11 @@ void Main::Maker::MakeFile()
     // ************************
 
     double event_weight = t->bnb_weight;
+    event_weight *= _extra_weight;
     if (isdata) event_weight = 1.;
 
 
-
+    // bool is_from_kaon = false;
 
     // ************************
     //
@@ -1543,11 +1561,25 @@ void Main::Maker::MakeFile()
 
           wgts_flux_multisim.at(i_wgt) *= t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt);
 
+          // if (t->evtwgt_flux_multisim_funcname.at(i_func) == "kminus_PrimaryHadronNormalization" 
+          //    || t->evtwgt_flux_multisim_funcname.at(i_func) == "kplus_PrimaryHadronFeynmanScaling" 
+          //    || t->evtwgt_flux_multisim_funcname.at(i_func) == "kzero_PrimaryHadronSanfordWang" ) {
+          //   std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+          //   if (t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt) != 1) {
+          //     is_from_kaon = true;
+          //   }
+          // }
+
         }
 
       }
 
     }
+
+    // if (is_from_kaon) {
+    //   // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+    //   event_weight *= 1.5;
+    // }
 
 
 /*
@@ -1581,17 +1613,17 @@ void Main::Maker::MakeFile()
     
     // This variable will store if this is a signal event or not
     bool isSignal = false;
-    
+
     if (t->nupdg == 14 && t->ccnc == 0 && t->fv == 1 && (t->tvtx_z[0] < 675 || t->tvtx_z[0] > 775)){
 
-      nsignal++;
+      nsignal += event_weight;
       isSignal = true;
 
-      if (t->mode == 0) nsignal_qe++;
-      if (t->mode == 1) nsignal_res++;
-      if (t->mode == 2) nsignal_dis++;
-      if (t->mode == 3) nsignal_coh++;
-      if (t->mode == 10) nsignal_mec++;
+      if (t->mode == 0) nsignal_qe += event_weight;
+      if (t->mode == 1) nsignal_res += event_weight;
+      if (t->mode == 2) nsignal_dis += event_weight;
+      if (t->mode == 3) nsignal_coh += event_weight;
+      if (t->mode == 10) nsignal_mec += event_weight;
       
     }
     
@@ -1776,8 +1808,8 @@ void Main::Maker::MakeFile()
     // ***********************
 
 
-    if (isSignal) selected_signal_events_percut["initial"]++;
-    selected_events_percut["initial"]++;
+    if (isSignal) selected_signal_events_percut["initial"]+=event_weight;
+    selected_events_percut["initial"]+=event_weight;
     
     
     //
@@ -1822,11 +1854,12 @@ void Main::Maker::MakeFile()
     
     if (isSignal) h_true_nu_eng_afterflash->Fill(t->nu_e, event_weight);
 
-    if (isSignal) selected_signal_events_percut["beamflash"]++;
-    selected_events_percut["beamflash"]++;
+    if (isSignal) selected_signal_events_percut["beamflash"]+=event_weight;
+    selected_events_percut["beamflash"]+=event_weight;
     
     
-    
+    if (t->nslices > 0) h_trklen_first->Fill(t->slc_longesttrack_length.at(0));
+    if (t->nslices > 1) h_trklen_second->Fill(t->slc_longesttrack_length.at(1));
 
     //
     // Loop over TPC Events - Preliminary plots with only the flash cut applied
@@ -1876,7 +1909,7 @@ void Main::Maker::MakeFile()
         }
       }
       //  spec
-      if (t->event == -1/*150801 4990051 3099969*/) {
+      if (/*t->event==900 && t->run==5326*/t->event==-1 /*150801 4990051 3099969*/) {
         if (flashInBeamSpill > -1 && t->slc_flsmatch_score.at(slc) > -1){
           int instance = 0;
           std::cout << "tpcx " << t->slc_flsmatch_tpcx.at(instance) << std::endl;
@@ -1947,7 +1980,10 @@ void Main::Maker::MakeFile()
 
     double score_max = -1;
     int scl_ll_max = -1;
+    std::vector<double> temp_score; temp_score.clear();
     for (int slc = 0; slc < t->nslices; slc ++){
+
+      temp_score.emplace_back(t->slc_flsmatch_score.at(slc));
       
       if (t->slc_flsmatch_score.at(slc) > 0.00000001) {
         n_slc_flsmatch++;
@@ -1960,6 +1996,8 @@ void Main::Maker::MakeFile()
     }
     
     h_n_slc_flsmatch->Fill(n_slc_flsmatch, event_weight);
+
+    std::sort(temp_score.begin(), temp_score.end(), std::greater<double>());
     
     
     // In no flash-matched object, continue
@@ -1978,8 +2016,8 @@ void Main::Maker::MakeFile()
     if (std::isinf(score_max)) continue;
 
 
-    if (isSignal && nu_origin) selected_signal_events_percut["flash_match"]++;
-    selected_events_percut["flash_match"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match"]+=event_weight;
+    selected_events_percut["flash_match"]+=event_weight;
     
     
     h_flsTime_wcut_4->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
@@ -1995,8 +2033,8 @@ void Main::Maker::MakeFile()
 
     if(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max) < -100) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltax"]++;
-    selected_events_percut["flash_match_deltax"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltax"]+=event_weight;
+    selected_events_percut["flash_match_deltax"]+=event_weight;
     
     h_flsTime_wcut_6->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
     h_deltaz_6->Fill(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill), event_weight);
@@ -2008,8 +2046,8 @@ void Main::Maker::MakeFile()
 
     if(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill) < -75) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltaz"]++;
-    selected_events_percut["flash_match_deltaz"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltaz"]+=event_weight;
+    selected_events_percut["flash_match_deltaz"]+=event_weight;
     
     h_flsTime_wcut_8->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
 
@@ -2039,15 +2077,15 @@ void Main::Maker::MakeFile()
     
     //if(!t->slc_passed_min_vertex_quality.at(scl_ll_max)) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["quality"]++;
-    selected_events_percut["quality"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["quality"]+=event_weight;
+    selected_events_percut["quality"]+=event_weight;
     
     //if (!t->slc_muoncandidate_contained.at(scl_ll_max)) continue;
     
     if(t->slc_muoncandidate_contained.at(scl_ll_max) && (t->slc_muoncandidate_mom_mcs.at(scl_ll_max) - t->slc_muoncandidate_mom_range.at(scl_ll_max) > 0.2)) continue;
     
-    if (isSignal && nu_origin) selected_signal_events_percut["mcs_length_quality"]++;
-    selected_events_percut["mcs_length_quality"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["mcs_length_quality"]+=event_weight;
+    selected_events_percut["mcs_length_quality"]+=event_weight;
 
 
     // DqDx cut
@@ -2060,9 +2098,10 @@ void Main::Maker::MakeFile()
     }
       
     if (dqdx_calib > dqdx_cut) continue;
+    // if(t->slc_nuvtx_z.at(scl_ll_max) <= 500) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["mip_consistency"]++;
-    selected_events_percut["mip_consistency"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["mip_consistency"]+=event_weight;
+    selected_events_percut["mip_consistency"]+=event_weight;
 
 
 
@@ -2083,24 +2122,32 @@ void Main::Maker::MakeFile()
     // FV cut
     if(t->slc_nuvtx_fv.at(scl_ll_max) == 0) continue;
     if(t->slc_nuvtx_z.at(scl_ll_max) > 675 && t->slc_nuvtx_z.at(scl_ll_max) < 775) continue;
-    //if(t->slc_nuvtx_z.at(scl_ll_max) < 300) continue;
+    // if(t->slc_nuvtx_z.at(scl_ll_max) < 200) continue;
 
-    if (isSignal && nu_origin) selected_signal_events_percut["fiducial_volume"]++;
-    selected_events_percut["fiducial_volume"]++;
+    if (isSignal && nu_origin) selected_signal_events_percut["fiducial_volume"]+=event_weight;
+    selected_events_percut["fiducial_volume"]+=event_weight;
     
     
 
+    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi()/4)) continue; // cathode
+    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < (3./4.)*TMath::Pi())) continue; // up
+    // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -(3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -TMath::Pi()/4)) continue; // down
+    // if (!((t->slc_longesttrack_phi.at(scl_ll_max) > (3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi())
+            // || (t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -(3./4.)*TMath::Pi()))) continue; // anode
 
 
+    //if(t->slc_mult_track_tolerance.at(scl_ll_max) <= 1) continue;
 
 
     //if (t->slc_nuvtx_z.at(scl_ll_max) < 300) continue;
 
     //if(t->slc_longesttrack_length.at(scl_ll_max) < 25.) continue;
     
-    //if(!t->slc_iscontained.at(scl_ll_max)) continue;
+    // if(t->slc_iscontained.at(scl_ll_max)) continue;
     
     //if(t->slc_crosses_top_boundary.at(scl_ll_max) == 1) continue;
+
+    // if (t->slc_muoncandidate_mom_mcs.at(scl_ll_max) > 2.5) continue;
 
 
     
@@ -2109,7 +2156,7 @@ void Main::Maker::MakeFile()
     // EVENT IS SELECTED
     //
     
-    //if (isSignal && nu_origin)std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
+    // if (isSignal && nu_origin)std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
     
     hmap_onebin["total"]->Fill(0.5, event_weight);
     hmap_trklen["total"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
@@ -2203,31 +2250,44 @@ void Main::Maker::MakeFile()
     hmap_vtxy["total"]->Fill(t->slc_nuvtx_y.at(scl_ll_max), event_weight);
     hmap_vtxz["total"]->Fill(t->slc_nuvtx_z.at(scl_ll_max), event_weight);
     
-    hmap_flsmatch_score["total"]->Fill(t->slc_flsmatch_score.at(scl_ll_max));
-    
+    double second_score = -9999, score_difference = -9999;
+    if (temp_score.size() > 1) {
+      second_score = temp_score.at(1);
+      score_difference = temp_score.at(0) - temp_score.at(1);
+    }
+
+    hmap_flsmatch_score["total"]->Fill(t->slc_flsmatch_score.at(scl_ll_max), event_weight);
+    hmap_flsmatch_score_second["total"]->Fill(second_score, event_weight);
+    hmap_flsmatch_score_difference["total"]->Fill(score_difference, event_weight);
+
+
     // SIGNAL
     if ( isSignal && nu_origin) {
       hmap_xdiff["signal"]->Fill(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max), event_weight);
       hmap_zdiff["signal"]->Fill(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill), event_weight);
-      hmap_pediff["signal"]->Fill(hypo_pe - t->beamfls_pe.at(flashInBeamSpill)/2, event_weight);
+      hmap_pediff["signal"]->Fill(hypo_pe - t->beamfls_pe.at(flashInBeamSpill), event_weight);
       
       hmap_vtxx["signal"]->Fill(t->slc_nuvtx_x.at(scl_ll_max), event_weight);
       hmap_vtxy["signal"]->Fill(t->slc_nuvtx_y.at(scl_ll_max), event_weight);
       hmap_vtxz["signal"]->Fill(t->slc_nuvtx_z.at(scl_ll_max), event_weight);
       
-      hmap_flsmatch_score["signal"]->Fill(t->slc_flsmatch_score.at(scl_ll_max));
+      hmap_flsmatch_score["signal"]->Fill(t->slc_flsmatch_score.at(scl_ll_max), event_weight);
+      hmap_flsmatch_score_second["signal"]->Fill(second_score, event_weight);
+      hmap_flsmatch_score_difference["signal"]->Fill(score_difference, event_weight);
     }
     // BACKGROUND
     else {
       hmap_xdiff["background"]->Fill(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max), event_weight);
       hmap_zdiff["background"]->Fill(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill), event_weight);
-      hmap_pediff["background"]->Fill(hypo_pe - t->beamfls_pe.at(flashInBeamSpill)/2, event_weight);
+      hmap_pediff["background"]->Fill(hypo_pe - t->beamfls_pe.at(flashInBeamSpill), event_weight);
 
       hmap_vtxx["background"]->Fill(t->slc_nuvtx_x.at(scl_ll_max), event_weight);
       hmap_vtxy["background"]->Fill(t->slc_nuvtx_y.at(scl_ll_max), event_weight);
       hmap_vtxz["background"]->Fill(t->slc_nuvtx_z.at(scl_ll_max), event_weight);
       
-      hmap_flsmatch_score["background"]->Fill(t->slc_flsmatch_score.at(scl_ll_max)/2, event_weight);
+      hmap_flsmatch_score["background"]->Fill(t->slc_flsmatch_score.at(scl_ll_max), event_weight);
+      hmap_flsmatch_score_second["background"]->Fill(second_score, event_weight);
+      hmap_flsmatch_score_difference["background"]->Fill(score_difference, event_weight);
     }
     
     if (isNueCCFV) {
@@ -2644,8 +2704,9 @@ void Main::Maker::MakeFile()
     //
     else {
       bkg_cosmic_sel ++;
-      if (t->slc_crosses_top_boundary.at(scl_ll_max) == 1 )
-        bkg_cosmic_top_sel++;
+      // Add extra weight to event_weight if we are scaling the cosmic background (for example from overlays)
+      if (_scale_cosmics) event_weight *= _scale_factor_cosmic;
+      if (t->slc_crosses_top_boundary.at(scl_ll_max) == 1 ) bkg_cosmic_top_sel++;
       pEff->Fill(false, t->nu_e);
       hmap_onebin["cosmic"]->Fill(0.5, event_weight);
       hmap_trklen["cosmic"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
@@ -2713,7 +2774,12 @@ void Main::Maker::MakeFile()
         hmap_multtracktol["cosmic_nostopmu"]->Fill(t->slc_mult_track_tolerance.at(scl_ll_max), event_weight);
         hmap_trktheta_trkmom["cosmic_nostopmu"]->Fill(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight);
       }
+
+      // Restore the event weight
+      if (_scale_cosmics) event_weight /= _scale_factor_cosmic;
     }
+
+
     
 
     
@@ -2787,6 +2853,11 @@ void Main::Maker::MakeFile()
   std::cout << "semisel_tpcobj: " << semisel_tpcobj << std::endl;
   std::cout << "semisel_tpcobj_with_atleast_one_track: " << semisel_tpcobj_with_atleast_one_track << std::endl;
 
+  std::cout << std::endl;
+  std::sort(run_numbers.begin(), run_numbers.end());
+  std::cout << "first run: " << run_numbers.at(0) << std::endl;
+  std::cout << "last run: " << run_numbers.at(run_numbers.size()-1) << std::endl;
+
   // ************************
   //
   //  Plotting
@@ -2808,6 +2879,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency";
   canvas_efficiency->SaveAs(temp2 + ".pdf");
@@ -2822,6 +2894,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/muon_reco_efficiency";
   canvas_muon_reco_efficiency->SaveAs(temp2 + ".pdf");
@@ -2836,6 +2909,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/muon_reco_efficiency_angle";
   canvas_muon_reco_efficiency_angle->SaveAs(temp2 + ".pdf");
@@ -2855,6 +2929,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulationXSec();
 
   temp2 = "./output/efficiency_mumom";
   canvas_efficiency_mumom->SaveAs(temp2 + ".pdf");
@@ -2874,6 +2949,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency_muangle";
   canvas_efficiency_muangle->SaveAs(temp2 + ".pdf");
@@ -2888,6 +2964,7 @@ void Main::Maker::MakeFile()
   pEff5_3->SetMarkerStyle(20);
   pEff5_3->SetMarkerSize(0.5);
   pEff5_3->Draw("colz");
+  PlottingTools::DrawSimulationXSec();
 
   
   temp2 = "./output/efficiency_muangle_mumom";
@@ -2908,6 +2985,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency_muphi";
   canvas_efficiency_muphi->SaveAs(temp2 + ".pdf");
@@ -2927,6 +3005,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency_mult";
   canvas_efficiency_mult->SaveAs(temp2 + ".pdf");
@@ -2946,6 +3025,7 @@ void Main::Maker::MakeFile()
   g->SetMinimum(0);
   g->SetMaximum(1);
   gPad->Update();
+  PlottingTools::DrawSimulationXSec();
   
   temp2 = "./output/efficiency_mult_ch";
   canvas_efficiency_mult_ch->SaveAs(temp2 + ".pdf");
@@ -2968,8 +3048,8 @@ void Main::Maker::MakeFile()
   gPad->Update();
 
   TEfficiency* pEff_res = new TEfficiency(*h_eff_res_num,*h_eff_res_den);
-  pEff_res->SetLineColor(kRed+2);
-  pEff_res->SetMarkerColor(kRed+2);
+  pEff_res->SetLineColor(kRed+1);
+  pEff_res->SetMarkerColor(kRed+1);
   pEff_res->SetLineWidth(2);
   pEff_res->SetMarkerStyle(20);
   pEff_res->SetMarkerSize(0.5);
@@ -2989,7 +3069,7 @@ void Main::Maker::MakeFile()
   pEff_coh->SetLineWidth(2);
   pEff_coh->SetMarkerStyle(20);
   pEff_coh->SetMarkerSize(0.5);
-  pEff_coh->Draw("LP same");
+  //pEff_coh->Draw("LP same");
 
   TEfficiency* pEff_mec = new TEfficiency(*h_eff_mec_num,*h_eff_mec_den);
   pEff_mec->SetLineColor(kMagenta+1); 
@@ -3003,9 +3083,11 @@ void Main::Maker::MakeFile()
   leg_mode->AddEntry(pEff_qe,"GENIE QE","lep");
   leg_mode->AddEntry(pEff_res,"GENIE RES","lep");  
   leg_mode->AddEntry(pEff_dis,"GENIE DIS","lep");  
-  leg_mode->AddEntry(pEff_coh,"GENIE COH","lep");  
+  // leg_mode->AddEntry(pEff_coh,"GENIE COH","lep");  
   leg_mode->AddEntry(pEff_mec,"GENIE MEC","lep");  
   leg_mode->Draw();
+
+  PlottingTools::DrawSimulation();
 
   temp2 = "./output/efficiency_mode";
   canvas_efficiency_mode->SaveAs(temp2 + ".pdf");
@@ -3052,7 +3134,7 @@ void Main::Maker::MakeFile()
   h_frac_diff_others->Draw("colz");
   
   // PE spec
-  new TCanvas();
+  TCanvas * canvas_fm_pe_comparison = new TCanvas();
   TGraph* gr = new TGraph(32,hypo_spec_x,hypo_spec_y);
   TGraph* gr2 = new TGraph(32,meas_spec_x,meas_spec_y);
   TGraph* gr3 = new TGraph(32,numc_spec_x,numc_spec_y);
@@ -3087,8 +3169,11 @@ void Main::Maker::MakeFile()
   leg->AddEntry(gr,"Hypo flash","l");
   leg->AddEntry(gr2,"Reco flash","l");
   //leg->AddEntry(gr3,"Neutrino MCFlash","l");
-  
   leg->Draw();
+  temp2 = "./output/fm_pe_comparison";
+  canvas_fm_pe_comparison->SaveAs(temp2 + ".pdf");
+  canvas_fm_pe_comparison->SaveAs(temp2 + ".C","C");
+
   
   TCanvas * canvas_vtxcheck = new TCanvas();
   h_vtxcheck_angle_good->Scale(1./h_vtxcheck_angle_good->Integral());
@@ -3413,18 +3498,18 @@ void Main::Maker::MakeFile()
 
   TH1D * selected_percut = new TH1D("selected_percut", "selected_percut", 9, 0, 9);
   TH1D * selected_signal_percut = new TH1D("selected_signal_percut", "selected_percut", 9, 0, 9);
-  //TH1D * generated_percut = new TH1D("generated_percut", "generated_percut", 8, 0, 7);
+  // TH1D * generated_percut = new TH1D("generated_percut", "generated_percut", 8, 0, 7);
   TH1D * generated_signal_percut = new TH1D("generated_signal_percut", "generated_percut", 9, 0, 9);
 
-  selected_percut->SetBinContent(1, selected_events_percut["initial"] + 1.28031e+06);
-  selected_percut->SetBinContent(2, selected_events_percut["beamflash"] + 821708);
-  selected_percut->SetBinContent(3, selected_events_percut["flash_match"] + 194732);
-  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"] + 154545);
-  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"] + 106803);
-  selected_percut->SetBinContent(6, selected_events_percut["quality"] + 76023.9);
-  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"] + 72577.9);
-  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"] + 69692.3);
-  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"] + 22657.5);
+  selected_percut->SetBinContent(1, selected_events_percut["initial"]); // + 1280310);
+  selected_percut->SetBinContent(2, selected_events_percut["beamflash"]); // + 821708);
+  selected_percut->SetBinContent(3, selected_events_percut["flash_match"]); // + 194732);
+  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"]); // + 154544);
+  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"]); // + 106802);
+  selected_percut->SetBinContent(6, selected_events_percut["quality"]); // + 76023);
+  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"]); // + 72577);
+  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"]); // + 69692);
+  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"]); // + 22657);
 
   selected_signal_percut->SetBinContent(1, selected_signal_events_percut["initial"]);
   selected_signal_percut->SetBinContent(2, selected_signal_events_percut["beamflash"]);
@@ -3436,10 +3521,11 @@ void Main::Maker::MakeFile()
   selected_signal_percut->SetBinContent(8, selected_signal_events_percut["mip_consistency"]);
   selected_signal_percut->SetBinContent(9, selected_signal_events_percut["fiducial_volume"]);
 
-  for (int i = 0; i < 9; i++) {
-    std::cout << "cut " << i << " => " << selected_signal_percut->GetBinContent(i+1) 
-      << " => " << selected_percut->GetBinContent(i+1) 
+  std::vector<std::string> cut_names = {"initial", "beamflash", "flashmatch", "flashmatchdeltax", "flashmatchdeltaz", "quality", "mcslengthquality", "mipconsistency", "fiducialvolume"};
 
+  for (int i = 0; i < 9; i++) {
+    std::cout << cut_names.at(i) << " & " << selected_signal_percut->GetBinContent(i+1) 
+       << " => " << selected_percut->GetBinContent(i+1) 
               << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(1) * 100 
               << " & " << selected_signal_percut->GetBinContent(i+1)/selected_signal_percut->GetBinContent(i) * 100  << "\\\\" << std::endl;
     generated_signal_percut->SetBinContent(i+1, (double)nsignal);
@@ -3448,17 +3534,26 @@ void Main::Maker::MakeFile()
 
   TCanvas * canvas_eff_pur_graph_percut = new TCanvas();
 
+  canvas_eff_pur_graph_percut->SetLeftMargin(0.05157593);
+  canvas_eff_pur_graph_percut->SetRightMargin(0.1475645);
+  canvas_eff_pur_graph_percut->SetTopMargin(0.04210526);
+  canvas_eff_pur_graph_percut->SetBottomMargin(0.1578947);
+
   TH1F *h = new TH1F("h","",9, 0, 9);
   h->SetMaximum(1);
-  h->GetXaxis()->SetBinLabel(1,"initial");
-  h->GetXaxis()->SetBinLabel(2,"beamflash");
-  h->GetXaxis()->SetBinLabel(3,"flash_match");
-  h->GetXaxis()->SetBinLabel(4,"flash_match_deltax");
-  h->GetXaxis()->SetBinLabel(5,"flash_match_deltaz");
-  h->GetXaxis()->SetBinLabel(6,"quality");
-  h->GetXaxis()->SetBinLabel(7,"mcs_length_quality");
-  h->GetXaxis()->SetBinLabel(8,"mip_consistency");
-  h->GetXaxis()->SetBinLabel(9,"fiducial_volume");
+  h->GetXaxis()->SetBinLabel(1,"Initial");
+  h->GetXaxis()->SetBinLabel(2,"Beam Flash");
+  h->GetXaxis()->SetBinLabel(3,"Flash Match");
+  h->GetXaxis()->SetBinLabel(4,"Flash Match #Deltax");
+  h->GetXaxis()->SetBinLabel(5,"Flash Match #Deltaz");
+  h->GetXaxis()->SetBinLabel(6,"Track Quality");
+  h->GetXaxis()->SetBinLabel(7,"MCS-Length Quality");
+  h->GetXaxis()->SetBinLabel(8,"MIP Consistency");
+  h->GetXaxis()->SetBinLabel(9,"Fiducial Volume");
+
+  h->GetXaxis()->SetLabelOffset(0.009);
+  h->GetXaxis()->SetLabelSize(0.06);
+
   h->Draw();
 
   TEfficiency* pEff_percut = new TEfficiency(*selected_signal_percut,*generated_signal_percut);
@@ -3475,16 +3570,19 @@ void Main::Maker::MakeFile()
   auto axis = pEff_percut_graph->GetYaxis();
   axis->SetLimits(0.,1.); 
 
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(1,"initial");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(2,"beamflash");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(3,"flash_match");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(4,"flash_match_deltax");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(5,"flash_match_deltaz");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(6,"quality");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(7,"mcs_length_quality");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(8,"mip_consistency");
-  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(9,"fiducial_volume");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(1,"Initial");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(2,"BeamFlash");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(3,"FlashMatch");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(4,"FlashMatch#Deltax");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(5,"FlashMatch#Deltaz");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(6,"TrackQuality");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(7,"MCS-LengthQuality");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(8,"MIPConsistency");
+  pEff_percut_graph->GetHistogram()->GetXaxis()->SetBinLabel(9,"FiducialVolume");
 
+
+
+  // pEff_percut_graph->GetXaxis()->SetLabelSize(0.07);
   pEff_percut_graph->Draw("PL");
 
   
@@ -3500,14 +3598,26 @@ void Main::Maker::MakeFile()
     pPur_percut_graph->SetPointEXhigh(i, 0.);
     pPur_percut_graph->SetPointEXlow(i, 0.);
   }
+
   pPur_percut_graph->Draw("PL");
 
-  TLegend* l = new TLegend(0.5873926,0.7473684,0.8810888,0.8526316,NULL,"brNDC");
+  TLegend* l = new TLegend(0.4842407,0.8168421,0.777937,0.9221053,NULL,"brNDC");
   l->AddEntry(pEff_percut_graph,"Efficiency");
   l->AddEntry(pPur_percut_graph,"Purity");
   //leg->AddEntry(gr3,"Neutrino MCFlash","l");
   
   l->Draw();
+
+  // PlottingTools::DrawSimulationXSec();
+
+  TLatex* prelim = new TLatex(0.8524355,0.9810526, "MicroBooNE Simulation, Preliminary");
+  prelim->SetTextFont(62);
+  prelim->SetTextColor(kGray+2);
+  prelim->SetNDC();
+  prelim->SetTextSize(1/30.);
+  prelim->SetTextAlign(32);
+  // prelim->SetTextSize(0.04631579);
+  prelim->Draw();
 
   temp2 = "./output/eff_pur_graph_percut";
   canvas_eff_pur_graph_percut->SaveAs(temp2 + ".pdf");
@@ -3654,6 +3764,11 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_ntpcobj, "hmap_ntpcobj");
 
   file_out->WriteObject(&hmap_flsmatch_score, "hmap_flsmatch_score");
+  file_out->WriteObject(&hmap_flsmatch_score_second, "hmap_flsmatch_score_second");
+  file_out->WriteObject(&hmap_flsmatch_score_difference, "hmap_flsmatch_score_difference");
+
+  h_trklen_first->Write();
+  h_trklen_second->Write();
 
   h_flsTime->Write();
   h_flsTime_wcut->Write();
