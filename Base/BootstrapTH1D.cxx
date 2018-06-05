@@ -9,8 +9,14 @@ namespace Base {
 
   BootstrapTH1D::BootstrapTH1D(std::string name, std::string title, int nbins, double *bins) /*: TObject()*/
   {
+
+    _h_v.clear();
+    _name_v.clear();
+
   	TH1D temp((name+"nominal").c_str(), title.c_str(), nbins, bins);
     _hmap["nominal"] = temp;
+    _h_v.emplace_back(temp);
+    _name_v.push_back("nominal");
     _hname = name;
     _title = title;
     _nbins = nbins;
@@ -22,8 +28,13 @@ namespace Base {
 
   BootstrapTH1D::BootstrapTH1D(std::string name, std::string title, int nbins, double bin_start, double bin_end) 
   {
+    _h_v.clear();
+    _name_v.clear();
+
     TH1D temp((name+"nominal").c_str(), title.c_str(), nbins, bin_start, bin_end);
     _hmap["nominal"] = temp;
+    _h_v.emplace_back(temp);
+    _name_v.push_back("nominal");
     _hname = name;
     _title = title;
     _nbins = nbins;
@@ -52,6 +63,8 @@ namespace Base {
     for (size_t i = 0; i < _n_weights - 1; i++) {
     	TH1D temp((_hname+names.at(i)).c_str(), _title.c_str(), _nbins, bins);
       _hmap[names.at(i)] = temp;
+      _h_v.emplace_back(temp);
+      _name_v.push_back(names.at(i));
     }
     
   }
@@ -88,7 +101,14 @@ namespace Base {
 
   int BootstrapTH1D::GetNUniverses()
   {
-    return _hmap.size();
+    // return _hmap.size(); // To be removed
+
+    if (_h_v.size() != _name_v.size()) {
+      std::cout << _name << "Histo vector and name vector do not have the same number of entries" << std::endl;
+      throw std::exception();
+    }
+
+    return _h_v.size();
   }
 
   size_t BootstrapTH1D::GetNWeights()
@@ -98,29 +118,44 @@ namespace Base {
 
   std::vector<std::string> BootstrapTH1D::GetUniverseNames()
   {
-    return _wnames;
+    // return _wnames; // To be removed
+    return _name_v;
   }
 
   void BootstrapTH1D::ResetIterator()
   {
     _current_iterator = _hmap.begin();
+    _current_vector_index = 0;
   }
 
   bool BootstrapTH1D::NextUniverse(std::string & uni_name, TH1D & uni_histo) {
 
-    if (_current_iterator == _hmap.end()) {
+    // if (_current_iterator->first == "nominal") {
+    //   _current_iterator++;
+    // }
+
+    if (_name_v.at(_current_vector_index) == "nominal") {
+      _current_vector_index++;
+    }
+
+    // if (_current_iterator == _hmap.end()) {
+    //   std::cout << "NextUniverse false" << std::endl;
+    //   return false;
+    // }
+
+    if (_current_vector_index >= _h_v.size()) {
       std::cout << "NextUniverse false" << std::endl;
       return false;
     }
 
-    if (_current_iterator->first == "nominal") {
-      _current_iterator++;
-    }
+    // uni_name = _current_iterator->first;
+    // uni_histo = _current_iterator->second;
 
-    uni_name = _current_iterator->first;
-    uni_histo = _current_iterator->second;
+    uni_name = _name_v.at(_current_vector_index);
+    uni_histo = _h_v.at(_current_vector_index);
 
-    _current_iterator++;
+    // _current_iterator++;
+    _current_vector_index++;
     
     return true;
   } 
@@ -172,13 +207,20 @@ namespace Base {
     }
 
     _hmap["nominal"].Fill(value, weight);
+    _h_v.at(0).Fill(value, weight); // The nominal histogram
 
-    for (size_t i = 0; i < _n_weights - 1; i++) {
+   //  for (size_t i = 0; i < _n_weights - 1; i++) {
 
-     _hmap[_wnames.at(i)].Fill(value, weight * weights.at(i));
+   //   _hmap[_wnames.at(i)].Fill(value, weight * weights.at(i));
+
+   // }
+
+    for (size_t i = 1; i < _n_weights; i++) {
+
+     _h_v[i].Fill(value, weight * weights.at(i));
 
    }
-    
+
   }
 
   TH1D BootstrapTH1D::GetNominal()
@@ -188,13 +230,21 @@ namespace Base {
 
   void BootstrapTH1D::GetUniverseHisto(std::string uni_name, TH1D & histo)
   {
-    auto iter = _hmap.find(uni_name);
-    if (iter == _hmap.end()) {
+    // auto iter = _hmap.find(uni_name);
+    // if (iter == _hmap.end()) {
+    //   std::cout << __PRETTY_FUNCTION__ << " :: Histomgram for universe " << uni_name << " not found! This is Bootstrap " << _hname << "::" << _title << std::endl;
+    //   throw std::exception();
+    // }
+
+    auto iter = std::find(_name_v.begin(), _name_v.end(), uni_name);
+    if (iter == _name_v.end()) {
       std::cout << __PRETTY_FUNCTION__ << " :: Histomgram for universe " << uni_name << " not found! This is Bootstrap " << _hname << "::" << _title << std::endl;
       throw std::exception();
     }
 
-    histo = iter->second;
+    int position = iter - _name_v.begin();
+
+    histo = _h_v.at(position);
 
     return;
   }
