@@ -56,7 +56,7 @@ namespace Base {
   {
 
     _n_weights = names.size() + 1;
-    //std::cout << "Bootstrap set up with " << _n_weights << " weights." << std::endl;
+    std::cout << "Bootstrap " << _hname << " set up with " << _n_weights << " weights." << std::endl;
     _wnames = names;
     _wnames.push_back("nominal");
     double* bins = &_bins[0];
@@ -73,23 +73,31 @@ namespace Base {
   {
 
 
-  	for (auto it : input_map) {
-  		_hmap[it.first] = *it.second;
+  	// for (auto it : input_map) {
+  	// 	_hmap[it.first] = *it.second;
+   //    //std::cout << "[BootstrapTH1D] Setting up histogram " << it.first << std::endl;
+  	// }
+
+    for (auto it : input_map) {
+      _h_v.push_back(*it.second);
+      _name_v.push_back(it.first);
       //std::cout << "[BootstrapTH1D] Setting up histogram " << it.first << std::endl;
-  	}
+    }
 
-    _nbins = _hmap.begin()->second.GetNbinsX();
 
-    _n_weights = _hmap.size();
+
+    _nbins = _h_v.at(0).GetNbinsX();
+
+    _n_weights = _h_v.size();
 
     _wnames.clear();
 
-    for (auto i : _hmap) {
-      _wnames.push_back(i.first);
+    for (auto n : _name_v) {
+      _wnames.push_back(n);
     }
 
-    _hname = _hmap["nominal"].GetTitle();
-    _title = _hmap["nominal"].GetTitle();
+    _hname = _h_v.at(0).GetTitle();
+    _title = _h_v.at(0).GetTitle();
     //_wnames.push_back("nominal");
 
   }
@@ -113,12 +121,14 @@ namespace Base {
 
   size_t BootstrapTH1D::GetNWeights()
   {
+    std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
     return _n_weights;
   }
 
   std::vector<std::string> BootstrapTH1D::GetUniverseNames()
   {
     // return _wnames; // To be removed
+    std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
     return _name_v;
   }
 
@@ -165,34 +175,66 @@ namespace Base {
 
     std::map<std::string, std::vector<TH1D>> output_map;
 
-    for (auto iter : _hmap) {
-      if (iter.first == "nominal") continue;
-      //std::cout << "iter.first = " << iter.first << std::endl;
+    for (size_t i = 0; i < _name_v.size(); i++) {
+
+      if (_name_v.at(i) == "nominal") continue;
 
       // Minus 1 sigma
-      std::size_t pos = iter.first.find("_m1");
+      std::size_t pos = _name_v.at(i).find("_m1");
       if (pos != std::string::npos) {  
-        std::string function_name = iter.first.substr (0, pos);
+        std::string function_name = _name_v.at(i).substr (0, pos);
 
         //std::cout << "Minus 1, substrig is " << function_name << std::endl;
 
         std::vector<TH1D> vec;
         vec.resize(2);
-        vec.at(0) = iter.second;
+        vec.at(0) = _h_v.at(i);
 
         output_map[function_name] = vec;
+
       }
 
       // Plus 1 sigma
-      pos = iter.first.find("_p1");
+      pos = _name_v.at(i).find("_p1");
       if (pos != std::string::npos) {  
-        std::string function_name = iter.first.substr (0, pos);
+        std::string function_name = _name_v.at(i).substr (0, pos);
 
         //std::cout << "Plus 1, substrig is " << function_name << std::endl;
 
-        output_map[function_name].at(1) = iter.second;
+        output_map[function_name].at(1) =  _h_v.at(i);
       }
     }
+
+
+
+    // for (auto iter : _hmap) {
+    //   if (iter.first == "nominal") continue;
+    //   //std::cout << "iter.first = " << iter.first << std::endl;
+
+    //   // Minus 1 sigma
+    //   std::size_t pos = iter.first.find("_m1");
+    //   if (pos != std::string::npos) {  
+    //     std::string function_name = iter.first.substr (0, pos);
+
+    //     //std::cout << "Minus 1, substrig is " << function_name << std::endl;
+
+    //     std::vector<TH1D> vec;
+    //     vec.resize(2);
+    //     vec.at(0) = iter.second;
+
+    //     output_map[function_name] = vec;
+    //   }
+
+    //   // Plus 1 sigma
+    //   pos = iter.first.find("_p1");
+    //   if (pos != std::string::npos) {  
+    //     std::string function_name = iter.first.substr (0, pos);
+
+    //     //std::cout << "Plus 1, substrig is " << function_name << std::endl;
+
+    //     output_map[function_name].at(1) = iter.second;
+    //   }
+    // }
 
     return output_map;
   }
@@ -215,9 +257,10 @@ namespace Base {
 
    // }
 
+
     for (size_t i = 1; i < _n_weights; i++) {
 
-     _h_v[i].Fill(value, weight * weights.at(i));
+     _h_v.at(i).Fill(value, weight * weights.at(i-1));
 
    }
 
@@ -225,7 +268,8 @@ namespace Base {
 
   TH1D BootstrapTH1D::GetNominal()
   {
-    return _hmap["nominal"];
+    // return _hmap["nominal"];
+    return _h_v.at(0);
   }
 
   void BootstrapTH1D::GetUniverseHisto(std::string uni_name, TH1D & histo)

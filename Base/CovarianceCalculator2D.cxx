@@ -62,7 +62,7 @@ namespace Base {
         double N_i_cv = _bs.GetNominal().GetBinContent(i+1);
         double N_j_cv = _bs.GetNominal().GetBinContent(j+1);
 
-        //if (_verbose) std::cout << "Nominal cross section in i " << i << ": " << N_i_cv << " and j " << j << ": " << N_j_cv << std::endl;
+        // if (_verbose) std::cout << "Nominal cross section in i " << i << ": " << N_i_cv << " and j " << j << ": " << N_j_cv << std::endl;
 
         _bs.ResetIterator();
 
@@ -72,7 +72,7 @@ namespace Base {
           TH1D uni_histo;
           _bs.NextUniverse(uni_name, uni_histo);
 
-          //std::cout << "************************()()()()() this is universe " << uni_name << std::endl;
+          // std::cout << "************************()()()()() this is universe " << uni_name << std::endl;
 
           double N_i_s = uni_histo.GetBinContent(i+1);
           double N_j_s = uni_histo.GetBinContent(j+1);
@@ -80,7 +80,7 @@ namespace Base {
 
           _M[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / number_of_universes;
 
-          //std::cout << "N_i_s = " << N_i_s << ", N_j_s = " << N_j_s << std::endl;          
+          // std::cout << "N_i_s = " << N_i_s << ", N_j_s = " << N_j_s << std::endl;          
 
         } // universe loop
 
@@ -92,8 +92,8 @@ namespace Base {
           _M[i][j] += (N_i_cv * _extra_relative_uncertainty) * (N_j_cv * _extra_relative_uncertainty);
         }
 
-        //if (_verbose) std::cout << "_M[" << i << "][" << j << "] = " << _M[i][j] << std::endl;
-        //if (_verbose) std::cout << "_M_frac[" << i << "][" << j << "] = " << _M_frac[i][j] << std::endl;
+        // if (_verbose) std::cout << "_M[" << i << "][" << j << "] = " << _M[i][j] << std::endl;
+        // if (_verbose) std::cout << "_M_frac[" << i << "][" << j << "] = " << _M_frac[i][j] << std::endl;
 
       } // bin j loop
     } // bin i loop

@@ -207,7 +207,7 @@ namespace Base {
 
     for (size_t s = 0; s < n_universe; s++) { 
 
-    	std::cout << "$>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is universe " << s << ", with name " << universe_names.at(s) << std::endl;
+    	std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> This is universe " << s << ", with name " << universe_names.at(s) << std::endl;
 
       //
     	// Construnct the hmap for the MC histograms
