@@ -113,15 +113,24 @@ namespace Base {
     _truth_xsec = xsec;
   }
 
-  double CrossSectionCalculator2D::EstimateFlux() 
+  double CrossSectionCalculator2D::EstimateFlux(std::string flux_file_name, std::string histogram_file_name) 
   {
     std::string flux_file = std::getenv("MYSW_DIR");
-    flux_file += "/Flux/numode_bnb_470m_r200.root";
-    std::cout << "Using flux file: " << flux_file << std::endl;
+    //flux_file += "/Flux/numode_bnb_470m_r200.root";
+    flux_file += "/Flux/";
+    flux_file += flux_file_name;
+    std::cout << "[CrossSectionCalculator1D] Using flux file: " << flux_file << std::endl;
+
+    std::cout << "[CrossSectionCalculator1D] Flux correction weight: " << _flux_correction_weight << std::endl;
+
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
     TH2D * h_flux_numu = (TH2D*) f->Get("numu");
-    h_flux_numu->Scale(_pot/1.e20);
+    //h_flux_numu->Scale(_pot/1.e20);
+    double scale_factor = _pot;
+    scale_factor /= 2.43e11 * 256.35 * 233.;
+    scale_factor *= _flux_correction_weight;
+    h_flux_numu->Scale(scale_factor);
 
 
     TCanvas * c_flux = new TCanvas();
@@ -203,13 +212,18 @@ namespace Base {
     l -> AddEntry(glow, "1#sigma Energy Range", "l");
     l -> Draw();
 
+    h_flux_numu->GetXaxis()->SetRangeUser(0, 4);
+    gPad->Update();
 
+    PlottingTools::DrawSimulationXSec();
 
     TString name = _folder + "_flux";
     c_flux->SaveAs(name + ".pdf");
     c_flux->SaveAs(name + ".C","C");
     
     _flux = h_flux_numu->Integral();
+
+    f->Close();
 
     return _flux;
   }
@@ -338,7 +352,7 @@ namespace Base {
     //teff_true->SetMarkerSize(0.5);
     teff_true->Draw("colz text");
 
-    name = _folder +_name + "efficiecy_true";
+    name = _folder +_name + "efficiency_true";
     c_eff_true->SaveAs(name + ".pdf");
 
 
@@ -366,7 +380,7 @@ namespace Base {
     graph->SetMaximum(1); 
     gPad->Update();
 
-    name = _folder +_name + "_efficiecy_reco";
+    name = _folder +_name + "_efficiency_reco";
     c_eff_reco->SaveAs(name + ".pdf");
 
     _eff = teff_reco;
