@@ -170,6 +170,8 @@ namespace Base {
 
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
+    bool _verbose = false;
+
     
   };
 }

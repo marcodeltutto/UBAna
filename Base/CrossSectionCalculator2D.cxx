@@ -144,16 +144,16 @@ namespace Base {
     h_flux_numu->Draw("histo");
 
     double mean = h_flux_numu-> GetMean();
-    std::cout << "The mean energy is: " << mean << std::endl;
+    if (_verbose) std::cout << "The mean energy is: " << mean << std::endl;
     int binmean = h_flux_numu -> FindBin(mean);
-    std::cout << "The bin of the mean is: " << binmean << std::endl;
+    if (_verbose) std::cout << "The bin of the mean is: " << binmean << std::endl;
 
     int n = h_flux_numu -> GetNbinsX();
 
     double lowerint = h_flux_numu -> Integral(1, binmean);
-    std::cout << "Lower Integral: " << lowerint << std::endl;
+    if (_verbose) std::cout << "Lower Integral: " << lowerint << std::endl;
     double lowerborder = lowerint * 0.32;
-    std::cout << "Lower Border: " << lowerborder << std::endl;
+    if (_verbose) std::cout << "Lower Border: " << lowerborder << std::endl;
     double lowersum = 0;
     int i = 0;
     while (lowersum < lowerborder) {
@@ -162,11 +162,11 @@ namespace Base {
       std::cout << i << "\t" << lowersum << std::endl;
     }
 
-    std::cout << "Lower Sum: " << lowersum << std::endl;
+    if (_verbose) std::cout << "Lower Sum: " << lowersum << std::endl;
     double low = h_flux_numu -> GetBinCenter(i-1);
-    std::cout << "The lower edge bin is: " << i-1 << std::endl;
-    std::cout << "The lower edge center energy is: " << low << std::endl;
-    std::cout << "The lower energy error is: " << mean - low << std::endl;
+    if (_verbose) std::cout << "The lower edge bin is: " << i-1 << std::endl;
+    if (_verbose) std::cout << "The lower edge center energy is: " << low << std::endl;
+    if (_verbose) std::cout << "The lower energy error is: " << mean - low << std::endl;
 
     double upperint = h_flux_numu -> Integral(binmean, n);
     std::cout << upperint << std::endl;
@@ -179,9 +179,9 @@ namespace Base {
     }
 
     double up = h_flux_numu -> GetBinCenter(n+1 - (i-1));
-    std::cout << "The upper edge bin is: " << i-1 << std::endl;
-    std::cout << "The upper edge center energy is: " << up << std::endl;
-    std::cout << "The upper energy error is: " << up - mean << std::endl;
+    if (_verbose) std::cout << "The upper edge bin is: " << i-1 << std::endl;
+    if (_verbose) std::cout << "The upper edge center energy is: " << up << std::endl;
+    if (_verbose) std::cout << "The upper energy error is: " << up - mean << std::endl;
 
     TGraph *gmean = new TGraph();
     gmean -> SetPoint(0, mean, 0);
