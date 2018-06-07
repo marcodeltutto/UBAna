@@ -52,6 +52,7 @@
 #include "TGraphAsymmErrors.h"
 
 #include "Types.h"
+#include "PlottingTools.h"
 
 namespace Base {
 
@@ -104,7 +105,7 @@ namespace Base {
     void Draw(std::vector<std::string> histos_to_subtract);
 
     /// 
-    double EstimateFlux();
+    double EstimateFlux(std::string flux_file_name = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_name = "numu/numu_CV_AV_TPC");
 
     ///
     THStack * ProcessTHStack(std::map<std::string,TH2D*> themap, TLegend*, std::vector<std::string>);
@@ -126,6 +127,9 @@ namespace Base {
 
     ///
     void Reset();
+
+    ///
+    void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
 
   private:
     
@@ -163,6 +167,9 @@ namespace Base {
     TEfficiency* _eff;
 
     std::vector<std::vector<std::vector<std::vector<double>>>> _S;
+
+    double _flux_correction_weight = 1.; ///< Flux correction weight
+
     
   };
 }
