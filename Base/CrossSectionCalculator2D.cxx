@@ -119,14 +119,13 @@ namespace Base {
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
     flux_file += flux_file_name;
-    std::cout << "[CrossSectionCalculator1D] Using flux file: " << flux_file << std::endl;
+    std::cout << _namebase << "Using flux file: " << flux_file << std::endl;
 
-    std::cout << "[CrossSectionCalculator1D] Flux correction weight: " << _flux_correction_weight << std::endl;
+    std::cout << _namebase << "Flux correction weight: " << _flux_correction_weight << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
-    TH2D * h_flux_numu = (TH2D*) f->Get("numu");
-    //h_flux_numu->Scale(_pot/1.e20);
+    TH1D * h_flux_numu = (TH1D*) f->Get(histogram_file_name.c_str());//f->Get("numu");    //h_flux_numu->Scale(_pot/1.e20);
     double scale_factor = _pot;
     scale_factor /= 2.43e11 * 256.35 * 233.;
     scale_factor *= _flux_correction_weight;

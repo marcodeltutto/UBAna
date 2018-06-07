@@ -957,6 +957,7 @@ std::cout << ">> here10" << std::endl;
     xseccalc2d.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
     xseccalc2d.SetPOT(bnbon_pot_meas);
     xseccalc2d.SetOutDir("output_data_mc_xsec2d");
+    xseccalc2d.SetFluxCorrectionWeight(_flux_correction_weight);
     std::cout << "FLUX: " << xseccalc2d.EstimateFlux() << std::endl;
 
     xseccalc2d.SetHistograms(hmap_trktheta_trkmom_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);

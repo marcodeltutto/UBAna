@@ -132,6 +132,8 @@ namespace Base {
     void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
 
   private:
+
+    std::string _namebase = "CrossSectionCalculator2D] ";
     
     bool _configured = false;
 
