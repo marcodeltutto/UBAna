@@ -44,7 +44,7 @@ analyser.ImportDetectorSystematics(False)
 
 analyser.ImportCosmicSystematics(False)
 
-analyser.DoGenieSystematics(True)
+analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)
 
 analyser.DoFluxSystematics(False)

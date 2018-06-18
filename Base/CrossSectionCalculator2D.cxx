@@ -723,6 +723,148 @@ namespace Base {
     c_xsec_data2->SaveAs(name + ".pdf");
     c_xsec_data2->SaveAs(name + ".C","C");
 
+
+    //
+    // Project in cos(theta) bins
+    //
+
+    std::vector<TH1D> xsec_data_histos;
+    std::vector<TH1D> xsec_mc_histos;
+    std::vector<std::string> costhetamu_ranges = {"-1.00 < cos(#theta_{#mu}^{reco}) < -0.50",
+                                                  "-0.50 < cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "1.00 < cos(#theta_{#mu}^{reco}) < 1.25",
+                                                  "1.25 < cos(#theta_{#mu}^{reco}) < 1.50",
+                                                  "1.50 < cos(#theta_{#mu}^{reco}) < 1.75",
+                                                  "1.75 < cos(#theta_{#mu}^{reco}) < 1.00"};
+
+    std::cout << "n bins x " << h_data->GetNbinsX() << std::endl;
+    std::cout << "n bins y " << h_data->GetNbinsY() << std::endl;
+
+
+    // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
+    TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
+    c_test->SetBottomMargin(0.15);
+    // gStyle->SetOptStat(0);
+    c_test->Divide(2,3,0.01,0.01);
+
+    for (int i = 0; i < h_data->GetNbinsX(); i++) {
+      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
+      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, i+2));
+    }
+
+
+    for (int i = 0; i < xsec_mc_histos.size(); i++) {
+      c_test->cd(i+1);
+      gPad->SetBottomMargin(0.15);
+      gPad->SetLeftMargin(0.15);
+      xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
+      xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
+      xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/neutron]");
+      xsec_mc_histos.at(i).GetXaxis()->CenterTitle();
+      xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
+      xsec_mc_histos.at(i).SetLineColor(kGreen+2);
+      xsec_mc_histos.at(i).SetFillColor(29);
+      xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
+      xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
+      xsec_mc_histos.at(i).Draw("E2");
+      TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
+      h_main->SetLineColor(kGreen+2);
+      h_main->SetFillColor(0); // fully transparent
+      h_main->Draw("histo same");
+
+      xsec_mc_histos.at(i).SetMinimum(0.);
+      if (i == 0) {
+        xsec_mc_histos.at(i).SetMaximum(0.7);
+      }
+
+      xsec_data_histos.at(i).Draw("E1 X0 same");
+      if (i == 0) {
+        TLegend *l;
+        l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
+        l->SetFillColor(0);
+        l->SetFillStyle(0);
+        l->SetTextSize(0.03407284);
+        l->AddEntry(&xsec_mc_histos.at(i), "GENIE Default + Emp. MEC (Stat. Unc.)");
+        l->AddEntry(&xsec_data_histos.at(i), "Measured (Stat. Unc.)", "ep");
+        l->Draw();
+      }
+    }
+    // PlottingTools::DrawPreliminaryXSec();
+
+    // c_test->cd(1);
+    // // DrawMC(c_test, 1, xsec_mc_histos.at(0));
+    // // xsec_mc_histos.at(0).Draw("histo");
+    // xsec_mc_histos.at(0).SetLineColor(kGreen+2);
+    // xsec_mc_histos.at(0).SetFillColor(29);
+    // xsec_mc_histos.at(0).Draw("E2");
+    // TH1D* h_main = (TH1D*) xsec_mc_histos.at(0).Clone("h_main");
+    // h_main->SetLineColor(kGreen+2);
+    // h_main->SetFillColor(0); // fully transparent
+    // h_main->Draw("histo same");
+    // xsec_data_histos.at(0).Draw("E1 X0 same");
+
+    // c_test->cd(2);
+    // xsec_mc_histos.at(1).Draw("histo");
+    // xsec_data_histos.at(1).Draw("E1 X0 same");
+    
+    // c_test->cd(3);
+    // xsec_mc_histos.at(2).Draw("histo");
+    // xsec_data_histos.at(2).Draw("E1 X0 same");
+
+    // c_test->cd(4);
+    // xsec_mc_histos.at(3).Draw("histo");
+    // xsec_data_histos.at(3).Draw("E1 X0 same");
+
+    // c_test->cd(5);
+    // xsec_mc_histos.at(4).Draw("histo");
+    // xsec_data_histos.at(4).Draw("E1 X0 same");
+
+    // c_test->cd(6);
+    // xsec_mc_histos.at(5).Draw("histo");
+    // xsec_data_histos.at(5).Draw("E1 X0 same");
+    
+
+
+    // TCanvas * c_test = new TCanvas();
+    // // TH1D * test = h_data->ProjectionY("fuck", 1, 2);
+    // xsec_data_histos.at(0).Draw("histo");
+
+    name = _folder +_name + "_test";
+    c_test->SaveAs(name + ".pdf");
+    c_test->SaveAs(name + ".C","C");
+
+
+  }
+
+  void CrossSectionCalculator2D::DrawMC(TCanvas * c, int c_number, TH1D h)
+  {
+    c->cd(c_number);
+    // h.GetXaxis()->SetTitle(xaxis_label.c_str());
+    // h.GetYaxis()->SetTitle(yaxis_label.c_str());
+    // h.GetXaxis()->SetTitleOffset(0.95);
+    // h.GetYaxis()->SetTitleOffset(0.77);
+
+    h.SetLineColor(kGreen+2);
+    h.SetFillColor(29);
+
+    // if (_name.find("mom") != std::string::npos) {
+    //   h.SetMinimum(0.);
+    //   h.SetMaximum(1.6);
+    // } else {
+    //   h.SetMinimum(0.);
+    //   h.SetMaximum(2.8);
+    // }
+    h.Draw("E2");
+
+    TH1D* h_main = (TH1D*) h.Clone("h_main");
+    h_main->SetLineColor(kGreen+2);
+    h_main->SetFillColor(0); // fully transparent
+    h_main->Draw("histo same");
+  }
+
+  void CrossSectionCalculator2D::DrawData(TH1D h)
+  {
+
   }
 
 
