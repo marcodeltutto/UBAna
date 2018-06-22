@@ -153,7 +153,7 @@ namespace Base {
     //   return false;
     // }
 
-    if (_current_vector_index >= _h_v.size()) {
+    if ((size_t)_current_vector_index >= _h_v.size()) {
       std::cout << "NextUniverse false" << std::endl;
       return false;
     }
