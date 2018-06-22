@@ -56,6 +56,7 @@
 #include "ubana/Base/ReweightingPlotter.h"
 #include "ubana/Base/CovarianceCalculator2D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator1D.h"
+#include "ubana/Base/CrossSectionBootstrapCalculator2D.h"
 
 using namespace Base;
 

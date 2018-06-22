@@ -448,9 +448,10 @@ void Main::Maker::MakeFile()
   _true_reco_tree->Branch("selected", &_selected, "selected/O");
   _true_reco_tree->Branch("angle_true", &_angle_true, "angle_true/D");
   _true_reco_tree->Branch("angle_reco", &_angle_reco, "angle_reco/D");
-  _true_reco_tree->Branch("wgts_genie_multisim", "std::vector<std::string>", &_wgtsnames_genie_multisim);
+  _true_reco_tree->Branch("event_weight", &_event_weight_fortree, "event_weight/D");
+  _true_reco_tree->Branch("wgtsnames_genie_multisim", "std::vector<std::string>", &_wgtsnames_genie_multisim);
   _true_reco_tree->Branch("wgts_genie_multisim", "std::vector<double>", &_wgts_genie_multisim);
-  _true_reco_tree->Branch("wgts_flux_multisim", "std::vector<std::string>", &_wgtsnames_flux_multisim);
+  _true_reco_tree->Branch("wgtsnames_flux_multisim", "std::vector<std::string>", &_wgtsnames_flux_multisim);
   _true_reco_tree->Branch("wgts_flux_multisim", "std::vector<double>", &_wgts_flux_multisim);
 
   // std::map<std::string,TTree*> tmap_mom_tree_gene_multisim_bs;
@@ -1260,7 +1261,7 @@ void Main::Maker::MakeFile()
   
   for(int i = _initial_entry; i < evts; i++) {
     
-    DrawProgressBar((double)i/(double)evts, barWidth);
+    if (i != 0) DrawProgressBar((double)i/(double)evts, barWidth);
     
     chain_ubxsec->GetEntry(i);
     
@@ -1486,6 +1487,9 @@ void Main::Maker::MakeFile()
 
       bs_genie_multisim_true_reco_mumom.SetWeightNames(fname_genie_multisim);
       bs_genie_multisim_true_reco_muangle.SetWeightNames(fname_genie_multisim);
+
+      bs_genie_multisim_eff_muangle_mumom_num.SetWeightNames(fname_genie_multisim);
+      bs_genie_multisim_eff_muangle_mumom_den.SetWeightNames(fname_genie_multisim);
       
     }
 
@@ -1689,6 +1693,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_mumom_den.Fill(t->true_muon_mom, event_weight, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_genie) bs_genie_multisim_eff_mumom_den.Fill(t->true_muon_mom, event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_genie) bs_genie_multisim_eff_muangle_den.Fill(t->lep_costheta, event_weight, wgts_genie_multisim);
+      if (!isdata && _fill_bootstrap_genie) bs_genie_multisim_eff_muangle_mumom_den.Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_genie) bs_genie_multisim_eff_onebin_den.Fill(0.5, event_weight, wgts_genie_multisim);
 
       if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_onebin_den.Fill(0.5, event_weight, wgts_flux_multisim);
@@ -2232,6 +2237,8 @@ void Main::Maker::MakeFile()
 
       _angle_true = t->lep_costheta;
       _angle_reco = t->slc_muoncandidate_theta.at(scl_ll_max);
+
+      _event_weight_fortree = event_weight;
       
       _wgtsnames_genie_multisim = fname_genie_multisim;
       _wgts_genie_multisim = wgts_genie_multisim;
@@ -2382,6 +2389,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_mumom_num.Fill(t->true_muon_mom, event_weight, wgts_flux_multisim); 
       if (!isdata && _fill_bootstrap_genie) bs_genie_multisim_eff_mumom_num.Fill(t->true_muon_mom, event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_genie) bs_genie_multisim_eff_muangle_num.Fill(t->lep_costheta, event_weight, wgts_genie_multisim);
+      if (!isdata && _fill_bootstrap_genie) bs_genie_multisim_eff_muangle_mumom_num.Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_genie) bs_genie_multisim_eff_onebin_num.Fill(0.5, event_weight, wgts_genie_multisim);
 
       //if (!isdata && _fill_bootstrap) bs_flux_multisim_eff_mumom_num.Fill(t->true_muon_mom, 1., wgts_flux_multisim);
@@ -3755,6 +3763,9 @@ void Main::Maker::MakeFile()
 
   file_out->WriteObject(&bs_genie_multisim_eff_muangle_num, "bs_genie_multisim_eff_muangle_num");
   file_out->WriteObject(&bs_genie_multisim_eff_muangle_den, "bs_genie_multisim_eff_muangle_den");
+
+  file_out->WriteObject(&bs_genie_multisim_eff_muangle_mumom_num, "bs_genie_multisim_eff_muangle_mumom_num");
+  file_out->WriteObject(&bs_genie_multisim_eff_muangle_mumom_den, "bs_genie_multisim_eff_muangle_mumom_den");
 
   // Efficiency - FLUX Multisim
   file_out->WriteObject(&bs_flux_multisim_eff_mumom_num, "bs_flux_multisim_eff_mumom_num");

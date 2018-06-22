@@ -96,6 +96,9 @@ namespace Base {
     ///
     void PlotMatrix();
 
+    /// If called uses the weights with name specified
+    void UseWeights(std::string weight_name);
+
   private:
 
     bool _configured = false;
@@ -114,6 +117,9 @@ namespace Base {
     bool _verbose = false;
 
     std::string _folder = "MigrationMatrix4DPlots/";
+
+    bool _use_weights = false; ///< If true uses additional wights (usually for multisim)
+    std::string _weight_name = "not_set";
     
   };
 }

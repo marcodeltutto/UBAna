@@ -21,6 +21,12 @@ namespace Base {
     _tree = t;
   }
 
+  void MigrationMatrix4D::UseWeights(std::string weight_name)
+  {
+    _use_weights = true;
+    _weight_name = weight_name;
+  }
+
   void MigrationMatrix4D::SetBins(double *var1_b, int n_var1_bins, double *var2_b, int n_var2_bins)
   {
 
@@ -50,11 +56,27 @@ namespace Base {
     Double_t        angle_true;
     Double_t        angle_reco;
 
+    Double_t        event_weight;
+
+    std::vector<std::string> wgtsnames_genie_multisim;
+    std::vector<double> wgts_genie_multisim;
+
+    std::vector<std::string> wgtsnames_flux_multisim;
+    std::vector<double> wgts_flux_multisim;
+
     TBranch        *b_mom_true; 
     TBranch        *b_mom_mcs;
 
     TBranch        *b_angle_true;
     TBranch        *b_angle_reco;
+
+    TBranch        *b_event_weight;
+
+    TBranch        *b_wgtsnames_genie_multisim;
+    TBranch        *b_wgts_genie_multisim;
+
+    TBranch        *b_wgtsnames_flux_multisim;
+    TBranch        *b_wgts_flux_multisim;
 
     _tree->SetMakeClass(1);
 
@@ -64,7 +86,39 @@ namespace Base {
     _tree->SetBranchAddress("angle_true", &angle_true, &b_angle_true);
     _tree->SetBranchAddress("angle_reco", &angle_reco, &b_angle_reco);
 
+    _tree->SetBranchAddress("event_weight", &event_weight, &b_event_weight);
+
+    _tree->SetBranchAddress("wgtsnames_genie_multisim", &wgtsnames_genie_multisim, &b_wgtsnames_genie_multisim);
+    _tree->SetBranchAddress("wgts_genie_multisim", &wgts_genie_multisim, &b_wgts_genie_multisim);
+
+    _tree->SetBranchAddress("wgtsnames_flux_multisim", &wgtsnames_flux_multisim, &b_wgtsnames_flux_multisim);
+    _tree->SetBranchAddress("wgts_flux_multisim", &wgts_flux_multisim, &b_wgts_flux_multisim);
+
     Long64_t nentries = _tree->GetEntriesFast();
+
+    double evt_weight = event_weight;
+
+    if (_use_weights) {
+
+      std::cout << "[MigrationMatrix4D] Using weight with name: " << _weight_name << std::endl;
+
+      for (size_t i = 0; i < wgtsnames_genie_multisim.size(); i++) {
+        if (wgtsnames_genie_multisim.at(i) == _weight_name){
+          evt_weight *= wgts_genie_multisim.at(i);
+          std::cout << "[MigrationMatrix4D] Weight with name: " << _weight_name << " found." << std::endl;
+          break;
+        }
+      }
+
+      for (size_t i = 0; i < wgtsnames_flux_multisim.size(); i++) {
+        if (wgtsnames_flux_multisim.at(i) == _weight_name){
+          evt_weight *= wgts_flux_multisim.at(i);
+          std::cout << "[MigrationMatrix4D] Weight with name: " << _weight_name << " found." << std::endl;
+          break;
+        }
+      }
+
+    }
 
     // Resize the smearing matrix
     _S.resize( _var1_bins.size(), 
@@ -113,7 +167,7 @@ namespace Base {
            && mom_true > v2_bin.first   && mom_true < v2_bin.second) {
 
             // Filling reco bin i, j
-            _reco_per_true->Fill(angle_reco, mom_mcs);
+            _reco_per_true->Fill(angle_reco, mom_mcs, evt_weight);
           }
         }
 

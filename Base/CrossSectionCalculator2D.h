@@ -114,7 +114,7 @@ namespace Base {
     TH2D* ProcessDataHisto(TH2D* histo);
 
     ///
-    void ExtractCrossSection(std::string, std::string, std::string);
+    TH2D* ExtractCrossSection(std::string, std::string, std::string);
 
     ///
     void SetSmearingMatrix(std::vector<std::vector<std::vector<std::vector<double>>>>);

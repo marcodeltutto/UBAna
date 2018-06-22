@@ -211,6 +211,7 @@ namespace Main {
     double _mom_true, _mom_mcs;
     bool _contained, _selected;
     double _angle_true, _angle_reco;
+    double _event_weight_fortree;
     std::vector<std::string> _wgtsnames_genie_multisim;
     std::vector<double> _wgts_genie_multisim;
     std::vector<std::string> _wgtsnames_flux_multisim;

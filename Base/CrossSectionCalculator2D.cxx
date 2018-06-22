@@ -5,7 +5,7 @@
 
 namespace Base {
 
-	void CrossSectionCalculator2D::Reset() 
+  void CrossSectionCalculator2D::Reset() 
   {
 
     _configured = false;
@@ -419,7 +419,7 @@ namespace Base {
   }
 
 
-  void CrossSectionCalculator2D::ExtractCrossSection(std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
+  TH2D* CrossSectionCalculator2D::ExtractCrossSection(std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
   {
 
     //
@@ -833,6 +833,11 @@ namespace Base {
     name = _folder +_name + "_test";
     c_test->SaveAs(name + ".pdf");
     c_test->SaveAs(name + ".C","C");
+
+
+
+
+    return h_data;
 
 
   }
