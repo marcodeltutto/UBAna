@@ -941,7 +941,7 @@ std::cout << ">> here10" << std::endl;
     // 
     MigrationMatrix4D migrationmatrix4d;
     TTree * tt;
-    mc_bnbcosmic_file->GetObject("mom_tree", tt);
+    mc_bnbcosmic_file->GetObject("true_reco_tree", tt);
     migrationmatrix4d.SetTTree(tt);
     int n_bins_mumom_temp = 4;
     double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};

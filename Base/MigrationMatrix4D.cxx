@@ -44,28 +44,25 @@ namespace Base {
 
   Mat4D MigrationMatrix4D::CalculateMigrationMatrix() 
   {
-    Double_t        mom_tree_true;
-    Double_t        mom_tree_mcs;
-    //Bool_t          mom_tree_contained;
-    //Bool_t          mom_tree_selected;
-    Double_t        mom_tree_angle_true;
-    Double_t        mom_tree_angle_reco;
+    Double_t        mom_true;
+    Double_t        mom_mcs;
 
-    TBranch        *b_mom_tree_true;   //!
-    TBranch        *b_mom_tree_mcs;   //!
-    //TBranch        *b_mom_tree_contained;   //!
-    //TBranch        *b_mom_tree_selected;   //!
-    TBranch        *b_mom_tree_angle_true;   //!
-    TBranch        *b_mom_tree_angle_reco;   //!
+    Double_t        angle_true;
+    Double_t        angle_reco;
+
+    TBranch        *b_mom_true; 
+    TBranch        *b_mom_mcs;
+
+    TBranch        *b_angle_true;
+    TBranch        *b_angle_reco;
 
     _tree->SetMakeClass(1);
 
-    _tree->SetBranchAddress("mom_tree_true", &mom_tree_true, &b_mom_tree_true);
-    _tree->SetBranchAddress("mom_tree_mcs", &mom_tree_mcs, &b_mom_tree_mcs);
-    //_tree->SetBranchAddress("mom_tree_contained", &mom_tree_contained, &b_mom_tree_contained);
-    //_tree->SetBranchAddress("mom_tree_selected", &mom_tree_selected, &b_mom_tree_selected);
-    _tree->SetBranchAddress("mom_tree_angle_true", &mom_tree_angle_true, &b_mom_tree_angle_true);
-    _tree->SetBranchAddress("mom_tree_angle_reco", &mom_tree_angle_reco, &b_mom_tree_angle_reco);
+    _tree->SetBranchAddress("mom_true", &mom_true, &b_mom_true);
+    _tree->SetBranchAddress("mom_mcs", &mom_mcs, &b_mom_mcs);
+
+    _tree->SetBranchAddress("angle_true", &angle_true, &b_angle_true);
+    _tree->SetBranchAddress("angle_reco", &angle_reco, &b_angle_reco);
 
     Long64_t nentries = _tree->GetEntriesFast();
 
@@ -112,11 +109,11 @@ namespace Base {
           _tree->GetEntry(jentry);
 
          
-        if (  mom_tree_angle_true > v1_bin.first && mom_tree_angle_true < v1_bin.second
-           && mom_tree_true > v2_bin.first       && mom_tree_true < v2_bin.second) {
+        if (  angle_true > v1_bin.first && angle_true < v1_bin.second
+           && mom_true > v2_bin.first   && mom_true < v2_bin.second) {
 
             // Filling reco bin i, j
-            _reco_per_true->Fill(mom_tree_angle_reco, mom_tree_mcs);
+            _reco_per_true->Fill(angle_reco, mom_mcs);
           }
         }
 

@@ -142,6 +142,14 @@ namespace Main {
                    std::vector<std::string> fname, 
                    std::vector<double> wgts_genie);
 
+    void FillBootstrap(double fill_value1,
+                   double fill_value2,
+                   double evt_wgt,
+                   std::map<std::string,std::map<std::string,TH2D*>> hmap_trkmom_genie_pm1_bs, 
+                   std::string channel_namel, 
+                   std::vector<std::string> fname, 
+                   std::vector<double> wgts_genie);
+
     // void FillBootstrap(double fill_value,
     //                std::map<std::string,TH1D*> hmap_trkmom_genie_pm1_bs, 
     //                std::vector<std::string> fname, 
@@ -197,6 +205,16 @@ namespace Main {
 
     bool _scale_cosmics = false; ///< If true scales the cosmic background by _scale_factor_cosmic
     double _scale_factor_cosmic = 1.; ///< Factor used to scale the cosmic background (used only if _scale_cosmics is true)
+
+
+    // These variables are filled in the reco-true TTree in the code
+    double _mom_true, _mom_mcs;
+    bool _contained, _selected;
+    double _angle_true, _angle_reco;
+    std::vector<std::string> _wgtsnames_genie_multisim;
+    std::vector<double> _wgts_genie_multisim;
+    std::vector<std::string> _wgtsnames_flux_multisim;
+    std::vector<double> _wgts_flux_multisim;
     
   };
 }

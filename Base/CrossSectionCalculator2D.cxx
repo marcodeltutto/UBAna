@@ -730,12 +730,12 @@ namespace Base {
 
     std::vector<TH1D> xsec_data_histos;
     std::vector<TH1D> xsec_mc_histos;
-    std::vector<std::string> costhetamu_ranges = {"-1.00 < cos(#theta_{#mu}^{reco}) < -0.50",
-                                                  "-0.50 < cos(#theta_{#mu}^{reco}) < 1.00",
-                                                  "1.00 < cos(#theta_{#mu}^{reco}) < 1.25",
-                                                  "1.25 < cos(#theta_{#mu}^{reco}) < 1.50",
-                                                  "1.50 < cos(#theta_{#mu}^{reco}) < 1.75",
-                                                  "1.75 < cos(#theta_{#mu}^{reco}) < 1.00"};
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+                                                  "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
+                                                  "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
+                                                  "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
+                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
     std::cout << "n bins x " << h_data->GetNbinsX() << std::endl;
     std::cout << "n bins y " << h_data->GetNbinsY() << std::endl;
@@ -757,9 +757,10 @@ namespace Base {
       c_test->cd(i+1);
       gPad->SetBottomMargin(0.15);
       gPad->SetLeftMargin(0.15);
+      gPad->SetTopMargin(0.1128947);
       xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
       xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
-      xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/neutron]");
+      xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
       xsec_mc_histos.at(i).GetXaxis()->CenterTitle();
       xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
       xsec_mc_histos.at(i).SetLineColor(kGreen+2);
