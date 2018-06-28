@@ -269,7 +269,7 @@ namespace Base {
       }
 
 
-
+      std::cout << "Here A" << std::endl;
 
       // Calculate the migration matrix for this universe
       if (_true_to_reco_is_set) {
@@ -283,6 +283,7 @@ namespace Base {
         double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
         migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
         S_4d = migrationmatrix4d.CalculateMigrationMatrix();
+        std::cout << "Here B" << std::endl;
         migrationmatrix4d.SetOutputFileName("latex_test_bootstrap.tex");
         migrationmatrix4d.PrintSmearingMatrixLatex();
         // migrationmatrix4d.PlotMatrix();
@@ -296,24 +297,88 @@ namespace Base {
         // std::cout << "S_2d calculated" << std::endl;
       }
 
+      std::cout << "Here C" << std::endl;
+
 
       // Calculate the cross section with these new objects in this universe
 
       _xsec_calc.Reset();
+      std::cout << "Here D" << std::endl;
       //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
       _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb);  
-      // if (_true_to_reco_is_set) {
-      //   _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den, &this_reco_true);
-      // } else {
-      //   _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
-      // }
+      std::cout << "Here E" << std::endl;
+      if (_true_to_reco_is_set) {
+        _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
+      } else {
+        _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
+      }
       //_xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
       _xsec_calc.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
       _xsec_calc.ProcessPlots();
       _xsec_calc.SetSmearingMatrix(S_4d);
+      std::cout << "Here G" << std::endl;
       _xsec_calc.Smear();
-      TH2D* universe_xsec = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+      std::cout << "Here G.1" << std::endl;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //   MigrationMatrix4D migrationmatrix4d;
+    //   migrationmatrix4d.SetTTree(tt); 
+    //   int n_bins_mumom_temp = 4;
+    //   double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
+    //   int n_bins_mucostheta_temp = 6;
+    //   double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
+    //   migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
+    
+    //   Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
+    // // std::cout << "Here 3" << std::endl;
+    
+    //   migrationmatrix4d.SetOutputFileName("latex_test.tex");
+    //   std::cout << "Here 4" << std::endl;
+    //   migrationmatrix4d.PrintSmearingMatrixLatex();
+    //   std::cout << "Here 5" << std::endl;
+    //   migrationmatrix4d.PlotMatrix();
+
+    //   std::cout << "Here 6" << std::endl;
+
+    //   CrossSectionCalculator2D xseccalc2d;
+    //   xseccalc2d.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+    //   xseccalc2d.SetPOT(bnbon_pot_meas);
+    //   xseccalc2d.SetOutDir("output_data_mc_xsec2d");
+    //   xseccalc2d.SetFluxCorrectionWeight(_flux_correction_weight);
+    //   std::cout << "FLUX: " << xseccalc2d.EstimateFlux() << std::endl;
+
+    //   std::cout << "Here 7" << std::endl;
+
+    //   xseccalc2d.SetHistograms(hmap_trktheta_trkmom_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
+    //   xseccalc2d.SetTruthHistograms(h_eff_muangle_mumom_num, h_eff_muangle_mumom_den);
+    //   xseccalc2d.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
+    //   xseccalc2d.ProcessPlots();
+    //   xseccalc2d.SetSmearingMatrix(S_4d);
+    //   xseccalc2d.Smear();
+
+
+
+
+
+
+      TH2D* universe_xsec = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+std::cout << "Here H" << std::endl;
       // _xsec_calc.Draw();
       // _xsec_calc.Draw(hist_to_subtract);
       // if (_do_smear && _true_to_reco_is_set) {

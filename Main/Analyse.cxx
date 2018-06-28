@@ -970,26 +970,26 @@ std::cout << ">> here10" << std::endl;
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
-    if (_do_genie_systs) {
+    // if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";cos(#theta_{#mu}^{reco}); Selected Events");
+      _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
       _xsec_bs_calc.SetOutDir("output_data_mc_bs_2d");
       _xsec_bs_calc.SetHistograms(hmap_trktheta_trkmom_genie_multisim_bs_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
       _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_mumom_num, bs_genie_multisim_eff_muangle_mumom_den, tt);
-      _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
-      _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle");
+      // _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+      _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle_mumom");
       _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
       _xsec_bs_calc.Run();
 
-      _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle");
-      _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
+      // _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle");
+      // _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
 
-      for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
-        std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
+      // for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
+      //   std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+      // }
+    // }
 
     std::cout << "Here 2" << std::endl;
 
@@ -1001,17 +1001,14 @@ std::cout << ">> here10" << std::endl;
     double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
     migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
     
-    migrationmatrix4d.CalculateMigrationMatrix();
-    std::cout << "Here 3" << std::endl;
+    Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
+    // std::cout << "Here 3" << std::endl;
     
     migrationmatrix4d.SetOutputFileName("latex_test.tex");
     std::cout << "Here 4" << std::endl;
     migrationmatrix4d.PrintSmearingMatrixLatex();
     std::cout << "Here 5" << std::endl;
     migrationmatrix4d.PlotMatrix();
-
-    Mat4D S_4d;
-    std::cout << "S_4d.size() " <<  S_4d.size() << std::endl;
 
     std::cout << "Here 6" << std::endl;
 

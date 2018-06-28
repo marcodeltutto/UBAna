@@ -48,7 +48,7 @@ namespace Base {
   }
 
 
-  void MigrationMatrix4D::CalculateMigrationMatrix() 
+  Mat4D MigrationMatrix4D::CalculateMigrationMatrix() 
   {
     Double_t        mom_true;
     Double_t        mom_mcs;
@@ -58,11 +58,11 @@ namespace Base {
 
     Double_t        event_weight;
 
-    std::vector<std::string> wgtsnames_genie_multisim;
-    std::vector<double> wgts_genie_multisim;
+    std::vector<std::string> * wgtsnames_genie_multisim = 0;
+    std::vector<double> * wgts_genie_multisim = 0;
 
-    std::vector<std::string> wgtsnames_flux_multisim;
-    std::vector<double> wgts_flux_multisim;
+    std::vector<std::string> * wgtsnames_flux_multisim = 0;
+    std::vector<double> * wgts_flux_multisim = 0;
 
     TBranch        *b_mom_true; 
     TBranch        *b_mom_mcs;
@@ -148,29 +148,32 @@ namespace Base {
 
 
           // Weights starts
-          // double evt_weight = event_weight;
+          double evt_weight = event_weight;
 
-          // if (_use_weights) {
+          if (_use_weights && _weight_name != "nominal") {
 
-          //   std::cout << _prefix << "Using weight with name: " << _weight_name << std::endl;
+            std::cout << _prefix << "Using weight with name: " << _weight_name << std::endl;
 
-          //   for (size_t i = 0; i < wgtsnames_genie_multisim.size(); i++) {
-          //     if (wgtsnames_genie_multisim.at(i) == _weight_name){
-          //       evt_weight *= wgts_genie_multisim.at(i);
-          //       std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
-          //       break;
-          //     }
-          //   }
+            bool found = false;
 
-          //   for (size_t i = 0; i < wgtsnames_flux_multisim.size(); i++) {
-          //     if (wgtsnames_flux_multisim.at(i) == _weight_name){
-          //       evt_weight *= wgts_flux_multisim.at(i);
-          //       std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
-          //       break;
-          //     }
-          //   }
+            for (size_t i = 0; i < (*wgtsnames_genie_multisim).size(); i++) {
+              if ((*wgtsnames_genie_multisim).at(i) == _weight_name){
+                evt_weight *= (*wgts_genie_multisim).at(i);
+                std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                found = true;
+                break;
+              }
+            }
 
-          // }
+            for (size_t i = 0; i < (*wgtsnames_flux_multisim).size() && !found; i++) {
+              if ((*wgtsnames_flux_multisim).at(i) == _weight_name){
+                evt_weight *= (*wgts_flux_multisim).at(i);
+                std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                break;
+              }
+            }
+
+          }
           // Weights ends
 
           // std::cout << _prefix << "mom_true: " << mom_true << ", mom_mcs: " << mom_mcs << ", evt_weight: " << evt_weight << std::endl;
@@ -246,9 +249,9 @@ namespace Base {
 
     std::cout << _prefix << "Here 8" << std::endl;
 
-    std::cout << _prefix << "_S.size() " << _S.size() << std::endl;
+    std::cout << _prefix << "Just before returning, _S.size() " << _S.size() << std::endl;
 
-    // return _S;
+    return _S;
 
   }
 

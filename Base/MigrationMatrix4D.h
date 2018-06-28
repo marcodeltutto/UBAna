@@ -76,7 +76,7 @@ namespace Base {
     void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
 
     ///
-    void CalculateMigrationMatrix(); 
+    Mat4D CalculateMigrationMatrix(); 
 
     ///
     void SetTTree(TTree*);
