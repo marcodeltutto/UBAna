@@ -129,19 +129,15 @@ namespace Base {
     for (int m = 0; m < _var1_bins.size(); m++) {
       for (int n = 0; n < _var2_bins.size(); n++) {
 
-        std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
+        if(_verbose) std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
 
         auto v1_bin = _var1_bins.at(m);
         auto v2_bin = _var2_bins.at(n);
 
-        std::cout << _prefix << "Here 1" << std::endl;
-
-        if(_verbose) std::cout << _prefix << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
-        if(_verbose) std::cout << _prefix << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
+        // if(_verbose) std::cout << _prefix << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
+        // if(_verbose) std::cout << _prefix << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
 
         _reco_per_true->Reset();
-
-        std::cout << _prefix << "Here 2" << std::endl;
 
         for (Long64_t jentry=0; jentry < nentries;jentry++) {
           _tree->GetEntry(jentry);
@@ -152,14 +148,14 @@ namespace Base {
 
           if (_use_weights && _weight_name != "nominal") {
 
-            std::cout << _prefix << "Using weight with name: " << _weight_name << std::endl;
+            // std::cout << _prefix << "Using weight with name: " << _weight_name << std::endl;
 
             bool found = false;
 
             for (size_t i = 0; i < (*wgtsnames_genie_multisim).size(); i++) {
               if ((*wgtsnames_genie_multisim).at(i) == _weight_name){
                 evt_weight *= (*wgts_genie_multisim).at(i);
-                std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
                 found = true;
                 break;
               }
@@ -168,7 +164,7 @@ namespace Base {
             for (size_t i = 0; i < (*wgtsnames_flux_multisim).size() && !found; i++) {
               if ((*wgtsnames_flux_multisim).at(i) == _weight_name){
                 evt_weight *= (*wgts_flux_multisim).at(i);
-                std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
                 break;
               }
             }
@@ -187,8 +183,6 @@ namespace Base {
           }
         }
 
-        std::cout << _prefix << "Here 3" << std::endl;
-
         // Normalize to get a probability
         _reco_per_true->Scale(1./_reco_per_true->Integral());
 
@@ -206,8 +200,6 @@ namespace Base {
             _S[i][j][m][n] = value;
           }
         }
-
-        std::cout << _prefix << "Here 4" << std::endl;
 
         // Saving the plot
         std::stringstream sstm;
@@ -232,10 +224,8 @@ namespace Base {
       }
     }
 
-    std::cout << _prefix << "Here 7" << std::endl;
 
-
-    // if(_verbose) {
+    if(_verbose) {
       for (int i = 0; i < _var1_bins.size(); i++) {
         for (int j = 0; j < _var2_bins.size(); j++) {
           for (int m = 0; m < _var1_bins.size(); m++) {
@@ -245,11 +235,7 @@ namespace Base {
           }
         }
       }
-    // }
-
-    std::cout << _prefix << "Here 8" << std::endl;
-
-    std::cout << _prefix << "Just before returning, _S.size() " << _S.size() << std::endl;
+    }
 
     return _S;
 

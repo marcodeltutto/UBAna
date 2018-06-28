@@ -135,7 +135,7 @@ namespace Base {
       char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
       std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
       
-      system(("mkdir -p " + folder /*+ "_" + timestamp*/).c_str());    
+      system(("mkdir -p " + folder + "_" + timestamp).c_str());    
     }
   	_save_prefix = folder + "/" + s;
   }
@@ -203,7 +203,6 @@ namespace Base {
     TH2D this_eff_den; 
     // TTree* this_reco_true;
     Mat4D S_4d;
-
 
     for (size_t s = 0; s < n_universe; s++) { 
 
@@ -321,64 +320,8 @@ namespace Base {
       std::cout << "Here G.1" << std::endl;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //   MigrationMatrix4D migrationmatrix4d;
-    //   migrationmatrix4d.SetTTree(tt); 
-    //   int n_bins_mumom_temp = 4;
-    //   double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
-    //   int n_bins_mucostheta_temp = 6;
-    //   double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
-    //   migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
-    
-    //   Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
-    // // std::cout << "Here 3" << std::endl;
-    
-    //   migrationmatrix4d.SetOutputFileName("latex_test.tex");
-    //   std::cout << "Here 4" << std::endl;
-    //   migrationmatrix4d.PrintSmearingMatrixLatex();
-    //   std::cout << "Here 5" << std::endl;
-    //   migrationmatrix4d.PlotMatrix();
-
-    //   std::cout << "Here 6" << std::endl;
-
-    //   CrossSectionCalculator2D xseccalc2d;
-    //   xseccalc2d.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-    //   xseccalc2d.SetPOT(bnbon_pot_meas);
-    //   xseccalc2d.SetOutDir("output_data_mc_xsec2d");
-    //   xseccalc2d.SetFluxCorrectionWeight(_flux_correction_weight);
-    //   std::cout << "FLUX: " << xseccalc2d.EstimateFlux() << std::endl;
-
-    //   std::cout << "Here 7" << std::endl;
-
-    //   xseccalc2d.SetHistograms(hmap_trktheta_trkmom_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
-    //   xseccalc2d.SetTruthHistograms(h_eff_muangle_mumom_num, h_eff_muangle_mumom_den);
-    //   xseccalc2d.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
-    //   xseccalc2d.ProcessPlots();
-    //   xseccalc2d.SetSmearingMatrix(S_4d);
-    //   xseccalc2d.Smear();
-
-
-
-
-
-
       TH2D* universe_xsec = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
-std::cout << "Here H" << std::endl;
+      std::cout << "Here H" << std::endl;
       // _xsec_calc.Draw();
       // _xsec_calc.Draw(hist_to_subtract);
       // if (_do_smear && _true_to_reco_is_set) {
@@ -412,13 +355,16 @@ std::cout << "Here H" << std::endl;
 
 
     
-    // // Covariance Matrix
-    // CovarianceCalculator2D _cov_calc;
-    // _cov_calc.SetPrefix(_save_prefix);
-    // _cov_calc.SetBootstrap(xsec_mumom_bs);
-    // _cov_calc.AddExtraDiagonalUncertainty(_extra_relative_uncertainty);
-    // _cov_calc.CalculateCovarianceMatrix();
-    // _cov_calc.PlotMatrices();
+    // Covariance Matrix
+    CovarianceCalculator4D _cov_calc;
+    _cov_calc.SetPrefix(_save_prefix);
+    _cov_calc.SetBootstrap(xsec_mumom_bs);
+    _cov_calc.AddExtraDiagonalUncertainty(_extra_relative_uncertainty);
+    std::cout << "Here I" << std::endl;
+    _cov_calc.CalculateCovarianceMatrix();
+    std::cout << "Here L" << std::endl;
+    _cov_calc.PlotMatrices();
+    std::cout << "Here M" << std::endl;
 
     // _cov_calc.GetCovarianceMatrix(_cov_matrix);
 
