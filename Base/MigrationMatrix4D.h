@@ -76,7 +76,7 @@ namespace Base {
     void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
 
     ///
-    Mat4D CalculateMigrationMatrix(); 
+    void CalculateMigrationMatrix(); 
 
     ///
     void SetTTree(TTree*);
@@ -102,6 +102,8 @@ namespace Base {
   private:
 
     bool _configured = false;
+
+    std::string _prefix = "[MigrationMatrix4D] ";
 
     TTree *_tree;
 
