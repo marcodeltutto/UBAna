@@ -32,7 +32,7 @@ analyser.SetPrefix("cv")
 # analyser.SetPrefix("cv_cosmicscaled_overlay")
 analyser.SetFluxCorrectionWeight(1.028)
 
-analyser.ImportAlternativeMC("xsec_file_cv_tune3.root")
+# analyser.ImportAlternativeMC("xsec_file_cv_tune3.root")
 
 analyser.SetBeamOffSubtraction(False)
 analyser.SetBreakdownPlots(True)

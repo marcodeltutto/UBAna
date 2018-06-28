@@ -939,7 +939,7 @@ void Main::Maker::MakeFile()
   // hmap_trkmom_genie_multisim_bs["signal_nostopmu"]["nominal"] = new TH1D("h_trkmom_signal_nostopmu_genie_mulinominal", "; Track length;", n_bins_mumom, bins_mumom);
   
 
-  // Number of events histograms - Cross Section Muon Momentum - GENIE Multisim (same as before but wih proper Botstrap, just a test)
+  // Number of events histograms - Cross Section Muon Momentum - GENIE Multisim (same as before but with proper Botstrap, just a test)
   std::map<std::string, BootstrapTH1D> map_bs_trkmom_genie_multisim;
   map_bs_trkmom_genie_multisim["total"] = BootstrapTH1D("bs_trkmom_total_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom); // 20, 0, 2.5
   map_bs_trkmom_genie_multisim["signal"] = BootstrapTH1D("bs_trkmom_signal_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);

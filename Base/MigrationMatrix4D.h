@@ -103,6 +103,8 @@ namespace Base {
 
     bool _configured = false;
 
+    std::string _prefix = "[MigrationMatrix4D] ";
+
     TTree *_tree;
 
     std::vector<std::pair<double, double>> _var1_bins;

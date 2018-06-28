@@ -237,7 +237,14 @@ namespace Main {
   TH2D* h_dqdx_trunc_length_mc = (TH2D*)mc_bnbcosmic_file->Get("h_dqdx_trunc_length");
 
 
+  // Create placeholders to get stuff from file
   std::map<std::string,std::map<std::string,TH1D*>>* temp_map_bs;
+  std::map<std::string,std::map<std::string,TH2D*>>* temp_map2d_bs;
+  BootstrapTH1D * temp_bs;
+  BootstrapTH2D * temp2d_bs;
+
+
+
   mc_bnbcosmic_file->GetObject("hmap_trkmom_genie_pm1_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> map_bs = *temp_map_bs;
 
@@ -245,7 +252,6 @@ namespace Main {
   //mc_bnbcosmic_file->GetObject("h_eff_mumom_num_bs", h_eff_mumom_num_bs_temp);
   //BootstrapTH1D h_eff_mumom_num_bs = *h_eff_mumom_num_bs_temp;
 
-  BootstrapTH1D * temp_bs; // temp Bootstrap to get stuff from file
 
   std::cout << ">> here1" << std::endl;
 
@@ -270,6 +276,12 @@ namespace Main {
   BootstrapTH1D  bs_genie_multisim_eff_muangle_num = *temp_bs;
   mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_den", temp_bs);
   BootstrapTH1D  bs_genie_multisim_eff_muangle_den = *temp_bs;
+
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_mumom_num", temp2d_bs);
+  BootstrapTH2D  bs_genie_multisim_eff_muangle_mumom_num = *temp2d_bs;
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_muangle_mumom_den", temp2d_bs);
+  BootstrapTH2D  bs_genie_multisim_eff_muangle_mumom_den = *temp2d_bs;
+
 
   // Bootstrap efficiency - FLUX Multisim
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_onebin_num", temp_bs);
@@ -326,6 +338,11 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("map_bs_trkmom_genie_multisim", map_bs_temp);
   std::map<std::string,BootstrapTH1D> map_bs_trkmom_genie_multisim = *map_bs_temp;
   std::cout << ">> Just after" << std::endl;
+
+  mc_bnbcosmic_file->GetObject("hmap_trktheta_trkmom_genie_multisim_bs", temp_map2d_bs);
+  std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_multisim_bs_mc = *temp_map2d_bs;
+
+
 
   // Events - FLUX Multisim
   mc_bnbcosmic_file->GetObject("hmap_onebin_flux_multisim_bs", temp_map_bs);
@@ -936,49 +953,64 @@ std::cout << ">> here10" << std::endl;
 
 
 
+    std::cout << "***************" << std::endl;
+    std::cout << "* Double differential cross section" << std::endl;
+    std::cout << "***************" << std::endl;
+
 
     //
     // Double Differential Cross Section
-    // 
+    //
+
+    std::cout << "Here 1" << std::endl;
+
+    TTree * tt;
+    mc_bnbcosmic_file->GetObject("true_reco_tree", tt);
 
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
-    if (_do_genie_systs) {
+    // if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";cos(#theta_{#mu}^{reco}); Selected Events");
+      _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
       _xsec_bs_calc.SetOutDir("output_data_mc_bs_2d");
-      _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
-      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
-      _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
-      _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle");
+      _xsec_bs_calc.SetHistograms(hmap_trktheta_trkmom_genie_multisim_bs_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
+      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_mumom_num, bs_genie_multisim_eff_muangle_mumom_den, tt);
+      // _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+      _xsec_bs_calc.SetSavePrefix("output_data_mc_bs_2d");
       _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
       _xsec_bs_calc.Run();
 
-      _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle");
-      _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
+      // _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle");
+      // _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
 
-      for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
-        std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
+      // for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
+      //   std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+      // }
+    // }
 
+    std::cout << "Here 2" << std::endl;
 
     MigrationMatrix4D migrationmatrix4d;
-    TTree * tt;
-    mc_bnbcosmic_file->GetObject("true_reco_tree", tt);
-    migrationmatrix4d.SetTTree(tt);
+    migrationmatrix4d.SetTTree(tt); 
     int n_bins_mumom_temp = 4;
     double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
     int n_bins_mucostheta_temp = 6;
     double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
     migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
-    auto S_4d = migrationmatrix4d.CalculateMigrationMatrix();
+    
+    Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
+    // std::cout << "Here 3" << std::endl;
+    
     migrationmatrix4d.SetOutputFileName("latex_test.tex");
+    std::cout << "Here 4" << std::endl;
     migrationmatrix4d.PrintSmearingMatrixLatex();
+    std::cout << "Here 5" << std::endl;
     migrationmatrix4d.PlotMatrix();
+
+    std::cout << "Here 6" << std::endl;
 
     CrossSectionCalculator2D xseccalc2d;
     xseccalc2d.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
@@ -987,12 +1019,16 @@ std::cout << ">> here10" << std::endl;
     xseccalc2d.SetFluxCorrectionWeight(_flux_correction_weight);
     std::cout << "FLUX: " << xseccalc2d.EstimateFlux() << std::endl;
 
+    std::cout << "Here 7" << std::endl;
+
     xseccalc2d.SetHistograms(hmap_trktheta_trkmom_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
     xseccalc2d.SetTruthHistograms(h_eff_muangle_mumom_num, h_eff_muangle_mumom_den);
     xseccalc2d.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
     xseccalc2d.ProcessPlots();
     xseccalc2d.SetSmearingMatrix(S_4d);
     xseccalc2d.Smear();
+
+    std::cout << "Here 8" << std::endl;
 
     xseccalc2d.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
   }

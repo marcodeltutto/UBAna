@@ -56,7 +56,7 @@
 #include "BootstrapTH2D.h"
 #include "CrossSectionCalculator2D.h"
 #include "MigrationMatrix4D.h"
-#include "CovarianceCalculator2D.h"
+#include "CovarianceCalculator4D.h"
 
 
 namespace Base {

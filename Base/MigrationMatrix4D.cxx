@@ -40,8 +40,8 @@ namespace Base {
       _var2_bins.push_back(std::make_pair(var2_b[i], var2_b[i+1]));
     }
 
-    std::cout << "Number of var1 bins: " << _var1_bins.size() << std::endl;
-    std::cout << "Number of var2 bins: " << _var2_bins.size() << std::endl;
+    std::cout << _prefix << "Number of var1 bins: " << _var1_bins.size() << std::endl;
+    std::cout << _prefix << "Number of var2 bins: " << _var2_bins.size() << std::endl;
 
     _reco_per_true = new TH2D("reco_per_true", "reco_per_true", n_var1_bins, var1_b, n_var2_bins, var2_b);
     
@@ -58,11 +58,11 @@ namespace Base {
 
     Double_t        event_weight;
 
-    std::vector<std::string> wgtsnames_genie_multisim;
-    std::vector<double> wgts_genie_multisim;
+    std::vector<std::string> * wgtsnames_genie_multisim = 0;
+    std::vector<double> * wgts_genie_multisim = 0;
 
-    std::vector<std::string> wgtsnames_flux_multisim;
-    std::vector<double> wgts_flux_multisim;
+    std::vector<std::string> * wgtsnames_flux_multisim = 0;
+    std::vector<double> * wgts_flux_multisim = 0;
 
     TBranch        *b_mom_true; 
     TBranch        *b_mom_mcs;
@@ -96,29 +96,7 @@ namespace Base {
 
     Long64_t nentries = _tree->GetEntriesFast();
 
-    double evt_weight = event_weight;
-
-    if (_use_weights) {
-
-      std::cout << "[MigrationMatrix4D] Using weight with name: " << _weight_name << std::endl;
-
-      for (size_t i = 0; i < wgtsnames_genie_multisim.size(); i++) {
-        if (wgtsnames_genie_multisim.at(i) == _weight_name){
-          evt_weight *= wgts_genie_multisim.at(i);
-          std::cout << "[MigrationMatrix4D] Weight with name: " << _weight_name << " found." << std::endl;
-          break;
-        }
-      }
-
-      for (size_t i = 0; i < wgtsnames_flux_multisim.size(); i++) {
-        if (wgtsnames_flux_multisim.at(i) == _weight_name){
-          evt_weight *= wgts_flux_multisim.at(i);
-          std::cout << "[MigrationMatrix4D] Weight with name: " << _weight_name << " found." << std::endl;
-          break;
-        }
-      }
-
-    }
+    
 
     // Resize the smearing matrix
     _S.resize( _var1_bins.size(), 
@@ -142,7 +120,7 @@ namespace Base {
         }
       }
     }
-    std::cout << "Total entries: " << counter << std::endl;
+    std::cout << _prefix << "Total entries: " << counter << std::endl;
 
 
     // True bin m, n
@@ -151,23 +129,57 @@ namespace Base {
     for (int m = 0; m < _var1_bins.size(); m++) {
       for (int n = 0; n < _var2_bins.size(); n++) {
 
+        if(_verbose) std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
+
         auto v1_bin = _var1_bins.at(m);
         auto v2_bin = _var2_bins.at(n);
 
-        if(_verbose) std::cout << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
-        if(_verbose) std::cout << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
+        // if(_verbose) std::cout << _prefix << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
+        // if(_verbose) std::cout << _prefix << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
 
         _reco_per_true->Reset();
 
-        for (Long64_t jentry=0; jentry<nentries;jentry++) {
+        for (Long64_t jentry=0; jentry < nentries;jentry++) {
           _tree->GetEntry(jentry);
 
+
+          // Weights starts
+          double evt_weight = event_weight;
+
+          if (_use_weights && _weight_name != "nominal") {
+
+            // std::cout << _prefix << "Using weight with name: " << _weight_name << std::endl;
+
+            bool found = false;
+
+            for (size_t i = 0; i < (*wgtsnames_genie_multisim).size(); i++) {
+              if ((*wgtsnames_genie_multisim).at(i) == _weight_name){
+                evt_weight *= (*wgts_genie_multisim).at(i);
+                // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                found = true;
+                break;
+              }
+            }
+
+            for (size_t i = 0; i < (*wgtsnames_flux_multisim).size() && !found; i++) {
+              if ((*wgtsnames_flux_multisim).at(i) == _weight_name){
+                evt_weight *= (*wgts_flux_multisim).at(i);
+                // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                break;
+              }
+            }
+
+          }
+          // Weights ends
+
+          // std::cout << _prefix << "mom_true: " << mom_true << ", mom_mcs: " << mom_mcs << ", evt_weight: " << evt_weight << std::endl;
+
          
-        if (  angle_true > v1_bin.first && angle_true < v1_bin.second
-           && mom_true > v2_bin.first   && mom_true < v2_bin.second) {
+          if (  angle_true > v1_bin.first && angle_true < v1_bin.second
+             && mom_true > v2_bin.first   && mom_true < v2_bin.second) {
 
             // Filling reco bin i, j
-            _reco_per_true->Fill(angle_reco, mom_mcs, evt_weight);
+            _reco_per_true->Fill(angle_reco, mom_mcs/*, evt_weight*/);
           }
         }
 
@@ -201,10 +213,14 @@ namespace Base {
         sstm.str("");
         sstm << "smearing_matrix_true_" << m << "_" << n;
 
+        std::cout << _prefix << "Here 5" << std::endl;
+
 
         TString name = _folder + sstm.str();
         c->SaveAs(name + ".pdf");
         c->SaveAs(name + ".C","C");
+
+        std::cout << _prefix << "Here 6" << std::endl;
       }
     }
 
