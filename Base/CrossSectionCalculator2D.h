@@ -137,6 +137,9 @@ namespace Base {
     /// Draw a TH1 on the current pad with Data style
     void DrawData(TH1D h);
 
+    ///
+    void SetVerbosity(bool verbosity) {_verbose = verbosity;}
+
   private:
 
     std::string _namebase = "CrossSectionCalculator2D] ";

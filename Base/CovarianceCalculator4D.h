@@ -42,6 +42,7 @@
 
 #include "BootstrapTH2D.h"
 #include "Types.h"
+#include "PlottingTools.h"
 
 namespace Base {
 

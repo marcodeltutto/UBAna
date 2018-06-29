@@ -127,6 +127,19 @@ namespace Base {
     _do_smear = false;
   }
 
+  void CrossSectionBootstrapCalculator2D::DrawProgressBar(double progress, double barWidth) {
+  
+  std::cout << "[";
+  int pos = barWidth * progress;
+  for (int i = 0; i < barWidth; ++i) {
+    if (i < pos) std::cout << "=";
+    else if (i == pos) std::cout << ">";
+    else std::cout << " ";
+  }
+  std::cout << "] " << int(progress * 100.0) << " % of universes completed.\r";
+  std::cout.flush();
+}
+
 
   void CrossSectionBootstrapCalculator2D::SetSavePrefix(std::string s, std::string folder)
   {
@@ -181,6 +194,7 @@ namespace Base {
     _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
     std::cout << _prefix << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
     std::cout << _prefix << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
+    _xsec_calc.SetVerbosity(false);
 
     std::vector<std::string> hist_to_subtract = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
 
@@ -204,12 +218,16 @@ namespace Base {
     // TTree* this_reco_true;
     Mat4D S_4d;
 
+    // n_universe = 2;
+
     for (size_t s = 0; s < n_universe; s++) { 
 
-    	std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> This is universe " << s << ", with name " << universe_names.at(s) << std::endl;
+      DrawProgressBar((double)s/(double)n_universe, 70);
+
+    	// std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> This is universe " << s << ", with name " << universe_names.at(s) << std::endl;
 
       //
-    	// Construnct the hmap for the MC histograms
+    	// Construct the hmap for the MC histograms
       //
       // to be removed int counter = 0;
       std::map<std::string, TH2D*> input_map_mc;
@@ -268,8 +286,6 @@ namespace Base {
       }
 
 
-      std::cout << "Here A" << std::endl;
-
       // Calculate the migration matrix for this universe
       if (_true_to_reco_is_set) {
 
@@ -282,7 +298,6 @@ namespace Base {
         double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
         migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
         S_4d = migrationmatrix4d.CalculateMigrationMatrix();
-        std::cout << "Here B" << std::endl;
         migrationmatrix4d.SetOutputFileName("latex_test_bootstrap.tex");
         migrationmatrix4d.PrintSmearingMatrixLatex();
         // migrationmatrix4d.PlotMatrix();
@@ -296,16 +311,13 @@ namespace Base {
         // std::cout << "S_2d calculated" << std::endl;
       }
 
-      std::cout << "Here C" << std::endl;
 
 
       // Calculate the cross section with these new objects in this universe
 
       _xsec_calc.Reset();
-      std::cout << "Here D" << std::endl;
       //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
       _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb);  
-      std::cout << "Here E" << std::endl;
       if (_true_to_reco_is_set) {
         _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
       } else {
@@ -315,13 +327,10 @@ namespace Base {
       _xsec_calc.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
       _xsec_calc.ProcessPlots();
       _xsec_calc.SetSmearingMatrix(S_4d);
-      std::cout << "Here G" << std::endl;
       _xsec_calc.Smear();
-      std::cout << "Here G.1" << std::endl;
 
 
       TH2D* universe_xsec = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
-      std::cout << "Here H" << std::endl;
       // _xsec_calc.Draw();
       // _xsec_calc.Draw(hist_to_subtract);
       // if (_do_smear && _true_to_reco_is_set) {
@@ -360,19 +369,26 @@ namespace Base {
     _cov_calc.SetPrefix(_save_prefix);
     _cov_calc.SetBootstrap(xsec_mumom_bs);
     _cov_calc.AddExtraDiagonalUncertainty(_extra_relative_uncertainty);
-    std::cout << "Here I" << std::endl;
     _cov_calc.CalculateCovarianceMatrix();
-    std::cout << "Here L" << std::endl;
     _cov_calc.PlotMatrices();
-    std::cout << "Here M" << std::endl;
 
     // _cov_calc.GetCovarianceMatrix(_cov_matrix);
 
 
 
-    // //
-    // // Plot all the xsec in one plot
-    // //
+    //
+    // Plot all the xsec in one plot
+    //
+    // TH2D h;
+    // xsec_mumom_bs.GetUniverseHisto("universe0", h);
+
+    DrawXSec(xsec_mumom_per_universe);
+
+   
+
+    
+
+
 
     // TCanvas * multisim_xsec_canvas = new TCanvas();
     // for (auto it : xsec_mumom_per_universe) {
@@ -523,6 +539,92 @@ namespace Base {
     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 
 	}
+
+
+  void CrossSectionBootstrapCalculator2D::DrawXSec(std::map<std::string, TH2D*> xsec_mumom_per_universe) 
+  {
+
+    TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
+    c_test->SetBottomMargin(0.15);
+    // gStyle->SetOptStat(0);
+    c_test->Divide(2,3,0.01,0.01);
+
+    for (auto it : xsec_mumom_per_universe) {
+
+      TH2D h_xsec_2d = *it.second;
+
+
+      // std::vector<TH1D> xsec_data_histos;
+    std::vector<TH1D> xsec_mc_histos;
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+                                                  "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
+                                                  "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
+                                                  "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
+                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
+
+    std::cout << "n bins x " << h_xsec_2d.GetNbinsX() << std::endl;
+    std::cout << "n bins y " << h_xsec_2d.GetNbinsY() << std::endl;    
+
+    for (int i = 0; i < h_xsec_2d.GetNbinsX(); i++) {
+      // xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
+      xsec_mc_histos.emplace_back(*h_xsec_2d.ProjectionY("fuck", i+1, i+2));
+    }
+
+
+    for (int i = 0; i < xsec_mc_histos.size(); i++) {
+      c_test->cd(i+1);
+      gPad->SetBottomMargin(0.15);
+      gPad->SetLeftMargin(0.15);
+      gPad->SetTopMargin(0.1128947);
+      xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
+      xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
+      xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
+      xsec_mc_histos.at(i).GetXaxis()->CenterTitle();
+      xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
+      xsec_mc_histos.at(i).SetLineColor(kGreen+1);
+      xsec_mc_histos.at(i).SetFillColor(29);
+      xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
+      xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
+      if (it.first == "nominal") {
+        xsec_mc_histos.at(i).SetLineColor(kGreen+3);
+      }
+      // xsec_mc_histos.at(i).Draw("E2");
+      TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
+      h_main->SetLineColor(kGreen+2);
+      h_main->SetFillColor(0); // fully transparent
+      h_main->Draw("histo same");
+
+      xsec_mc_histos.at(i).SetMinimum(0.);
+      if (i == 0) {
+        xsec_mc_histos.at(i).SetMaximum(0.7);
+      }
+
+
+
+    }
+
+
+    
+    
+
+      // xsec_data_histos.at(i).Draw("E1 X0 same");
+
+      // if (i == 0) {
+      //   TLegend *l;
+      //   l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
+      //   l->SetFillColor(0);
+      //   l->SetFillStyle(0);
+      //   l->SetTextSize(0.03407284);
+      //   l->AddEntry(&xsec_mc_histos.at(i), "GENIE Default + Emp. MEC (Stat. Unc.)");
+      //   // l->AddEntry(&xsec_data_histos.at(i), "Measured (Stat. Unc.)", "ep");
+      //   l->Draw();
+      // }
+
+      c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.pdf").c_str());
+      c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.C").c_str());
+    }
+  }
 }
 
 #endif

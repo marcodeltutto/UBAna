@@ -40,8 +40,8 @@ namespace Base {
       _var2_bins.push_back(std::make_pair(var2_b[i], var2_b[i+1]));
     }
 
-    std::cout << _prefix << "Number of var1 bins: " << _var1_bins.size() << std::endl;
-    std::cout << _prefix << "Number of var2 bins: " << _var2_bins.size() << std::endl;
+    // std::cout << _prefix << "Number of var1 bins: " << _var1_bins.size() << std::endl;
+    // std::cout << _prefix << "Number of var2 bins: " << _var2_bins.size() << std::endl;
 
     _reco_per_true = new TH2D("reco_per_true", "reco_per_true", n_var1_bins, var1_b, n_var2_bins, var2_b);
     
@@ -120,7 +120,7 @@ namespace Base {
         }
       }
     }
-    std::cout << _prefix << "Total entries: " << counter << std::endl;
+    // std::cout << _prefix << "Total entries: " << counter << std::endl;
 
 
     // True bin m, n
@@ -179,7 +179,7 @@ namespace Base {
              && mom_true > v2_bin.first   && mom_true < v2_bin.second) {
 
             // Filling reco bin i, j
-            _reco_per_true->Fill(angle_reco, mom_mcs/*, evt_weight*/);
+            _reco_per_true->Fill(angle_reco, mom_mcs, evt_weight);
           }
         }
 
@@ -213,14 +213,10 @@ namespace Base {
         sstm.str("");
         sstm << "smearing_matrix_true_" << m << "_" << n;
 
-        std::cout << _prefix << "Here 5" << std::endl;
-
-
         TString name = _folder + sstm.str();
         c->SaveAs(name + ".pdf");
         c->SaveAs(name + ".C","C");
 
-        std::cout << _prefix << "Here 6" << std::endl;
       }
     }
 

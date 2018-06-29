@@ -41,7 +41,7 @@ maker.SetMaUpMECOff(False)
 # maker.ScaleCosmics(0.54548) # For overlay systematics
 
 maker.FillBootstrapGenie(True)
-maker.FillBootstrapFlux(False)
+maker.FillBootstrapFlux(True)
 #maker.SetTargetFluxSystematic("FluxUnisim");
 #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
 #maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");

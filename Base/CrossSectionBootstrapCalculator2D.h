@@ -119,6 +119,9 @@ namespace Base {
     void SetSavePrefix(std::string s, std::string folder = "covariance_plots");
 
     ///
+    void DrawProgressBar(double progress, double barWidth);
+
+    ///
     void SetUpperLabel(std::string s) {_upper_label = s;}
 
     ///
@@ -132,6 +135,10 @@ namespace Base {
 
     ///
     void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
+
+    ///
+    void DrawXSec(std::map<std::string, TH2D*> xsec_mumom_per_universe);
+  
 
   private:
 

@@ -294,6 +294,11 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_muangle_den", temp_bs);
   BootstrapTH1D bs_flux_multisim_eff_muangle_den = *temp_bs;
 
+  mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_muangle_mumom_num", temp2d_bs);
+  BootstrapTH2D  bs_flux_multisim_eff_muangle_mumom_num = *temp2d_bs;
+  mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_muangle_mumom_den", temp2d_bs);
+  BootstrapTH2D  bs_flux_multisim_eff_muangle_mumom_den = *temp2d_bs;
+
   // Boostrap reco-true
   std::map<std::string,TH2D*>* temp_map_bs2;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_true_reco_mom", temp_map_bs2);
@@ -343,11 +348,12 @@ namespace Main {
   std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_multisim_bs_mc = *temp_map2d_bs;
 
 
-
   // Events - FLUX Multisim
   mc_bnbcosmic_file->GetObject("hmap_onebin_flux_multisim_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_flux_multisim_bs_mc = *temp_map_bs;
 
+  mc_bnbcosmic_file->GetObject("hmap_trktheta_trkmom_flux_multisim_bs", temp_map2d_bs);
+  std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_flux_multisim_bs_mc = *temp_map2d_bs;
   
 
   BootstrapTH2D * temp_bs_2d;
@@ -970,7 +976,7 @@ std::cout << ">> here10" << std::endl;
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
-    // if (_do_genie_systs) {
+    if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -979,15 +985,38 @@ std::cout << ">> here10" << std::endl;
       _xsec_bs_calc.SetHistograms(hmap_trktheta_trkmom_genie_multisim_bs_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
       _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_mumom_num, bs_genie_multisim_eff_muangle_mumom_den, tt);
       // _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
-      _xsec_bs_calc.SetSavePrefix("output_data_mc_bs_2d");
+      _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle_mumom");
       _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
       _xsec_bs_calc.Run();
 
-      // _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle");
+      // _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle_mumom");
       // _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
 
       // for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
       //   std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+      // }
+    }
+
+    // if (_do_flux_systs) {
+      _xsec_bs_calc.Reset();
+      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
+      _xsec_bs_calc.SetOutDir("output_data_mc_bs_2d");
+      _xsec_bs_calc.SetHistograms(hmap_trktheta_trkmom_flux_multisim_bs_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
+      _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_mumom_num, bs_flux_multisim_eff_muangle_mumom_den, tt);
+      // _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+      _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle_mumom");
+      _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
+      _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
+      _xsec_bs_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
+      _xsec_bs_calc.Run();
+
+      // _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_muangle_mumom");
+      // _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
+
+      // for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
+      //   std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
       // }
     // }
 

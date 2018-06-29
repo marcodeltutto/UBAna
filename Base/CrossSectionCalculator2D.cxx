@@ -87,6 +87,22 @@ namespace Base {
     _h_extbnb = extbnb;
     _h_intimecosmic = intimecosmic;
 
+
+    for (auto it : bnbcosmic) {
+      std::string this_name = it.second->GetName();
+      _hmap_bnbcosmic[it.first] = (TH2D*)it.second->Clone((this_name + it.first + "_xsec_int").c_str());
+    }
+    
+    if (bnbon != NULL) {
+      _h_bnbon = (TH2D*)bnbon->Clone("_h_bnbon");
+    }
+    if (extbnb != NULL) {
+      _h_extbnb = (TH2D*)extbnb->Clone("_h_extbnb");
+    }
+    if (intimecosmic != NULL) {
+      _h_intimecosmic = (TH2D*)intimecosmic->Clone("_h_intimecosmic");
+    }
+
   }
 
   void CrossSectionCalculator2D::SetTruthHistograms(TH2D* num, TH2D* den/*, TH2D* h*/)
@@ -472,9 +488,11 @@ namespace Base {
     // Divide by flux, and N_target and bin width
     //
 
-    std::cout << "FLUX: " << _flux
-    << "\nN_target: " << _n_target
-    << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
+    if (_verbose) {
+      std::cout << "FLUX: " << _flux
+                << "\nN_target: " << _n_target
+                << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
+    }
     double den = _flux * _n_target * 1e-38;
 
     h_mc->Scale(1. / den, "width");
@@ -483,9 +501,10 @@ namespace Base {
     // Do it also for the truth xsec
     //_truth_xsec->Scale(1. / den, "width");
 
-
-    std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
-    std::cout << "Data Integral: " << h_data->Integral() << std::endl;
+    if (_verbose) {
+      std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
+      std::cout << "Data Integral: " << h_data->Integral() << std::endl;
+    }
 
 
 
@@ -737,9 +756,10 @@ namespace Base {
                                                   "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
                                                   "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
-    std::cout << "n bins x " << h_data->GetNbinsX() << std::endl;
-    std::cout << "n bins y " << h_data->GetNbinsY() << std::endl;
-
+    if (_verbose) {
+      std::cout << "n bins x " << h_data->GetNbinsX() << std::endl;
+      std::cout << "n bins y " << h_data->GetNbinsY() << std::endl;
+    }
 
     // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
     TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
