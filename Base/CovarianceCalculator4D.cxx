@@ -107,6 +107,10 @@ namespace Base {
             double N_ij_cv = _bs.GetNominal().GetBinContent(i+1, j+1);
             double N_mn_cv = _bs.GetNominal().GetBinContent(m+1, n+1);
 
+            if (i == 2 && j == 3 && m == 2 && n == 3) {
+              std::cout << "N_23_cv = " << N_ij_cv << std::endl;
+            }
+
             // if (_verbose) std::cout << "Nominal cross section in i " << i << ": " << N_i_cv << " and j " << j << ": " << N_j_cv << std::endl;
 
             _bs.ResetIterator();
@@ -121,6 +125,10 @@ namespace Base {
 
               double N_ij_s = uni_histo.GetBinContent(i+1, j+1);
               double N_mn_s = uni_histo.GetBinContent(m+1, n+1);
+
+              if (i == 2 && j == 3 && m == 2 && n == 3) {
+              std::cout << "N_23_s = " << N_ij_s << std::endl;
+            }
           
 
               _M[i][j][m][n] += (N_ij_s - N_ij_cv) * (N_mn_s - N_mn_cv) / number_of_universes;
@@ -132,10 +140,10 @@ namespace Base {
             //_M_frac[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / (number_of_universes * N_i_cv * N_j_cv);
             _M_frac[i][j][m][n] = _M[i][j][m][n] / (N_ij_cv * N_mn_cv);
 
-            // if ( (i == m) && (j == n)) { // Diagonal
-            //   _M_frac[i][j][m][n] += _extra_relative_uncertainty * _extra_relative_uncertainty;
-            //   _M[i][j][m][n] += (N_ij_cv * _extra_relative_uncertainty) * (N_mn_cv * _extra_relative_uncertainty);
-            // }
+            if ( (i == m) && (j == n)) { // Diagonal
+              _M_frac[i][j][m][n] += _extra_relative_uncertainty * _extra_relative_uncertainty;
+              _M[i][j][m][n] += (N_ij_cv * _extra_relative_uncertainty) * (N_mn_cv * _extra_relative_uncertainty);
+            }
 
             // if (_verbose) std::cout << "_M[" << i << "][" << j << "] = " << _M[i][j] << std::endl;
             // if (_verbose) std::cout << "_M_frac[" << i << "][" << j << "] = " << _M_frac[i][j] << std::endl;
@@ -170,12 +178,6 @@ namespace Base {
         }
       }
     // }
-
-
-    std::cout << "_RHO.size() " << _RHO.size() << std::endl;
-    std::cout << "_RHO.at(0).size() " << _RHO.at(0).size() << std::endl;
-    std::cout << "_RHO.at(0).at(0).size() " << _RHO.size() << std::endl;
-    std::cout << "_RHO.at(0).at(0).at(0).size() " << _RHO.at(0).at(0).at(0).size() << std::endl;
 
 
 
@@ -255,9 +257,12 @@ namespace Base {
 
     h->SetMaximum(1);
 
+    int label_number = 0;
     for (int i = 0; i <  cov_matrix_histo->GetNbinsX()+1; i++) {
       std::ostringstream oss;
-      oss << i;
+      oss << label_number;
+      if (label_number % _bs.GetNbinsY() == 0) label_number = 0;
+      label_number++;
       std::string label = oss.str();
       h->GetXaxis()->SetBinLabel(i,label.c_str());
       h->GetYaxis()->SetBinLabel(i,label.c_str());
@@ -267,10 +272,26 @@ namespace Base {
     h->GetXaxis()->SetLabelSize(0.06);
     h->GetYaxis()->SetLabelOffset(0.004);
     h->GetYaxis()->SetLabelSize(0.06);
-    h->GetXaxis()->SetTitle("Bin i");
-    h->GetYaxis()->SetTitle("Bin j");
+    h->GetXaxis()->SetTitle("Bin ij");
+    h->GetYaxis()->SetTitle("Bin mn");
     h->GetXaxis()->CenterTitle();
     h->GetYaxis()->CenterTitle();
+
+    std::vector<TLine*> lines;
+
+    for (int i = 1; i < _bs.GetNbinsY(); i++) {
+      TLine *line = new TLine(_bs.GetNbinsX()  * i, 0, _bs.GetNbinsX() * i, n_bins);
+      line->SetLineColor(kRed);
+      line->SetLineWidth(2);
+      lines.emplace_back(line);
+    }
+
+    for (int i = 1; i < _bs.GetNbinsY(); i++) {
+      TLine *line = new TLine(0, _bs.GetNbinsX() * i, n_bins, _bs.GetNbinsX() * i);
+      line->SetLineColor(kRed);
+      line->SetLineWidth(2);
+      lines.emplace_back(line);
+    }
 
     TCanvas * cov_c = new TCanvas();
     cov_c->SetRightMargin(0.13);
@@ -279,11 +300,13 @@ namespace Base {
     cov_matrix_histo->SetMarkerSize(1.8);
     cov_matrix_histo->GetXaxis()->CenterTitle();
     cov_matrix_histo->GetYaxis()->CenterTitle();
-    cov_matrix_histo->GetXaxis()->SetTitle("Bin i");
-    cov_matrix_histo->GetYaxis()->SetTitle("Bin j");
+    cov_matrix_histo->GetXaxis()->SetTitle("Bin ij");
+    cov_matrix_histo->GetYaxis()->SetTitle("Bin mn");
     cov_matrix_histo->GetXaxis()->SetTickLength(0);
     cov_matrix_histo->GetYaxis()->SetTickLength(0);
     h->Draw();
+    for (auto l : lines)
+      l->Draw();
       // cov_matrix_histo->Draw("colz text same");
     cov_matrix_histo->Draw("colz same");
     PlottingTools::DrawSimulationXSec();
@@ -299,11 +322,13 @@ namespace Base {
     frac_cov_matrix_histo->SetMarkerSize(1.8);
     frac_cov_matrix_histo->GetXaxis()->CenterTitle();
     frac_cov_matrix_histo->GetYaxis()->CenterTitle();
-    frac_cov_matrix_histo->GetXaxis()->SetTitle("Bin i");
-    frac_cov_matrix_histo->GetYaxis()->SetTitle("Bin j");
+    frac_cov_matrix_histo->GetXaxis()->SetTitle("Bin ij");
+    frac_cov_matrix_histo->GetYaxis()->SetTitle("Bin mn");
     frac_cov_matrix_histo->GetXaxis()->SetTickLength(0);
     frac_cov_matrix_histo->GetYaxis()->SetTickLength(0);
     h->Draw();
+    for (auto l : lines)
+      l->Draw();
       // frac_cov_matrix_histo->Draw("colz text same");
     frac_cov_matrix_histo->Draw("colz same");
     PlottingTools::DrawSimulationXSec();
@@ -323,6 +348,8 @@ namespace Base {
     corr_matrix_histo->GetXaxis()->SetTickLength(0);
     corr_matrix_histo->GetYaxis()->SetTickLength(0);
     h->Draw();
+    for (auto l : lines)
+      l->Draw();
       // corr_matrix_histo->Draw("colz text same");
     corr_matrix_histo->Draw("colz same");
     PlottingTools::DrawSimulationXSec();

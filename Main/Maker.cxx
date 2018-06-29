@@ -2265,7 +2265,7 @@ void Main::Maker::MakeFile()
       _selected = true;
 
       _angle_true = t->lep_costheta;
-      _angle_reco = t->slc_muoncandidate_theta.at(scl_ll_max);
+      _angle_reco = t->slc_longesttrack_theta.at(scl_ll_max); //t->slc_muoncandidate_theta.at(scl_ll_max);
 
       _event_weight_fortree = event_weight;
       

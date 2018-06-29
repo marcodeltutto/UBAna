@@ -300,15 +300,6 @@ namespace Base {
         S_4d = migrationmatrix4d.CalculateMigrationMatrix();
         migrationmatrix4d.SetOutputFileName("latex_test_bootstrap.tex");
         migrationmatrix4d.PrintSmearingMatrixLatex();
-        // migrationmatrix4d.PlotMatrix();
-
-
-        // S_2d.Clear(); S_2d.ResizeTo(_n, _m);
-        // MigrationMatrix2D migrationmatrix2d;
-        // migrationmatrix2d.SetNBins(_n, _m);
-        // migrationmatrix2d.SetTrueRecoHistogram(&this_reco_true);
-        // S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-        // std::cout << "S_2d calculated" << std::endl;
       }
 
 
@@ -329,21 +320,9 @@ namespace Base {
       _xsec_calc.SetSmearingMatrix(S_4d);
       _xsec_calc.Smear();
 
-
       TH2D* universe_xsec = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
-      // _xsec_calc.Draw();
-      // _xsec_calc.Draw(hist_to_subtract);
-      // if (_do_smear && _true_to_reco_is_set) {
-      //   _xsec_calc.SetMigrationMatrix(S_2d);
-      //   _xsec_calc.Smear(_n, _m);
-      // } else {
-      //   _xsec_calc.DoNotSmear(); 
-      // }
-      // TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-
 
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
-
 
     } // endl loop over universes
 
@@ -358,8 +337,8 @@ namespace Base {
     BootstrapTH2D xsec_mumom_bs;
     xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
 
-    std::cout << "xsec_mumom_bs.GetNbinsX() " << xsec_mumom_bs.GetNbinsX() << std::endl;
-    std::cout << "xsec_mumom_bs.GetNbinsY() " << xsec_mumom_bs.GetNbinsY() << std::endl;
+    // std::cout << "xsec_mumom_bs.GetNbinsX() " << xsec_mumom_bs.GetNbinsX() << std::endl;
+    // std::cout << "xsec_mumom_bs.GetNbinsY() " << xsec_mumom_bs.GetNbinsY() << std::endl;
 
 
 
@@ -379,166 +358,17 @@ namespace Base {
     //
     // Plot all the xsec in one plot
     //
-    // TH2D h;
-    // xsec_mumom_bs.GetUniverseHisto("universe0", h);
-
+    
     DrawXSec(xsec_mumom_per_universe);
 
    
-
-    
-
-
-
-    // TCanvas * multisim_xsec_canvas = new TCanvas();
-    // for (auto it : xsec_mumom_per_universe) {
-    //   if (it.first == "nominal") {
-    //     continue;
-    //   }
-    //   if (it.first == "universe0") {
-    //     if (_save_prefix.find("mumom") != std::string::npos) {
-    //       it.second->GetXaxis()->SetTitle("p_{#mu} [GeV]");
-    //       it.second->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-    //       it.second->SetMinimum(0.);
-    //       it.second->SetMaximum(1.6);
-    //     } else if (_save_prefix.find("onebin") != std::string::npos) {
-    //       it.second->GetXaxis()->SetTickLength(0);
-    //       it.second->GetXaxis()->SetLabelSize(0);
-    //       it.second->GetXaxis()->SetTitle("");
-    //       it.second->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}");
-    //       it.second->SetMinimum(0.4);
-    //       it.second->SetMaximum(1.2);
-    //     }else {
-    //       it.second->GetXaxis()->SetTitle("cos(#theta_{#mu})");
-    //       it.second->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
-    //       it.second->SetMaximum(2.2);
-    //     }
-    //     it.second->GetYaxis()->SetTitleOffset(0.8);
-    //   }
-    //   it.second->SetLineWidth(1);
-    //   it.second->SetLineColor(kGreen+2);
-    //   it.second->Draw("histo same");
-    // }
-    // xsec_mumom_per_universe["nominal"]->SetLineColor(kGreen+3);
-    // xsec_mumom_per_universe["nominal"]->SetLineWidth(3);
-    // xsec_mumom_per_universe["nominal"]->Draw("histo same");
-
-    // TLegend *l = new TLegend(0.5873926,0.7621053,0.8166189,0.8589474,NULL,"brNDC");
-    // l->SetBorderSize(0);
-    // l->SetTextSize(0.03789474);
-    // l->SetLineColor(1);
-    // l->SetLineStyle(1);
-    // l->SetLineWidth(1);
-    // l->SetFillColor(0);
-    // l->SetFillStyle(1001);
-    // l->AddEntry(xsec_mumom_per_universe["nominal"], "Central Value", "l");
-    // l->AddEntry(xsec_mumom_per_universe["universe0"], "Other Universes", "l");
-    // l->Draw();
-
-    // TLatex* label = new TLatex(.10, .92, _upper_label.c_str());
-    // label->SetTextFont(62);
-    // label->SetTextColor(kRed+2);
-    // label->SetNDC();
-    // label->SetTextSize(1/30.);
-    // label->SetTextAlign(10);//left adjusted
-    // label->Draw();
-    // multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.pdf").c_str());
-    // multisim_xsec_canvas->SaveAs((_save_prefix + "_xsec_all.C").c_str());
-
-
-    // // Make the fancy plot
-    // int n_bins_y = 120; // was 60, 120
-    // double bins_y[121];
-    // for (int i = 0; i < n_bins_y+1; i++) { 
-    //   if(_save_prefix.find("mumom") != std::string::npos) {
-    //     bins_y[i] = (double)i/(double)n_bins_y * 1.6; 
-    //   } else if (_save_prefix.find("onebin") != std::string::npos) {
-    //     bins_y[i] = (double)i/(double)n_bins_y * 1.2; 
-    //   } else {
-    //     bins_y[i] = (double)i/(double)n_bins_y * 2.2; 
-    //   }
-    // }
-    // TH2D *h_2d_all_xsec = new TH2D("h_2d_all_xsec", "", xsec_mumom_per_universe["nominal"]->GetNbinsX(), 
-    //                                                     xsec_mumom_per_universe["nominal"]->GetXaxis()->GetXbins()->GetArray(),
-    //                                                     n_bins_y,
-    //                                                     bins_y);
-
-    // for (auto it : xsec_mumom_per_universe) {
-    //   if (it.first == "nominal") {
-    //     continue;
-    //   }
-    //   for (int bin = 1; bin < it.second->GetNbinsX()+1; bin++) {
-    //     h_2d_all_xsec->Fill(h_2d_all_xsec->GetXaxis()->GetBinLowEdge(bin), it.second->GetBinContent(bin));
-    //   }
-    // }
-
-    // TH1D * h_nominal_werror = (TH1D*) xsec_mumom_per_universe["nominal"]->Clone("h_nominal_werror");
-    // for (int bin = 1; bin < h_nominal_werror->GetNbinsX()+1; bin++) {
-    //   h_nominal_werror->SetBinError(bin, std::sqrt(_cov_matrix.GetBinContent(bin, bin)));
-    // }
-
-    // gStyle->SetPalette(kBlueGreenYellow);
-
-    // TCanvas * multisim_xsec_fancy_canvas = new TCanvas();
-
-    // if (_save_prefix.find("mumom") != std::string::npos) {
-    //   h_2d_all_xsec->GetXaxis()->SetTitle("p_{#mu} [GeV]");
-    //   h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
-    //   h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-    //   h_2d_all_xsec->SetMaximum(50); // was 200
-    // } else if (_save_prefix.find("onebin") != std::string::npos) {
-    //   h_2d_all_xsec->GetXaxis()->SetTitle("");
-    //   h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}]");
-    //   h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-    //   h_2d_all_xsec->GetXaxis()->SetTickLength(0);
-    //   h_2d_all_xsec->GetXaxis()->SetLabelSize(0);
-    // } else {
-    //   h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu})");
-    //   h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
-    //   h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-    //   h_2d_all_xsec->SetMaximum(50);
-    // }
-
-    // h_2d_all_xsec->Draw("colz");
-
-    // h_nominal_werror->SetLineColor(kRed+2);
-    // h_nominal_werror->SetMarkerColor(kRed+2);
-    // h_nominal_werror->Draw("E1 same");
-
-    // label->Draw();
-
-    // TLegend *l2;
-    // if (_save_prefix.find("mumom") != std::string::npos) {
-    //   l2 = new TLegend(0.5931232,0.7284211,0.8166189,0.8589474,NULL,"brNDC");
-    // } else if (_save_prefix.find("onebin") != std::string::npos) {
-    //   l2 = new TLegend(0.5931232,0.7284211,0.8166189,0.8589474,NULL,"brNDC");
-    // } else {
-    //   l2 = new TLegend(0.1962751,0.6863158,0.4197708,0.8168421,NULL,"brNDC");
-    // }
-     
-    // l2->SetBorderSize(0);
-    // l2->SetTextSize(0.03789474);
-    // l2->SetLineColor(1);
-    // l2->SetLineStyle(1);
-    // l2->SetLineWidth(1);
-    // l2->SetFillColor(0);
-    // l2->SetFillStyle(1001);
-    // l2->AddEntry(h_nominal_werror, "Central Value", "lep");
-    // l2->AddEntry(h_2d_all_xsec, "Color map shows", "");
-    // l2->AddEntry(h_2d_all_xsec, "other universes", "");
-    // l2->Draw();
-
-    // multisim_xsec_fancy_canvas->SaveAs((_save_prefix + "_xsec_all_fancy.pdf").c_str());
-    // multisim_xsec_fancy_canvas->SaveAs((_save_prefix + "_xsec_all_fancy.C").c_str());
-
-    // gStyle->SetPalette(kRainBow);
-
-
 
 
     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 
 	}
+
+
 
 
   void CrossSectionBootstrapCalculator2D::DrawXSec(std::map<std::string, TH2D*> xsec_mumom_per_universe) 
@@ -592,6 +422,10 @@ namespace Base {
       // xsec_mc_histos.at(i).Draw("E2");
       TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
       h_main->SetLineColor(kGreen+2);
+      if (it.first == "nominal") {
+        h_main->SetLineColor(kGreen+3);
+        h_main->SetLineWidth(3);
+      }
       h_main->SetFillColor(0); // fully transparent
       h_main->Draw("histo same");
 

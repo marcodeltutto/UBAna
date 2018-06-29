@@ -916,8 +916,11 @@ std::cout << ">> here10" << std::endl;
     // Muon CosTheta Cross Section
     // 
 
+    std::cout << ">>>>>Here ee 1" << std::endl;
+
     S_2d.Clear(); S_2d.ResizeTo(9, 9);
     migrationmatrix2d.SetOutDir("migration_matrix_2d_trkcostheta");
+    migrationmatrix2d.SetVerbosity(true);
     migrationmatrix2d.SetNBins(9, 9);
     migrationmatrix2d.SetTrueRecoHistogram(h_true_reco_costheta);
     S_2d = migrationmatrix2d.CalculateMigrationMatrix();
@@ -932,21 +935,31 @@ std::cout << ">> here10" << std::endl;
     if (_fake_data_mode) {
     	_xsec_calc.SetTruthXSec(h_truth_xsec_muangle_fake, 9, 9);
     }
+    std::cout << ">>>>>>>>Here ee 2" << std::endl;
     _xsec_calc.SetNameAndLabel("trkcostheta", ";cos(#theta_{#mu}^{reco}); Selected Events");
+    std::cout << ">>>>>>>>Here ee 2.1" << std::endl;
     _xsec_calc.ProcessPlots();
+    std::cout << ">>>>>>>>Here ee 2.2" << std::endl;
     _xsec_calc.SaveEventNumbers("trkcostheta_eventsperbin_table.tex");
+    std::cout << ">>>>>>>>Here ee 2.3" << std::endl;
     _xsec_calc.Draw();
+    std::cout << ">>>>>>>>Here ee 2.4" << std::endl;
     _xsec_calc.Draw(hist_to_subtract);
+    std::cout << ">>>>>>>>Here ee 2.5" << std::endl;
     _xsec_calc.Smear(9, 9);
+    std::cout << ">>>>>>>>Here ee 2.6" << std::endl;
     _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
+    std::cout << ">>>>>>>>Here ee 2.7" << std::endl;
     _xsec_calc.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
+    std::cout << ">>>>>>>>Here ee 2.8" << std::endl;
     if (_import_alternative_mc) {
       TH1D* h = (TH1D*)file_alt_mc->Get("xsec_muangle_mc_cv_tune3");
       _xsec_calc.ImportAlternativeMC(*h);
     }
     TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu}^{reco})", "d#sigma/dcos(#theta_{#mu}^{reco}) [10^{-38} cm^{2}]");
+    std::cout << ">>>>>>>>Here ee 2.9" << std::endl;
     TH1D * xsec_muangle_mc = _xsec_calc.GetMCCrossSection();
-
+std::cout << ">>>>>>>>Here ee 3" << std::endl;
 
     file_out->cd();
     save_name = "xsec_muangle_" + _prefix;
@@ -956,7 +969,7 @@ std::cout << ">> here10" << std::endl;
     save_name = "covariance_matrix_muangle_" + _prefix;
     covariance_matrix_muangle.Write(save_name.c_str());
 
-
+std::cout << "Here ee 4" << std::endl;
 
 
     std::cout << "***************" << std::endl;
@@ -976,7 +989,7 @@ std::cout << ">> here10" << std::endl;
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
-    if (_do_genie_systs) {
+    // if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -995,7 +1008,7 @@ std::cout << ">> here10" << std::endl;
       // for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
       //   std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       // }
-    }
+    // }
 
     // if (_do_flux_systs) {
       _xsec_bs_calc.Reset();
@@ -1060,7 +1073,10 @@ std::cout << ">> here10" << std::endl;
     std::cout << "Here 8" << std::endl;
 
     xseccalc2d.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+    
   }
+
+
 
   //file_out->Write();
   file_out->Close();

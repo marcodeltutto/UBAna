@@ -38,7 +38,7 @@
 #include <TStyle.h>
 #include <TString.h>
 #include <TMatrix.h>
-#include <TObject.h>
+#include <TLine.h>
 
 #include "BootstrapTH2D.h"
 #include "Types.h"
