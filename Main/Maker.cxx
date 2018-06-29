@@ -613,7 +613,7 @@ void Main::Maker::MakeFile()
   BootstrapTH2D bs_flux_multisim_eff_muangle_mumom_num("bs_flux_multisim_eff_muangle_mumom_num", "bs_flux_multisim_eff_muangle_mumom_num_title", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
   BootstrapTH2D bs_flux_multisim_eff_muangle_mumom_den("bs_flux_multisim_eff_muangle_mumom_den", "bs_flux_multisim_eff_muangle_mumom_den_title", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
 
-
+  
 
   
 
@@ -998,6 +998,16 @@ void Main::Maker::MakeFile()
   // hmap_trktheta_trkmom_genie_multisim_bs["nc_other"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_other_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
   // hmap_trktheta_trkmom_genie_multisim_bs["signal_stopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_stopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
   // hmap_trktheta_trkmom_genie_multisim_bs["signal_nostopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_nostopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+
+  // Number of events histograms - Cross Section Double Diff - FLUX Multisim
+  std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_flux_multisim_bs;
+  hmap_trktheta_trkmom_flux_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_flux_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_flux_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_flux_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_flux_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_flux_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_flux_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
 /*
   std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs;
   //std::map<std::string, TH1D*> mymap;
@@ -1453,6 +1463,7 @@ void Main::Maker::MakeFile()
 
             histo_name = "h_genie_multisim_trkmom_trkangle_" + this_name + "_" + fname_genie_multisim.at(i); 
             hmap_trktheta_trkmom_genie_multisim_bs[this_name][fname_genie_multisim.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+
           }
 
         }
@@ -1532,15 +1543,28 @@ void Main::Maker::MakeFile()
         // Now emplace the histograms for the variations
         for (size_t i = 0; i < fname_flux_multisim.size(); i++) {
 
+          // Single diff - Momentum
           std::string histo_name = "h_flux_multisim_trkmom_" + this_name + "_" + fname_flux_multisim.at(i);
           double this_bins_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
           hmap_trkmom_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track length;", 6, this_bins_mumom); 
 
+          // Single diff - Angle
           histo_name = "h_flux_multisim_trkangle_" + this_name + "_" + fname_flux_multisim.at(i);
           hmap_trkangle_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track angle;", 9, bins_mucostheta); 
 
+          // Total
           histo_name = "h_flux_multisim_onebin_" + this_name + "_" + fname_flux_multisim.at(i);
           hmap_onebin_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track angle;", 1, 0, 1);
+
+          // Double Diff
+          int n_bins_mumom_temp = 4;
+          double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
+          int n_bins_mucostheta_temp = 6;
+          double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
+
+          histo_name = "h_flux_multisim_trkmom_trkangle_" + this_name + "_" + fname_flux_multisim.at(i); 
+          hmap_trktheta_trkmom_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+ 
 
         }
 
@@ -1559,6 +1583,9 @@ void Main::Maker::MakeFile()
 
       bs_flux_multisim_true_reco_mumom.SetWeightNames(fname_flux_multisim);
       bs_flux_multisim_true_reco_muangle.SetWeightNames(fname_flux_multisim);
+
+      bs_flux_multisim_eff_muangle_mumom_num.SetWeightNames(fname_flux_multisim);
+      bs_flux_multisim_eff_muangle_mumom_den.SetWeightNames(fname_flux_multisim);
     }
 
     // Prepare the vector of weights to be used for bootstraps
@@ -1698,6 +1725,7 @@ void Main::Maker::MakeFile()
 
       if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_onebin_den.Fill(0.5, event_weight, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_muangle_den.Fill(t->lep_costheta, event_weight, wgts_flux_multisim);
+      if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_muangle_mumom_den.Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_flux_multisim);
 
 
       h_eff_muangle_den->Fill(t->lep_costheta, event_weight);
@@ -2218,6 +2246,7 @@ void Main::Maker::MakeFile()
     if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["total"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
     if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "total", fname_flux_multisim, wgts_flux_multisim);
     if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_flux_multisim_bs, "total", fname_flux_multisim, wgts_flux_multisim);
+    if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_flux_multisim_bs, "total", fname_flux_multisim, wgts_flux_multisim);
     //hmap_trkmom_genie_pm1_bs["total"]->Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), 1., wgts_genie_pm1);
     //hmap_trkmom_genie_pm1_bs["total"]["nominal"]->Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max));
 
@@ -2395,6 +2424,8 @@ void Main::Maker::MakeFile()
       //if (!isdata && _fill_bootstrap) bs_flux_multisim_eff_mumom_num.Fill(t->true_muon_mom, 1., wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_onebin_num.Fill(0.5, event_weight, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_muangle_num.Fill(t->lep_costheta, event_weight, wgts_flux_multisim);
+      if (!isdata && _fill_bootstrap_flux) bs_flux_multisim_eff_muangle_mumom_num.Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_flux_multisim);
+
 
       h_eff_muangle_num->Fill(t->lep_costheta, event_weight);
       h_eff_muangle_mumom_num->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
@@ -2473,6 +2504,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["signal"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "signal", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_flux_multisim_bs, "signal", fname_flux_multisim, wgts_flux_multisim);
+      if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_flux_multisim_bs, "signal", fname_flux_multisim, wgts_flux_multisim);
  
       
 
@@ -2552,6 +2584,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["anumu"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "anumu", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_flux_multisim_bs, "anumu", fname_flux_multisim, wgts_flux_multisim);
+      if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_flux_multisim_bs, "anumu", fname_flux_multisim, wgts_flux_multisim);
 
 
       hmap_trkphi["anumu"]->Fill(t->slc_longesttrack_phi.at(scl_ll_max), event_weight);
@@ -2582,6 +2615,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["nue"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "nue", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_flux_multisim_bs, "nue", fname_flux_multisim, wgts_flux_multisim);
+      if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_flux_multisim_bs, "nue", fname_flux_multisim, wgts_flux_multisim);
 
 
       hmap_trkphi["nue"]->Fill(t->slc_longesttrack_phi.at(scl_ll_max), event_weight);
@@ -2614,6 +2648,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["nc"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "nc", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_flux_multisim_bs, "nc", fname_flux_multisim, wgts_flux_multisim);
+      if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_flux_multisim_bs, "nc", fname_flux_multisim, wgts_flux_multisim);
 
 
       hmap_trkphi["nc"]->Fill(t->slc_longesttrack_phi.at(scl_ll_max), event_weight);
@@ -2716,6 +2751,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["outfv"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "outfv", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_flux_multisim_bs, "outfv", fname_flux_multisim, wgts_flux_multisim);
+      if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_flux_multisim_bs, "outfv", fname_flux_multisim, wgts_flux_multisim);
 
 
       hmap_trkphi["outfv"]->Fill(t->slc_longesttrack_phi.at(scl_ll_max), event_weight);
@@ -2794,6 +2830,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["cosmic"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "cosmic", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_flux_multisim_bs, "cosmic", fname_flux_multisim, wgts_flux_multisim);
+      if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_flux_multisim_bs, "cosmic", fname_flux_multisim, wgts_flux_multisim);
 
 
       hmap_trkphi["cosmic"]->Fill(t->slc_longesttrack_phi.at(scl_ll_max), event_weight);
@@ -3777,6 +3814,9 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&bs_flux_multisim_eff_onebin_num, "bs_flux_multisim_eff_onebin_num");
   file_out->WriteObject(&bs_flux_multisim_eff_onebin_den, "bs_flux_multisim_eff_onebin_den");
 
+  file_out->WriteObject(&bs_flux_multisim_eff_muangle_mumom_num, "bs_flux_multisim_eff_muangle_mumom_num");
+  file_out->WriteObject(&bs_flux_multisim_eff_muangle_mumom_den, "bs_flux_multisim_eff_muangle_mumom_den");
+
 
 
 
@@ -3795,6 +3835,7 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_onebin_flux_multisim_bs, "hmap_onebin_flux_multisim_bs");
   file_out->WriteObject(&hmap_trkmom_flux_multisim_bs, "hmap_trkmom_flux_multisim_bs");
   file_out->WriteObject(&hmap_trkangle_flux_multisim_bs, "hmap_trkangle_flux_multisim_bs");
+  file_out->WriteObject(&hmap_trktheta_trkmom_flux_multisim_bs, "hmap_trktheta_trkmom_flux_multisim_bs");
 
 
   
