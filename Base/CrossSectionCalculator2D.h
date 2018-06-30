@@ -116,6 +116,9 @@ namespace Base {
     ///
     TH2D* ExtractCrossSection(std::string, std::string, std::string);
 
+    /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
+    TH2D* GetMCCrossSection() {return _h_mc;}
+
     ///
     void SetSmearingMatrix(std::vector<std::vector<std::vector<std::vector<double>>>>);
 
@@ -176,6 +179,9 @@ namespace Base {
     TH2D* _h_data_sub;
 
     TEfficiency* _eff;
+
+    TH2D* _h_mc = NULL; ///< The to-be extracted MC cross section
+    TH2D* _h_data = NULL; ///< The to-be extracted data cross section
 
     std::vector<std::vector<std::vector<std::vector<double>>>> _S;
 

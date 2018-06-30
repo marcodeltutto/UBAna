@@ -768,8 +768,8 @@ namespace Base {
     c_test->Divide(2,3,0.01,0.01);
 
     for (int i = 0; i < h_data->GetNbinsX(); i++) {
-      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
-      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, i+2));
+      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+1));
+      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, i+1));
     }
 
 
@@ -795,10 +795,15 @@ namespace Base {
 
       xsec_mc_histos.at(i).SetMinimum(0.);
       if (i == 0) {
-        xsec_mc_histos.at(i).SetMaximum(0.7);
-      }
+        xsec_mc_histos.at(i).SetMaximum(0.4);
+      } else if (i == 1) {
+        xsec_mc_histos.at(i).SetMaximum(0.4);
+      } 
 
+      xsec_data_histos.at(i).SetMarkerStyle(20);
+      xsec_data_histos.at(i).SetMarkerSize(0.5);
       xsec_data_histos.at(i).Draw("E1 X0 same");
+
       if (i == 0) {
         TLegend *l;
         l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
@@ -856,11 +861,14 @@ namespace Base {
 
 
 
+    _h_data = h_data;
+    _h_mc = h_mc;
+
 
     return h_data;
 
-
   }
+  
 
   void CrossSectionCalculator2D::DrawMC(TCanvas * c, int c_number, TH1D h)
   {

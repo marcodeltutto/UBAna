@@ -77,17 +77,17 @@ namespace Base {
     // _RHO.Clear();
     // _RHO.ResizeTo(_bs.GetNbinsX(), _bs.GetNbinsX());
 
-    for (int i = 0; i < _bs.GetNbinsX(); i++) {
-      for (int j = 0; j < _bs.GetNbinsY(); j++) {
-        for (int m = 0; m < _bs.GetNbinsX(); m++) {
-          for (int n = 0; n < _bs.GetNbinsY(); n++) {
-           _M[i][j][m][n] = 0.;
-           _M_frac[i][j][m][n] = 0.;
-           _RHO[i][j][m][n] = 0.;
-         }
-       }
-      }
-    }
+    // for (int i = 0; i < _bs.GetNbinsX(); i++) {
+    //   for (int j = 0; j < _bs.GetNbinsY(); j++) {
+    //     for (int m = 0; m < _bs.GetNbinsX(); m++) {
+    //       for (int n = 0; n < _bs.GetNbinsY(); n++) {
+    //        _M[i][j][m][n] = 0.;
+    //        _M_frac[i][j][m][n] = 0.;
+    //        _RHO[i][j][m][n] = 0.;
+    //      }
+    //    }
+    //   }
+    // }
 
 
     _bs.ResetIterator();
@@ -103,13 +103,23 @@ namespace Base {
 
           for (int n = 0; n < _bs.GetNbinsY(); n++) {
 
+            // Reset the matrix element
+            _M[i][j][m][n] = 0.;
+            _M_frac[i][j][m][n] = 0.;
+            _RHO[i][j][m][n] = 0.;
+
             // Nominal cross section for bin ij and mn 
             double N_ij_cv = _bs.GetNominal().GetBinContent(i+1, j+1);
             double N_mn_cv = _bs.GetNominal().GetBinContent(m+1, n+1);
 
-            if (i == 2 && j == 3 && m == 2 && n == 3) {
-              std::cout << "N_23_cv = " << N_ij_cv << std::endl;
-            }
+            // std::cout << "N_" << i << j << "_cv = " << N_ij_cv << std::endl;
+
+            // if (i == 2 && j == 2 && m == 2 && n == 2) {
+            //   std::cout << "** N_22_cv = " << N_ij_cv << std::endl;
+            // }
+            // if (i == 2 && j == 0 && m == 2 && n == 0) {
+            //   std::cout << "** N_20_cv = " << N_ij_cv << std::endl;
+            // }
 
             // if (_verbose) std::cout << "Nominal cross section in i " << i << ": " << N_i_cv << " and j " << j << ": " << N_j_cv << std::endl;
 
@@ -126,9 +136,12 @@ namespace Base {
               double N_ij_s = uni_histo.GetBinContent(i+1, j+1);
               double N_mn_s = uni_histo.GetBinContent(m+1, n+1);
 
-              if (i == 2 && j == 3 && m == 2 && n == 3) {
-              std::cout << "N_23_s = " << N_ij_s << std::endl;
-            }
+              // if (i == 2 && j == 2 && m == 2 && n == 2) {
+              //   std::cout << "N_22_s = " << N_ij_s << std::endl;
+              // }
+              // if (i == 2 && j == 0 && m == 2 && n == 0) {
+              //   std::cout << "N_20_s = " << N_ij_s << std::endl;
+              // }
           
 
               _M[i][j][m][n] += (N_ij_s - N_ij_cv) * (N_mn_s - N_mn_cv) / number_of_universes;
@@ -195,7 +208,7 @@ namespace Base {
 
             _RHO[i][j][m][n] += _M[i][j][m][n] / (std::sqrt(_M[i][j][i][j]) * std::sqrt(_M[m][n][m][n]));
 
-            if (_RHO[i][j][m][n] < -1 || _RHO[i][j][m][n] > 1) {
+            if (_RHO[i][j][m][n] < -1. || _RHO[i][j][m][n] > 1.) {
               std::cout << "WARNING!!! Corraltion Matrix rho is smaller than -1 or greater than +1, value: _RHO[" << i << "][" << j << "][" << m << "][" << n << "]" << _RHO[i][j][m][n] << std::endl;
             }
           } // bin n loop
@@ -256,13 +269,19 @@ namespace Base {
       cov_matrix_histo->GetNbinsY(), 0, cov_matrix_histo->GetNbinsY());
 
     h->SetMaximum(1);
+    h->GetXaxis()->SetLabelSize(0.04);
+    h->GetYaxis()->SetLabelSize(0.04);
 
-    int label_number = 0;
+    int i_label_number = 0;
+    int j_label_number = 0;
     for (int i = 0; i <  cov_matrix_histo->GetNbinsX()+1; i++) {
       std::ostringstream oss;
-      oss << label_number;
-      if (label_number % _bs.GetNbinsY() == 0) label_number = 0;
-      label_number++;
+      oss << i_label_number << "," << j_label_number;
+      if (j_label_number % _bs.GetNbinsY() == 0) {
+        i_label_number ++;
+        j_label_number = 0;
+      }
+      j_label_number++;
       std::string label = oss.str();
       h->GetXaxis()->SetBinLabel(i,label.c_str());
       h->GetYaxis()->SetBinLabel(i,label.c_str());
@@ -279,16 +298,16 @@ namespace Base {
 
     std::vector<TLine*> lines;
 
-    for (int i = 1; i < _bs.GetNbinsY(); i++) {
-      TLine *line = new TLine(_bs.GetNbinsX()  * i, 0, _bs.GetNbinsX() * i, n_bins);
-      line->SetLineColor(kRed);
+    for (int i = 1; i < _bs.GetNbinsX(); i++) {
+      TLine *line = new TLine(_bs.GetNbinsY()  * i, 0, _bs.GetNbinsY() * i, n_bins);
+      line->SetLineColor(kGreen+2);
       line->SetLineWidth(2);
       lines.emplace_back(line);
     }
 
-    for (int i = 1; i < _bs.GetNbinsY(); i++) {
-      TLine *line = new TLine(0, _bs.GetNbinsX() * i, n_bins, _bs.GetNbinsX() * i);
-      line->SetLineColor(kRed);
+    for (int i = 1; i < _bs.GetNbinsX(); i++) {
+      TLine *line = new TLine(0, _bs.GetNbinsY() * i, n_bins, _bs.GetNbinsY() * i);
+      line->SetLineColor(kGreen+2);
       line->SetLineWidth(2);
       lines.emplace_back(line);
     }
@@ -300,15 +319,17 @@ namespace Base {
     cov_matrix_histo->SetMarkerSize(1.8);
     cov_matrix_histo->GetXaxis()->CenterTitle();
     cov_matrix_histo->GetYaxis()->CenterTitle();
-    cov_matrix_histo->GetXaxis()->SetTitle("Bin ij");
-    cov_matrix_histo->GetYaxis()->SetTitle("Bin mn");
+    cov_matrix_histo->GetXaxis()->SetTitle("Bin i,j");
+    cov_matrix_histo->GetYaxis()->SetTitle("Bin m,n");
     cov_matrix_histo->GetXaxis()->SetTickLength(0);
     cov_matrix_histo->GetYaxis()->SetTickLength(0);
     h->Draw();
-    for (auto l : lines)
-      l->Draw();
       // cov_matrix_histo->Draw("colz text same");
     cov_matrix_histo->Draw("colz same");
+
+    for (auto l : lines)
+      l->Draw();
+
     PlottingTools::DrawSimulationXSec();
     name = _prefix + "_cov_matrix_2d";
     cov_c->SaveAs(name + ".pdf");
@@ -322,15 +343,17 @@ namespace Base {
     frac_cov_matrix_histo->SetMarkerSize(1.8);
     frac_cov_matrix_histo->GetXaxis()->CenterTitle();
     frac_cov_matrix_histo->GetYaxis()->CenterTitle();
-    frac_cov_matrix_histo->GetXaxis()->SetTitle("Bin ij");
-    frac_cov_matrix_histo->GetYaxis()->SetTitle("Bin mn");
+    frac_cov_matrix_histo->GetXaxis()->SetTitle("Bin i,j");
+    frac_cov_matrix_histo->GetYaxis()->SetTitle("Bin m,n");
     frac_cov_matrix_histo->GetXaxis()->SetTickLength(0);
     frac_cov_matrix_histo->GetYaxis()->SetTickLength(0);
     h->Draw();
-    for (auto l : lines)
-      l->Draw();
       // frac_cov_matrix_histo->Draw("colz text same");
     frac_cov_matrix_histo->Draw("colz same");
+
+    for (auto l : lines)
+      l->Draw();
+
     PlottingTools::DrawSimulationXSec();
     name = _prefix + "_cov_frac_matrix_2d";
     cov_frac_c->SaveAs(name + ".pdf");
@@ -343,15 +366,17 @@ namespace Base {
     corr_matrix_histo->SetMarkerSize(1.8);
     corr_matrix_histo->GetXaxis()->CenterTitle();
     corr_matrix_histo->GetYaxis()->CenterTitle();
-    corr_matrix_histo->GetXaxis()->SetTitle("Bin i");
-    corr_matrix_histo->GetYaxis()->SetTitle("Bin j");
+    corr_matrix_histo->GetXaxis()->SetTitle("Bin i,j");
+    corr_matrix_histo->GetYaxis()->SetTitle("Bin m,n");
     corr_matrix_histo->GetXaxis()->SetTickLength(0);
     corr_matrix_histo->GetYaxis()->SetTickLength(0);
     h->Draw();
-    for (auto l : lines)
-      l->Draw();
       // corr_matrix_histo->Draw("colz text same");
     corr_matrix_histo->Draw("colz same");
+
+    for (auto l : lines)
+      l->Draw();
+
     PlottingTools::DrawSimulationXSec();
     name = _prefix + "_corr_matrix_2d";
     corr_c->SaveAs(name + ".pdf");

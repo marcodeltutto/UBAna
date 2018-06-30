@@ -129,16 +129,16 @@ namespace Base {
 
   void CrossSectionBootstrapCalculator2D::DrawProgressBar(double progress, double barWidth) {
   
-  std::cout << "[";
-  int pos = barWidth * progress;
-  for (int i = 0; i < barWidth; ++i) {
+    std::cout << "[";
+    int pos = barWidth * progress;
+    for (int i = 0; i < barWidth; ++i) {
     if (i < pos) std::cout << "=";
-    else if (i == pos) std::cout << ">";
-    else std::cout << " ";
+      else if (i == pos) std::cout << ">";
+      else std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " % of universes completed.\r";
+    std::cout.flush();
   }
-  std::cout << "] " << int(progress * 100.0) << " % of universes completed.\r";
-  std::cout.flush();
-}
 
 
   void CrossSectionBootstrapCalculator2D::SetSavePrefix(std::string s, std::string folder)
@@ -204,12 +204,14 @@ namespace Base {
     size_t n_universe = _h_eff_mumom_num.GetNWeights();
     std::vector<std::string> universe_names = _h_eff_mumom_num.GetUniverseNames();
 
-    std::cout << _prefix << "n_universe " << n_universe << std::endl;
-    std::cout << _prefix << "universe_names.size() " << universe_names.size() << std::endl;
+    std::cout << _prefix << "Number of Universes: " << n_universe << std::endl;
+    // std::cout << _prefix << "universe_names.size() " << universe_names.size() << std::endl;
 
+    std::cout << _prefix << "Universes Names: ";
     for (auto s : universe_names) {
-    	std::cout << _prefix << ">>>>>>> name is " << s << std::endl;
+    	std::cout << s << ", ";
     }
+    std::cout << std::endl;
 
     
     TH2D this_h;
@@ -324,6 +326,13 @@ namespace Base {
 
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
 
+      // if(universe_names.at(s) == "nominal") {
+      //   std::cout << "Nominal xsec, 00: " << universe_xsec->GetBinContent(1,1) << std::endl;
+      //   std::cout << "Nominal xsec, 01: " << universe_xsec->GetBinContent(1,2) << std::endl;
+      //   std::cout << "Nominal xsec, 10: " << universe_xsec->GetBinContent(2,1) << std::endl;
+      //   std::cout << "Nominal xsec, 11: " << universe_xsec->GetBinContent(2,2) << std::endl;
+      // }
+
     } // endl loop over universes
 
 
@@ -379,9 +388,13 @@ namespace Base {
     // gStyle->SetOptStat(0);
     c_test->Divide(2,3,0.01,0.01);
 
-    for (auto it : xsec_mumom_per_universe) {
+    // reverse_iterator because we want to have the nominal at the end
+    std::map<std::string, TH2D*>::reverse_iterator it = xsec_mumom_per_universe.rbegin();
 
-      TH2D h_xsec_2d = *it.second;
+    while (it != xsec_mumom_per_universe.rend()) {    
+    // for (auto it : xsec_mumom_per_universe) {
+
+      TH2D h_xsec_2d = *it->second;
 
 
       // std::vector<TH1D> xsec_data_histos;
@@ -398,7 +411,7 @@ namespace Base {
 
     for (int i = 0; i < h_xsec_2d.GetNbinsX(); i++) {
       // xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
-      xsec_mc_histos.emplace_back(*h_xsec_2d.ProjectionY("fuck", i+1, i+2));
+      xsec_mc_histos.emplace_back(*h_xsec_2d.ProjectionY("fuck", i+1, i+1));
     }
 
 
@@ -416,13 +429,13 @@ namespace Base {
       xsec_mc_histos.at(i).SetFillColor(29);
       xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
       xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
-      if (it.first == "nominal") {
+      if (it->first == "nominal") {
         xsec_mc_histos.at(i).SetLineColor(kGreen+3);
       }
       // xsec_mc_histos.at(i).Draw("E2");
       TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
       h_main->SetLineColor(kGreen+2);
-      if (it.first == "nominal") {
+      if (it->first == "nominal") {
         h_main->SetLineColor(kGreen+3);
         h_main->SetLineWidth(3);
       }
@@ -457,6 +470,8 @@ namespace Base {
 
       c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.pdf").c_str());
       c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.C").c_str());
+
+      it++;
     }
   }
 }
