@@ -143,14 +143,15 @@ namespace Base {
 
   void CrossSectionBootstrapCalculator2D::SetSavePrefix(std::string s, std::string folder)
   {
+    std::string timestamp;
     if (folder != "") {
       auto now = std::time(nullptr);
       char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
-      std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
+      timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
       
       system(("mkdir -p " + folder + "_" + timestamp).c_str());    
     }
-  	_save_prefix = folder + "/" + s;
+  	_save_prefix = folder + "_" + timestamp + "/" + s;
   }
 
   void CrossSectionBootstrapCalculator2D::SetFluxHistogramType(bool rwgt_flux, std::string flux_unc_type)

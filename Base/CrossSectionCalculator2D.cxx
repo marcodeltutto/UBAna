@@ -68,6 +68,12 @@ namespace Base {
 
   }
 
+  void CrossSectionCalculator2D::SetCovarianceMatrix(TH2D h)
+  {
+    _covariance_matrix = h;
+    _covariance_matrix_is_set = true;
+  }
+
   void CrossSectionCalculator2D::PrintConfig() {
 
     std::cout << "--- CrossSectionCalculator2D:" << std::endl;
@@ -868,7 +874,7 @@ namespace Base {
     return h_data;
 
   }
-  
+
 
   void CrossSectionCalculator2D::DrawMC(TCanvas * c, int c_number, TH1D h)
   {

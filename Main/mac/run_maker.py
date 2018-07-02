@@ -28,12 +28,13 @@ maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Ou
 
 maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_18__v2.root"); # After Neutrino
 maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v2.root"); # After Neutrino
-
+maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_18__v3.root"); # After Neutrino
+maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v3.root"); # After Neutrino
 
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)
-maker.SetBeamSpillStart(3.1)    
-maker.SetBeamSpillEnd(4.9)
+maker.SetBeamSpillStart(3.2)    
+maker.SetBeamSpillEnd(4.8)
 maker.SetFlashShift(0.)    
 maker.SetGainCalibration(198)    
 maker.SetCalculatePOT(True)    
@@ -76,10 +77,12 @@ maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Ou
 
 maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_bnbon_ubcodev06_26_01_18__v2.root") # 5e19 After Neutrino
 maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_bnbon_ubcodev06_26_01_18__v2.root") # 5e19 After Neutrino
+maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_bnbon_ubcodev06_26_01_18__v3.root") # 5e19 After Neutrino
+maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_bnbon_ubcodev06_26_01_18__v3.root") # 5e19 After Neutrino
 
 maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.2)    
-maker.SetBeamSpillEnd(5.0)    
+maker.SetBeamSpillStart(3.3)    
+maker.SetBeamSpillEnd(4.9)    
 maker.SetFlashShift(0.)    
 maker.SetGainCalibration(243)    
 maker.SetCalculatePOT(False)    
@@ -106,10 +109,12 @@ maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Ou
 
 maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_extbnb_ubcodev06_26_01_18__v2.root") # 5e19 After Neutrino
 maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_extbnb_ubcodev06_26_01_18__v2.root") # 5e19 After Neutrino
+maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_extbnb_ubcodev06_26_01_18__v3.root") # 5e19 After Neutrino
+maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_extbnb_ubcodev06_26_01_18__v3.root") # 5e19 After Neutrino
 
 maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.5)    
-maker.SetBeamSpillEnd(5.3)    
+maker.SetBeamSpillStart(3.65)    
+maker.SetBeamSpillEnd(5.25)    
 maker.SetFlashShift(0.406)    
 maker.SetGainCalibration(243)    
 maker.SetCalculatePOT(False)    

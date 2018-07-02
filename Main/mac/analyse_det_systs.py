@@ -41,7 +41,7 @@ analyser.SetExtraFluxUncertainty(0.)
 det_syst_list = ["CV", "dataSCE", "withDIC", "stretchResp", "squeezeResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp"]
 
 
-det_syst_list = ["stretchResp"]
+# det_syst_list = ["stretchResp"]
 
 for systname in det_syst_list:
   # file_name = "/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_detsyst_" + systname + ".root"

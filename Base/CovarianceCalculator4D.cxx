@@ -265,12 +265,15 @@ namespace Base {
     TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
     gStyle->SetNumberContours(NCont);
 
+
+    //
+    // Create axis lables
+    //
+
     TH2F *h = new TH2F("h", "", cov_matrix_histo->GetNbinsX(), 0, cov_matrix_histo->GetNbinsX(),
       cov_matrix_histo->GetNbinsY(), 0, cov_matrix_histo->GetNbinsY());
 
-    h->SetMaximum(1);
-    h->GetXaxis()->SetLabelSize(0.04);
-    h->GetYaxis()->SetLabelSize(0.04);
+    // h->SetMaximum(1);
 
     int i_label_number = 0;
     int j_label_number = 0;
@@ -288,13 +291,18 @@ namespace Base {
     }
 
     h->GetXaxis()->SetLabelOffset(0.004);
-    h->GetXaxis()->SetLabelSize(0.06);
+    h->GetXaxis()->SetLabelSize(0.04);
     h->GetYaxis()->SetLabelOffset(0.004);
-    h->GetYaxis()->SetLabelSize(0.06);
-    h->GetXaxis()->SetTitle("Bin ij");
-    h->GetYaxis()->SetTitle("Bin mn");
+    h->GetYaxis()->SetLabelSize(0.04);
+    h->GetXaxis()->SetTitle("Bin i,j");
+    h->GetYaxis()->SetTitle("Bin m,n");
     h->GetXaxis()->CenterTitle();
     h->GetYaxis()->CenterTitle();
+
+
+    //
+    // Create lines to divide primary bins
+    //
 
     std::vector<TLine*> lines;
 
@@ -311,6 +319,32 @@ namespace Base {
       line->SetLineWidth(2);
       lines.emplace_back(line);
     }
+
+
+
+    //
+    // Create TLatex lables
+    //
+
+    TLatex* prelim = new TLatex(0.10,0.97, "i, m = cos(#theta_{#mu}) bins");
+    prelim->SetTextColor(kBlack);
+    prelim->SetTextFont(42);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(12);
+
+    TLatex* prelim2 = new TLatex(0.10,0.93, "j, n = p_{#mu} bins");
+    prelim2->SetTextColor(kBlack);
+    prelim2->SetTextFont(42);
+    prelim2->SetNDC();
+    prelim2->SetTextSize(1/30.);
+    prelim2->SetTextAlign(12);
+
+
+
+    // 
+    // Draw the proper matrices
+    //
 
     TCanvas * cov_c = new TCanvas();
     cov_c->SetRightMargin(0.13);
@@ -329,6 +363,9 @@ namespace Base {
 
     for (auto l : lines)
       l->Draw();
+
+    prelim->Draw();
+    prelim2->Draw();
 
     PlottingTools::DrawSimulationXSec();
     name = _prefix + "_cov_matrix_2d";
@@ -354,6 +391,9 @@ namespace Base {
     for (auto l : lines)
       l->Draw();
 
+    prelim->Draw();
+    prelim2->Draw();
+
     PlottingTools::DrawSimulationXSec();
     name = _prefix + "_cov_frac_matrix_2d";
     cov_frac_c->SaveAs(name + ".pdf");
@@ -376,6 +416,9 @@ namespace Base {
 
     for (auto l : lines)
       l->Draw();
+
+    prelim->Draw();
+    prelim2->Draw();
 
     PlottingTools::DrawSimulationXSec();
     name = _prefix + "_corr_matrix_2d";

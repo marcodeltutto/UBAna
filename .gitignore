@@ -2,3 +2,15 @@ lib
 *.o
 *Dict.cxx
 build
+covariance*
+output*
+xsec*
+migration*
+Migration*
+*.pdf
+*.C
+*.txt
+log
+*.tex
+general*
+*.root

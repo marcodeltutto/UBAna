@@ -123,6 +123,9 @@ namespace Base {
     void SetSmearingMatrix(std::vector<std::vector<std::vector<std::vector<double>>>>);
 
     ///
+    void SetCovarianceMatrix(TH2D);
+
+    ///
     void Smear();
 
     ///
@@ -142,6 +145,9 @@ namespace Base {
 
     ///
     void SetVerbosity(bool verbosity) {_verbose = verbosity;}
+
+    ///
+    void AddExtraDiagonalUncertainty(double v) {_extra_fractional_uncertainty = v;};
 
   private:
 
@@ -188,6 +194,11 @@ namespace Base {
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
     bool _verbose = false;
+
+    double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
+
+    TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
+    bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
 
     
   };
