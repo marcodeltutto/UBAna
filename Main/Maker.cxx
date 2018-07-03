@@ -2137,7 +2137,7 @@ void Main::Maker::MakeFile()
 
     // Cut on residuala ans fraction of used hits in cluster
     if (t->slc_muoncandidate_residuals_std.at(scl_ll_max) > 2.5) continue;
-    if (std::abs(t->slc_muoncandidate_residuals_mean.at(scl_ll_max)) > 0.7) continue;
+    // if (std::abs(t->slc_muoncandidate_residuals_mean.at(scl_ll_max)) > 0.7) continue;
     if (t->slc_muoncandidate_perc_used_hits_in_cluster.at(scl_ll_max) < 0.7) continue;
     
     //if(!t->slc_passed_min_track_quality.at(scl_ll_max)) continue;
@@ -2265,7 +2265,7 @@ void Main::Maker::MakeFile()
       _selected = true;
 
       _angle_true = t->lep_costheta;
-      _angle_reco = t->slc_muoncandidate_theta.at(scl_ll_max);
+      _angle_reco = t->slc_longesttrack_theta.at(scl_ll_max); //t->slc_muoncandidate_theta.at(scl_ll_max);
 
       _event_weight_fortree = event_weight;
       

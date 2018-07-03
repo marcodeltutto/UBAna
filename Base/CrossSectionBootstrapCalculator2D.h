@@ -116,7 +116,7 @@ namespace Base {
     void Reset();
  
     ///
-    void SetSavePrefix(std::string s, std::string folder = "covariance_plots");
+    void SetSavePrefix(std::string s, std::string folder = "output_covariance_plots");
 
     ///
     void DrawProgressBar(double progress, double barWidth);

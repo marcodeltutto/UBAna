@@ -50,6 +50,7 @@
 #include "Math/SMatrix.h"
 #include "TMatrix.h"
 #include "TGraphAsymmErrors.h"
+#include "TLine.h"
 
 #include "Types.h"
 #include "PlottingTools.h"
@@ -116,8 +117,14 @@ namespace Base {
     ///
     TH2D* ExtractCrossSection(std::string, std::string, std::string);
 
+    /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
+    TH2D* GetMCCrossSection() {return _h_mc;}
+
     ///
     void SetSmearingMatrix(std::vector<std::vector<std::vector<std::vector<double>>>>);
+
+    ///
+    void SetCovarianceMatrix(TH2D);
 
     ///
     void Smear();
@@ -139,6 +146,9 @@ namespace Base {
 
     ///
     void SetVerbosity(bool verbosity) {_verbose = verbosity;}
+
+    ///
+    void AddExtraDiagonalUncertainty(double v) {_extra_fractional_uncertainty = v;};
 
   private:
 
@@ -177,13 +187,24 @@ namespace Base {
 
     TEfficiency* _eff;
 
+    TH2D* _h_mc = NULL; ///< The to-be extracted MC cross section
+    TH2D* _h_data = NULL; ///< The to-be extracted data cross section
+
     std::vector<std::vector<std::vector<std::vector<double>>>> _S;
 
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
     bool _verbose = false;
 
-    
+    double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
+
+    TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
+    bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
+
+    TH2D *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    TH2D *_cov_matrix_total = NULL; ///< Total  covariance matrix
+    TH2D *_corr_matrix_total = NULL; ///< Total correlation matrix
+
   };
 }
 

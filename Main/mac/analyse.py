@@ -15,6 +15,7 @@ analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_mcc8.7_test6.root")    
 analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_mcc8.7_test6.root")
+
 analyser.SetBNBPOT(4.852e+19);    
 analyser.SetBNBONTriggers(10820589)
 analyser.SetEXTBNBTriggers(15482261)
@@ -22,7 +23,7 @@ analyser.SetPrefix("cv");
 analyser.SetFluxCorrectionWeight(1.028)
 
 extra_unc = math.sqrt(0.02*0.02 + 0.06*0.06) # POT counting, beam window, cosmics (overlay)
-analyser.SetExtraUncertainty(extra_unc)
+# analyser.SetExtraUncertainty(extra_unc)
 
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)

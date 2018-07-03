@@ -45,10 +45,10 @@ analyser.ImportDetectorSystematics(False)
 analyser.ImportCosmicSystematics(False)
 
 analyser.DoGenieSystematics(False)
-analyser.ImportGenieSystematics(False)
+analyser.ImportGenieSystematics(True)
 
 analyser.DoFluxSystematics(False)
-analyser.ImportFluxSystematics(True)
+analyser.ImportFluxSystematics(False)
 analyser.SetExtraFluxUncertainty(0.)
 #analyser.SetTargetFluxSystematic("FluxUnisim");
 #analyser.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
