@@ -361,7 +361,7 @@ namespace Base {
     _cov_calc.CalculateCovarianceMatrix();
     _cov_calc.PlotMatrices();
 
-    // _cov_calc.GetCovarianceMatrix(_cov_matrix);
+    _cov_calc.GetCovarianceMatrix(_cov_matrix);
 
 
 

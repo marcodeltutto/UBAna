@@ -50,6 +50,7 @@
 #include "Math/SMatrix.h"
 #include "TMatrix.h"
 #include "TGraphAsymmErrors.h"
+#include "TLine.h"
 
 #include "Types.h"
 #include "PlottingTools.h"
@@ -200,7 +201,10 @@ namespace Base {
     TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
 
-    
+    TH2D *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    TH2D *_cov_matrix_total = NULL; ///< Total  covariance matrix
+    TH2D *_corr_matrix_total = NULL; ///< Total correlation matrix
+
   };
 }
 

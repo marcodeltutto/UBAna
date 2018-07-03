@@ -981,7 +981,7 @@ std::cout << ">> here10" << std::endl;
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
-    // if (_do_genie_systs) {
+    if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -999,7 +999,7 @@ std::cout << ">> here10" << std::endl;
       for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
         std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       }
-    // }
+    }
 
     if (_import_genie_systs) {
 

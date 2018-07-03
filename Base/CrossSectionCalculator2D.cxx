@@ -513,11 +513,83 @@ namespace Base {
     }
 
 
+    //
+    // Add systs uncertainties (if cov. matrix is set)
+    //
+
+    if (_extra_fractional_uncertainty != 0) {
+      std::cout << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
+    }
+
+    TH2D * h_syst_unc = (TH2D*) h_data->Clone("h_syst_unc");
+
+    if (_covariance_matrix_is_set) {
+
+      // Just to set the right bins:
+      _cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");
+      _frac_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_frac_cov_matrix_total");
+      _corr_matrix_total = (TH2D*)_covariance_matrix.Clone("_corr_matrix_total");
+
+      int i = 0, j = 0, m = 0, n = 0;
+ 
+      for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {
+
+        for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
+
+          // Unroll a and b lablel into a = i,j and b = m,n
+          if (a % h_data->GetNbinsY() == 0){
+              i = a / h_data->GetNbinsY();
+          }
+          j = a % h_data->GetNbinsY();
+
+          if (b % h_data->GetNbinsY() == 0){
+              m = b / h_data->GetNbinsY();
+          }
+          n = b % h_data->GetNbinsY();
+
+          // std::cout << "a = " << a << ", i = " << i << ", j = " << j << std::endl;
+          // std::cout << "b = " << b << ", m = " << m << ", n = " << n << std::endl;
+
+
+          // The statictial uncertainty squared
+          double unc_stat_2 = h_data->GetBinError(i+1, j+1) * h_data->GetBinError(m+1, n+1);
+
+          // The systematic uncertainty squared
+          double unc_syst_2 = _covariance_matrix.GetBinContent(a+1, b+1);
+
+          // The extra systematic uncertainty squared (POT normalisation, ...)
+          double extra_unc_2 = _extra_fractional_uncertainty * h_data->GetBinContent(i+1, j+1)   *    _extra_fractional_uncertainty * h_data->GetBinContent(m+1, n+1);
+
+          // The total uncertainty (quadrature sum)
+          double unc_tot = std::sqrt(unc_stat_2 + unc_syst_2 + extra_unc_2);
+
+          if (a == b) {
+            std::cout << "Bin " << a << " (aka i = " << i << ", j = " << j << ")" << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
+            h_syst_unc->SetBinError(i+1, j+1, unc_tot); 
+          }
+
+          // Also construct the total syst covariance matrix
+          double total_syst_unc_2 = unc_syst_2 + extra_unc_2;
+
+          _cov_matrix_total->SetBinContent(a+1, b+1, total_syst_unc_2);
+          _frac_cov_matrix_total->SetBinContent(a+1, b+1, (total_syst_unc_2) / (h_data->GetBinContent(i+1, j+1) * h_data->GetBinContent(m+1, n+1)));
+
+        } // j
+      } // i
+
+      // And also the correlation matrix
+      for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {
+        for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
+          _corr_matrix_total->SetBinContent(a+1, b+1, _cov_matrix_total->GetBinContent(a+1, b+1) / (std::sqrt(_cov_matrix_total->GetBinContent(a+1, a+1)) * std::sqrt(_cov_matrix_total->GetBinContent(b+1, b+1))));
+        }
+      }
+    }
+
+
 
     //
     // General for plotting
     //
-
 
     TLatex* prelim = new TLatex(0.982808,0.9494737, "MicroBooNE Preliminary"); //0.9, 0.93
     prelim->SetTextColor(kGray+1);
@@ -749,12 +821,23 @@ namespace Base {
     c_xsec_data2->SaveAs(name + ".C","C");
 
 
+
+
+
+
+
+
+
+
+
+
     //
     // Project in cos(theta) bins
     //
 
     std::vector<TH1D> xsec_data_histos;
     std::vector<TH1D> xsec_mc_histos;
+    std::vector<TH1D> xsec_data_unc_histos;
     std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
                                                   "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
                                                   "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
@@ -776,6 +859,7 @@ namespace Base {
     for (int i = 0; i < h_data->GetNbinsX(); i++) {
       xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+1));
       xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, i+1));
+      xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1, i+1));
     }
 
 
@@ -806,6 +890,12 @@ namespace Base {
         xsec_mc_histos.at(i).SetMaximum(0.4);
       } 
 
+      // The outer uncertainty bar
+      xsec_data_unc_histos.at(i).SetMarkerStyle(20);
+      xsec_data_unc_histos.at(i).SetMarkerSize(0.1);
+      xsec_data_unc_histos.at(i).Draw("E1 X0 same");
+
+      // The proper data points
       xsec_data_histos.at(i).SetMarkerStyle(20);
       xsec_data_histos.at(i).SetMarkerSize(0.5);
       xsec_data_histos.at(i).Draw("E1 X0 same");
@@ -823,53 +913,208 @@ namespace Base {
     }
     // PlottingTools::DrawPreliminaryXSec();
 
-    // c_test->cd(1);
-    // // DrawMC(c_test, 1, xsec_mc_histos.at(0));
-    // // xsec_mc_histos.at(0).Draw("histo");
-    // xsec_mc_histos.at(0).SetLineColor(kGreen+2);
-    // xsec_mc_histos.at(0).SetFillColor(29);
-    // xsec_mc_histos.at(0).Draw("E2");
-    // TH1D* h_main = (TH1D*) xsec_mc_histos.at(0).Clone("h_main");
-    // h_main->SetLineColor(kGreen+2);
-    // h_main->SetFillColor(0); // fully transparent
-    // h_main->Draw("histo same");
-    // xsec_data_histos.at(0).Draw("E1 X0 same");
-
-    // c_test->cd(2);
-    // xsec_mc_histos.at(1).Draw("histo");
-    // xsec_data_histos.at(1).Draw("E1 X0 same");
-    
-    // c_test->cd(3);
-    // xsec_mc_histos.at(2).Draw("histo");
-    // xsec_data_histos.at(2).Draw("E1 X0 same");
-
-    // c_test->cd(4);
-    // xsec_mc_histos.at(3).Draw("histo");
-    // xsec_data_histos.at(3).Draw("E1 X0 same");
-
-    // c_test->cd(5);
-    // xsec_mc_histos.at(4).Draw("histo");
-    // xsec_data_histos.at(4).Draw("E1 X0 same");
-
-    // c_test->cd(6);
-    // xsec_mc_histos.at(5).Draw("histo");
-    // xsec_data_histos.at(5).Draw("E1 X0 same");
-    
-
-
-    // TCanvas * c_test = new TCanvas();
-    // // TH1D * test = h_data->ProjectionY("fuck", 1, 2);
-    // xsec_data_histos.at(0).Draw("histo");
-
-    name = _folder +_name + "_test";
+    name = _folder +_name + "_xsec_anglesplit";
     c_test->SaveAs(name + ".pdf");
     c_test->SaveAs(name + ".C","C");
 
 
 
+
+
+
+
+    //
+    // Now plot the covariance matrices
+    //
+
+    if (_covariance_matrix_is_set) {
+
+      gStyle->SetPalette(kDeepSea);
+      gStyle->SetPaintTextFormat("4.3f");
+
+      const Int_t NCont = 100;
+      const Int_t NRGBs = 5;
+      Double_t mainColour[NRGBs]   = { 1.00, 1.00, 1.00, 1.00, 1.00 };
+      Double_t otherColour[NRGBs]   = { 0.99,0.80, 0.60, 0.40, 0.20 };
+      //Double_t otherOtherColour[NRGBs]   = { 0.9,0.80, 0.80, 0.80, 0.80 };
+      Double_t stops[NRGBs] = { 0.00, 0.05, 0.1, 0.4, 1.00 };
+
+      TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
+      gStyle->SetNumberContours(NCont);
+
+
+      TH2F *h = new TH2F("h", "", _covariance_matrix.GetNbinsX(), 0, _covariance_matrix.GetNbinsX(),
+        _covariance_matrix.GetNbinsY(), 0, _covariance_matrix.GetNbinsY());
+
+      // h->SetMaximum(1);
+
+      int i_label_number = 0;
+      int j_label_number = 0;
+      for (int i = 0; i <  _covariance_matrix.GetNbinsX()+1; i++) {
+        std::ostringstream oss;
+        oss << i_label_number << "," << j_label_number;
+        if (j_label_number % h_data->GetNbinsY() == 0) {
+          i_label_number ++;
+          j_label_number = 0;
+        }
+        j_label_number++;
+        std::string label = oss.str();
+        h->GetXaxis()->SetBinLabel(i,label.c_str());
+        h->GetYaxis()->SetBinLabel(i,label.c_str());
+      }
+
+      h->GetXaxis()->SetLabelOffset(0.004);
+      h->GetXaxis()->SetLabelSize(0.04);
+      h->GetYaxis()->SetLabelOffset(0.004);
+      h->GetYaxis()->SetLabelSize(0.04);
+      h->GetXaxis()->SetTitle("Bin i,j");
+      h->GetYaxis()->SetTitle("Bin m,n");
+      h->GetXaxis()->CenterTitle();
+      h->GetYaxis()->CenterTitle();
+
+      //
+      // Create lines to divide primary bins
+      //
+
+      std::vector<TLine*> lines;
+
+      for (int i = 1; i < h_data->GetNbinsX(); i++) {
+        TLine *line = new TLine(h_data->GetNbinsY()  * i, 0, h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX());
+        line->SetLineColor(kGreen+2);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+      }
+
+      for (int i = 1; i < h_data->GetNbinsX(); i++) {
+        TLine *line = new TLine(0, h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX(), h_data->GetNbinsY() * i);
+        line->SetLineColor(kGreen+2);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+      }
+
+      //
+      // Create TLatex lables
+      //
+
+      TLatex* tl1 = new TLatex(0.10,0.97, "i, m = cos(#theta_{#mu}) bins");
+      tl1->SetTextColor(kBlack);
+      tl1->SetTextFont(42);
+      tl1->SetNDC();
+      tl1->SetTextSize(1/30.);
+      tl1->SetTextAlign(12);
+
+      TLatex* tl2 = new TLatex(0.10,0.93, "j, n = p_{#mu} bins");
+      tl2->SetTextColor(kBlack);
+      tl2->SetTextFont(42);
+      tl2->SetNDC();
+      tl2->SetTextSize(1/30.);
+      tl2->SetTextAlign(12);
+
+
+
+    // 
+    // Draw the proper matrices
+    //
+
+      TCanvas * cov_c = new TCanvas();
+      cov_c->SetRightMargin(0.13);
+      cov_c->SetFixedAspectRatio();
+      _cov_matrix_total->SetMarkerColor(kBlack);
+      _cov_matrix_total->SetMarkerSize(1.8);
+      _cov_matrix_total->GetXaxis()->CenterTitle();
+      _cov_matrix_total->GetYaxis()->CenterTitle();
+      _cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _cov_matrix_total->GetYaxis()->SetTickLength(0);
+      h->Draw();
+      // cov_matrix_histo->Draw("colz text same");
+      _cov_matrix_total->Draw("colz same");
+
+      for (auto l : lines)
+        l->Draw();
+
+      tl1->Draw();
+      tl2->Draw();
+
+      PlottingTools::DrawSimulationXSec();
+      name = _folder +_name + "_tot_covariance";
+      cov_c->SaveAs(name + ".pdf");
+      cov_c->SaveAs(name + ".C","C");
+
+
+      TCanvas * cov_frac_c = new TCanvas();
+      cov_frac_c->SetRightMargin(0.13);
+      cov_frac_c->SetFixedAspectRatio();
+      _frac_cov_matrix_total->SetMarkerColor(kBlack);
+      _frac_cov_matrix_total->SetMarkerSize(1.8);
+      _frac_cov_matrix_total->GetXaxis()->CenterTitle();
+      _frac_cov_matrix_total->GetYaxis()->CenterTitle();
+      _frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _frac_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
+      h->Draw();
+      // frac_cov_matrix_histo->Draw("colz text same");
+      _frac_cov_matrix_total->Draw("colz same");
+
+      for (auto l : lines)
+        l->Draw();
+
+      tl1->Draw();
+      tl2->Draw();
+
+      PlottingTools::DrawSimulationXSec();
+      name = _folder +_name + "_tot_fractional_covariance";
+      cov_frac_c->SaveAs(name + ".pdf");
+      cov_frac_c->SaveAs(name + ".C","C");
+
+      TCanvas * corr_c = new TCanvas();
+      corr_c->SetRightMargin(0.13);
+      corr_c->SetFixedAspectRatio();
+      _corr_matrix_total->SetMarkerColor(kBlack);
+      _corr_matrix_total->SetMarkerSize(1.8);
+      _corr_matrix_total->GetXaxis()->CenterTitle();
+      _corr_matrix_total->GetYaxis()->CenterTitle();
+      _corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _corr_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _corr_matrix_total->GetXaxis()->SetTickLength(0);
+      _corr_matrix_total->GetYaxis()->SetTickLength(0);
+      h->Draw();
+      // corr_matrix_histo->Draw("colz text same");
+      _corr_matrix_total->Draw("colz same");
+
+      for (auto l : lines)
+        l->Draw();
+
+      tl1->Draw();
+      tl2->Draw();
+
+      PlottingTools::DrawSimulationXSec();
+      name = _folder +_name + "_tot_correlation";
+      corr_c->SaveAs(name + ".pdf");
+      corr_c->SaveAs(name + ".C","C");
+
+      gStyle->SetPalette(kRainBow);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     _h_data = h_data;
     _h_mc = h_mc;
-
 
     return h_data;
 

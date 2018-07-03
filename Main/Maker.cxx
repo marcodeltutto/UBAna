@@ -2137,7 +2137,7 @@ void Main::Maker::MakeFile()
 
     // Cut on residuala ans fraction of used hits in cluster
     if (t->slc_muoncandidate_residuals_std.at(scl_ll_max) > 2.5) continue;
-    if (std::abs(t->slc_muoncandidate_residuals_mean.at(scl_ll_max)) > 0.7) continue;
+    // if (std::abs(t->slc_muoncandidate_residuals_mean.at(scl_ll_max)) > 0.7) continue;
     if (t->slc_muoncandidate_perc_used_hits_in_cluster.at(scl_ll_max) < 0.7) continue;
     
     //if(!t->slc_passed_min_track_quality.at(scl_ll_max)) continue;

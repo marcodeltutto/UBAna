@@ -24,7 +24,7 @@ analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_extbnb_ubcodev06_26_01_18__v3.root") # After Neutrino
 analyser.SetBNBPOT(4.195e+19)    
 analyser.SetBNBONTriggers(9296107)
-analyser.SetEXTBNBTriggers(60523225)
+analyser.SetEXTBNBTriggers(60306830)
 
 
 
