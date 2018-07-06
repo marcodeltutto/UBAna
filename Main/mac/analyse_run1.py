@@ -21,6 +21,8 @@ analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kaondown.root")
 
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v6.root") # tune 1 - genie models syst only (after neutrino, but same selection as before)
+
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root")    
 analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root")
@@ -40,15 +42,18 @@ analyser.SetBreakdownPlots(True)
 extra_unc = math.sqrt(0.02*0.02 + 0.04*0.04) # POT counting, beam window
 # analyser.SetExtraUncertainty(extra_unc)
 
-analyser.ImportDetectorSystematics(False)
+analyser.ImportDetectorSystematics(True)
 
 analyser.ImportCosmicSystematics(False)
 
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(True)
 
+analyser.DoGenieModelsSystematics(True)
+analyser.ImportGenieModelsSystematics(False)
+
 analyser.DoFluxSystematics(False)
-analyser.ImportFluxSystematics(False)
+analyser.ImportFluxSystematics(True)
 analyser.SetExtraFluxUncertainty(0.)
 #analyser.SetTargetFluxSystematic("FluxUnisim");
 #analyser.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");

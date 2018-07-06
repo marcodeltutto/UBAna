@@ -605,12 +605,26 @@ namespace Base {
     _h_mc->SetTitle(_label.c_str());
     _h_data->Sumw2();
 
+
     std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
+
+
+    // Print the statistical uncertainties on the screen
+    std::cout << "Statistical uncertainty for beam-on: " << _h_data->GetBinError(1) << std::endl;
+    if (_h_data->GetNbinsX() == 1) {
+      for (auto name : bkg_names) {
+        std::cout << "Statistical uncertainty for " << name << ": "<< _hmap_bnbcosmic[name]->GetBinError(1) << std::endl;
+      }
+    }
+
+
 
     for (auto name : bkg_names) 
     {
       _h_data->Add(_hmap_bnbcosmic[name], -1.);
     }
+
+    
 
     //
     // Create efficiency histogram
@@ -842,15 +856,25 @@ namespace Base {
       gStyle->SetPalette(kDeepSea);
       gStyle->SetPaintTextFormat("4.3f");
 
-      const Int_t NCont = 100;
-      const Int_t NRGBs = 5;
-      Double_t mainColour[NRGBs]   = { 1.00, 1.00, 1.00, 1.00, 1.00 };
-      Double_t otherColour[NRGBs]   = { 0.99,0.80, 0.60, 0.40, 0.20 };
-      //Double_t otherOtherColour[NRGBs]   = { 0.9,0.80, 0.80, 0.80, 0.80 };
-      Double_t stops[NRGBs] = { 0.00, 0.05, 0.1, 0.4, 1.00 };
+      // const Int_t NCont = 100;
+      // const Int_t NRGBs = 5;
+      // Double_t mainColour[NRGBs]   = { 1.00, 1.00, 1.00, 1.00, 1.00 };
+      // Double_t otherColour[NRGBs]   = { 0.99,0.80, 0.60, 0.40, 0.20 };
+      // //Double_t otherOtherColour[NRGBs]   = { 0.9,0.80, 0.80, 0.80, 0.80 };
+      // Double_t stops[NRGBs] = { 0.00, 0.05, 0.1, 0.4, 1.00 };
 
-      TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
-      gStyle->SetNumberContours(NCont);
+      // TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
+      // gStyle->SetNumberContours(NCont);
+
+
+      const Int_t Number = 9;
+      Double_t Red[Number]    = { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
+      Double_t Green[Number]  = { 1.00, 0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20 };
+      Double_t Blue[Number]   = { 1.00, 0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20 };
+      Double_t Stops[Number] =  { 0.00, 0.15, 0.30, 0.40, 0.50, 0.60, 0.70, 0.85, 1.00 };
+      Int_t nb=100;
+      TColor::CreateGradientColorTable(Number,Stops,Red,Green,Blue,nb);
+   
 
       TH2F *h = new TH2F("h", "", _cov_matrix_total->GetNbinsX(), 0, _cov_matrix_total->GetNbinsX(),
                                   _cov_matrix_total->GetNbinsY(), 0, _cov_matrix_total->GetNbinsY());
@@ -886,8 +910,8 @@ namespace Base {
       _cov_matrix_total->GetXaxis()->SetTickLength(0);
       _cov_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // _cov_matrix_total->Draw("colz text same");
-      _cov_matrix_total->Draw("colz same");
+      _cov_matrix_total->Draw("colz text same");
+      // _cov_matrix_total->Draw("colz same");
       PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_covariance";
       cov_c->SaveAs(name + ".pdf");
@@ -905,8 +929,8 @@ namespace Base {
       _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
       _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // _frac_cov_matrix_total->Draw("colz text same");
-      _frac_cov_matrix_total->Draw("colz same");
+      _frac_cov_matrix_total->Draw("colz text same");
+      // _frac_cov_matrix_total->Draw("colz same");
       PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_fractional_covariance";
       cov_frac_c->SaveAs(name + ".pdf");
@@ -924,8 +948,8 @@ namespace Base {
       _corr_matrix_total->GetXaxis()->SetTickLength(0);
       _corr_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // _corr_matrix_total->Draw("colz text same");
-      _corr_matrix_total->Draw("colz same");
+      _corr_matrix_total->Draw("colz text same");
+      // _corr_matrix_total->Draw("colz same");
       PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_correlation";
       corr_c->SaveAs(name + ".pdf");
