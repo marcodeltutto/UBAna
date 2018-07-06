@@ -930,7 +930,7 @@ namespace Base {
     if (_covariance_matrix_is_set) {
 
       gStyle->SetPalette(kDeepSea);
-      gStyle->SetPaintTextFormat("4.3f");
+      gStyle->SetPaintTextFormat("4.2f");
 
       const Int_t NCont = 100;
       const Int_t NRGBs = 5;
@@ -1020,7 +1020,7 @@ namespace Base {
       cov_c->SetRightMargin(0.13);
       cov_c->SetFixedAspectRatio();
       _cov_matrix_total->SetMarkerColor(kBlack);
-      _cov_matrix_total->SetMarkerSize(1.8);
+      _cov_matrix_total->SetMarkerSize(1.1);
       _cov_matrix_total->GetXaxis()->CenterTitle();
       _cov_matrix_total->GetYaxis()->CenterTitle();
       _cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
@@ -1028,8 +1028,8 @@ namespace Base {
       _cov_matrix_total->GetXaxis()->SetTickLength(0);
       _cov_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // cov_matrix_histo->Draw("colz text same");
-      _cov_matrix_total->Draw("colz same");
+      _cov_matrix_total->Draw("colz text same");
+      // _cov_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();
@@ -1047,7 +1047,7 @@ namespace Base {
       cov_frac_c->SetRightMargin(0.13);
       cov_frac_c->SetFixedAspectRatio();
       _frac_cov_matrix_total->SetMarkerColor(kBlack);
-      _frac_cov_matrix_total->SetMarkerSize(1.8);
+      _frac_cov_matrix_total->SetMarkerSize(1.1);
       _frac_cov_matrix_total->GetXaxis()->CenterTitle();
       _frac_cov_matrix_total->GetYaxis()->CenterTitle();
       _frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
@@ -1055,8 +1055,8 @@ namespace Base {
       _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
       _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // frac_cov_matrix_histo->Draw("colz text same");
-      _frac_cov_matrix_total->Draw("colz same");
+      _frac_cov_matrix_total->Draw("colz text same");
+      // _frac_cov_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();
@@ -1073,7 +1073,7 @@ namespace Base {
       corr_c->SetRightMargin(0.13);
       corr_c->SetFixedAspectRatio();
       _corr_matrix_total->SetMarkerColor(kBlack);
-      _corr_matrix_total->SetMarkerSize(1.8);
+      _corr_matrix_total->SetMarkerSize(1.1);
       _corr_matrix_total->GetXaxis()->CenterTitle();
       _corr_matrix_total->GetYaxis()->CenterTitle();
       _corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
@@ -1081,8 +1081,8 @@ namespace Base {
       _corr_matrix_total->GetXaxis()->SetTickLength(0);
       _corr_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // corr_matrix_histo->Draw("colz text same");
-      _corr_matrix_total->Draw("colz same");
+      _corr_matrix_total->Draw("colz text same");
+      // _corr_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();

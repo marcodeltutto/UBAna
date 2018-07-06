@@ -26,7 +26,21 @@ analyser.SetBNBPOT(4.195e+19)
 analyser.SetBNBONTriggers(9296107)
 analyser.SetEXTBNBTriggers(60306830)
 
+# v4
+analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v4.root") # After Neutrino
+analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_bnbon_ubcodev06_26_01_18__v4.root") # After Neutrino    
+analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_extbnb_ubcodev06_26_01_18__v4.root") # After Neutrino
+analyser.SetBNBPOT(4.178e+19)    
+analyser.SetBNBONTriggers(9258619)
+analyser.SetEXTBNBTriggers(58071044)
 
+# v5
+analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v5.root") # After Neutrino
+analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_bnbon_ubcodev06_26_01_18__v5.root") # After Neutrino    
+analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_extbnb_ubcodev06_26_01_18__v5.root") # After Neutrino
+analyser.SetBNBPOT(4.246e+19)    
+analyser.SetBNBONTriggers(9413078)
+analyser.SetEXTBNBTriggers(58284673)
 
 
 

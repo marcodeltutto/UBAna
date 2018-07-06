@@ -21,10 +21,11 @@ namespace Base {
     _tree = t;
   }
 
-  void MigrationMatrix4D::UseWeights(std::string weight_name)
+  void MigrationMatrix4D::UseWeights(std::string weight_name, std::string weight_type)
   {
     _use_weights = true;
     _weight_name = weight_name;
+    _weight_type = weight_type;
   }
 
   void MigrationMatrix4D::SetBins(double *var1_b, int n_var1_bins, double *var2_b, int n_var2_bins)
@@ -61,6 +62,9 @@ namespace Base {
     std::vector<std::string> * wgtsnames_genie_multisim = 0;
     std::vector<double> * wgts_genie_multisim = 0;
 
+    std::vector<std::string> * wgtsnames_genie_models = 0;
+    std::vector<double> * wgts_genie_models = 0;
+
     std::vector<std::string> * wgtsnames_flux_multisim = 0;
     std::vector<double> * wgts_flux_multisim = 0;
 
@@ -74,6 +78,9 @@ namespace Base {
 
     TBranch        *b_wgtsnames_genie_multisim;
     TBranch        *b_wgts_genie_multisim;
+
+    TBranch        *b_wgtsnames_genie_models;
+    TBranch        *b_wgts_genie_models;
 
     TBranch        *b_wgtsnames_flux_multisim;
     TBranch        *b_wgts_flux_multisim;
@@ -90,6 +97,9 @@ namespace Base {
 
     _tree->SetBranchAddress("wgtsnames_genie_multisim", &wgtsnames_genie_multisim, &b_wgtsnames_genie_multisim);
     _tree->SetBranchAddress("wgts_genie_multisim", &wgts_genie_multisim, &b_wgts_genie_multisim);
+
+    _tree->SetBranchAddress("wgtsnames_genie_models", &wgtsnames_genie_models, &b_wgtsnames_genie_models);
+    _tree->SetBranchAddress("wgts_genie_models", &wgts_genie_models, &b_wgts_genie_models);
 
     _tree->SetBranchAddress("wgtsnames_flux_multisim", &wgtsnames_flux_multisim, &b_wgtsnames_flux_multisim);
     _tree->SetBranchAddress("wgts_flux_multisim", &wgts_flux_multisim, &b_wgts_flux_multisim);
@@ -152,21 +162,45 @@ namespace Base {
 
             bool found = false;
 
-            for (size_t i = 0; i < (*wgtsnames_genie_multisim).size(); i++) {
-              if ((*wgtsnames_genie_multisim).at(i) == _weight_name){
-                evt_weight *= (*wgts_genie_multisim).at(i);
-                // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
-                found = true;
-                break;
+            if (_weight_type == "genie_multisim") {
+
+              for (size_t i = 0; i < (*wgtsnames_genie_multisim).size(); i++) {
+                if ((*wgtsnames_genie_multisim).at(i) == _weight_name){
+                  evt_weight *= (*wgts_genie_multisim).at(i);
+                  // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                  found = true;
+                  break;
+                }
               }
             }
 
-            for (size_t i = 0; i < (*wgtsnames_flux_multisim).size() && !found; i++) {
-              if ((*wgtsnames_flux_multisim).at(i) == _weight_name){
-                evt_weight *= (*wgts_flux_multisim).at(i);
-                // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
-                break;
+            if (_weight_type == "genie_models") {
+
+              for (size_t i = 0; i < (*wgtsnames_genie_models).size(); i++) {
+                if ((*wgtsnames_genie_models).at(i) == _weight_name){
+                  evt_weight *= (*wgts_genie_models).at(i);
+                  // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                  found = true;
+                  break;
+                }
               }
+            }
+
+            if (_weight_type == "flux_multisim") {
+
+              for (size_t i = 0; i < (*wgtsnames_flux_multisim).size(); i++) {
+                if ((*wgtsnames_flux_multisim).at(i) == _weight_name){
+                  evt_weight *= (*wgts_flux_multisim).at(i);
+                  // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
+                  found = true;
+                  break;
+                }
+              }
+            }
+
+            if (!found) {
+              std::cout << _prefix << "Weight with name: " << _weight_name << " NOT found!" << std::endl;
+              throw std::exception();
             }
 
           }

@@ -103,9 +103,6 @@ namespace Main {
     void SetIsData(bool);
 
     ///
-    void SetTargetFluxSystematic(std::string);
-
-    ///
     void SetMaUpMECOff(bool option) {_maup_mecoff = option;};
 
     ///
@@ -125,6 +122,18 @@ namespace Main {
 
     ///
     void FillBootstrapGenie(bool option) {_fill_bootstrap_genie = option;}
+
+    ///
+    void FillBootstrapGenieModels(bool option) {_fill_bootstrap_genie_models = option;}
+
+    ///
+    void OverrideWithPoissonWeights(bool option) {_override_with_poisson_weights = option;}
+
+    ///
+    void SetTargetFluxSystematic(std::string s) { _target_flux_syst = s; }
+
+    ///
+    void SetTargetGenieModelsSystematic(std::string s) { _genie_models_target_syst = s; }
 
 
   private:
@@ -170,8 +179,10 @@ namespace Main {
     //const bool _fill_bootstrap = true;
     bool _fill_bootstrap_flux = false;
     bool _fill_bootstrap_genie = false;
+    bool _fill_bootstrap_genie_models = false;
 
     std::string _target_flux_syst = "";
+    std::string _genie_models_target_syst = "";
 
     const bool _check_duplicate_events = false;
 
@@ -214,8 +225,15 @@ namespace Main {
     double _event_weight_fortree;
     std::vector<std::string> _wgtsnames_genie_multisim;
     std::vector<double> _wgts_genie_multisim;
+    std::vector<std::string> _wgtsnames_genie_models;
+    std::vector<double> _wgts_genie_models;
     std::vector<std::string> _wgtsnames_flux_multisim;
     std::vector<double> _wgts_flux_multisim;
+
+
+    bool _override_with_poisson_weights = false; ///< If true, changes the GENIE multisim weights to be uncorrelated Poisson weights with mean 1
+
+    TRandom _random_engine; ///< The engine to generate random numbers
     
   };
 }

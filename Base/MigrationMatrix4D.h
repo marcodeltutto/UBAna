@@ -97,7 +97,7 @@ namespace Base {
     void PlotMatrix();
 
     /// If called uses the weights with name specified
-    void UseWeights(std::string weight_name);
+    void UseWeights(std::string weight_name = "universe0", std::string weight_type = "genie_multisim");
 
   private:
 
@@ -122,6 +122,7 @@ namespace Base {
 
     bool _use_weights = false; ///< If true uses additional wights (usually for multisim)
     std::string _weight_name = "not_set";
+    std::string _weight_type = "not_set";
     
   };
 }

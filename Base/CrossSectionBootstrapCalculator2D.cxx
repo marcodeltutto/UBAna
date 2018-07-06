@@ -178,7 +178,7 @@ namespace Base {
   // Main method
   //
 
-	void CrossSectionBootstrapCalculator2D::Run() 
+	void CrossSectionBootstrapCalculator2D::Run(std::string weight_type) 
 	{
 
 		gROOT->SetBatch(kTRUE);
@@ -294,7 +294,7 @@ namespace Base {
 
         MigrationMatrix4D migrationmatrix4d;
         migrationmatrix4d.SetTTree(_t_true_reco);
-        migrationmatrix4d.UseWeights(universe_names.at(s));
+        migrationmatrix4d.UseWeights(universe_names.at(s), weight_type);
         int n_bins_mumom_temp = 4;
         double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
         int n_bins_mucostheta_temp = 6;

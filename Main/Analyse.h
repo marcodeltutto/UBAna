@@ -113,11 +113,17 @@ namespace Main {
     /// Imports all the detector systs from files (previously calculated via external macro, and adds them togheter)
     void ImportDetectorSystematics(bool option, std::string file = "file.root") {_import_detector_systs = option; _detector_syst_file = file;}
 
-    /// Calculates the genie covariance matrix and saves it to a file for a particular flux syst
+    /// Calculates the genie multisim covariance matrix and saves it to a file for a particular flux syst
     void DoGenieSystematics(bool option) {_do_genie_systs = option;}
 
-    /// Imports all the genie systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
+    /// Calculates the genie models covariance matrix and saves it to a file for a particular flux syst
+    void DoGenieModelsSystematics(bool option) {_do_genie_models_systs = option;}
+
+    /// Imports all the genie multisim systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
     void ImportGenieSystematics(bool option, std::string file = "file.root") {_import_genie_systs = option; _genie_syst_file = file;}
+
+    /// Imports all the genie models systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
+    void ImportGenieModelsSystematics(bool option, std::string file = "file.root") {_import_genie_models_systs = option; _genie_models_syst_file = file;}
 
     /// Imports  the cosmic systs from files (previously calculated via external macro, and adds them togheter)
     void ImportCosmicSystematics(bool option, std::string file = "file.root") {_import_cosmic_systs = option; _cosmic_syst_file = file;}
@@ -186,6 +192,10 @@ namespace Main {
     bool _do_genie_systs = false;
     bool _import_genie_systs = false;
     std::string _genie_syst_file;
+
+    bool _do_genie_models_systs = false;
+    bool _import_genie_models_systs = false;
+    std::string _genie_models_syst_file;
 
     bool _fake_data_mode = false;
     bool _overlay_mode = false;
