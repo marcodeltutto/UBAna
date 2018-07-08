@@ -21,7 +21,8 @@ analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelecti
 
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kaondown.root")
 
-# analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v6.root") # tune 1 - genie models syst only (after neutrino, but same selection as before)
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v6.root") # tune 1 - genie models syst only (stolen from Andy's area) (after neutrino, but same selection as before)
+analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v7.root") # tune 1 - genie models syst only (from Andy's uboonedata branch) (after neutrino, but same selection as before)
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root")    
@@ -42,18 +43,18 @@ analyser.SetBreakdownPlots(True)
 extra_unc = math.sqrt(0.02*0.02 + 0.04*0.04) # POT counting, beam window
 # analyser.SetExtraUncertainty(extra_unc)
 
-analyser.ImportDetectorSystematics(True)
+analyser.ImportDetectorSystematics(False)
 
 analyser.ImportCosmicSystematics(False)
 
 analyser.DoGenieSystematics(False)
-analyser.ImportGenieSystematics(True)
+analyser.ImportGenieSystematics(False)
 
 analyser.DoGenieModelsSystematics(True)
 analyser.ImportGenieModelsSystematics(False)
 
 analyser.DoFluxSystematics(False)
-analyser.ImportFluxSystematics(True)
+analyser.ImportFluxSystematics(False)
 analyser.SetExtraFluxUncertainty(0.)
 #analyser.SetTargetFluxSystematic("FluxUnisim");
 #analyser.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");

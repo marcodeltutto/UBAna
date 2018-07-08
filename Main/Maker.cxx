@@ -1746,6 +1746,8 @@ void Main::Maker::MakeFile()
 
         for (size_t i_wgt = 0; i_wgt < fname_genie_models.size(); i_wgt++) {
 
+          // std::cout << "weight number " << i_wgt << " = " << t->evtwgt_genie_models_multisim_weight.at(i_func).at(i_wgt) << std::endl;
+
           wgts_genie_models.at(i_wgt) *= t->evtwgt_genie_models_multisim_weight.at(i_func).at(i_wgt);
         }
       }

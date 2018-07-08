@@ -36,6 +36,8 @@ maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Ou
 # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v5.root"); # After Neutrino
 # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_18__v6.root"); # After Neutrino
 # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v6.root"); # After Neutrino
+maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_18__v7.root"); # After Neutrino
+maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v7.root"); # After Neutrino
 
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)
@@ -54,12 +56,12 @@ maker.SetMaUpMECOff(False)
 
 maker.FillBootstrapGenie(False)
 
-maker.FillBootstrapGenieModels(False)
+maker.FillBootstrapGenieModels(True)
 # maker.SetTargetGenieModelsSystematic("model_q0q3_ccmec_HistogramWeight")
-# maker.SetTargetGenieModelsSystematic("model_q0q3_ccqe_HistogramWeight")
-maker.SetTargetGenieModelsSystematic("total")
+maker.SetTargetGenieModelsSystematic("model_q0q3_ccqe_HistogramWeight")
+# maker.SetTargetGenieModelsSystematic("total")
 
-maker.FillBootstrapFlux(True)
+maker.FillBootstrapFlux(False)
 #maker.SetTargetFluxSystematic("FluxUnisim");
 #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
 #maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
