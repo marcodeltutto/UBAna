@@ -975,23 +975,23 @@ void Main::Maker::MakeFile()
   
 
   // Number of events histograms - Cross Section Muon Momentum - GENIE Multisim (same as before but with proper Botstrap, just a test)
-  std::map<std::string, BootstrapTH1D> map_bs_trkmom_genie_multisim;
-  map_bs_trkmom_genie_multisim["total"] = BootstrapTH1D("bs_trkmom_total_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom); // 20, 0, 2.5
-  map_bs_trkmom_genie_multisim["signal"] = BootstrapTH1D("bs_trkmom_signal_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  map_bs_trkmom_genie_multisim["cosmic"] = BootstrapTH1D("bs_trkmom_cosmic_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["cosmic_stopmu"] = BootstrapTH1D("bs_trkmom_cosmic_stopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["cosmic_nostopmu"] = BootstrapTH1D("bs_trkmom_cosmic_nostopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  map_bs_trkmom_genie_multisim["outfv"] = BootstrapTH1D("bs_trkmom_outfv_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["outfv_stopmu"] = BootstrapTH1D("bs_trkmom_outfv_stopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["outfv_nostopmu"] = BootstrapTH1D("bs_trkmom_outfv_nostopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  map_bs_trkmom_genie_multisim["nc"] = BootstrapTH1D("bs_trkmom_nc_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["nc_proton"] = BootstrapTH1D("bs_trkmom_nc_proton_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["nc_pion"] = BootstrapTH1D("bs_trkmom_nc_pion_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["nc_other"] = BootstrapTH1D("bs_trkmom_nc_other_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  map_bs_trkmom_genie_multisim["anumu"] = BootstrapTH1D("bs_trkmom_anumu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  map_bs_trkmom_genie_multisim["nue"] = BootstrapTH1D("bs_trkmom_nue_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["signal_stopmu"] = BootstrapTH1D("bs_trkmom_signal_stopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
-  // map_bs_trkmom_genie_multisim["signal_nostopmu"] = BootstrapTH1D("bs_trkmom_signal_nostopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // std::map<std::string, BootstrapTH1D> map_bs_trkmom_genie_multisim;
+  // map_bs_trkmom_genie_multisim["total"] = BootstrapTH1D("bs_trkmom_total_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom); // 20, 0, 2.5
+  // map_bs_trkmom_genie_multisim["signal"] = BootstrapTH1D("bs_trkmom_signal_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // map_bs_trkmom_genie_multisim["cosmic"] = BootstrapTH1D("bs_trkmom_cosmic_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["cosmic_stopmu"] = BootstrapTH1D("bs_trkmom_cosmic_stopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["cosmic_nostopmu"] = BootstrapTH1D("bs_trkmom_cosmic_nostopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // map_bs_trkmom_genie_multisim["outfv"] = BootstrapTH1D("bs_trkmom_outfv_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["outfv_stopmu"] = BootstrapTH1D("bs_trkmom_outfv_stopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["outfv_nostopmu"] = BootstrapTH1D("bs_trkmom_outfv_nostopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // map_bs_trkmom_genie_multisim["nc"] = BootstrapTH1D("bs_trkmom_nc_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["nc_proton"] = BootstrapTH1D("bs_trkmom_nc_proton_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["nc_pion"] = BootstrapTH1D("bs_trkmom_nc_pion_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["nc_other"] = BootstrapTH1D("bs_trkmom_nc_other_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // map_bs_trkmom_genie_multisim["anumu"] = BootstrapTH1D("bs_trkmom_anumu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // map_bs_trkmom_genie_multisim["nue"] = BootstrapTH1D("bs_trkmom_nue_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["signal_stopmu"] = BootstrapTH1D("bs_trkmom_signal_stopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
+  // // map_bs_trkmom_genie_multisim["signal_nostopmu"] = BootstrapTH1D("bs_trkmom_signal_nostopmu_genie_multisim", "; Track length;", n_bins_mumom, bins_mumom);
 
   // Number of events histograms - Cross Section Muon Angle - GENIE Multisim
   std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_genie_multisim_bs;
@@ -1506,9 +1506,9 @@ void Main::Maker::MakeFile()
         }
 
         // Test
-        for (auto & iter : map_bs_trkmom_genie_multisim) {
-          iter.second.SetWeightNames(fname_genie_multisim);
-        }
+        // for (auto & iter : map_bs_trkmom_genie_multisim) {
+        //   iter.second.SetWeightNames(fname_genie_multisim);
+        // }
 
         // Number of events
         for (auto & iter : hmap_trkmom_genie_multisim_bs /*map_bs_trkmom_genie_multisim*/) {
@@ -2485,7 +2485,7 @@ void Main::Maker::MakeFile()
     if (!isdata && _fill_bootstrap_genie) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_genie_multisim_bs, "total", fname_genie_multisim, wgts_genie_multisim);
     if (!isdata && _fill_bootstrap_genie) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_genie_multisim_bs, "total", fname_genie_multisim, wgts_genie_multisim);
     if (!isdata && _fill_bootstrap_genie) FillBootstrap(0.5, event_weight, hmap_onebin_genie_multisim_bs, "total", fname_genie_multisim, wgts_genie_multisim);
-    if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["total"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
+    // if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["total"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
 
     if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_genie_models_bs, "total", fname_genie_models, wgts_genie_models);
     if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_genie_models_bs, "total", fname_genie_models, wgts_genie_models);
@@ -2773,7 +2773,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_genie_models_bs, "signal", fname_genie_models, wgts_genie_models);      
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(0.5, event_weight, hmap_onebin_genie_models_bs, "signal", fname_genie_models, wgts_genie_models);
       
-      if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["signal"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["signal"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
       
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(0.5, event_weight, hmap_onebin_flux_multisim_bs, "signal", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "signal", fname_flux_multisim, wgts_flux_multisim);
@@ -2861,7 +2861,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_genie_models_bs, "anumu", fname_genie_models, wgts_genie_models);
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(0.5, event_weight, hmap_onebin_genie_models_bs, "anumu", fname_genie_models, wgts_genie_models);
       
-      if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["anumu"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["anumu"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
 
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(0.5, event_weight, hmap_onebin_flux_multisim_bs, "anumu", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "anumu", fname_flux_multisim, wgts_flux_multisim);
@@ -2900,7 +2900,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_genie_models_bs, "nue", fname_genie_models, wgts_genie_models);
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(0.5, event_weight, hmap_onebin_genie_models_bs, "nue", fname_genie_models, wgts_genie_models);
       
-      if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["nue"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["nue"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
 
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(0.5, event_weight, hmap_onebin_flux_multisim_bs, "nue", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "nue", fname_flux_multisim, wgts_flux_multisim);
@@ -2941,7 +2941,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_genie_models_bs, "nc", fname_genie_models, wgts_genie_models);
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(0.5, event_weight, hmap_onebin_genie_models_bs, "nc", fname_genie_models, wgts_genie_models);
       
-      if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["nc"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["nc"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
 
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(0.5, event_weight, hmap_onebin_flux_multisim_bs, "nc", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "nc", fname_flux_multisim, wgts_flux_multisim);
@@ -3052,7 +3052,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_genie_models_bs, "outfv", fname_genie_models, wgts_genie_models);
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(0.5, event_weight, hmap_onebin_genie_models_bs, "outfv", fname_genie_models, wgts_genie_models);
       
-      if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["outfv"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["outfv"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
 
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(0.5, event_weight, hmap_onebin_flux_multisim_bs, "outfv", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "outfv", fname_flux_multisim, wgts_flux_multisim);
@@ -3139,7 +3139,7 @@ void Main::Maker::MakeFile()
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_genie_models_bs, "cosmic", fname_genie_models, wgts_genie_models);
       if (!isdata && _fill_bootstrap_genie_models) FillBootstrap(0.5, event_weight, hmap_onebin_genie_models_bs, "cosmic", fname_genie_models, wgts_genie_models);
       
-      if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["cosmic"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) map_bs_trkmom_genie_multisim["cosmic"].Fill(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, wgts_genie_multisim);
 
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(0.5, event_weight, hmap_onebin_flux_multisim_bs, "cosmic", fname_flux_multisim, wgts_flux_multisim);
       if (!isdata && _fill_bootstrap_flux) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_flux_multisim_bs, "cosmic", fname_flux_multisim, wgts_flux_multisim);
@@ -4156,7 +4156,7 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_trkangle_genie_multisim_bs, "hmap_trkangle_genie_multisim_bs");
   file_out->WriteObject(&hmap_trktheta_trkmom_genie_multisim_bs, "hmap_trktheta_trkmom_genie_multisim_bs");
 
-  file_out->WriteObject(&map_bs_trkmom_genie_multisim, "map_bs_trkmom_genie_multisim");
+  // file_out->WriteObject(&map_bs_trkmom_genie_multisim, "map_bs_trkmom_genie_multisim");
 
   // All MC Histo - GENIE Models
   file_out->WriteObject(&hmap_onebin_genie_models_bs, "hmap_onebin_genie_models_bs");
