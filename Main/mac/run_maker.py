@@ -36,8 +36,11 @@ maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Ou
 # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v5.root"); # After Neutrino
 # maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_18__v6.root"); # After Neutrino
 # maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v6.root"); # After Neutrino
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_18__v7.root"); # After Neutrino
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v7.root"); # After Neutrino
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_18__v7.root"); # After Neutrino
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v7.root"); # After Neutrino
+
+# maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_mc_bnbcosmic_dirt_ox_v1.root"); # Dirt OX v1
+# maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_dirt_ox_v1.root"); # Dirt OX v1
 
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)
@@ -54,14 +57,14 @@ maker.SetExtraWeight(1.028); # Flux correction
 maker.SetMaUpMECOff(False)
 # maker.ScaleCosmics(0.54548) # For overlay systematics
 
-maker.FillBootstrapGenie(False)
+maker.FillBootstrapGenie(True)
 
-maker.FillBootstrapGenieModels(True)
+maker.FillBootstrapGenieModels(False)
 # maker.SetTargetGenieModelsSystematic("model_q0q3_ccmec_HistogramWeight")
 maker.SetTargetGenieModelsSystematic("model_q0q3_ccqe_HistogramWeight")
 # maker.SetTargetGenieModelsSystematic("total")
 
-maker.FillBootstrapFlux(False)
+maker.FillBootstrapFlux(True)
 #maker.SetTargetFluxSystematic("FluxUnisim");
 #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
 #maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");

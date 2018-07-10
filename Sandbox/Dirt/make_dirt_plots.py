@@ -5,15 +5,18 @@ import math
 from ROOT import *
 gROOT.ProcessLine(".x " + os.environ['MYSW_DIR'] + "/Utils/rootlogon.C")
 
-pot_scale = 1.627e20/2.14249e+19
+
+
+
+# pot_scale = 1.627e20/2.14249e+19
+# file_cv = TFile("ubxsecana_output_mc_dirt.root")
+
+pot_scale = 1.627e20/3.99011e+19
+file_cv = TFile("ubxsecana_output_mc_bnbcosmic_dirt_ox_v1.root")
+
+
 
 print "pot_scale is ", pot_scale
-
-
-file_cv = TFile("ubxsecana_output_mc_dirt.root")
-
-
-
 
 c_trktheta_classic = TCanvas()
 

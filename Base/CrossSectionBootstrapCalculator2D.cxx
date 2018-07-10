@@ -399,62 +399,60 @@ namespace Base {
 
 
       // std::vector<TH1D> xsec_data_histos;
-    std::vector<TH1D> xsec_mc_histos;
-    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
-                                                  "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
-                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
-                                                  "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
-                                                  "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
+      std::vector<TH1D> xsec_mc_histos;
+      std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+                                                    "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+                                                    "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
+                                                    "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
+                                                    "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
+                                                    "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
-    std::cout << "n bins x " << h_xsec_2d.GetNbinsX() << std::endl;
-    std::cout << "n bins y " << h_xsec_2d.GetNbinsY() << std::endl;    
+      std::cout << "n bins x " << h_xsec_2d.GetNbinsX() << std::endl;
+      std::cout << "n bins y " << h_xsec_2d.GetNbinsY() << std::endl;    
 
-    for (int i = 0; i < h_xsec_2d.GetNbinsX(); i++) {
-      // xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
-      xsec_mc_histos.emplace_back(*h_xsec_2d.ProjectionY("fuck", i+1, i+1));
-    }
-
-
-    for (int i = 0; i < xsec_mc_histos.size(); i++) {
-      c_test->cd(i+1);
-      gPad->SetBottomMargin(0.15);
-      gPad->SetLeftMargin(0.15);
-      gPad->SetTopMargin(0.1128947);
-      xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
-      xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
-      xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
-      xsec_mc_histos.at(i).GetXaxis()->CenterTitle();
-      xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
-      xsec_mc_histos.at(i).SetLineColor(kGreen+1);
-      xsec_mc_histos.at(i).SetFillColor(29);
-      xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
-      xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
-      if (it->first == "nominal") {
-        xsec_mc_histos.at(i).SetLineColor(kGreen+3);
-      }
-      // xsec_mc_histos.at(i).Draw("E2");
-      TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
-      h_main->SetLineColor(kGreen+2);
-      if (it->first == "nominal") {
-        h_main->SetLineColor(kGreen+3);
-        h_main->SetLineWidth(3);
-      }
-      h_main->SetFillColor(0); // fully transparent
-      h_main->Draw("histo same");
-
-      xsec_mc_histos.at(i).SetMinimum(0.);
-      if (i == 0) {
-        xsec_mc_histos.at(i).SetMaximum(0.7);
+      for (int i = 0; i < h_xsec_2d.GetNbinsX(); i++) {
+        // xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
+        xsec_mc_histos.emplace_back(*h_xsec_2d.ProjectionY("fuck", i+1, i+1));
       }
 
 
+      for (int i = 0; i < xsec_mc_histos.size(); i++) {
+        c_test->cd(i+1);
+        gPad->SetBottomMargin(0.15);
+        gPad->SetLeftMargin(0.15);
+        gPad->SetTopMargin(0.1128947);
+        xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
+        xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
+        xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
+        xsec_mc_histos.at(i).GetXaxis()->CenterTitle();
+        xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
+        xsec_mc_histos.at(i).SetLineColor(kGreen+1);
+        xsec_mc_histos.at(i).SetFillColor(29);
+        xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
+        xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
+        if (it->first == "nominal") {
+          xsec_mc_histos.at(i).SetLineColor(kGreen+3);
+        }
+        // xsec_mc_histos.at(i).Draw("E2");
+        TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
+        h_main->SetLineColor(kGreen+2);
+        if (it->first == "nominal") {
+          h_main->SetLineColor(kGreen+3);
+          h_main->SetLineWidth(3);
+        }
+        h_main->SetFillColor(0); // fully transparent
+        h_main->Draw("histo same");
 
-    }
+        xsec_mc_histos.at(i).SetMinimum(0.);
+        if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.40);
+        if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.40);
+        if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.60);
+        if (i == 3) xsec_mc_histos.at(i).SetMaximum(0.80);
+        if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+        if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
 
 
-    
-    
+      }
 
       // xsec_data_histos.at(i).Draw("E1 X0 same");
 
@@ -469,11 +467,13 @@ namespace Base {
       //   l->Draw();
       // }
 
-      c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.pdf").c_str());
-      c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.C").c_str());
+      
 
       it++;
-    }
+    } // Loop over universes in reverse order
+
+    c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.pdf").c_str());
+    c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.C").c_str());
   }
 }
 

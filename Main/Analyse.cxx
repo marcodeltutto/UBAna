@@ -283,25 +283,25 @@ namespace Main {
   BootstrapTH2D  bs_genie_multisim_eff_muangle_mumom_den = *temp2d_bs;
 
   // Bootstrap efficiency - GENIE Models
-  mc_bnbcosmic_file->GetObject("bs_genie_models_eff_onebin_num", temp_bs);
-  BootstrapTH1D bs_genie_models_eff_onebin_num = *temp_bs;
-  mc_bnbcosmic_file->GetObject("bs_genie_models_eff_onebin_den", temp_bs);
-  BootstrapTH1D bs_genie_models_eff_onebin_den = *temp_bs;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_eff_onebin_num", temp_bs);
+  // BootstrapTH1D bs_genie_models_eff_onebin_num = *temp_bs;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_eff_onebin_den", temp_bs);
+  // BootstrapTH1D bs_genie_models_eff_onebin_den = *temp_bs;
 
-  mc_bnbcosmic_file->GetObject("bs_genie_models_eff_mumom_num", temp_bs);
-  BootstrapTH1D  bs_genie_models_eff_mumom_num = *temp_bs;
-  mc_bnbcosmic_file->GetObject("bs_genie_models_eff_mumom_den", temp_bs);
-  BootstrapTH1D  bs_genie_models_eff_mumom_den = *temp_bs;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_eff_mumom_num", temp_bs);
+  // BootstrapTH1D  bs_genie_models_eff_mumom_num = *temp_bs;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_eff_mumom_den", temp_bs);
+  // BootstrapTH1D  bs_genie_models_eff_mumom_den = *temp_bs;
 
-  mc_bnbcosmic_file->GetObject("bs_genie_models_eff_muangle_num", temp_bs);
-  BootstrapTH1D  bs_genie_models_eff_muangle_num = *temp_bs;
-  mc_bnbcosmic_file->GetObject("bs_genie_models_eff_muangle_den", temp_bs);
-  BootstrapTH1D  bs_genie_models_eff_muangle_den = *temp_bs;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_eff_muangle_num", temp_bs);
+  // BootstrapTH1D  bs_genie_models_eff_muangle_num = *temp_bs;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_eff_muangle_den", temp_bs);
+  // BootstrapTH1D  bs_genie_models_eff_muangle_den = *temp_bs;
 
-  mc_bnbcosmic_file->GetObject("bs_genie_models_eff_muangle_mumom_num", temp2d_bs);
-  BootstrapTH2D  bs_genie_models_eff_muangle_mumom_num = *temp2d_bs;
-  mc_bnbcosmic_file->GetObject("bs_genie_models_eff_muangle_mumom_den", temp2d_bs);
-  BootstrapTH2D  bs_genie_models_eff_muangle_mumom_den = *temp2d_bs;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_eff_muangle_mumom_num", temp2d_bs);
+  // BootstrapTH2D  bs_genie_models_eff_muangle_mumom_num = *temp2d_bs;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_eff_muangle_mumom_den", temp2d_bs);
+  // BootstrapTH2D  bs_genie_models_eff_muangle_mumom_den = *temp2d_bs;
 
 
 
@@ -371,17 +371,17 @@ namespace Main {
 
 
   // Events - GENIE Models
-  mc_bnbcosmic_file->GetObject("hmap_onebin_genie_models_bs", temp_map_bs);
-  std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_models_bs_mc = *temp_map_bs;
+  // mc_bnbcosmic_file->GetObject("hmap_onebin_genie_models_bs", temp_map_bs);
+  // std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_models_bs_mc = *temp_map_bs;
 
-  mc_bnbcosmic_file->GetObject("hmap_trkmom_genie_models_bs", temp_map_bs);
-  std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_models_bs_mc = *temp_map_bs;
+  // mc_bnbcosmic_file->GetObject("hmap_trkmom_genie_models_bs", temp_map_bs);
+  // std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_models_bs_mc = *temp_map_bs;
 
-  mc_bnbcosmic_file->GetObject("hmap_trkangle_genie_models_bs", temp_map_bs);
-  std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_genie_models_bs_mc = *temp_map_bs;
+  // mc_bnbcosmic_file->GetObject("hmap_trkangle_genie_models_bs", temp_map_bs);
+  // std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_genie_models_bs_mc = *temp_map_bs;
 
-  mc_bnbcosmic_file->GetObject("hmap_trktheta_trkmom_genie_models_bs", temp_map2d_bs);
-  std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_models_bs_mc = *temp_map2d_bs;
+  // mc_bnbcosmic_file->GetObject("hmap_trktheta_trkmom_genie_models_bs", temp_map2d_bs);
+  // std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_models_bs_mc = *temp_map2d_bs;
 
 
   // Events - FLUX Multisim
@@ -404,13 +404,13 @@ namespace Main {
   BootstrapTH2D bs_genie_multisim_true_reco_muangle = *temp_bs_2d;
 
   // Boostrap reco-true - GENIE Models
-  mc_bnbcosmic_file->GetObject("bs_genie_models_true_reco_mumom", temp_bs_2d);
-  BootstrapTH2D bs_genie_models_reco_true_mumom = *temp_bs_2d;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_true_reco_mumom", temp_bs_2d);
+  // BootstrapTH2D bs_genie_models_reco_true_mumom = *temp_bs_2d;
 
-  std::cout << ">> herea" << std::endl;
+  // std::cout << ">> herea" << std::endl;
 
-  mc_bnbcosmic_file->GetObject("bs_genie_models_true_reco_muangle", temp_bs_2d);
-  BootstrapTH2D bs_genie_models_true_reco_muangle = *temp_bs_2d;
+  // mc_bnbcosmic_file->GetObject("bs_genie_models_true_reco_muangle", temp_bs_2d);
+  // BootstrapTH2D bs_genie_models_true_reco_muangle = *temp_bs_2d;
 
   std::cout << ">> here8" << std::endl;
 
@@ -643,19 +643,19 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.Run();
       }
 
-      if (_do_genie_models_systs) {
-        _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-        _xsec_bs_calc.SetHistograms(hmap_onebin_genie_models_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
-        _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_onebin_num, bs_genie_models_eff_onebin_den);
-        _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
-        _xsec_bs_calc.SetSavePrefix("genie_models_onebin");
-        _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
-        _xsec_bs_calc.Run();
-      }
+      // if (_do_genie_models_systs) {
+      //   _xsec_bs_calc.Reset();
+      //   _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+      //   _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      //   _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
+      //   _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+      //   _xsec_bs_calc.SetHistograms(hmap_onebin_genie_models_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
+      //   _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_onebin_num, bs_genie_models_eff_onebin_den);
+      //   _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
+      //   _xsec_bs_calc.SetSavePrefix("genie_models_onebin");
+      //   _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
+      //   _xsec_bs_calc.Run();
+      // }
 
       //
       // FLUX Multisim Systematics
@@ -734,26 +734,26 @@ std::cout << ">> here10" << std::endl;
 
       }
 
-      if (_do_genie_models_systs) {
-        _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
-        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-        _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_models_bs_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
-        _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_mumom_num, bs_genie_models_eff_mumom_den, bs_genie_models_reco_true_mumom);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(7, 7);
-        _xsec_bs_calc.SetSavePrefix("genie_models_mumom");
-        _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
-        _xsec_bs_calc.Run();
+      // if (_do_genie_models_systs) {
+      //   _xsec_bs_calc.Reset();
+      //   _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+      //   _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      //   _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
+      //   _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+      //   _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_models_bs_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
+      //   _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_mumom_num, bs_genie_models_eff_mumom_den, bs_genie_models_reco_true_mumom);
+      //   _xsec_bs_calc.SetMigrationMatrixDimensions(7, 7);
+      //   _xsec_bs_calc.SetSavePrefix("genie_models_mumom");
+      //   _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
+      //   _xsec_bs_calc.Run();
 
-        _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie_models.root", "covariance_matrix_genie_models_mumom");
-        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie_models);
+      //   _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie_models.root", "covariance_matrix_genie_models_mumom");
+      //   _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie_models);
 
-        for (int i = 0; i < covariance_matrix_genie_models.GetNbinsX(); i++) {
-          std::cout << "GENIE Models - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie_models.GetBinContent(i+1, i+1) << std::endl;
-        }
-      }
+      //   for (int i = 0; i < covariance_matrix_genie_models.GetNbinsX(); i++) {
+      //     std::cout << "GENIE Models - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie_models.GetBinContent(i+1, i+1) << std::endl;
+      //   }
+      // }
 
       if (_import_genie_models_systs) {
 
@@ -942,26 +942,26 @@ std::cout << "H here 5" << std::endl;
       	
       }
 
-      if (_do_genie_models_systs) {
-        _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-        _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_models", ";cos(#theta_{#mu}^{reco}); Selected Events");
-        _xsec_bs_calc.SetOutDir("output_data_mc_bs");
-        _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_models_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
-        _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_muangle_num, bs_genie_models_eff_muangle_den, bs_genie_models_true_reco_muangle);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
-        _xsec_bs_calc.SetSavePrefix("genie_models_muangle");
-        _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
-        _xsec_bs_calc.Run();
+      // if (_do_genie_models_systs) {
+      //   _xsec_bs_calc.Reset();
+      //   _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
+      //   _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      //   _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_models", ";cos(#theta_{#mu}^{reco}); Selected Events");
+      //   _xsec_bs_calc.SetOutDir("output_data_mc_bs");
+      //   _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_models_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
+      //   _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_muangle_num, bs_genie_models_eff_muangle_den, bs_genie_models_true_reco_muangle);
+      //   _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+      //   _xsec_bs_calc.SetSavePrefix("genie_models_muangle");
+      //   _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
+      //   _xsec_bs_calc.Run();
 
-        _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie_models.root", "covariance_matrix_genie_models_muangle");
-        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie_models);
+      //   _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie_models.root", "covariance_matrix_genie_models_muangle");
+      //   _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie_models);
 
-        for (int i = 0; i < covariance_matrix_genie_models.GetNbinsX(); i++) {
-          std::cout << "GENIE Models - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie_models.GetBinContent(i+1, i+1) << std::endl;
-        }
-      }
+      //   for (int i = 0; i < covariance_matrix_genie_models.GetNbinsX(); i++) {
+      //     std::cout << "GENIE Models - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie_models.GetBinContent(i+1, i+1) << std::endl;
+      //   }
+      // }
 
       if (_import_genie_models_systs) {
 
@@ -1133,7 +1133,7 @@ std::cout << "H here 5" << std::endl;
       }
     }
 
-    if (_import_genie_systs) {
+    if (false /*_import_genie_systs*/) {
 
       TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_muangle_mumom");
@@ -1163,7 +1163,7 @@ std::cout << "H here 5" << std::endl;
       }
     }
 
-    if (_import_flux_systs) {
+    if (false /*_import_flux_systs*/) {
 
       TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_muangle_mumom");
@@ -1181,7 +1181,7 @@ std::cout << "H here 5" << std::endl;
     }
 
 
-    if (_import_detector_systs) {
+    if (true /*_import_detector_systs*/) {
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_detector_muangle_mumom");
