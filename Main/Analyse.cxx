@@ -1133,7 +1133,7 @@ std::cout << "H here 5" << std::endl;
       }
     }
 
-    if (_import_genie_systs) {
+    if (false /*_import_genie_systs*/) {
 
       TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_muangle_mumom");
@@ -1163,7 +1163,7 @@ std::cout << "H here 5" << std::endl;
       }
     }
 
-    if (_import_flux_systs) {
+    if (false /*_import_flux_systs*/) {
 
       TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_muangle_mumom");
@@ -1181,7 +1181,7 @@ std::cout << "H here 5" << std::endl;
     }
 
 
-    if (_import_detector_systs) {
+    if (true /*_import_detector_systs*/) {
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_detector_muangle_mumom");

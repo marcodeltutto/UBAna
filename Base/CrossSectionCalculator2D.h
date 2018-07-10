@@ -152,7 +152,7 @@ namespace Base {
 
   private:
 
-    std::string _namebase = "CrossSectionCalculator2D] ";
+    std::string _namebase = "[CrossSectionCalculator2D] ";
     
     bool _configured = false;
 

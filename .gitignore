@@ -8,7 +8,7 @@ xsec*
 migration*
 Migration*
 *.pdf
-*.C
+./*.C
 *.txt
 log
 *.tex

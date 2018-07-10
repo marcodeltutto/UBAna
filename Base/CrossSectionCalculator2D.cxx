@@ -180,7 +180,7 @@ namespace Base {
     while (lowersum < lowerborder) {
       i++;
       lowersum += h_flux_numu -> GetBinContent(i);
-      std::cout << i << "\t" << lowersum << std::endl;
+      if (_verbose) std::cout << i << "\t" << lowersum << std::endl;
     }
 
     if (_verbose) std::cout << "Lower Sum: " << lowersum << std::endl;
@@ -572,7 +572,11 @@ namespace Base {
           double total_syst_unc_2 = unc_syst_2 + extra_unc_2;
 
           _cov_matrix_total->SetBinContent(a+1, b+1, total_syst_unc_2);
-          _frac_cov_matrix_total->SetBinContent(a+1, b+1, (total_syst_unc_2) / (h_data->GetBinContent(i+1, j+1) * h_data->GetBinContent(m+1, n+1)));
+          if (h_data->GetBinContent(i+1, j+1) != 0. && h_data->GetBinContent(m+1, n+1) != 0.) {
+            _frac_cov_matrix_total->SetBinContent(a+1, b+1, (total_syst_unc_2) / (h_data->GetBinContent(i+1, j+1) * h_data->GetBinContent(m+1, n+1)));
+          } else {
+            _frac_cov_matrix_total->SetBinContent(a+1, b+1, 0.);
+          }
 
         } // j
       } // i
@@ -580,7 +584,11 @@ namespace Base {
       // And also the correlation matrix
       for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {
         for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
-          _corr_matrix_total->SetBinContent(a+1, b+1, _cov_matrix_total->GetBinContent(a+1, b+1) / (std::sqrt(_cov_matrix_total->GetBinContent(a+1, a+1)) * std::sqrt(_cov_matrix_total->GetBinContent(b+1, b+1))));
+          if (_cov_matrix_total->GetBinContent(a+1, a+1) != 0. && _cov_matrix_total->GetBinContent(b+1, b+1) != 0.) {
+            _corr_matrix_total->SetBinContent(a+1, b+1, _cov_matrix_total->GetBinContent(a+1, b+1) / (std::sqrt(_cov_matrix_total->GetBinContent(a+1, a+1)) * std::sqrt(_cov_matrix_total->GetBinContent(b+1, b+1))));
+          } else {
+            _corr_matrix_total->SetBinContent(a+1, b+1, 0.);
+          }
         }
       }
     }
@@ -884,11 +892,18 @@ namespace Base {
       h_main->Draw("histo same");
 
       xsec_mc_histos.at(i).SetMinimum(0.);
-      if (i == 0) {
-        xsec_mc_histos.at(i).SetMaximum(0.4);
-      } else if (i == 1) {
-        xsec_mc_histos.at(i).SetMaximum(0.4);
-      } 
+      // if (i == 0) {
+      //   xsec_mc_histos.at(i).SetMaximum(0.4);
+      // } else if (i == 1) {
+      //   xsec_mc_histos.at(i).SetMaximum(0.4);
+      // } 
+
+      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.40);
+      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.40);
+      if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.60);
+      if (i == 3) xsec_mc_histos.at(i).SetMaximum(0.80);
+      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+      if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
 
       // The outer uncertainty bar
       xsec_data_unc_histos.at(i).SetMarkerStyle(20);
