@@ -11,10 +11,11 @@ gROOT.ProcessLine(".x " + os.environ['MYSW_DIR'] + "/Utils/rootlogon.C")
 # pot_scale = 1.627e20/2.14249e+19
 # file_cv = TFile("ubxsecana_output_mc_dirt.root")
 
-pot_scale = 1.627e20/3.99011e+19
-file_cv = TFile("ubxsecana_output_mc_bnbcosmic_dirt_ox_v1.root")
+# pot_scale = 1.627e20/3.99011e+19
+# file_cv = TFile("ubxsecana_output_mc_bnbcosmic_dirt_ox_v1.root")
 
-
+pot_scale = 1.627e20/2.07271e+20
+file_cv = TFile("ubxsecana_output_mc_dirt_ubcodev06_26_01_18__v9.root")
 
 print "pot_scale is ", pot_scale
 
