@@ -147,7 +147,8 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   
   
   for (auto iter : themap) {
-    if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off" || iter.first == "dirt_cosmic" || iter.first == "dirt_outfv") continue;
+    if ( iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off" 
+      || iter.first == "dirt_cosmic" || iter.first == "dirt_outfv" || iter.first == "dirt") continue;
     iter.second->Scale(pot_scaling);
     // if (iter.first == "cosmic_nostopmu" || iter.first == "cosmic_nostopmu" || iter.first == "cosmic") iter.second->Scale(0.45);
   }
@@ -550,7 +551,8 @@ TLegend* PlottingTools::DrawTHStack2(THStack *hs_trklen,
   
   
   for (auto iter : themap) {
-    if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
+    if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off"
+      || iter.first == "dirt_outfv" || iter.first == "dirt_outfv" || iter.first == "dirt") continue;
     iter.second->Scale(pot_scaling);
   }
   

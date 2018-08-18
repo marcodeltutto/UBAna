@@ -214,6 +214,18 @@ namespace Main {
     // int n_bins_mumom = 20;
     // int n_bins_mucostheta = 25;
 
+    // int n_bins_double_mumom = 4; ///< Number of momentum bins for double differential
+    // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50}; ///< Momentum bins for double differential
+    int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
+    double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
+    // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
+    // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
+
+    // int n_bins_double_mucostheta = 6; ///< Number of costheta bins for double differential
+    // double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00}; ///< costheta bins for double differential
+    int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
+    double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+
     bool _scale_cosmics = false; ///< If true scales the cosmic background by _scale_factor_cosmic
     double _scale_factor_cosmic = 1.; ///< Factor used to scale the cosmic background (used only if _scale_cosmics is true)
 

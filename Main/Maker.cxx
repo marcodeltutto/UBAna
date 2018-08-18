@@ -567,10 +567,7 @@ void Main::Maker::MakeFile()
 
   TH2D * h_true_reco_costheta= new TH2D("h_true_reco_costheta", ";Muon cos(#theta) (Truth) [GeV]; Muon cos(#theta) (MCS) [GeV]", 9, bins_mucostheta, 9, bins_mucostheta);
 
-  int n_bins_mumom_temp = 4;
-  double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
-  int n_bins_mucostheta_temp = 6;
-  double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
+  
   
   TH1D* h_eff_onebin_num = new TH1D("h_eff_onebin_num", "h_eff_onebin_num", 1, 0, 1);
   TH1D* h_eff_onebin_den = new TH1D("h_eff_onebin_den", "h_eff_onebin_den", 1, 0, 1);
@@ -581,8 +578,8 @@ void Main::Maker::MakeFile()
   TH1D* h_eff_mumom_den = new TH1D("h_eff_mumom_den", "h_eff_mumom_den", n_bins_mumom, bins_mumom);
   TH1D* h_eff_muangle_num = new TH1D("h_eff_muangle_num", "h_eff_muangle_num", n_bins_mucostheta, bins_mucostheta);
   TH1D* h_eff_muangle_den = new TH1D("h_eff_muangle_den", "h_eff_muangle_den", n_bins_mucostheta, bins_mucostheta);
-  TH2D* h_eff_muangle_mumom_num = new TH2D("h_eff_muangle_mumom_num", "h_eff_muangle_mumom_num", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  TH2D* h_eff_muangle_mumom_den = new TH2D("h_eff_muangle_mumom_den", "h_eff_muangle_mumom_den", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  TH2D* h_eff_muangle_mumom_num = new TH2D("h_eff_muangle_mumom_num", "h_eff_muangle_mumom_num", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  TH2D* h_eff_muangle_mumom_den = new TH2D("h_eff_muangle_mumom_den", "h_eff_muangle_mumom_den", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
 
   // Efficiency - GENIE pm1sigma
@@ -599,8 +596,8 @@ void Main::Maker::MakeFile()
   BootstrapTH1D bs_genie_multisim_eff_muangle_num("bs_genie_multisim_eff_muangle_num", "bs_genie_multisim_eff_muangle_num_title", n_bins_mucostheta, bins_mucostheta);
   BootstrapTH1D bs_genie_multisim_eff_muangle_den("bs_genie_multisim_eff_muangle_den", "bs_genie_multisim_eff_muangle_den_title", n_bins_mucostheta, bins_mucostheta);
 
-  BootstrapTH2D bs_genie_multisim_eff_muangle_mumom_num("bs_genie_multisim_eff_muangle_mumom_num", "bs_genie_multisim_eff_muangle_mumom_num_title", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  BootstrapTH2D bs_genie_multisim_eff_muangle_mumom_den("bs_genie_multisim_eff_muangle_mumom_den", "bs_genie_multisim_eff_muangle_mumom_den_title", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  BootstrapTH2D bs_genie_multisim_eff_muangle_mumom_num("bs_genie_multisim_eff_muangle_mumom_num", "bs_genie_multisim_eff_muangle_mumom_num_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  BootstrapTH2D bs_genie_multisim_eff_muangle_mumom_den("bs_genie_multisim_eff_muangle_mumom_den", "bs_genie_multisim_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
   // Efficiency - GENIE Models
   BootstrapTH1D bs_genie_models_eff_onebin_num("bs_genie_models_eff_onebin_num", "bs_genie_models_eff_onebin_num_title", 1, 0, 1);
@@ -612,8 +609,8 @@ void Main::Maker::MakeFile()
   BootstrapTH1D bs_genie_models_eff_muangle_num("bs_genie_models_eff_muangle_num", "bs_genie_models_eff_muangle_num_title", n_bins_mucostheta, bins_mucostheta);
   BootstrapTH1D bs_genie_models_eff_muangle_den("bs_genie_models_eff_muangle_den", "bs_genie_models_eff_muangle_den_title", n_bins_mucostheta, bins_mucostheta);
 
-  BootstrapTH2D bs_genie_models_eff_muangle_mumom_num("bs_genie_models_eff_muangle_mumom_num", "bs_genie_models_eff_muangle_mumom_num_title", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  BootstrapTH2D bs_genie_models_eff_muangle_mumom_den("bs_genie_models_eff_muangle_mumom_den", "bs_genie_models_eff_muangle_mumom_den_title", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  BootstrapTH2D bs_genie_models_eff_muangle_mumom_num("bs_genie_models_eff_muangle_mumom_num", "bs_genie_models_eff_muangle_mumom_num_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  BootstrapTH2D bs_genie_models_eff_muangle_mumom_den("bs_genie_models_eff_muangle_mumom_den", "bs_genie_models_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
   
   // Efficiency - FLUX Multisim
   BootstrapTH1D bs_flux_multisim_eff_onebin_num("bs_flux_multisim_eff_onebin_num", "bs_flux_multisim_eff_onebin_num_title", 1, 0, 1);
@@ -625,8 +622,8 @@ void Main::Maker::MakeFile()
   BootstrapTH1D bs_flux_multisim_eff_mumom_num ("bs_flux_multisim_eff_mumom_num_nominal_nominal", "h_eff_mumom_num", n_bins_mumom, bins_mumom);
   BootstrapTH1D bs_flux_multisim_eff_mumom_den ("bs_flux_multisim_eff_mumom_den_nominal_nominal", "h_eff_mumom_den", n_bins_mumom, bins_mumom);
 
-  BootstrapTH2D bs_flux_multisim_eff_muangle_mumom_num("bs_flux_multisim_eff_muangle_mumom_num", "bs_flux_multisim_eff_muangle_mumom_num_title", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  BootstrapTH2D bs_flux_multisim_eff_muangle_mumom_den("bs_flux_multisim_eff_muangle_mumom_den", "bs_flux_multisim_eff_muangle_mumom_den_title", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  BootstrapTH2D bs_flux_multisim_eff_muangle_mumom_num("bs_flux_multisim_eff_muangle_mumom_num", "bs_flux_multisim_eff_muangle_mumom_num_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  BootstrapTH2D bs_flux_multisim_eff_muangle_mumom_den("bs_flux_multisim_eff_muangle_mumom_den", "bs_flux_multisim_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
   
 
@@ -776,22 +773,22 @@ void Main::Maker::MakeFile()
   TH1D* h_n_slc_flsmatch = new TH1D("h_n_slc_flsmatch",  ";n slices flash matched per event;",  10, 0, 10);
 
   std::map<std::string,TH2D*> hmap_trktheta_trkmom;
-  hmap_trktheta_trkmom["total"] = new TH2D("h_trktheta_trkmom_total", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["signal"] = new TH2D("h_trktheta_trkmom_signal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["cosmic"] = new TH2D("h_trktheta_trkmom_cosmic", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["outfv"] = new TH2D("h_trktheta_trkmom_outfv", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["nc"] = new TH2D("h_trktheta_trkmom_nc", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["anumu"] = new TH2D("h_trktheta_trkmom_anumu", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["nue"] = new TH2D("h_trktheta_trkmom_nue", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["cosmic_stopmu"] = new TH2D("h_trktheta_trkmom_cosmic_stopmu", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["cosmic_nostopmu"] = new TH2D("h_trktheta_trkmom_cosmic_nostopmu", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["outfv_stopmu"] = new TH2D("h_trktheta_trkmom_outfv_stopmu", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["outfv_nostopmu"] = new TH2D("h_trktheta_trkmom_outfv_nostopmu", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["nc_proton"] = new TH2D("h_trktheta_trkmom_nc_proton", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["nc_pion"] = new TH2D("h_trktheta_trkmom_nc_pion", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["nc_other"] = new TH2D("h_trktheta_trkmom_nc_other", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["signal_stopmu"] = new TH2D("h_trktheta_trkmom_signal_stopmu", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom["signal_nostopmu"] = new TH2D("h_trktheta_trkmom_signal_nostopmu", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom["total"] = new TH2D("h_trktheta_trkmom_total", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["signal"] = new TH2D("h_trktheta_trkmom_signal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["cosmic"] = new TH2D("h_trktheta_trkmom_cosmic", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["outfv"] = new TH2D("h_trktheta_trkmom_outfv", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["nc"] = new TH2D("h_trktheta_trkmom_nc", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["anumu"] = new TH2D("h_trktheta_trkmom_anumu", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["nue"] = new TH2D("h_trktheta_trkmom_nue", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["cosmic_stopmu"] = new TH2D("h_trktheta_trkmom_cosmic_stopmu", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["cosmic_nostopmu"] = new TH2D("h_trktheta_trkmom_cosmic_nostopmu", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["outfv_stopmu"] = new TH2D("h_trktheta_trkmom_outfv_stopmu", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["outfv_nostopmu"] = new TH2D("h_trktheta_trkmom_outfv_nostopmu", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["nc_proton"] = new TH2D("h_trktheta_trkmom_nc_proton", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["nc_pion"] = new TH2D("h_trktheta_trkmom_nc_pion", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["nc_other"] = new TH2D("h_trktheta_trkmom_nc_other", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["signal_stopmu"] = new TH2D("h_trktheta_trkmom_signal_stopmu", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom["signal_nostopmu"] = new TH2D("h_trktheta_trkmom_signal_nostopmu", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
   
   std::map<std::string,TH1D*> hmap_trklen;
   hmap_trklen["total"] = new TH1D("h_trklen_total", "; Track length;", 30, 0, 700);
@@ -1027,42 +1024,42 @@ void Main::Maker::MakeFile()
 
   // Number of events histograms - Cross Section Double Diff - GENIE Multisim
   std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_multisim_bs;
-  hmap_trktheta_trkmom_genie_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["cosmic_stopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_stopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["cosmic_nostopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_nostopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["outfv_stopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_stopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["outfv_nostopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_nostopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["nc_proton"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_proton_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["nc_pion"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_pion_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["nc_other"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_other_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["signal_stopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_stopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  // hmap_trktheta_trkmom_genie_multisim_bs["signal_nostopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_nostopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_genie_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["cosmic_stopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_stopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["cosmic_nostopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_nostopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["outfv_stopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_stopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["outfv_nostopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_nostopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["nc_proton"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_proton_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["nc_pion"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_pion_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["nc_other"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_other_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["signal_stopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_stopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  // hmap_trktheta_trkmom_genie_multisim_bs["signal_nostopmu"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_nostopmu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
   // Number of events histograms - Cross Section Double Diff - GENIE Models
   std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_models_bs;
-  hmap_trktheta_trkmom_genie_models_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_genie_models_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_models_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_genie_models_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_models_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_genie_models_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_models_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_genie_models_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_models_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_genie_models_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_models_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_genie_models_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_genie_models_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_genie_models_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_genie_models_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_genie_models_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_models_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_genie_models_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_models_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_genie_models_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_models_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_genie_models_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_models_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_genie_models_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_models_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_genie_models_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_genie_models_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_genie_models_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
   // Number of events histograms - Cross Section Double Diff - FLUX Multisim
   std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_flux_multisim_bs;
-  hmap_trktheta_trkmom_flux_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_flux_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_flux_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_flux_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_flux_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_flux_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
-  hmap_trktheta_trkmom_flux_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_flux_multisim_nominal", "; Track cos(#theta);", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+  hmap_trktheta_trkmom_flux_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_flux_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_flux_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_flux_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_flux_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_flux_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+  hmap_trktheta_trkmom_flux_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 /*
   std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs;
   //std::map<std::string, TH1D*> mymap;
@@ -1535,13 +1532,13 @@ void Main::Maker::MakeFile()
             hmap_onebin_genie_multisim_bs[this_name][fname_genie_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track angle;", 1, 0, 1);
 
             // Double Diff
-            int n_bins_mumom_temp = 4;
-            double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
-            int n_bins_mucostheta_temp = 6;
-            double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
+            int n_bins_double_mumom = 4;
+            double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
+            int n_bins_double_mucostheta = 6;
+            double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
 
             histo_name = "h_genie_multisim_trkmom_trkangle_" + this_name + "_" + fname_genie_multisim.at(i); 
-            hmap_trktheta_trkmom_genie_multisim_bs[this_name][fname_genie_multisim.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+            hmap_trktheta_trkmom_genie_multisim_bs[this_name][fname_genie_multisim.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
           }
 
@@ -1654,13 +1651,13 @@ void Main::Maker::MakeFile()
             hmap_onebin_genie_models_bs[this_name][fname_genie_models.at(i)] = new TH1D(histo_name.c_str(), "; Track angle;", 1, 0, 1);
 
             // Double Diff
-            int n_bins_mumom_temp = 4;
-            double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
-            int n_bins_mucostheta_temp = 6;
-            double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
+            int n_bins_double_mumom = 4;
+            double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
+            int n_bins_double_mucostheta = 6;
+            double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
 
             histo_name = "h_genie_models_trkmom_trkangle_" + this_name + "_" + fname_genie_models.at(i); 
-            hmap_trktheta_trkmom_genie_models_bs[this_name][fname_genie_models.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+            hmap_trktheta_trkmom_genie_models_bs[this_name][fname_genie_models.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
           }
 
@@ -1805,13 +1802,13 @@ void Main::Maker::MakeFile()
           hmap_onebin_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH1D(histo_name.c_str(), "; Track angle;", 1, 0, 1);
 
           // Double Diff
-          int n_bins_mumom_temp = 4;
-          double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
-          int n_bins_mucostheta_temp = 6;
-          double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
+          int n_bins_double_mumom = 4;
+          double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
+          int n_bins_double_mucostheta = 6;
+          double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
 
           histo_name = "h_flux_multisim_trkmom_trkangle_" + this_name + "_" + fname_flux_multisim.at(i); 
-          hmap_trktheta_trkmom_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_mucostheta_temp, bins_mucostheta_temp, n_bins_mumom_temp, bins_mumom_temp);
+          hmap_trktheta_trkmom_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
  
 
         }
@@ -1915,7 +1912,7 @@ void Main::Maker::MakeFile()
     // This variable will store if this is a signal event or not
     bool isSignal = false;
 
-    if (t->nupdg == 14 && t->ccnc == 0 && t->fv == 1 /*&& (t->tvtx_z[0] < 675 || t->tvtx_z[0] > 775)*/){
+    if (t->nupdg == 14 && t->ccnc == 0 && t->fv == 1 && (t->tvtx_z[0] < 675 || t->tvtx_z[0] > 775)){
 
       nsignal += event_weight;
       isSignal = true;
@@ -2312,140 +2309,150 @@ void Main::Maker::MakeFile()
     //*******************************************
     //*******************************************
     //*******************************************
-    if (!t->is_selected) continue;
+    // if (!t->is_selected) continue;
     //*******************************************
     //*******************************************
     //*******************************************
+
+    // In no flash-matched object, continue
+    if (scl_ll_max == -1) continue;
+
     
     bool nu_origin = (t->slc_origin.at(scl_ll_max) == 0 || t->slc_origin.at(scl_ll_max) == 2);
     
     double dqdx_calib = t->slc_muoncandidate_dqdx_trunc.at(scl_ll_max) * _gainCalib;
 
     
-    // // In no flash-matched object, continue
-    // if (scl_ll_max == -1) continue;
     
     
     
     
-    // h_flsTime_wcut_3->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
+    h_flsTime_wcut_3->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
     
-    // if (isSignal && nu_origin) nSignalFlashMatched ++;
+    if (isSignal && nu_origin) nSignalFlashMatched ++;
 
-    // // A score < 3e-4 or inf means no flash-matched object, continue
-    // if (score_max <= 3e-4) continue;
-    // if (std::isinf(score_max)) continue;
+    // A score < 3e-4 or inf means no flash-matched object, continue
+    if (score_max <= 3e-4) continue;
+    if (std::isinf(score_max)) continue;
 
 
-    // if (isSignal && nu_origin) selected_signal_events_percut["flash_match"]+=event_weight;
-    // selected_events_percut["flash_match"]+=event_weight;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match"]+=event_weight;
+    selected_events_percut["flash_match"]+=event_weight;
     
     
-    // h_flsTime_wcut_4->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
-    // h_deltax->Fill(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max), event_weight);
-    // h_deltax_2d->Fill(t->slc_flsmatch_qllx.at(scl_ll_max), t->slc_flsmatch_tpcx.at(scl_ll_max), event_weight);
-    // h_deltaz_4->Fill(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill), event_weight);
+    h_flsTime_wcut_4->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
+    h_deltax->Fill(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max), event_weight);
+    h_deltax_2d->Fill(t->slc_flsmatch_qllx.at(scl_ll_max), t->slc_flsmatch_tpcx.at(scl_ll_max), event_weight);
+    h_deltaz_4->Fill(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill), event_weight);
     
 
-    // // If it doens't pass the flash-match deltaX cut, continue
-    // if(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max) > 50) continue;
+    // If it doens't pass the flash-match deltaX cut, continue
+    if(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max) > 50) continue;
     
-    // h_flsTime_wcut_5->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
+    h_flsTime_wcut_5->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
 
-    // if(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max) < -100) continue;
+    if(t->slc_flsmatch_qllx.at(scl_ll_max) - t->slc_flsmatch_tpcx.at(scl_ll_max) < -100) continue;
 
-    // if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltax"]+=event_weight;
-    // selected_events_percut["flash_match_deltax"]+=event_weight;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltax"]+=event_weight;
+    selected_events_percut["flash_match_deltax"]+=event_weight;
     
-    // h_flsTime_wcut_6->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
-    // h_deltaz_6->Fill(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill), event_weight);
+    h_flsTime_wcut_6->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
+    h_deltaz_6->Fill(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill), event_weight);
     
-    // // If it doens't pass the flash-match deltaZ cut, continue
-    // if(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill) > 75) continue;
+    // If it doens't pass the flash-match deltaZ cut, continue
+    if(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill) > 75) continue;
     
-    // h_flsTime_wcut_7->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
+    h_flsTime_wcut_7->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
 
-    // if(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill) < -75) continue;
+    if(t->slc_flsmatch_hypoz.at(scl_ll_max) - t->beamfls_z.at(flashInBeamSpill) < -75) continue;
 
-    // if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltaz"]+=event_weight;
-    // selected_events_percut["flash_match_deltaz"]+=event_weight;
+    if (isSignal && nu_origin) selected_signal_events_percut["flash_match_deltaz"]+=event_weight;
+    selected_events_percut["flash_match_deltaz"]+=event_weight;
     
-    // h_flsTime_wcut_8->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
+    h_flsTime_wcut_8->Fill(t->beamfls_time.at(flashInBeamSpill) - _flashShift, event_weight);
 
     
-    
-  
-
-    // //m if(t->slc_vtxcheck_angle.at(scl_ll_max) > 2.9) continue;
-    
-    // //if(t->slc_vtxcheck_angle.at(scl_ll_max) < 0.05 && t->slc_vtxcheck_angle.at(scl_ll_max) !=-9999 ) continue;
-
-    // semisel_tpcobj++;
-    
-    // // If zero tracks in this tpcobject, continue
-    // if(t->slc_ntrack.at(scl_ll_max) == 0) continue;
-
-    // semisel_tpcobj_with_atleast_one_track++;
-
-
-    // // Cut on residuala ans fraction of used hits in cluster
-    // if (t->slc_muoncandidate_residuals_std.at(scl_ll_max) > 2.5) continue;
-    // // if (std::abs(t->slc_muoncandidate_residuals_mean.at(scl_ll_max)) > 0.7) continue;
-    // if (t->slc_muoncandidate_perc_used_hits_in_cluster.at(scl_ll_max) < 0.7) continue;
-    
-    // //if(!t->slc_passed_min_track_quality.at(scl_ll_max)) continue;
-    
-    // //if(!t->slc_passed_min_vertex_quality.at(scl_ll_max)) continue;
-
-    // if (isSignal && nu_origin) selected_signal_events_percut["quality"]+=event_weight;
-    // selected_events_percut["quality"]+=event_weight;
-    
-    // //if (!t->slc_muoncandidate_contained.at(scl_ll_max)) continue;
-    
-    // if(t->slc_muoncandidate_contained.at(scl_ll_max) && (t->slc_muoncandidate_mom_mcs.at(scl_ll_max) - t->slc_muoncandidate_mom_range.at(scl_ll_max) > 0.2)) continue;
-    
-    // if (isSignal && nu_origin) selected_signal_events_percut["mcs_length_quality"]+=event_weight;
-    // selected_events_percut["mcs_length_quality"]+=event_weight;
-
-
-    // // DqDx cut
-    // std::vector<double> svm_x = {86300, 86050, 85850, 85600, 85400, 85150, 84950, 84700, 84500, 84300, 84100, 83850, 83650, 83450, 83250, 83050, 82850, 82650, 82450, 82250, 82050, 81900, 81700, 81500, 81300, 81150, 80950, 80750, 80600, 80400, 80250, 80050, 79900, 79750, 79550, 79400, 79250, 79050, 78900, 78750, 78600, 78400, 78250, 78100, 77950, 77800, 77650, 77500, 77350, 77200, 77050, 76900, 76750, 76650, 76500, 76350, 76200, 76050, 75950, 75800, 75650, 75550, 75400, 75300, 75150, 75000, 74900, 74750, 74650, 74500, 74400, 74250, 74150, 74050, 73900, 73800, 73700, 73550, 73450, 73350, 73250, 73100, 73000, 72900, 72800, 72700, 72550, 72450, 72350, 72250, 72150, 72050, 71950, 71850, 71750, 71650, 71550, 71450, 71350, 71250, 71150, 71100, 71000, 70900, 70800, 70700, 70600, 70550, 70450, 70350, 70250, 70200, 70100, 70000, 69950, 69850, 69750, 69700, 69600, 69550, 69450, 69350, 69300, 69200, 69150, 69050, 69000, 68900, 68850, 68750, 68700, 68600, 68550, 68500, 68400, 68350, 68250, 68200, 68150, 68050, 68000, 67950, 67850, 67800, 67750, 67700, 67600, 67550, 67500, 67450, 67350, 67300, 67250, 67200, 67150, 67100, 67000, 66950, 66900, 66850, 66800, 66750, 66700, 66650, 66600, 66550, 66500, 66450, 66400, 66350, 66300, 66250, 66200, 66150, 66100, 66050, 66000, 65950, 65900, 65850, 65800, 65750, 65750, 65700, 65650, 65600, 65550, 65500, 65450, 65450, 65400, 65350, 65300, 65250, 65250, 65200, 65150, 65100, 65100, 65050, 65000, 65000, 64950, 64900, 64850, 64850, 64800, 64750, 64750, 64700, 64700, 64650, 64600, 64600, 64550, 64500, 64500, 64450, 64450, 64400, 64400, 64350, 64350, 64300, 64250, 64250, 64200, 64200, 64150, 64150, 64100, 64100, 64100, 64050, 64050, 64000, 64000, 63950, 63950, 63900, 63900, 63900, 63850, 63850, 63800, 63800, 63800, 63750, 63750, 63750, 63700, 63700, 63700, 63650, 63650, 63650, 63600, 63600, 63600, 63550, 63550, 63550, 63500, 63500, 63500, 63500, 63450, 63450, 63450, 63450, 63400, 63400, 63400, 63400, 63400, 63350, 63350, 63350, 63350, 63350, 63350, 63300, 63300, 63300, 63300, 63300, 63300, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63300, 63300, 63300, 63300, 63300, 63300, 63300, 63350, 63350, 63350, 63350, 63350, 63350, 63400, 63400, 63400, 63400, 63400, 63400, 63450, 63450, 63450, 63450, 63500, 63500, 63500, 63500, 63500, 63550, 63550, 63550, 63550, 63600, 63600, 63600, 63600, 63650, 63650, 63650, 63650, 63700, 63700, 63700, 63750, 63750, 63750, 63800, 63800, 63800, 63800, 63850, 63850, 63850, 63900, 63900, 63900, 63950, 63950, 63950, 64000, 64000, 64000, 64050, 64050, 64100, 64100, 64100, 64150, 64150, 64150, 64200, 64200, 64250, 64250, 64250, 64300, 64300, 64350, 64350, 64350, 64400, 64400, 64450, 64450, 64450, 64500, 64500, 64550, 64550, 64600, 64600, 64650, 64650, 64650, 64700, 64700, 64750, 64750, 64800, 64800, 64850, 64850, 64900, 64900, 64950, 64950, 65000, 65000, 65050, 65050, 65100, 65100, 65150, 65150, 65200, 65200, 65250, 65250, 65300, 65300, 65350, 65350, 65400, 65400, 65450, 65500, 65500, 65550, 65550, 65600, 65600, 65650, 65650, 65700, 65750, 65750, 65800, 65800, 65850, 65850, 65900, 65950, 65950, 66000, 66000, 66050, 66100, 66100, 66150, 66150, 66200, 66250, 66250, 66300, 66350, 66350, 66400, 66400, 66450, 66500, 66500, 66550, 66600, 66600, 66650, 66700, 66700, 66750, 66750, 66800, 66850, 66850, 66900, 66950, 66950, 67000, 67050, 67050, 67100, 67150, 67150, 67200, 67250, 67300, 67300, 67350, 67400, 67400, 67450, 67500, 67500, 67550, 67600, 67650, 67650, 67700, 67750, 67750, 67800, 67850, 67900, 67900, 67950, 68000, 68050, 68050, 68100, 68150, 68150, 68200, 68250, 68300, 68300, 68350, 68400, 68450, 68450, 68500, 68550, 68600, 68650, 68650, 68700, 68750, 68800, 68800, 68850, 68900, 68950, 69000, 69000, 69050, 69100, 69150, 69150, 69200, 69250, 69300, 69350, 69350, 69400, 69450, 69500, 69550, 69600, 69600, 69650, 69700, 69750, 69800, 69800, 69850, 69900, 69950, 70000, 70050, 70050, 70100, 70150, 70200, 70250, 70300, 70300, 70350, 70400, 70450, 70500, 70550, 70600, 70600, 70650, 70700, 70750, 70800, 70850, 70900, 70900, 70950, 71000, 71050, 71100, 71150, 71200, 71250, 71300, 71300, 71350, 71400, 71450, 71500, 71550, 71600, 71650, 71700, 71700, 71750, 71800, 71850, 71900, 71950, 72000, 72050, 72100, 72150, 72200, 72200, 72250, 72300, 72350, 72400, 72450, 72500, 72550, 72600, 72650, 72700, 72750, 72800, 72850, 72850, 72900, 72950, 73000, 73050, 73100, 73150, 73200, 73250, 73300, 73350, 73400, 73450, 73500, 73550, 73600, 73650, 73700, 73750, 73800, 73850, 73900, 73900, 73950, 74000, 74050, 74100, 74150, 74200, 74250, 74300, 74350, 74400, 74450, 74500, 74550, 74600, 74650, 74700, 74750, 74800, 74850, 74900, 74950, 75000, 75050, 75100, 75150, 75200, 75250, 75300, 75350, 75400, 75450, 75500, 75550, 75600, 75650, 75700, 75750, 75800, 75850, 75900, 76000, 76050, 76100, 76150, 76200, 76250, 76300, 76350, 76400, 76450, 76500, 76550, 76600, 76650, 76700, 76750, 76800, 76850, 76900, 76950, 77000, 77050, 77100, 77200, 77250, 77300, 77350, 77400, 77450, 77500, 77550, 77600, 77650, 77700, 77750, 77800, 77850, 77900, 78000, 78050, 78100, 78150, 78200, 78250, 78300, 78350, 78400, 78450, 78500, 78550, 78600, 78700, 78750, 78800, 78850, 78900, 78950, 79000, 79050, 79100, 79150, 79250, 79300, 79350, 79400, 79450, 79500, 79550, 79600, 79650, 79750, 79800, 79850, 79900, 79950, 80000, 80050, 80100, 80150, 80250, 80300, 80350, 80400, 80450, 80500, 80550, 80600, 80700, 80750, 80800, 80850, 80900, 80950, 81000, 81100, 81150, 81200, 81250, 81300, 81350, 81400, 81450, 81550, 81600, 81650, 81700, 81750, 81800, 81900, 81950, 82000, 82050, 82100, 82150, 82200, 82300, 82350, 82400, 82450, 82500, 82550, 82650, 82700, 82750, 82800, 82850, 82900, 83000, 83050, 83100, 83150, 83200, 83250, 83350, 83400, 83450, 83500, 83550, 83650, 83700, 83750, 83800, 83850, 83900, 84000, 84050, 84100, 84150, 84200, 84300, 84350, 84400, 84450, 84500, 84600, 84650, 84700, 84750, 84800, 84900, 84950, 85000, 85050, 85100, 85200, 85250, 85300, 85350, 85400, 85500, 85550, 85600, 85650, 85700, 85800, 85850, 85900, 85950, 86000, 86100, 86150, 86200, 86250, 86350, 86400, 86450, 86500, 86550, 86650, 86700, 86750, 86800, 86900, 86950, 87000, 87050, 87150, 87200, 87250, 87300, 87350, 87450, 87500, 87550, 87600, 87700, 87750, 87800, 87850, 87950, 88000, 88050, 88100, 88200, 88250, 88300, 88350, 88450, 88500, 88550, 88600, 88700, 88750, 88800, 88850, 88950, 89000, 89050, 89100, 89200, 89250, 89300, 89350, 89450, 89500, 89550, 89600, 89700, 89750, 89800, 89900, 89950, 90000, 90050, 90150, 90200, 90250, 90300, 90400, 90450, 90500, 90600, 90650, 90700, 90750, 90850, 90900, 90950, 91000, 91100, 91150, 91200, 91300, 91350, 91400, 91450, 91550, 91600, 91650, 91750, 91800, 91850, 91950, 92000, 92050, 92100, 92200, 92250};
-
-    // double l = std::round(t->slc_muoncandidate_length.at(scl_ll_max));
-    // double dqdx_cut = 200000;
-    // if (l >= 0 && l < 1000) {
-    //   dqdx_cut = svm_x.at(l);
-    // }
       
-    // if (dqdx_calib > dqdx_cut) continue;
-    // // if(t->slc_nuvtx_z.at(scl_ll_max) <= 500) continue;
 
-    // if (isSignal && nu_origin) selected_signal_events_percut["mip_consistency"]+=event_weight;
-    // selected_events_percut["mip_consistency"]+=event_weight;
+    //m if(t->slc_vtxcheck_angle.at(scl_ll_max) > 2.9) continue;
+    
+    //if(t->slc_vtxcheck_angle.at(scl_ll_max) < 0.05 && t->slc_vtxcheck_angle.at(scl_ll_max) !=-9999 ) continue;
 
+    semisel_tpcobj++;
+    
+    // If zero tracks in this tpcobject, continue
+    if(t->slc_ntrack.at(scl_ll_max) == 0) continue;
 
-
-    // // Just before the FV cut, make distribution of vtxz
-    // if (t->slc_nuvtx_y.at(scl_ll_max) > 82) {
-    //   hmap_vtxz_upborder["total"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
-    //   hmap_vtxx_upborder["total"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
-    //   if (isSignal && nu_origin) {
-    //     hmap_vtxz_upborder["signal"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
-    //     hmap_vtxx_upborder["signal"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
-    //   } else {
-    //     hmap_vtxz_upborder["background"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
-    //     hmap_vtxx_upborder["background"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
-    //   }
-    // }
+    semisel_tpcobj_with_atleast_one_track++;
 
 
-    // // FV cut
-    // if(t->slc_nuvtx_fv.at(scl_ll_max) == 0) continue;
-    // if(t->slc_nuvtx_z.at(scl_ll_max) > 675 && t->slc_nuvtx_z.at(scl_ll_max) < 775) continue;
-    // // if(t->slc_nuvtx_z.at(scl_ll_max) < 200) continue;
+    // Cut on residuala ans fraction of used hits in cluster
+    if (t->slc_muoncandidate_residuals_std.at(scl_ll_max) > 2.5) continue;
+    if (std::abs(t->slc_muoncandidate_residuals_mean.at(scl_ll_max)) > 0.7) continue;
+    if (t->slc_muoncandidate_perc_used_hits_in_cluster.at(scl_ll_max) < 0.7) continue;
+    
+    //if(!t->slc_passed_min_track_quality.at(scl_ll_max)) continue;
+    
+    //if(!t->slc_passed_min_vertex_quality.at(scl_ll_max)) continue;
 
-    // if (isSignal && nu_origin) selected_signal_events_percut["fiducial_volume"]+=event_weight;
-    // selected_events_percut["fiducial_volume"]+=event_weight;
+    if (isSignal && nu_origin) selected_signal_events_percut["quality"]+=event_weight;
+    selected_events_percut["quality"]+=event_weight;
+    
+    //if (!t->slc_muoncandidate_contained.at(scl_ll_max)) continue;
+    
+    if(t->slc_muoncandidate_contained.at(scl_ll_max) && (t->slc_muoncandidate_mom_mcs.at(scl_ll_max) - t->slc_muoncandidate_mom_range.at(scl_ll_max) > 0.2)) continue;
+    
+    if (isSignal && nu_origin) selected_signal_events_percut["mcs_length_quality"]+=event_weight;
+    selected_events_percut["mcs_length_quality"]+=event_weight;
+
+
+    // DqDx cut
+    std::vector<double> svm_x = {86300, 86050, 85850, 85600, 85400, 85150, 84950, 84700, 84500, 84300, 84100, 83850, 83650, 83450, 83250, 83050, 82850, 82650, 82450, 82250, 82050, 81900, 81700, 81500, 81300, 81150, 80950, 80750, 80600, 80400, 80250, 80050, 79900, 79750, 79550, 79400, 79250, 79050, 78900, 78750, 78600, 78400, 78250, 78100, 77950, 77800, 77650, 77500, 77350, 77200, 77050, 76900, 76750, 76650, 76500, 76350, 76200, 76050, 75950, 75800, 75650, 75550, 75400, 75300, 75150, 75000, 74900, 74750, 74650, 74500, 74400, 74250, 74150, 74050, 73900, 73800, 73700, 73550, 73450, 73350, 73250, 73100, 73000, 72900, 72800, 72700, 72550, 72450, 72350, 72250, 72150, 72050, 71950, 71850, 71750, 71650, 71550, 71450, 71350, 71250, 71150, 71100, 71000, 70900, 70800, 70700, 70600, 70550, 70450, 70350, 70250, 70200, 70100, 70000, 69950, 69850, 69750, 69700, 69600, 69550, 69450, 69350, 69300, 69200, 69150, 69050, 69000, 68900, 68850, 68750, 68700, 68600, 68550, 68500, 68400, 68350, 68250, 68200, 68150, 68050, 68000, 67950, 67850, 67800, 67750, 67700, 67600, 67550, 67500, 67450, 67350, 67300, 67250, 67200, 67150, 67100, 67000, 66950, 66900, 66850, 66800, 66750, 66700, 66650, 66600, 66550, 66500, 66450, 66400, 66350, 66300, 66250, 66200, 66150, 66100, 66050, 66000, 65950, 65900, 65850, 65800, 65750, 65750, 65700, 65650, 65600, 65550, 65500, 65450, 65450, 65400, 65350, 65300, 65250, 65250, 65200, 65150, 65100, 65100, 65050, 65000, 65000, 64950, 64900, 64850, 64850, 64800, 64750, 64750, 64700, 64700, 64650, 64600, 64600, 64550, 64500, 64500, 64450, 64450, 64400, 64400, 64350, 64350, 64300, 64250, 64250, 64200, 64200, 64150, 64150, 64100, 64100, 64100, 64050, 64050, 64000, 64000, 63950, 63950, 63900, 63900, 63900, 63850, 63850, 63800, 63800, 63800, 63750, 63750, 63750, 63700, 63700, 63700, 63650, 63650, 63650, 63600, 63600, 63600, 63550, 63550, 63550, 63500, 63500, 63500, 63500, 63450, 63450, 63450, 63450, 63400, 63400, 63400, 63400, 63400, 63350, 63350, 63350, 63350, 63350, 63350, 63300, 63300, 63300, 63300, 63300, 63300, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63200, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63250, 63300, 63300, 63300, 63300, 63300, 63300, 63300, 63350, 63350, 63350, 63350, 63350, 63350, 63400, 63400, 63400, 63400, 63400, 63400, 63450, 63450, 63450, 63450, 63500, 63500, 63500, 63500, 63500, 63550, 63550, 63550, 63550, 63600, 63600, 63600, 63600, 63650, 63650, 63650, 63650, 63700, 63700, 63700, 63750, 63750, 63750, 63800, 63800, 63800, 63800, 63850, 63850, 63850, 63900, 63900, 63900, 63950, 63950, 63950, 64000, 64000, 64000, 64050, 64050, 64100, 64100, 64100, 64150, 64150, 64150, 64200, 64200, 64250, 64250, 64250, 64300, 64300, 64350, 64350, 64350, 64400, 64400, 64450, 64450, 64450, 64500, 64500, 64550, 64550, 64600, 64600, 64650, 64650, 64650, 64700, 64700, 64750, 64750, 64800, 64800, 64850, 64850, 64900, 64900, 64950, 64950, 65000, 65000, 65050, 65050, 65100, 65100, 65150, 65150, 65200, 65200, 65250, 65250, 65300, 65300, 65350, 65350, 65400, 65400, 65450, 65500, 65500, 65550, 65550, 65600, 65600, 65650, 65650, 65700, 65750, 65750, 65800, 65800, 65850, 65850, 65900, 65950, 65950, 66000, 66000, 66050, 66100, 66100, 66150, 66150, 66200, 66250, 66250, 66300, 66350, 66350, 66400, 66400, 66450, 66500, 66500, 66550, 66600, 66600, 66650, 66700, 66700, 66750, 66750, 66800, 66850, 66850, 66900, 66950, 66950, 67000, 67050, 67050, 67100, 67150, 67150, 67200, 67250, 67300, 67300, 67350, 67400, 67400, 67450, 67500, 67500, 67550, 67600, 67650, 67650, 67700, 67750, 67750, 67800, 67850, 67900, 67900, 67950, 68000, 68050, 68050, 68100, 68150, 68150, 68200, 68250, 68300, 68300, 68350, 68400, 68450, 68450, 68500, 68550, 68600, 68650, 68650, 68700, 68750, 68800, 68800, 68850, 68900, 68950, 69000, 69000, 69050, 69100, 69150, 69150, 69200, 69250, 69300, 69350, 69350, 69400, 69450, 69500, 69550, 69600, 69600, 69650, 69700, 69750, 69800, 69800, 69850, 69900, 69950, 70000, 70050, 70050, 70100, 70150, 70200, 70250, 70300, 70300, 70350, 70400, 70450, 70500, 70550, 70600, 70600, 70650, 70700, 70750, 70800, 70850, 70900, 70900, 70950, 71000, 71050, 71100, 71150, 71200, 71250, 71300, 71300, 71350, 71400, 71450, 71500, 71550, 71600, 71650, 71700, 71700, 71750, 71800, 71850, 71900, 71950, 72000, 72050, 72100, 72150, 72200, 72200, 72250, 72300, 72350, 72400, 72450, 72500, 72550, 72600, 72650, 72700, 72750, 72800, 72850, 72850, 72900, 72950, 73000, 73050, 73100, 73150, 73200, 73250, 73300, 73350, 73400, 73450, 73500, 73550, 73600, 73650, 73700, 73750, 73800, 73850, 73900, 73900, 73950, 74000, 74050, 74100, 74150, 74200, 74250, 74300, 74350, 74400, 74450, 74500, 74550, 74600, 74650, 74700, 74750, 74800, 74850, 74900, 74950, 75000, 75050, 75100, 75150, 75200, 75250, 75300, 75350, 75400, 75450, 75500, 75550, 75600, 75650, 75700, 75750, 75800, 75850, 75900, 76000, 76050, 76100, 76150, 76200, 76250, 76300, 76350, 76400, 76450, 76500, 76550, 76600, 76650, 76700, 76750, 76800, 76850, 76900, 76950, 77000, 77050, 77100, 77200, 77250, 77300, 77350, 77400, 77450, 77500, 77550, 77600, 77650, 77700, 77750, 77800, 77850, 77900, 78000, 78050, 78100, 78150, 78200, 78250, 78300, 78350, 78400, 78450, 78500, 78550, 78600, 78700, 78750, 78800, 78850, 78900, 78950, 79000, 79050, 79100, 79150, 79250, 79300, 79350, 79400, 79450, 79500, 79550, 79600, 79650, 79750, 79800, 79850, 79900, 79950, 80000, 80050, 80100, 80150, 80250, 80300, 80350, 80400, 80450, 80500, 80550, 80600, 80700, 80750, 80800, 80850, 80900, 80950, 81000, 81100, 81150, 81200, 81250, 81300, 81350, 81400, 81450, 81550, 81600, 81650, 81700, 81750, 81800, 81900, 81950, 82000, 82050, 82100, 82150, 82200, 82300, 82350, 82400, 82450, 82500, 82550, 82650, 82700, 82750, 82800, 82850, 82900, 83000, 83050, 83100, 83150, 83200, 83250, 83350, 83400, 83450, 83500, 83550, 83650, 83700, 83750, 83800, 83850, 83900, 84000, 84050, 84100, 84150, 84200, 84300, 84350, 84400, 84450, 84500, 84600, 84650, 84700, 84750, 84800, 84900, 84950, 85000, 85050, 85100, 85200, 85250, 85300, 85350, 85400, 85500, 85550, 85600, 85650, 85700, 85800, 85850, 85900, 85950, 86000, 86100, 86150, 86200, 86250, 86350, 86400, 86450, 86500, 86550, 86650, 86700, 86750, 86800, 86900, 86950, 87000, 87050, 87150, 87200, 87250, 87300, 87350, 87450, 87500, 87550, 87600, 87700, 87750, 87800, 87850, 87950, 88000, 88050, 88100, 88200, 88250, 88300, 88350, 88450, 88500, 88550, 88600, 88700, 88750, 88800, 88850, 88950, 89000, 89050, 89100, 89200, 89250, 89300, 89350, 89450, 89500, 89550, 89600, 89700, 89750, 89800, 89900, 89950, 90000, 90050, 90150, 90200, 90250, 90300, 90400, 90450, 90500, 90600, 90650, 90700, 90750, 90850, 90900, 90950, 91000, 91100, 91150, 91200, 91300, 91350, 91400, 91450, 91550, 91600, 91650, 91750, 91800, 91850, 91950, 92000, 92050, 92100, 92200, 92250};
+
+    double l = std::round(t->slc_muoncandidate_length.at(scl_ll_max));
+    double dqdx_cut = 200000;
+    if (l >= 0 && l < 1000) {
+      dqdx_cut = svm_x.at(l);
+    }
+      
+    if (dqdx_calib > dqdx_cut) continue;
+    // if(t->slc_nuvtx_z.at(scl_ll_max) <= 500) continue;
+
+    if (isSignal && nu_origin) selected_signal_events_percut["mip_consistency"]+=event_weight;
+    selected_events_percut["mip_consistency"]+=event_weight;
+
+
+
+    // Just before the FV cut, make distribution of vtxz
+    if (t->slc_nuvtx_y.at(scl_ll_max) > 82) {
+      hmap_vtxz_upborder["total"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+      hmap_vtxx_upborder["total"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+      if (isSignal && nu_origin) {
+        hmap_vtxz_upborder["signal"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+        hmap_vtxx_upborder["signal"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+      } else {
+        hmap_vtxz_upborder["background"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+        hmap_vtxx_upborder["background"]->Fill(t->slc_nuvtx_z.at(scl_ll_max));
+      }
+    }
+
+
+    // FV cut
+    if(t->slc_nuvtx_fv.at(scl_ll_max) == 0) continue;
+    if(t->slc_nuvtx_z.at(scl_ll_max) > 675 && t->slc_nuvtx_z.at(scl_ll_max) < 775) continue;
+    // if(t->slc_nuvtx_z.at(scl_ll_max) < 200) continue;
+
+    if (isSignal && nu_origin) selected_signal_events_percut["fiducial_volume"]+=event_weight;
+    selected_events_percut["fiducial_volume"]+=event_weight;
+
+    // Select the bump only
+    if(t->slc_iscontained.at(scl_ll_max)) continue; // Uncontained
+    if(t->slc_ntrack.at(scl_ll_max) != 1) continue; // Multiplicity == 1
+    if(t->slc_nuvtx_y.at(scl_ll_max) > 0) continue; // Vertex in the bottom half of the detector
+    if(t->slc_nuvtx_x.at(scl_ll_max) > 128.175) continue; // Vertex in the anode half of the detector
+    if(t->slc_longesttrack_theta.at(scl_ll_max) > -0.6) continue; // cos(theta) < -0.6
+
+
     
     
 

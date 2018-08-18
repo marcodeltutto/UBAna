@@ -27,7 +27,8 @@ analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecan
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v9_models_ccmec.root") # tune 1 - genie models syst only (from Andy's uboonedata branch, and with the q0, q3 fix) (after neutrino, but same selection as before)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v9_models_total.root") # tune 1 - genie models syst only (from Andy's uboonedata branch, and with the q0, q3 fix) (after neutrino, but same selection as before)
 
-analyser.SetDirtFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_18__v9.root") # dirt
+# analyser.SetDirtFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_18__v9.root") # dirt
+analyser.SetDirtFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15.root") # dirt v15
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 analyser.SetBNBONFile         ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root")    

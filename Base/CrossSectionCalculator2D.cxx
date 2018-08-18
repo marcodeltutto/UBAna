@@ -416,7 +416,8 @@ namespace Base {
 
     // Scale mc histograms
     for (auto iter : _hmap_bnbcosmic) {
-      if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
+      if ( iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off"
+        || iter.first == "dirt" || iter.first == "dirt_outfv"   || iter.first == "dirt_cosmic") continue;
       iter.second->Sumw2();
       iter.second->Scale(_scale_factor_mc_bnbcosmic);
     }
@@ -453,7 +454,7 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
-    std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
+    std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu", "dirt"};
 
     for (auto name : bkg_names) 
     {
@@ -846,23 +847,45 @@ namespace Base {
     std::vector<TH1D> xsec_data_histos;
     std::vector<TH1D> xsec_mc_histos;
     std::vector<TH1D> xsec_data_unc_histos;
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+    //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
+    //                                               "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
+    //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
+    //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
+
+
     std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
                                                   "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
                                                   "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
                                                   "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
                                                   "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
+                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",};
+
 
     if (_verbose) {
       std::cout << "n bins x " << h_data->GetNbinsX() << std::endl;
       std::cout << "n bins y " << h_data->GetNbinsY() << std::endl;
     }
 
+    int horizontal_division = 2;
+    int vertical_division = floor(h_data->GetNbinsX() / 2.) + 1;
+
+    if (_verbose) {
+      std::cout << "Horizontal divisions " << horizontal_division << std::endl;
+      std::cout << "Vertical divisions " << vertical_division << std::endl;
+    }
+
     // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
     TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
     c_test->SetBottomMargin(0.15);
     // gStyle->SetOptStat(0);
-    c_test->Divide(2,3,0.01,0.01);
+    c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
 
     for (int i = 0; i < h_data->GetNbinsX(); i++) {
       xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+1));
@@ -872,10 +895,13 @@ namespace Base {
 
 
     for (int i = 0; i < xsec_mc_histos.size(); i++) {
+
       c_test->cd(i+1);
+
       gPad->SetBottomMargin(0.15);
       gPad->SetLeftMargin(0.15);
       gPad->SetTopMargin(0.1128947);
+
       xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
       xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
       xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
@@ -898,10 +924,18 @@ namespace Base {
       //   xsec_mc_histos.at(i).SetMaximum(0.4);
       // } 
 
-      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.40);
-      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.40);
-      if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.60);
-      if (i == 3) xsec_mc_histos.at(i).SetMaximum(0.80);
+      // if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.40);
+      // if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.40);
+      // if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.60);
+      // if (i == 3) xsec_mc_histos.at(i).SetMaximum(0.80);
+      // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+      // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.50);
+      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.45);
+      if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.80);
+      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.00);
+      // if (i == 3) xsec_mc_histos.at(i).SetMinimum(-0.3);
       if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
       if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
 
@@ -927,6 +961,7 @@ namespace Base {
       }
     }
     // PlottingTools::DrawPreliminaryXSec();
+
 
     name = _folder +_name + "_xsec_anglesplit";
     c_test->SaveAs(name + ".pdf");

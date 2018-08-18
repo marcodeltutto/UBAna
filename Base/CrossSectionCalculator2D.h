@@ -194,7 +194,7 @@ namespace Base {
 
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
-    bool _verbose = false;
+    bool _verbose = true;
 
     double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
 

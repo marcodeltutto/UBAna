@@ -106,6 +106,9 @@ namespace Main {
   TFile* mc_dirt_file = TFile::Open(mc_dirt_file_name.c_str(), "READ");
   TFile* bnbon_file = TFile::Open(bnbon_file_name.c_str(), "READ");
   TFile* extbnb_file = TFile::Open(extbnb_file_name.c_str(), "READ");
+
+  if (!mc_dirt_file) 
+    std::cout << "MC Dirt File not available." << std::endl;
   
 
   // *************************************
@@ -541,8 +544,49 @@ std::cout << ">> here10" << std::endl;
     hmap_mctruth_mucostheta_gen_mc_dirt = *temp_map;
     mc_dirt_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
     hmap_mctruth_muphi_gen_mc_dirt = *temp_map;
+
+    //
+    // Add them to the bnbcosmic maps
+    //
+    for (auto it : hmap_onebin_mc_dirt) it.second->Scale(scale_factor_mc_dirt);
+    hmap_onebin_mc["dirt"] = hmap_onebin_mc_dirt["total"];
+    hmap_onebin_mc["total"]->Add(hmap_onebin_mc_dirt["total"]);
+    hmap_onebin_mc["dirt_outfv"] = hmap_onebin_mc_dirt["outfv"];
+    hmap_onebin_mc["dirt_cosmic"] = hmap_onebin_mc_dirt["cosmic"];
+
+    for (auto it : hmap_trkmom_mc_dirt) it.second->Scale(scale_factor_mc_dirt);
+    hmap_trkmom_mc["dirt"] = hmap_trkmom_mc_dirt["total"];
+    hmap_trkmom_mc["total"]->Add(hmap_trkmom_mc_dirt["total"]);
+    hmap_trkmom_mc["dirt_outfv"] = hmap_trkmom_mc_dirt["outfv"];
+    hmap_trkmom_mc["dirt_cosmic"] = hmap_trkmom_mc_dirt["cosmic"];
+
+    for (auto it : hmap_trktheta_mc_dirt) it.second->Scale(scale_factor_mc_dirt);
+    hmap_trktheta_mc["dirt"] = hmap_trktheta_mc_dirt["total"];
+    hmap_trktheta_mc["total"]->Add(hmap_trktheta_mc_dirt["total"]);
+    hmap_trktheta_mc["dirt_outfv"] = hmap_trktheta_mc_dirt["outfv"];
+    hmap_trktheta_mc["dirt_cosmic"] = hmap_trktheta_mc_dirt["cosmic"];
+
+  } else {
+    // Create an empy histogram
+    TH1D * h_empty = (TH1D*) hmap_onebin_mc["total"]->Clone("empty");
+    h_empty->Reset();
+
+    hmap_onebin_mc["dirt"] = h_empty;
+    hmap_onebin_mc["outfv_dirt"] = h_empty;
+    hmap_onebin_mc["cosmic_dirt"] = h_empty;
+
+    hmap_trkmom_mc["dirt"] = h_empty;
+    hmap_trkmom_mc["outfv_dirt"] = h_empty;
+    hmap_trkmom_mc["cosmic_dirt"] = h_empty;
+
+    hmap_trktheta_mc["dirt"] = h_empty;
+    hmap_trktheta_mc["outfv_dirt"] = h_empty;
+    hmap_trktheta_mc["cosmic_dirt"] = h_empty;
   }
 
+
+
+  
 
   // *************************************
   // Getting the relevant histograms from data file
@@ -643,6 +687,21 @@ std::cout << ">> here10" << std::endl;
   TH2D* h_trktheta_trkmom_total_extbnb = (TH2D*)extbnb_file->Get("h_trktheta_trkmom_total");
   TH2D* h_eff_muangle_mumom_num = (TH2D*)mc_bnbcosmic_file->Get("h_eff_muangle_mumom_num");
   TH2D* h_eff_muangle_mumom_den = (TH2D*)mc_bnbcosmic_file->Get("h_eff_muangle_mumom_den");
+  if (mc_dirt_file) {
+    mc_dirt_file->GetObject("hmap_trktheta_trkmom", temp_map2);
+    std::map<std::string,TH2D*> hmap_trktheta_trkmom_mc_dirt = *temp_map2;
+    for (auto it : hmap_trktheta_trkmom_mc_dirt) it.second->Scale(scale_factor_mc_dirt);
+    hmap_trktheta_trkmom_mc["dirt"] = hmap_trktheta_trkmom_mc_dirt["total"];
+    hmap_trktheta_trkmom_mc["total"]->Add(hmap_trktheta_trkmom_mc_dirt["total"]);
+    hmap_trktheta_trkmom_mc["dirt_outfv"] = hmap_trktheta_trkmom_mc_dirt["outfv"];
+    hmap_trktheta_trkmom_mc["dirt_cosmic"] = hmap_trktheta_trkmom_mc_dirt["cosmic"];
+  } else {
+    TH2D * h_empty = (TH2D*) hmap_trktheta_trkmom_mc["total"]->Clone("empty2d");
+    h_empty->Reset();
+    hmap_trktheta_trkmom_mc["dirt"] = h_empty;
+    hmap_trktheta_trkmom_mc["outfv_dirt"] = h_empty;
+    hmap_trktheta_trkmom_mc["cosmic_dirt"] = h_empty;
+  }
 
 
 
@@ -1315,11 +1374,20 @@ std::cout << "H here 5" << std::endl;
 
     MigrationMatrix4D migrationmatrix4d;
     migrationmatrix4d.SetTTree(tt); 
-    int n_bins_mumom_temp = 4;
-    double bins_mumom_temp[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
-    int n_bins_mucostheta_temp = 6;
-    double bins_mucostheta_temp[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
-    migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
+
+    // int n_bins_double_mumom = 4;
+    // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
+    // int n_bins_double_mucostheta = 6;
+    // double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
+
+    int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
+    double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
+    // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
+    // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
+    int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
+    double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+
+    migrationmatrix4d.SetBins(bins_double_mucostheta, n_bins_double_mucostheta, bins_double_mumom, n_bins_double_mumom);
     
     Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
     // std::cout << "Here 3" << std::endl;
@@ -1357,6 +1425,8 @@ std::cout << "H here 5" << std::endl;
 
     TH2D * xsec_muangle_mumom = xseccalc2d.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
     TH2D * xsec_muangle_mumom_mc = xseccalc2d.GetMCCrossSection();
+
+    std::cout << "Here 9" << std::endl;
 
     file_out->cd();
     save_name = "xsec_muangle_mumom_" + _prefix;
@@ -1586,9 +1656,15 @@ std::cout << "H here 5" << std::endl;
   if (mc_dirt_file) {
     hmap_trklen_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
     hmap_trklen_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
+    hmap_trklen_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
     hmap_trklen_mc["dirt_cosmic"] = hmap_trklen_mc_dirt["cosmic"];
     hmap_trklen_mc["dirt_outfv"] = hmap_trklen_mc_dirt["outfv"];
-  } 
+    hmap_trklen_mc["dirt"] = hmap_trklen_mc_dirt["total"];
+  } else {
+    TH1D * h_empty = (TH1D*) hmap_trktheta_trkmom_mc["total"]->Clone("empty2d");
+    h_empty->Reset();
+    hmap_trklen_mc["dirt"] = h_empty;
+  }
   this->DrawDataMC(canvas_trklen, hs_trklen_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trklen_mc, h_trklen_total_bnbon, bnbon_pot_meas);
 
   
@@ -1604,18 +1680,18 @@ std::cout << "H here 5" << std::endl;
   hmap_trklen_mc["nue"]->Integral() +
   hmap_trklen_mc["beam-off"]->Integral();
 
-  std::cout << std::endl;
+  // std::cout << std::endl;
   
-  std::cout << "Number of events per channel:" << std::endl;
-  std::cout << "signal: " << hmap_trklen_mc["signal"]->Integral() << ", " << hmap_trklen_mc["signal"]->Integral() / den << std::endl;
-  std::cout << "cosmic: " << hmap_trklen_mc["cosmic"]->Integral() << ", " << hmap_trklen_mc["cosmic"]->Integral() / den << std::endl;
-  std::cout << "outfv: " << hmap_trklen_mc["outfv"]->Integral() << ", " << hmap_trklen_mc["outfv"]->Integral() / den << std::endl;
-  std::cout << "nc: " << hmap_trklen_mc["nc"]->Integral() << ", " << hmap_trklen_mc["nc"]->Integral() / den << std::endl;
-  std::cout << "anumu: " << hmap_trklen_mc["anumu"]->Integral() << ", " << hmap_trklen_mc["anumu"]->Integral() / den << std::endl;
-  std::cout << "nue: " << hmap_trklen_mc["nue"]->Integral() << ", " << hmap_trklen_mc["nue"]->Integral() / den << std::endl;
-  std::cout << "beam-off: " << hmap_trklen_mc["beam-off"]->Integral() << ", " << hmap_trklen_mc["beam-off"]->Integral() / den << std::endl;
-  std::cout << std::endl;
-  std::cout << "PURITY: " << hmap_trklen_mc["signal"]->Integral() / den << std::endl;
+  // std::cout << "Number of events per channel:" << std::endl;
+  // std::cout << "signal: " << hmap_trklen_mc["signal"]->Integral() << ", " << hmap_trklen_mc["signal"]->Integral() / den << std::endl;
+  // std::cout << "cosmic: " << hmap_trklen_mc["cosmic"]->Integral() << ", " << hmap_trklen_mc["cosmic"]->Integral() / den << std::endl;
+  // std::cout << "outfv: " << hmap_trklen_mc["outfv"]->Integral() << ", " << hmap_trklen_mc["outfv"]->Integral() / den << std::endl;
+  // std::cout << "nc: " << hmap_trklen_mc["nc"]->Integral() << ", " << hmap_trklen_mc["nc"]->Integral() / den << std::endl;
+  // std::cout << "anumu: " << hmap_trklen_mc["anumu"]->Integral() << ", " << hmap_trklen_mc["anumu"]->Integral() / den << std::endl;
+  // std::cout << "nue: " << hmap_trklen_mc["nue"]->Integral() << ", " << hmap_trklen_mc["nue"]->Integral() / den << std::endl;
+  // std::cout << "beam-off: " << hmap_trklen_mc["beam-off"]->Integral() << ", " << hmap_trklen_mc["beam-off"]->Integral() / den << std::endl;
+  // std::cout << std::endl;
+  // std::cout << "PURITY: " << hmap_trklen_mc["signal"]->Integral() / den << std::endl;
   
   std::cout << std::endl;
 
@@ -1629,6 +1705,7 @@ std::cout << "H here 5" << std::endl;
   hmap_trklen_mc["nc"]->Integral(0, nbins+1) +
   hmap_trklen_mc["anumu"]->Integral(0, nbins+1) +
   hmap_trklen_mc["nue"]->Integral(0, nbins+1) +
+  hmap_trklen_mc["dirt"]->Integral(0, nbins+1) +
   hmap_trklen_mc["beam-off"]->Integral(0, nbins+1);
 
   std::cout << "signal: " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) / den << std::endl;
@@ -1637,6 +1714,7 @@ std::cout << "H here 5" << std::endl;
   std::cout << "nc: " << hmap_trklen_mc["nc"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["nc"]->Integral(0, nbins+1) / den << std::endl;
   std::cout << "anumu: " << hmap_trklen_mc["anumu"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["anumu"]->Integral(0, nbins+1) / den << std::endl;
   std::cout << "nue: " << hmap_trklen_mc["nue"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["nue"]->Integral(0, nbins+1) / den << std::endl;
+  std::cout << "dirt: " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) / den << std::endl;
   std::cout << "beam-off: " << hmap_trklen_mc["beam-off"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["beam-off"]->Integral(0, nbins+1) / den << std::endl;
   std::cout << std::endl;
   std::cout << "PURITY: " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) / den << std::endl;
@@ -1758,6 +1836,7 @@ std::cout << "H here 5" << std::endl;
   name = outdir + "multtracktol";
   canvas_multtracktol->SaveAs(name + ".pdf");
   canvas_multtracktol->SaveAs(name + ".C","C");
+
   
   TCanvas* canvas_xdiff_b = new TCanvas();
   THStack *hs_xdiff_b_mc = new THStack("hs_xdiff_b",";QLL x - TPC x [cm]; TPCObjects (Before Selection)");
@@ -1770,6 +1849,8 @@ std::cout << "H here 5" << std::endl;
   name = outdir + "xdiff_b";
   canvas_xdiff_b->SaveAs(name + ".pdf");
   canvas_xdiff_b->SaveAs(name + ".C","C");
+
+
   
   TCanvas* canvas_b_zdiff = new TCanvas();
   THStack *hs_zdiff_b_mc = new THStack("hs_zdiff_b",";Hypo z - Flash z [cm]; TPCObjects (Before Selection)");
@@ -1795,6 +1876,8 @@ std::cout << "H here 5" << std::endl;
   canvas_xdiff->SaveAs(name + ".pdf");
   canvas_xdiff->SaveAs(name + ".C","C");
 
+
+
   TCanvas* canvas_zdiff = new TCanvas();
   THStack *hs_zdiff_mc = new THStack("hs_zdiff",";Hypo z - Flash z [cm]; Selected Events");
   leg = PlottingTools::DrawTHStack2(hs_zdiff_mc, scale_factor_mc_bnbcosmic, true, hmap_zdiff_mc);
@@ -1806,6 +1889,8 @@ std::cout << "H here 5" << std::endl;
   name = outdir + "zdiff";
   canvas_zdiff->SaveAs(name + ".pdf");
   canvas_zdiff->SaveAs(name + ".C","C");
+
+
 
   TCanvas* canvas_vtxz_upborder = new TCanvas();
   THStack *hs_vtxz_upborder_mc = new THStack("hs_vtxz_upborder",";Candidate Neutrino Vertex Z [cm]; Selected Events");
@@ -1832,15 +1917,21 @@ std::cout << "H here 5" << std::endl;
   canvas_vtxx_upborder->SaveAs(name + ".C","C");
 
 
+
+
   TCanvas* canvas_vtxcheck_angle = new TCanvas();
   THStack *hs_vtxcheck_angle_mc = new THStack("hs_vtxcheck_angle",";Angle [rad]; TPCObjects (Before Selection)");
   hmap_vtxcheck_angle_mc["beam-off"] = h_vtxcheck_angle_total_extbnb;
   if (mc_dirt_file) {
-    hmap_vtxcheck_angle_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxcheck_angle_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxcheck_angle_mc["dirt_cosmic"] = hmap_vtxcheck_angle_mc_dirt["cosmic"];
-    hmap_vtxcheck_angle_mc["dirt_outfv"] = hmap_vtxcheck_angle_mc_dirt["outfv"];
+    hmap_vtxcheck_angle_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxcheck_angle_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxcheck_angle_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxcheck_angle_mc["signal"]->Add(hmap_vtxcheck_angle_mc_dirt["signal"]);
+    hmap_vtxcheck_angle_mc["background"]->Add(hmap_vtxcheck_angle_mc_dirt["background"]);
+    hmap_vtxcheck_angle_mc["total"]->Add(hmap_vtxcheck_angle_mc_dirt["total"]);
+
   }
+
   leg = PlottingTools::DrawTHStack2(hs_vtxcheck_angle_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxcheck_angle_mc);
   leg->AddEntry(h_vtxcheck_angle_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
   PlottingTools::DrawDataHisto(h_vtxcheck_angle_total_bnbon);
@@ -1853,14 +1944,18 @@ std::cout << "H here 5" << std::endl;
 
 
 
+
+
   TCanvas* canvas_residuals_std = new TCanvas();
   THStack *hs_residulas_std_mc = new THStack("hs_residulas_std",";#sigma_{r_{i}}; TPCObjects (Before Selection)");
   hmap_residuals_std_mc["beam-off"] = h_residuals_std_total_extbnb;
   if (mc_dirt_file) {
-    hmap_residuals_std_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_residuals_std_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_residuals_std_mc["dirt_cosmic"] = hmap_residuals_std_mc_dirt["cosmic"];
-    hmap_residuals_std_mc["dirt_outfv"] = hmap_residuals_std_mc_dirt["outfv"];
+    hmap_residuals_std_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_residuals_std_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_residuals_std_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_residuals_std_mc["signal"]->Add(hmap_residuals_std_mc_dirt["signal"]);
+    hmap_residuals_std_mc["background"]->Add(hmap_residuals_std_mc_dirt["background"]);
+    hmap_residuals_std_mc["total"]->Add(hmap_residuals_std_mc_dirt["total"]);
   }
   leg = PlottingTools::DrawTHStack2(hs_residulas_std_mc, scale_factor_mc_bnbcosmic, true, hmap_residuals_std_mc);
   leg->AddEntry(h_residuals_std_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
@@ -1874,14 +1969,18 @@ std::cout << "H here 5" << std::endl;
 
 
 
+
+
   TCanvas* canvas_residuals_mean = new TCanvas();
   THStack *hs_residulas_mean_mc = new THStack("hs_residulas_mean",";<r_{i}>; TPCObjects (Before Selection)");
   hmap_residuals_mean_mc["beam-off"] = h_residuals_mean_total_extbnb;
   if (mc_dirt_file) {
-    hmap_residuals_mean_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_residuals_mean_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_residuals_mean_mc["dirt_cosmic"] = hmap_residuals_mean_mc_dirt["cosmic"];
-    hmap_residuals_mean_mc["dirt_outfv"] = hmap_residuals_mean_mc_dirt["outfv"];
+    hmap_residuals_mean_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_residuals_mean_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_residuals_mean_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_residuals_mean_mc["signal"]->Add(hmap_residuals_mean_mc_dirt["signal"]);
+    hmap_residuals_mean_mc["background"]->Add(hmap_residuals_mean_mc_dirt["background"]);
+    hmap_residuals_mean_mc["total"]->Add(hmap_residuals_mean_mc_dirt["total"]);
   }
   leg = PlottingTools::DrawTHStack2(hs_residulas_mean_mc, scale_factor_mc_bnbcosmic, true, hmap_residuals_mean_mc);
   leg->AddEntry(h_residuals_mean_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
@@ -1896,14 +1995,17 @@ std::cout << "H here 5" << std::endl;
 
 
 
+
   TCanvas* canvas_perc_used_hits = new TCanvas();
   THStack *hs_perc_used_hits_mc = new THStack("hs_residulas_mean",";Fraction of used hits in cluster; TPCObjects (Before Selection)");
   hmap_perc_used_hits_mc["beam-off"] = h_perc_used_hits_total_extbnb;
   if (mc_dirt_file) {
-    hmap_perc_used_hits_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_perc_used_hits_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_perc_used_hits_mc["dirt_cosmic"] = hmap_perc_used_hits_mc_dirt["cosmic"];
-    hmap_perc_used_hits_mc["dirt_outfv"] = hmap_perc_used_hits_mc_dirt["outfv"];
+    hmap_perc_used_hits_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_perc_used_hits_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_perc_used_hits_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_perc_used_hits_mc["signal"]->Add(hmap_perc_used_hits_mc_dirt["signal"]);
+    hmap_perc_used_hits_mc["background"]->Add(hmap_perc_used_hits_mc_dirt["background"]);
+    hmap_perc_used_hits_mc["total"]->Add(hmap_perc_used_hits_mc_dirt["total"]);
   }
   leg = PlottingTools::DrawTHStack2(hs_perc_used_hits_mc, scale_factor_mc_bnbcosmic, true, hmap_perc_used_hits_mc);
   leg->AddEntry(h_perc_used_hits_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
@@ -1920,10 +2022,12 @@ std::cout << "H here 5" << std::endl;
   THStack *hs_mom_mcs_length_mc = new THStack("hs_residulas_mean",";(MCS - Length) Reconstructed Momentum [GeV]; TPCObjects (Before Selection)");
   hmap_mom_mcs_length_mc["beam-off"] = h_mom_mcs_length_total_extbnb;
   if (mc_dirt_file) {
-    hmap_mom_mcs_length_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_mom_mcs_length_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_mom_mcs_length_mc["dirt_cosmic"] = hmap_mom_mcs_length_mc_dirt["cosmic"];
-    hmap_mom_mcs_length_mc["dirt_outfv"] = hmap_mom_mcs_length_mc_dirt["outfv"];
+    hmap_mom_mcs_length_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_mom_mcs_length_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_mom_mcs_length_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_mom_mcs_length_mc["signal"]->Add(hmap_mom_mcs_length_mc_dirt["signal"]);
+    hmap_mom_mcs_length_mc["background"]->Add(hmap_mom_mcs_length_mc_dirt["background"]);
+    hmap_mom_mcs_length_mc["total"]->Add(hmap_mom_mcs_length_mc_dirt["total"]);
   }
   leg = PlottingTools::DrawTHStack2(hs_mom_mcs_length_mc, scale_factor_mc_bnbcosmic, true, hmap_mom_mcs_length_mc);
   leg->AddEntry(h_mom_mcs_length_total_bnbon,"Data (Beam-on)","lep");  // DrawDataHisto(h_vtxx_total_bnbon);
@@ -1940,10 +2044,12 @@ std::cout << "H here 5" << std::endl;
   THStack *hs_vtxx_mc = new THStack("hs_vtxx",";Candidate Neutrino Vertex X [cm]; Selected Events");
   hmap_vtxx_mc["beam-off"] = h_vtxx_total_extbnb;
   if (mc_dirt_file) {
-    hmap_vtxx_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxx_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxx_mc["dirt_cosmic"] = hmap_vtxx_mc_dirt["cosmic"];
-    hmap_vtxx_mc["dirt_outfv"] = hmap_vtxx_mc_dirt["outfv"];
+    hmap_vtxx_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxx_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxx_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxx_mc["signal"]->Add(hmap_vtxx_mc_dirt["signal"]);
+    hmap_vtxx_mc["background"]->Add(hmap_vtxx_mc_dirt["background"]);
+    hmap_vtxx_mc["total"]->Add(hmap_vtxx_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_vtxx, hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc, h_vtxx_total_bnbon, bnbon_pot_meas);
 
@@ -1955,10 +2061,12 @@ std::cout << "H here 5" << std::endl;
   TCanvas* canvas_vtxy = new TCanvas("canvas_vtxy", "canvas", 800, 700);
   THStack *hs_vtxy_mc = new THStack("hs_vtxy",";Candidate Neutrino Vertex Y [cm]; Selected Events");
   if (mc_dirt_file) {
-    hmap_vtxy_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxy_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxy_mc["dirt_cosmic"] = hmap_vtxy_mc_dirt["cosmic"];
-    hmap_vtxy_mc["dirt_outfv"] = hmap_vtxy_mc_dirt["outfv"];
+    hmap_vtxy_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxy_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxy_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxy_mc["signal"]->Add(hmap_vtxy_mc_dirt["signal"]);
+    hmap_vtxy_mc["background"]->Add(hmap_vtxy_mc_dirt["background"]);
+    hmap_vtxy_mc["total"]->Add(hmap_vtxy_mc_dirt["total"]);
   }
   hmap_vtxy_mc["beam-off"] = h_vtxy_total_extbnb;
   this->DrawDataMC(canvas_vtxy, hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc, h_vtxy_total_bnbon, bnbon_pot_meas);
@@ -1971,10 +2079,12 @@ std::cout << "H here 5" << std::endl;
   THStack *hs_vtxz_mc = new THStack("hs_vtxz",";Candidate Neutrino Vertex Z [cm]; Selected Events");
   hmap_vtxz_mc["beam-off"] = h_vtxz_total_extbnb;
   if (mc_dirt_file) {
-    hmap_vtxz_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxz_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxz_mc["dirt_cosmic"] = hmap_vtxz_mc_dirt["cosmic"];
-    hmap_vtxz_mc["dirt_outfv"] = hmap_vtxz_mc_dirt["outfv"];
+    hmap_vtxz_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxz_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxz_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_vtxz_mc["signal"]->Add(hmap_vtxz_mc_dirt["signal"]);
+    hmap_vtxz_mc["background"]->Add(hmap_vtxz_mc_dirt["background"]);
+    hmap_vtxz_mc["total"]->Add(hmap_vtxz_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_vtxz, hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc, h_vtxz_total_bnbon, bnbon_pot_meas);
 
@@ -1986,10 +2096,12 @@ std::cout << "H here 5" << std::endl;
   THStack *hs_flsmatch_score_mc = new THStack("hs_flsmatch_score",";1/(-log(L_{1})); Selected Events");
   hmap_flsmatch_score_mc["beam-off"] = h_flsmatch_score_total_extbnb;
   if (mc_dirt_file) {
-    hmap_flsmatch_score_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_flsmatch_score_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_flsmatch_score_mc["dirt_cosmic"] = hmap_flsmatch_score_mc_dirt["cosmic"];
-    hmap_flsmatch_score_mc["dirt_outfv"] = hmap_flsmatch_score_mc_dirt["outfv"];
+    hmap_flsmatch_score_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_mc["signal"]->Add(hmap_flsmatch_score_mc_dirt["signal"]);
+    hmap_flsmatch_score_mc["background"]->Add(hmap_flsmatch_score_mc_dirt["background"]);
+    hmap_flsmatch_score_mc["total"]->Add(hmap_flsmatch_score_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_flsmatch_score, hs_flsmatch_score_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_mc, h_flsmatch_score_total_bnbon, bnbon_pot_meas);  
   name = outdir + "flsmatch_score";
@@ -2001,10 +2113,12 @@ std::cout << "H here 5" << std::endl;
   THStack *hs_flsmatch_score_second_mc = new THStack("hs_flsmatch_score_second",";1/(-log(L_{2})); Selected Events");
   hmap_flsmatch_score_second_mc["beam-off"] = h_flsmatch_score_second_total_extbnb;
   if (mc_dirt_file) {
-    hmap_flsmatch_score_second_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_flsmatch_score_second_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_flsmatch_score_second_mc["dirt_cosmic"] = hmap_flsmatch_score_second_mc_dirt["cosmic"];
-    hmap_flsmatch_score_second_mc["dirt_outfv"] = hmap_flsmatch_score_second_mc_dirt["outfv"];
+    hmap_flsmatch_score_second_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_second_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_second_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_second_mc["signal"]->Add(hmap_flsmatch_score_second_mc_dirt["signal"]);
+    hmap_flsmatch_score_second_mc["background"]->Add(hmap_flsmatch_score_second_mc_dirt["background"]);
+    hmap_flsmatch_score_second_mc["total"]->Add(hmap_flsmatch_score_second_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_flsmatch_score_second, hs_flsmatch_score_second_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_second_mc, h_flsmatch_score_second_total_bnbon, bnbon_pot_meas);
   name = outdir + "flsmatch_score_second";
@@ -2016,10 +2130,12 @@ std::cout << "H here 5" << std::endl;
   THStack *hs_flsmatch_score_difference_mc = new THStack("hs_flsmatch_score_difference",";1/(-log(L_{1})) - 1/(-log(L_{2})); Selected Events");
   hmap_flsmatch_score_difference_mc["beam-off"] = h_flsmatch_score_difference_total_extbnb;
   if (mc_dirt_file) {
-    hmap_flsmatch_score_difference_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_flsmatch_score_difference_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_flsmatch_score_difference_mc["dirt_cosmic"] = hmap_flsmatch_score_difference_mc_dirt["cosmic"];
-    hmap_flsmatch_score_difference_mc["dirt_outfv"] = hmap_flsmatch_score_difference_mc_dirt["outfv"];
+    hmap_flsmatch_score_difference_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_difference_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_difference_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_flsmatch_score_difference_mc["signal"]->Add(hmap_flsmatch_score_difference_mc_dirt["signal"]);
+    hmap_flsmatch_score_difference_mc["background"]->Add(hmap_flsmatch_score_difference_mc_dirt["background"]);
+    hmap_flsmatch_score_difference_mc["total"]->Add(hmap_flsmatch_score_difference_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_flsmatch_score_difference, hs_flsmatch_score_difference_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_difference_mc, h_flsmatch_score_difference_total_bnbon, bnbon_pot_meas);
   name = outdir + "flsmatch_score_difference";
@@ -2031,10 +2147,12 @@ std::cout << "H here 5" << std::endl;
   THStack *hs_ntpcobj_mc = new THStack("hs_ntpcobj",";Number of TPCObjects per Event;");
   hmap_ntpcobj_mc["beam-off"] = h_ntpcobj_total_extbnb;
   if (mc_dirt_file) {
-    hmap_ntpcobj_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
-    hmap_ntpcobj_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
-    hmap_ntpcobj_mc["dirt_cosmic"] = hmap_ntpcobj_mc_dirt["cosmic"];
-    hmap_ntpcobj_mc["dirt_outfv"] = hmap_ntpcobj_mc_dirt["outfv"];
+    hmap_ntpcobj_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
+    hmap_ntpcobj_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
+    hmap_ntpcobj_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
+    hmap_ntpcobj_mc["signal"]->Add(hmap_ntpcobj_mc_dirt["signal"]);
+    hmap_ntpcobj_mc["background"]->Add(hmap_ntpcobj_mc_dirt["background"]);
+    hmap_ntpcobj_mc["total"]->Add(hmap_ntpcobj_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_ntpcobj, hs_ntpcobj_mc, scale_factor_mc_bnbcosmic, true, hmap_ntpcobj_mc, h_ntpcobj_total_bnbon, bnbon_pot_meas);
   name = outdir + "ntpcobj";
@@ -2147,8 +2265,6 @@ std::cout << "H here 5" << std::endl;
   h_deltax_2d_mc->Draw("colz");
   new TCanvas();
   h_deltax_2d_data->Draw("colz");
-
-
 
 
 
