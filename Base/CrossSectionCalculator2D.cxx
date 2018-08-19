@@ -854,18 +854,18 @@ namespace Base {
     //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
     //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
-
+-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00
     std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
                                                   "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
-                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
-                                                  "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
-                                                  "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00",};
+                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+                                                  "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+                                                  "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+                                                  "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+                                                  "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+                                                  "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+                                                  "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
 
     if (_verbose) {
