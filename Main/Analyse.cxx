@@ -378,7 +378,9 @@ namespace Main {
 
   std::cout << ">> here7" << std::endl;
 
+  //
   // Events - GENIE Multisim
+  //
   mc_bnbcosmic_file->GetObject("hmap_onebin_genie_multisim_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs_mc = *temp_map_bs;
 
@@ -388,14 +390,26 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("hmap_trkangle_genie_multisim_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_genie_multisim_bs_mc = *temp_map_bs;
 
-  std::cout << ">> Just before" << std::endl;
-  // std::map<std::string,BootstrapTH1D>* map_bs_temp;  //BootstrapTH1D* temp;
-  // mc_bnbcosmic_file->GetObject("map_bs_trkmom_genie_multisim", map_bs_temp);
-  // std::map<std::string,BootstrapTH1D> map_bs_trkmom_genie_multisim = *map_bs_temp;
-  // std::cout << ">> Just after" << std::endl;
-
   mc_bnbcosmic_file->GetObject("hmap_trktheta_trkmom_genie_multisim_bs", temp_map2d_bs);
   std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_multisim_bs_mc = *temp_map2d_bs;
+
+  if (mc_dirt_file) {
+    mc_dirt_file->GetObject("hmap_onebin_genie_multisim_bs", temp_map_bs);
+    std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs_mc_dirt = *temp_map_bs;
+    hmap_onebin_genie_multisim_bs_mc["dirt"] = hmap_onebin_genie_multisim_bs_mc_dirt["total"];
+
+    mc_dirt_file->GetObject("hmap_trkmom_genie_multisim_bs", temp_map_bs);
+    std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_multisim_bs_mc_dirt = *temp_map_bs;
+    hmap_trkmom_genie_multisim_bs_mc["dirt"] = hmap_trkmom_genie_multisim_bs_mc_dirt["total"];
+
+    mc_dirt_file->GetObject("hmap_trkangle_genie_multisim_bs", temp_map_bs);
+    std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_genie_multisim_bs_mc_dirt = *temp_map_bs;
+    hmap_trkangle_genie_multisim_bs_mc["dirt"] = hmap_trkangle_genie_multisim_bs_mc_dirt["total"];
+
+    mc_dirt_file->GetObject("hmap_trktheta_trkmom_genie_multisim_bs", temp_map2d_bs);
+    std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_multisim_bs_mc_dirt = *temp_map2d_bs;
+    hmap_trktheta_trkmom_genie_multisim_bs_mc["dirt"] = hmap_trktheta_trkmom_genie_multisim_bs_mc_dirt["total"];
+  } 
 
 
   // Events - GENIE Models
@@ -750,7 +764,9 @@ std::cout << ">> here10" << std::endl;
 
 
     // Create a list of the backgrounds that will be subtracted
-    std::vector<std::string> hist_to_subtract = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
+    std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
+    if (mc_dirt_file) 
+      std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu", "dirt"};
 
 
     std::cout << "***************" << std::endl;
@@ -769,10 +785,10 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
     _xsec_calc.ProcessPlots();
     _xsec_calc.Draw();
-    _xsec_calc.Draw(hist_to_subtract);
+    _xsec_calc.Draw(bkg_names);
     _xsec_calc.DoNotSmear(); // No smearing for total cross section
     _xsec_calc.PrintOnFile(_prefix);
-    TH1D * xsec = _xsec_calc.ExtractCrossSection("One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
+    TH1D * xsec = _xsec_calc.ExtractCrossSection(bkg_names, "One Bin", "#sigma [10^{-38} cm^{2}/GeV]");
 
     save_name = "xsec_onebin_" + _prefix;
     file_out->cd();
@@ -803,6 +819,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_onebin_genie_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_onebin_num, bs_genie_multisim_eff_onebin_den);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("genie_multisim_onebin");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
@@ -817,6 +834,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_onebin_genie_models_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_onebin_num, bs_genie_models_eff_onebin_den);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("genie_models_onebin");
         _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
@@ -835,6 +853,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetOutDir("output_data_mc_bs");
         _xsec_bs_calc.SetHistograms(hmap_onebin_flux_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_onebin_num, bs_flux_multisim_eff_onebin_den);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("flux_multisim_onebin");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
@@ -880,6 +899,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_mumom_num, bs_genie_multisim_eff_mumom_den, bs_genie_multisim_reco_true_mumom);
         _xsec_bs_calc.SetMigrationMatrixDimensions(7, 7);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.SetSavePrefix("genie_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -909,6 +929,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_models_bs_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_mumom_num, bs_genie_models_eff_mumom_den, bs_genie_models_reco_true_mumom);
         _xsec_bs_calc.SetMigrationMatrixDimensions(7, 7);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.SetSavePrefix("genie_models_mumom");
         _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -943,6 +964,7 @@ std::cout << ">> here10" << std::endl;
         _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
         _xsec_bs_calc.SetMigrationMatrixDimensions(7, 7);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
@@ -1027,7 +1049,7 @@ std::cout << ">> here10" << std::endl;
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkmom_eventsperbin_table.tex");
     _xsec_calc.Draw();
-    _xsec_calc.Draw(hist_to_subtract);
+    _xsec_calc.Draw(bkg_names);
     _xsec_calc.Smear(7, 7);
     if (covariance_matrix_mumom.GetNbinsX() > 1) {
       _xsec_calc.SetCovarianceMatrix(covariance_matrix_mumom);
@@ -1038,7 +1060,7 @@ std::cout << ">> here10" << std::endl;
       _xsec_calc.ImportAlternativeMC(*h);
     }
     std::cout << "H here 3" << std::endl;
-    TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection("p_{#mu}^{reco} [GeV]", "d#sigma/dp_{#mu}^{reco} [10^{-38} cm^{2}/GeV]");
+    TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection(bkg_names, "p_{#mu}^{reco} [GeV]", "d#sigma/dp_{#mu}^{reco} [10^{-38} cm^{2}/GeV]");
     TH1D * xsec_mumom_mc = _xsec_calc.GetMCCrossSection();
 std::cout << "H here 4" << std::endl;
     file_out->cd();
@@ -1088,6 +1110,7 @@ std::cout << "H here 5" << std::endl;
         _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
         _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -1117,6 +1140,7 @@ std::cout << "H here 5" << std::endl;
         _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_models_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_genie_models_eff_muangle_num, bs_genie_models_eff_muangle_den, bs_genie_models_true_reco_muangle);
         _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.SetSavePrefix("genie_models_muangle");
         _xsec_bs_calc.SetUpperLabel("GENIE Models Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -1150,6 +1174,7 @@ std::cout << "H here 5" << std::endl;
         _xsec_bs_calc.SetHistograms(hmap_trkangle_flux_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb);
         _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_num, bs_flux_multisim_eff_muangle_den, bs_flux_multisim_true_reco_muangle);
         _xsec_bs_calc.SetMigrationMatrixDimensions(9, 9);
+        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
@@ -1233,7 +1258,7 @@ std::cout << "H here 5" << std::endl;
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkcostheta_eventsperbin_table.tex");
     _xsec_calc.Draw();
-    _xsec_calc.Draw(hist_to_subtract);
+    _xsec_calc.Draw(bkg_names);
     _xsec_calc.Smear(9, 9);
     if (covariance_matrix_muangle.GetNbinsX() > 1) {
       _xsec_calc.SetCovarianceMatrix(covariance_matrix_muangle);
@@ -1243,7 +1268,7 @@ std::cout << "H here 5" << std::endl;
       TH1D* h = (TH1D*)file_alt_mc->Get("xsec_muangle_mc_cv_tune3");
       _xsec_calc.ImportAlternativeMC(*h);
     }
-    TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection("cos(#theta_{#mu}^{reco})", "d#sigma/dcos(#theta_{#mu}^{reco}) [10^{-38} cm^{2}]");
+    TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection(bkg_names, "cos(#theta_{#mu}^{reco})", "d#sigma/dcos(#theta_{#mu}^{reco}) [10^{-38} cm^{2}]");
     TH1D * xsec_muangle_mc = _xsec_calc.GetMCCrossSection();
 
     file_out->cd();
@@ -1279,7 +1304,7 @@ std::cout << "H here 5" << std::endl;
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
-    if (_do_genie_systs) {
+    // if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -1287,6 +1312,7 @@ std::cout << "H here 5" << std::endl;
       _xsec_bs_calc.SetOutDir("output_data_mc_bs_2d");
       _xsec_bs_calc.SetHistograms(hmap_trktheta_trkmom_genie_multisim_bs_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
       _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_mumom_num, bs_genie_multisim_eff_muangle_mumom_den, tt);
+      _xsec_bs_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle_mumom");
       _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
       _xsec_bs_calc.Run("genie_multisim");
@@ -1297,7 +1323,7 @@ std::cout << "H here 5" << std::endl;
       for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
         std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       }
-    }
+    // }
 
     if (false /*_import_genie_systs*/) {
 
@@ -1315,6 +1341,7 @@ std::cout << "H here 5" << std::endl;
       _xsec_bs_calc.SetOutDir("output_data_mc_bs_2d");
       _xsec_bs_calc.SetHistograms(hmap_trktheta_trkmom_flux_multisim_bs_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
       _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_mumom_num, bs_flux_multisim_eff_muangle_mumom_den, tt);
+      _xsec_bs_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle_mumom");
       _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
       _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
@@ -1423,7 +1450,7 @@ std::cout << "H here 5" << std::endl;
 
     std::cout << "Here 8" << std::endl;
 
-    TH2D * xsec_muangle_mumom = xseccalc2d.ExtractCrossSection("cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+    TH2D * xsec_muangle_mumom = xseccalc2d.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
     TH2D * xsec_muangle_mumom_mc = xseccalc2d.GetMCCrossSection();
 
     std::cout << "Here 9" << std::endl;

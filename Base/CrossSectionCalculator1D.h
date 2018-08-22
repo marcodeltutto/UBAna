@@ -123,8 +123,8 @@ namespace Base {
     ///
     TH1D* ProcessDataHisto(TH1D* histo);
 
-    ///
-    TH1D* ExtractCrossSection(std::string, std::string);
+    /// Extracts the cross section, provide a vector of background names to be subtracted in the first argument
+    TH1D* ExtractCrossSection(std::vector<std::string>, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
     TH1D* GetMCCrossSection();

@@ -28,7 +28,7 @@ namespace Base {
     _weight_type = weight_type;
   }
 
-  void MigrationMatrix4D::SetBins(double *var1_b, int n_var1_bins, double *var2_b, int n_var2_bins)
+  void MigrationMatrix4D::SetBins(const double *var1_b, int n_var1_bins, const double *var2_b, int n_var2_bins)
   {
 
     for (int i = 0; i < n_var1_bins; i++) 

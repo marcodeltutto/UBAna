@@ -46,6 +46,11 @@ namespace Base {
     _pot = pot;
   }
 
+  void CrossSectionBootstrapCalculator1D::SetBkgToSubtract(std::vector<std::string> bkg_names)
+  {
+    _bkg_names = bkg_names;
+  }
+
   void CrossSectionBootstrapCalculator1D::SetNameAndLabel(std::string name, std::string label)
   {
     _name = name;
@@ -315,7 +320,7 @@ namespace Base {
       } else {
         _xsec_calc.DoNotSmear(); 
       }
-      TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+      TH1D* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
 
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;

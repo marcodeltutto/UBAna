@@ -114,8 +114,8 @@ namespace Base {
     ///
     TH2D* ProcessDataHisto(TH2D* histo);
 
-    ///
-    TH2D* ExtractCrossSection(std::string, std::string, std::string);
+    /// Extracts the cross section, provide a vector of background names to be subtracted in the first argument
+    TH2D* ExtractCrossSection(std::vector<std::string> bkg_names, std::string, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
     TH2D* GetMCCrossSection() {return _h_mc;}

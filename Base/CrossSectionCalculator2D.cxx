@@ -442,7 +442,7 @@ namespace Base {
   }
 
 
-  TH2D* CrossSectionCalculator2D::ExtractCrossSection(std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
+  TH2D* CrossSectionCalculator2D::ExtractCrossSection(std::vector<std::string> bkg_names, std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
   {
 
     //
@@ -454,7 +454,6 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
-    std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu", "dirt"};
 
     for (auto name : bkg_names) 
     {
@@ -854,7 +853,6 @@ namespace Base {
     //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
     //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
--1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00
     std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
                                                   "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
                                                   "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
