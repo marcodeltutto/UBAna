@@ -82,7 +82,7 @@ namespace Base {
     void SetTTree(TTree*);
 
     ///
-    void SetBins(double *, int, double *, int);
+    void SetBins(const double *, int, const double *, int);
 
     ///
     void SetOutputFileName(std::string name);

@@ -85,6 +85,9 @@ namespace Base {
     /// Sets the POT number
     void SetPOT(double pot);
 
+    /// Set the names of the backreounds to subtract
+    void SetBkgToSubtract(std::vector<std::string> bkg_names);
+
     /// Set the plot name for saving and the label for the axis
     void SetNameAndLabel(std::string name, std::string label);
 
@@ -187,6 +190,8 @@ namespace Base {
 
     int _n, _m;
     bool _do_smear = true;
+
+    std::vector<std::string> _bkg_names; ///< List of bkg names used to subtract backgrounds for the cross section
 
     std::string _save_prefix = "PREFIX_"; ///< Prefix name used to save output plots
     std::string _upper_label = "NOT SET"; ///< The label that will happer in the upper plot of the reweighted cross sections

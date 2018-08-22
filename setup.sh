@@ -62,7 +62,7 @@ if [ -z `command -v $MYSW_CXX` ]; then
     if [ -z `command -v $MYSW_CXX` ]; then
         echo
         echo Looks like you do not have neither clang or g++!
-        echo You need one of those to compile LArCaffe... Abort config...
+        echo You need one of those to compile UBAna... Abort config...
         echo
         return 1;
     fi

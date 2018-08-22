@@ -84,6 +84,9 @@ namespace Main {
     void SetInTimeCosmicFile(std::string f);
 
     ///
+    void SetDirtFile(std::string f);
+
+    ///
     void SetBNBONFile(std::string f);
 
     ///
@@ -172,6 +175,7 @@ namespace Main {
 
     std::string mc_bnbcosmic_file_name     = "ubxsecana_output.root";
     std::string mc_intimecosmic_file_name  = "ubxsecana_output.root";
+    std::string mc_dirt_file_name          = "ubxsecana_output.root";
     std::string bnbon_file_name            = "ubxsecana_output.root";
     std::string extbnb_file_name           = "ubxsecana_output.root";
     double bnbon_pot_meas        = -1;
@@ -213,6 +217,44 @@ namespace Main {
 
     double _extra_flux_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal of the flux covariance matrix
     double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal of the total covariance matrix
+
+
+
+  std::map<std::string,TH1D*> hmap_trklen_mc_dirt;
+  std::map<std::string,TH1D*> hmap_onebin_mc_dirt;
+  std::map<std::string,TH1D*> hmap_trkmom_mc_dirt;
+  std::map<std::string,TH1D*> hmap_trkmom_classic_mc_dirt;
+  std::map<std::string,TH1D*> hmap_trktheta_mc_dirt;
+  std::map<std::string,TH1D*> hmap_trktheta_classic_mc_dirt;
+  std::map<std::string,TH1D*> hmap_trkphi_mc_dirt;
+  std::map<std::string,TH1D*> hmap_multpfp_mc_dirt;
+  std::map<std::string,TH1D*> hmap_multtracktol_mc_dirt;
+  std::map<std::string,TH1D*> hmap_xdiff_b_mc_dirt;
+  std::map<std::string,TH1D*> hmap_zdiff_b_mc_dirt;
+  std::map<std::string,TH1D*> hmap_xdiff_mc_dirt;
+  std::map<std::string,TH1D*> hmap_zdiff_mc_dirt;
+  std::map<std::string,TH1D*> hmap_vtxx_mc_dirt;
+  std::map<std::string,TH1D*> hmap_vtxy_mc_dirt;
+  std::map<std::string,TH1D*> hmap_vtxz_mc_dirt;
+  std::map<std::string,TH1D*> hmap_vtxz_upborder_mc_dirt;
+  std::map<std::string,TH1D*> hmap_vtxx_upborder_mc_dirt;
+  std::map<std::string,TH1D*> hmap_flsmatch_score_mc_dirt;
+  std::map<std::string,TH1D*> hmap_flsmatch_score_second_mc_dirt;
+  std::map<std::string,TH1D*> hmap_flsmatch_score_difference_mc_dirt;
+  std::map<std::string,TH1D*> hmap_ntpcobj_mc_dirt;
+  std::map<std::string,TH1D*> hmap_vtxcheck_angle_mc_dirt;
+  std::map<std::string,TH1D*> hmap_residuals_std_mc_dirt;
+  std::map<std::string,TH1D*> hmap_residuals_mean_mc_dirt;
+  std::map<std::string,TH1D*> hmap_perc_used_hits_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mom_mcs_length_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mctruth_mumom_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mctruth_muphi_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mctruth_mumom_gen_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc_dirt;
+  std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc_dirt;
     
   };
 }
