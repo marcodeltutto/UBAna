@@ -1304,7 +1304,7 @@ std::cout << "H here 5" << std::endl;
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
-    // if (_do_genie_systs) {
+    if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -1323,7 +1323,7 @@ std::cout << "H here 5" << std::endl;
       for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
         std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       }
-    // }
+    }
 
     if (false /*_import_genie_systs*/) {
 
@@ -1415,9 +1415,10 @@ std::cout << "H here 5" << std::endl;
     double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
 
     migrationmatrix4d.SetBins(bins_double_mucostheta, n_bins_double_mucostheta, bins_double_mumom, n_bins_double_mumom);
+    std::cout << "Here 2.1" << std::endl;
     
     Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
-    // std::cout << "Here 3" << std::endl;
+    std::cout << "Here 3" << std::endl;
     
     migrationmatrix4d.SetOutputFileName("latex_test.tex");
     std::cout << "Here 4" << std::endl;
@@ -2074,9 +2075,10 @@ std::cout << "H here 5" << std::endl;
     hmap_vtxx_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
     hmap_vtxx_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
     hmap_vtxx_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxx_mc["signal"]->Add(hmap_vtxx_mc_dirt["signal"]);
-    hmap_vtxx_mc["background"]->Add(hmap_vtxx_mc_dirt["background"]);
-    hmap_vtxx_mc["total"]->Add(hmap_vtxx_mc_dirt["total"]);
+    hmap_vtxx_mc["dirt"] = hmap_vtxx_mc_dirt["total"];
+    // hmap_vtxx_mc["signal"]->Add(hmap_vtxx_mc_dirt["signal"]);
+    // hmap_vtxx_mc["background"]->Add(hmap_vtxx_mc_dirt["background"]);
+    // hmap_vtxx_mc["total"]->Add(hmap_vtxx_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_vtxx, hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc, h_vtxx_total_bnbon, bnbon_pot_meas);
 
@@ -2091,9 +2093,10 @@ std::cout << "H here 5" << std::endl;
     hmap_vtxy_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
     hmap_vtxy_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
     hmap_vtxy_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxy_mc["signal"]->Add(hmap_vtxy_mc_dirt["signal"]);
-    hmap_vtxy_mc["background"]->Add(hmap_vtxy_mc_dirt["background"]);
-    hmap_vtxy_mc["total"]->Add(hmap_vtxy_mc_dirt["total"]);
+    hmap_vtxy_mc["dirt"] = hmap_vtxy_mc_dirt["total"];
+    // hmap_vtxy_mc["signal"]->Add(hmap_vtxy_mc_dirt["signal"]);
+    // hmap_vtxy_mc["background"]->Add(hmap_vtxy_mc_dirt["background"]);
+    // hmap_vtxy_mc["total"]->Add(hmap_vtxy_mc_dirt["total"]);
   }
   hmap_vtxy_mc["beam-off"] = h_vtxy_total_extbnb;
   this->DrawDataMC(canvas_vtxy, hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc, h_vtxy_total_bnbon, bnbon_pot_meas);
@@ -2109,9 +2112,10 @@ std::cout << "H here 5" << std::endl;
     hmap_vtxz_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
     hmap_vtxz_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
     hmap_vtxz_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxz_mc["signal"]->Add(hmap_vtxz_mc_dirt["signal"]);
-    hmap_vtxz_mc["background"]->Add(hmap_vtxz_mc_dirt["background"]);
-    hmap_vtxz_mc["total"]->Add(hmap_vtxz_mc_dirt["total"]);
+    hmap_vtxz_mc["dirt"] = hmap_vtxz_mc_dirt["total"];
+    // hmap_vtxz_mc["signal"]->Add(hmap_vtxz_mc_dirt["signal"]);
+    // hmap_vtxz_mc["background"]->Add(hmap_vtxz_mc_dirt["background"]);
+    // hmap_vtxz_mc["total"]->Add(hmap_vtxz_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_vtxz, hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc, h_vtxz_total_bnbon, bnbon_pot_meas);
 
@@ -2126,9 +2130,9 @@ std::cout << "H here 5" << std::endl;
     hmap_flsmatch_score_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
     hmap_flsmatch_score_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
     hmap_flsmatch_score_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
-    hmap_flsmatch_score_mc["signal"]->Add(hmap_flsmatch_score_mc_dirt["signal"]);
-    hmap_flsmatch_score_mc["background"]->Add(hmap_flsmatch_score_mc_dirt["background"]);
-    hmap_flsmatch_score_mc["total"]->Add(hmap_flsmatch_score_mc_dirt["total"]);
+    // hmap_flsmatch_score_mc["signal"]->Add(hmap_flsmatch_score_mc_dirt["signal"]);
+    // hmap_flsmatch_score_mc["background"]->Add(hmap_flsmatch_score_mc_dirt["background"]);
+    // hmap_flsmatch_score_mc["total"]->Add(hmap_flsmatch_score_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_flsmatch_score, hs_flsmatch_score_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_mc, h_flsmatch_score_total_bnbon, bnbon_pot_meas);  
   name = outdir + "flsmatch_score";

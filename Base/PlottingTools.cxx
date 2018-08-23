@@ -563,6 +563,11 @@ TLegend* PlottingTools::DrawTHStack2(THStack *hs_trklen,
     themap["total"]->Add(themap["beam-off"]);
     hs_trklen->Add(themap["beam-off"]);
   }
+
+  if (themap["dirt"] != NULL) {
+    themap["background"]->Add(themap["dirt"]);
+    themap["total"]->Add(themap["dirt"]);
+  }
   
   themap["background"]->SetLineColor(kBlue-3);
   themap["background"]->SetFillColor(kBlue-3);
