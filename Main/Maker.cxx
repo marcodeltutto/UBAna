@@ -1874,13 +1874,13 @@ void Main::Maker::MakeFile()
 
         std::string histo_name;
         histo_name = "bs_flux_multisim_reco_per_true_" + fname_flux_multisim.at(i);
-        bs_flux_multisim_reco_per_true[fname_genie_multisim.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+        bs_flux_multisim_reco_per_true[fname_flux_multisim.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
 
         for (int m = 0; m < n_bins_double_mucostheta; m++) {
           for (int n = 0; n < n_bins_double_mumom; n++) { 
             std::stringstream sstm;
             sstm << histo_name << "_" << m << "_" << n;
-            bs_flux_multisim_reco_per_true[fname_genie_multisim.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+            bs_flux_multisim_reco_per_true[fname_flux_multisim.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
           }
         }
 

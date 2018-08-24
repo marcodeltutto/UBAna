@@ -85,8 +85,8 @@ namespace Base {
 
         // std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
 
-        auto v1_bin = _var1_bins.at(m);
-        auto v2_bin = _var2_bins.at(n);
+        // auto v1_bin = _var1_bins.at(m);
+        // auto v2_bin = _var2_bins.at(n);
 
         // std::cout << "Done 1" << std::endl;
 
@@ -248,8 +248,8 @@ namespace Base {
   void MigrationMatrix4D::PrintSmearingMatrixLatex()
   {
 
-    for (int m = 0; m < _var1_bins.size(); m++) {
-      for (int n = 0; n < _var2_bins.size(); n++) {
+    for (size_t m = 0; m < _var1_bins.size(); m++) {
+      for (size_t n = 0; n < _var2_bins.size(); n++) {
         this->PrintSmearingMatrixLatex(m, n);
       }
     }
