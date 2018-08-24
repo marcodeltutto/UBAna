@@ -21,6 +21,11 @@ namespace Base {
     _tree = t;
   }
 
+  void MigrationMatrix4D::SetRecoPerTrueHistos(std::vector<std::vector<TH2D*>> h_reco_per_true)
+  {
+    _h_reco_per_true = h_reco_per_true;
+  }
+
   void MigrationMatrix4D::UseWeights(std::string weight_name, std::string weight_type)
   {
     _use_weights = true;
@@ -130,7 +135,7 @@ namespace Base {
         }
       }
     }
-    // std::cout << _prefix << "Total entries: " << counter << std::endl;
+    std::cout << _prefix << "Total entries: " << counter << std::endl;
 
 
     // True bin m, n
@@ -139,15 +144,17 @@ namespace Base {
     for (int m = 0; m < _var1_bins.size(); m++) {
       for (int n = 0; n < _var2_bins.size(); n++) {
 
-        if(_verbose) std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
+        std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
 
         auto v1_bin = _var1_bins.at(m);
         auto v2_bin = _var2_bins.at(n);
 
+        // std::cout << "Done 1" << std::endl;
+
         // if(_verbose) std::cout << _prefix << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
         // if(_verbose) std::cout << _prefix << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
 
-        _reco_per_true->Reset();
+       /* _reco_per_true->Reset();
 
         for (Long64_t jentry=0; jentry < nentries;jentry++) {
           _tree->GetEntry(jentry);
@@ -158,7 +165,7 @@ namespace Base {
 
           if (_use_weights && _weight_name != "nominal") {
 
-            // std::cout << _prefix << "Using weight with name: " << _weight_name << std::endl;
+            std::cout << _prefix << "Using weight with name: " << _weight_name << std::endl;
 
             bool found = false;
 
@@ -216,6 +223,8 @@ namespace Base {
             _reco_per_true->Fill(angle_reco, mom_mcs, evt_weight);
           }
         }
+        */
+        _reco_per_true = (TH2D*) _h_reco_per_true[m][n]->Clone("_reco_per_true");
 
         // Normalize to get a probability
         _reco_per_true->Scale(1./_reco_per_true->Integral());

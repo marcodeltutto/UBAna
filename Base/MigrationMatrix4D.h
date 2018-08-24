@@ -78,8 +78,11 @@ namespace Base {
     ///
     Mat4D CalculateMigrationMatrix(); 
 
-    ///
+    /// Sets the TTree for all signal selected events, to construct S (no longer used)
     void SetTTree(TTree*);
+
+    /// Set 2D reco histogram for every true bin m,n
+    void SetRecoPerTrueHistos(std::vector<std::vector<TH2D*>>);
 
     ///
     void SetBins(const double *, int, const double *, int);
@@ -99,6 +102,7 @@ namespace Base {
     /// If called uses the weights with name specified
     void UseWeights(std::string weight_name = "universe0", std::string weight_type = "genie_multisim");
 
+
   private:
 
     bool _configured = false;
@@ -106,6 +110,7 @@ namespace Base {
     std::string _prefix = "[MigrationMatrix4D] ";
 
     TTree *_tree;
+    std::vector<std::vector<TH2D*>> _h_reco_per_true; ///< 2D reco histogram for every true bin m,n
 
     std::vector<std::pair<double, double>> _var1_bins;
     std::vector<std::pair<double, double>> _var2_bins;

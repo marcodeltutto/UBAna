@@ -264,12 +264,22 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_dqdx_trunc_mc = *temp_map;
   TH2D* h_dqdx_trunc_length_mc = (TH2D*)mc_bnbcosmic_file->Get("h_dqdx_trunc_length");
 
+  // Reco Per True - GENIE Multisim
+  std::cout << ">> here jjjj" << std::endl;
+
+  std::vector<std::vector<TH2D*>> * temp_reco_per_true;
+  mc_bnbcosmic_file->GetObject("h_reco_per_true", temp_reco_per_true);
+  std::vector<std::vector<TH2D*>> h_reco_per_true_mc = *temp_reco_per_true;
+  std::cout << ">> here iiii" << std::endl;
+
 
   // Create placeholders to get stuff from file
   std::map<std::string,std::map<std::string,TH1D*>>* temp_map_bs;
   std::map<std::string,std::map<std::string,TH2D*>>* temp_map2d_bs;
   BootstrapTH1D * temp_bs;
   BootstrapTH2D * temp2d_bs;
+  std::map<std::string,std::vector<std::vector<TH2D*>>> * temp_bs_reco_per_true;
+
 
 
 
@@ -378,6 +388,7 @@ namespace Main {
 
   std::cout << ">> here7" << std::endl;
 
+
   //
   // Events - GENIE Multisim
   //
@@ -410,6 +421,17 @@ namespace Main {
     std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_multisim_bs_mc_dirt = *temp_map2d_bs;
     hmap_trktheta_trkmom_genie_multisim_bs_mc["dirt"] = hmap_trktheta_trkmom_genie_multisim_bs_mc_dirt["total"];
   } 
+
+  std::cout << ">> here aaa" << std::endl;
+
+
+  // Reco Per True - GENIE Multisim
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_reco_per_true", temp_bs_reco_per_true);
+  std::map<std::string,std::vector<std::vector<TH2D*>>> bs_genie_multisim_reco_per_true_mc = *temp_bs_reco_per_true;
+
+  std::cout << ">> here bbb" << std::endl;
+
+
 
 
   // Events - GENIE Models
@@ -479,7 +501,12 @@ std::cout << ">> here9" << std::endl;
 
 std::cout << ">> here10" << std::endl;
 
+  // Reco Per True - FLUX Multisim
+  mc_bnbcosmic_file->GetObject("bs_flux_multisim_reco_per_true", temp_bs_reco_per_true);
+  std::map<std::string,std::vector<std::vector<TH2D*>>> bs_flux_multisim_reco_per_true_mc = *temp_bs_reco_per_true;
 
+
+std::cout << ">> here11" << std::endl;
 
 
 
@@ -1304,14 +1331,14 @@ std::cout << "H here 5" << std::endl;
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
-    // if (_do_genie_systs) {
+    if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
       _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
       _xsec_bs_calc.SetOutDir("output_data_mc_bs_2d");
       _xsec_bs_calc.SetHistograms(hmap_trktheta_trkmom_genie_multisim_bs_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
-      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_mumom_num, bs_genie_multisim_eff_muangle_mumom_den, tt);
+      _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_mumom_num, bs_genie_multisim_eff_muangle_mumom_den, bs_genie_multisim_reco_per_true_mc);
       _xsec_bs_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle_mumom");
       _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
@@ -1323,7 +1350,7 @@ std::cout << "H here 5" << std::endl;
       for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
         std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       }
-    // }
+    }
 
     if (false /*_import_genie_systs*/) {
 
@@ -1340,7 +1367,7 @@ std::cout << "H here 5" << std::endl;
       _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
       _xsec_bs_calc.SetOutDir("output_data_mc_bs_2d");
       _xsec_bs_calc.SetHistograms(hmap_trktheta_trkmom_flux_multisim_bs_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb);
-      _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_mumom_num, bs_flux_multisim_eff_muangle_mumom_den, tt);
+      _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_mumom_num, bs_flux_multisim_eff_muangle_mumom_den, bs_flux_multisim_reco_per_true_mc);
       _xsec_bs_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle_mumom");
       _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
@@ -1401,6 +1428,7 @@ std::cout << "H here 5" << std::endl;
 
     MigrationMatrix4D migrationmatrix4d;
     migrationmatrix4d.SetTTree(tt); 
+    migrationmatrix4d.SetRecoPerTrueHistos(h_reco_per_true_mc);
 
     // int n_bins_double_mumom = 4;
     // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
@@ -1415,9 +1443,10 @@ std::cout << "H here 5" << std::endl;
     double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
 
     migrationmatrix4d.SetBins(bins_double_mucostheta, n_bins_double_mucostheta, bins_double_mumom, n_bins_double_mumom);
+    std::cout << "Here 2.1" << std::endl;
     
     Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
-    // std::cout << "Here 3" << std::endl;
+    std::cout << "Here 3" << std::endl;
     
     migrationmatrix4d.SetOutputFileName("latex_test.tex");
     std::cout << "Here 4" << std::endl;
@@ -2074,9 +2103,10 @@ std::cout << "H here 5" << std::endl;
     hmap_vtxx_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
     hmap_vtxx_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
     hmap_vtxx_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxx_mc["signal"]->Add(hmap_vtxx_mc_dirt["signal"]);
-    hmap_vtxx_mc["background"]->Add(hmap_vtxx_mc_dirt["background"]);
-    hmap_vtxx_mc["total"]->Add(hmap_vtxx_mc_dirt["total"]);
+    hmap_vtxx_mc["dirt"] = hmap_vtxx_mc_dirt["total"];
+    // hmap_vtxx_mc["signal"]->Add(hmap_vtxx_mc_dirt["signal"]);
+    // hmap_vtxx_mc["background"]->Add(hmap_vtxx_mc_dirt["background"]);
+    // hmap_vtxx_mc["total"]->Add(hmap_vtxx_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_vtxx, hs_vtxx_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxx_mc, h_vtxx_total_bnbon, bnbon_pot_meas);
 
@@ -2091,9 +2121,10 @@ std::cout << "H here 5" << std::endl;
     hmap_vtxy_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
     hmap_vtxy_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
     hmap_vtxy_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxy_mc["signal"]->Add(hmap_vtxy_mc_dirt["signal"]);
-    hmap_vtxy_mc["background"]->Add(hmap_vtxy_mc_dirt["background"]);
-    hmap_vtxy_mc["total"]->Add(hmap_vtxy_mc_dirt["total"]);
+    hmap_vtxy_mc["dirt"] = hmap_vtxy_mc_dirt["total"];
+    // hmap_vtxy_mc["signal"]->Add(hmap_vtxy_mc_dirt["signal"]);
+    // hmap_vtxy_mc["background"]->Add(hmap_vtxy_mc_dirt["background"]);
+    // hmap_vtxy_mc["total"]->Add(hmap_vtxy_mc_dirt["total"]);
   }
   hmap_vtxy_mc["beam-off"] = h_vtxy_total_extbnb;
   this->DrawDataMC(canvas_vtxy, hs_vtxy_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxy_mc, h_vtxy_total_bnbon, bnbon_pot_meas);
@@ -2109,9 +2140,10 @@ std::cout << "H here 5" << std::endl;
     hmap_vtxz_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
     hmap_vtxz_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
     hmap_vtxz_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
-    hmap_vtxz_mc["signal"]->Add(hmap_vtxz_mc_dirt["signal"]);
-    hmap_vtxz_mc["background"]->Add(hmap_vtxz_mc_dirt["background"]);
-    hmap_vtxz_mc["total"]->Add(hmap_vtxz_mc_dirt["total"]);
+    hmap_vtxz_mc["dirt"] = hmap_vtxz_mc_dirt["total"];
+    // hmap_vtxz_mc["signal"]->Add(hmap_vtxz_mc_dirt["signal"]);
+    // hmap_vtxz_mc["background"]->Add(hmap_vtxz_mc_dirt["background"]);
+    // hmap_vtxz_mc["total"]->Add(hmap_vtxz_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_vtxz, hs_vtxz_mc, scale_factor_mc_bnbcosmic, true, hmap_vtxz_mc, h_vtxz_total_bnbon, bnbon_pot_meas);
 
@@ -2126,9 +2158,9 @@ std::cout << "H here 5" << std::endl;
     hmap_flsmatch_score_mc_dirt["signal"]->Scale(scale_factor_mc_dirt);
     hmap_flsmatch_score_mc_dirt["background"]->Scale(scale_factor_mc_dirt);
     hmap_flsmatch_score_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
-    hmap_flsmatch_score_mc["signal"]->Add(hmap_flsmatch_score_mc_dirt["signal"]);
-    hmap_flsmatch_score_mc["background"]->Add(hmap_flsmatch_score_mc_dirt["background"]);
-    hmap_flsmatch_score_mc["total"]->Add(hmap_flsmatch_score_mc_dirt["total"]);
+    // hmap_flsmatch_score_mc["signal"]->Add(hmap_flsmatch_score_mc_dirt["signal"]);
+    // hmap_flsmatch_score_mc["background"]->Add(hmap_flsmatch_score_mc_dirt["background"]);
+    // hmap_flsmatch_score_mc["total"]->Add(hmap_flsmatch_score_mc_dirt["total"]);
   }
   this->DrawDataMC(canvas_flsmatch_score, hs_flsmatch_score_mc, scale_factor_mc_bnbcosmic, true, hmap_flsmatch_score_mc, h_flsmatch_score_total_bnbon, bnbon_pot_meas);  
   name = outdir + "flsmatch_score";

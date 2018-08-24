@@ -238,6 +238,29 @@ void Main::Maker::FillBootstrap(double fill_value1,
 
 }
 
+//___________________________________________________________________________________________________
+void Main::Maker::FillBootstrap(double fill_value1, // reco value x (costheta)
+                                double fill_value2, // reco value y (momentum)
+                                int m, // true bin m (costheta)
+                                int n, // true bin n (momentum)
+                                double evt_wgt,
+                                std::map<std::string,std::vector<std::vector<TH2D*>>> bs_reco_per_true, 
+                                std::vector<std::string> fname, 
+                                std::vector<double> wgts) {
+
+
+  bs_reco_per_true["nominal"][m][n]->Fill(fill_value1, fill_value2, evt_wgt);
+
+  for (size_t i = 0; i < fname.size(); i++) {
+
+    bs_reco_per_true[fname.at(i)][m][n]->Fill(fill_value1, fill_value2, wgts.at(i) * evt_wgt);
+
+    //std::cout << "Fill value: " << fill_value << ", weight: " << wgts_genie_pm1.at(i) << std::endl;
+
+  }
+
+}
+
 
 
 
@@ -452,6 +475,39 @@ void Main::Maker::MakeFile()
   _true_reco_tree->Branch("wgts_genie_models", "std::vector<double>", &_wgts_genie_models);
   _true_reco_tree->Branch("wgtsnames_flux_multisim", "std::vector<std::string>", &_wgtsnames_flux_multisim);
   _true_reco_tree->Branch("wgts_flux_multisim", "std::vector<double>", &_wgts_flux_multisim);
+
+
+  std::vector<std::vector<TH2D*>> _h_reco_per_true; ///< Per true bins m,n, it contains the distribution of the reco quantity
+  _h_reco_per_true.resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+  for (int m = 0; m < n_bins_double_mucostheta; m++) {
+    for (int n = 0; n < n_bins_double_mumom; n++) { 
+      std::stringstream sstm;
+      sstm << "reco_per_true_" << m << "_" << n; 
+      _h_reco_per_true[m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+    }
+  }
+
+  std::map<std::string,std::vector<std::vector<TH2D*>>> bs_genie_multisim_reco_per_true;
+  bs_genie_multisim_reco_per_true["nominal"].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+  for (int m = 0; m < n_bins_double_mucostheta; m++) {
+    for (int n = 0; n < n_bins_double_mumom; n++) { 
+      std::stringstream sstm;
+      sstm << "bs_genie_multisim_reco_per_true_nominal_" << m << "_" << n;
+      bs_genie_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+    }
+  }
+
+
+  std::map<std::string,std::vector<std::vector<TH2D*>>> bs_flux_multisim_reco_per_true;
+  bs_flux_multisim_reco_per_true["nominal"].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+  for (int m = 0; m < n_bins_double_mucostheta; m++) {
+    for (int n = 0; n < n_bins_double_mumom; n++) { 
+      std::stringstream sstm;
+      sstm << "bs_genie_multisim_reco_per_true_nominal_" << m << "_" << n;
+      bs_flux_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+    }
+  }
+
 
   // std::map<std::string,TTree*> tmap_mom_tree_gene_multisim_bs;
   // tmap_mom_tree_gene_multisim_bs["nominal"] = new TTree("mom_tree_genie_multisim_nominal", "mom_tree");
@@ -1555,6 +1611,22 @@ void Main::Maker::MakeFile()
         //   tmap_mom_tree_gene_multisim_bs[fname_genie_multisim.at(i)] = new TTree(tree_name.c_str(), "true_reco_tree");
         // }
 
+        for (size_t i = 0; i < fname_genie_multisim.size(); i++) {
+
+          std::string histo_name;
+          histo_name = "bs_genie_multisim_reco_per_true_" + fname_genie_multisim.at(i);
+          bs_genie_multisim_reco_per_true[fname_genie_multisim.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+          
+          for (int m = 0; m < n_bins_double_mucostheta; m++) {
+            for (int n = 0; n < n_bins_double_mumom; n++) { 
+              std::stringstream sstm;
+              sstm << histo_name << "_" << m << "_" << n;
+              bs_genie_multisim_reco_per_true[fname_genie_multisim.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+            }
+          }
+
+        }
+
       }
 
       bs_genie_multisim_eff_onebin_num.SetWeightNames(fname_genie_multisim);
@@ -1793,6 +1865,23 @@ void Main::Maker::MakeFile()
           hmap_trktheta_trkmom_flux_multisim_bs[this_name][fname_flux_multisim.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
  
 
+        }
+
+      }
+
+      // Reco per true
+      for (size_t i = 0; i < fname_flux_multisim.size(); i++) {
+
+        std::string histo_name;
+        histo_name = "bs_flux_multisim_reco_per_true_" + fname_flux_multisim.at(i);
+        bs_flux_multisim_reco_per_true[fname_genie_multisim.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+
+        for (int m = 0; m < n_bins_double_mucostheta; m++) {
+          for (int n = 0; n < n_bins_double_mumom; n++) { 
+            std::stringstream sstm;
+            sstm << histo_name << "_" << m << "_" << n;
+            bs_flux_multisim_reco_per_true[fname_genie_multisim.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+          }
         }
 
       }
@@ -2528,6 +2617,17 @@ void Main::Maker::MakeFile()
       _wgts_flux_multisim = wgts_flux_multisim;
 
       _true_reco_tree->Fill();
+
+      // *** Migr mat addition
+      int m = _h_reco_per_true[0][0]->GetXaxis()->FindBin(_angle_true) - 1;
+      int n = _h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1;
+      if (m < _h_reco_per_true[0][0]->GetNbinsX() && n < _h_reco_per_true[0][0]->GetNbinsY()) { // Avoid overflows
+        // std::cout << "_angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << ", n " << n << std::endl;
+        _h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs);
+        FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_genie_multisim_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
+        FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_flux_multisim_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
+      }
+      // *** addition ends
 
       // // Also fill the same tree for all te universes
       // FillTrueRecoTree(tmap_mom_tree_gene_multisim_bs, _mom_true, _mom_mcs, _angle_true, _angle_reco, fname_genie_multisim, wgts_genie_multisim);
@@ -4250,6 +4350,9 @@ void Main::Maker::MakeFile()
   _true_reco_tree->Write();
   h_true_reco_mom->Write();
   h_true_reco_costheta->Write();
+  file_out->WriteObject(&_h_reco_per_true, "h_reco_per_true");
+  file_out->WriteObject(&bs_genie_multisim_reco_per_true, "bs_genie_multisim_reco_per_true");
+  file_out->WriteObject(&bs_flux_multisim_reco_per_true, "bs_flux_multisim_reco_per_true");
 
   file_out->Write();
   

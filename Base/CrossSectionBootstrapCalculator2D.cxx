@@ -102,12 +102,13 @@ namespace Base {
     }
   }
 
-  void CrossSectionBootstrapCalculator2D::SetTruthHistograms(BootstrapTH2D num, BootstrapTH2D den, TTree *t)
+  void CrossSectionBootstrapCalculator2D::SetTruthHistograms(BootstrapTH2D num, BootstrapTH2D den, std::map<std::string,std::vector<std::vector<TH2D*>>> bs_reco_per_true)
   {
     _h_eff_mumom_num = num;
     _h_eff_mumom_den = den;
 
-    _t_true_reco = t;
+    // _t_true_reco = t;
+    _bs_reco_per_true = bs_reco_per_true;
 
     _true_to_reco_is_set = true;
 
@@ -217,6 +218,7 @@ namespace Base {
     
     TH2D this_eff_num;
     TH2D this_eff_den; 
+    std::vector<std::vector<TH2D*>> this_reco_per_true;
     Mat4D S_4d;
 
     n_universe = 5;
@@ -252,6 +254,17 @@ namespace Base {
       _h_eff_mumom_num.GetUniverseHisto(universe_names.at(s), this_eff_num);
       hname = "this_eff_den" + universe_names.at(s);
       _h_eff_mumom_den.GetUniverseHisto(universe_names.at(s), this_eff_den);
+
+
+      //
+      // Costruct the reco_per_true histos for this universe
+      //
+      auto iter =  _bs_reco_per_true.find(universe_names.at(s));
+      if (iter == _bs_reco_per_true.end()) {
+        std::cout << __PRETTY_FUNCTION__ << "Can't find bs_reco_per_true for universe " << universe_names.at(s) << std::endl;
+        throw std::exception();
+      }
+      this_reco_per_true = iter->second;
 
     
       //

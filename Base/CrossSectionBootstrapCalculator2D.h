@@ -97,8 +97,8 @@ namespace Base {
     /// Sets all the histograms
     void SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, TH2D* intimecosmic = 0);
 
-    /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
-    void SetTruthHistograms(BootstrapTH2D, BootstrapTH2D, TTree*);
+    /// Sets num and dem histograms for the efficiency and the reco per true 2D histos
+    void SetTruthHistograms(BootstrapTH2D, BootstrapTH2D, std::map<std::string,std::vector<std::vector<TH2D*>>>);
 
     /// Sets num and dem histograms for the efficiency
     void SetTruthHistograms(BootstrapTH2D, BootstrapTH2D);
@@ -174,7 +174,8 @@ namespace Base {
     BootstrapTH2D _h_eff_mumom_num; ///< The efficiency numerator
     BootstrapTH2D _h_eff_mumom_den; ///< The efficiency denominator
 
-    TTree * _t_true_reco; ///< The TTree containing the mapping true to reco
+    TTree * _t_true_reco; ///< The TTree containing the mapping true to reco (no longer used)
+    std::map<std::string,std::vector<std::vector<TH2D*>>> _bs_reco_per_true; ///< The Bootstrap containing the reco per true histos for every universe
 
     TTree* true_reco_tree = nullptr; ///< The tree that containes the true to reco mapping
 
