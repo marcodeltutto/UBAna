@@ -145,19 +145,19 @@ namespace Main {
     double eff_uncertainty(int _n, int _N);
 
     void FillBootstrap(double fill_value,
-                   double evt_wgt,
-                   std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_pm1_bs, 
-                   std::string channel_namel, 
-                   std::vector<std::string> fname, 
-                   std::vector<double> wgts_genie);
+                       double evt_wgt,
+                       std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_pm1_bs, 
+                       std::string channel_namel, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts_genie);
 
     void FillBootstrap(double fill_value1,
-                   double fill_value2,
-                   double evt_wgt,
-                   std::map<std::string,std::map<std::string,TH2D*>> hmap_trkmom_genie_pm1_bs, 
-                   std::string channel_namel, 
-                   std::vector<std::string> fname, 
-                   std::vector<double> wgts_genie);
+                       double fill_value2,
+                       double evt_wgt,
+                       std::map<std::string,std::map<std::string,TH2D*>> hmap_trkmom_genie_pm1_bs, 
+                       std::string channel_namel, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts_genie);
 
     // void FillBootstrap(double fill_value,
     //                std::map<std::string,TH1D*> hmap_trkmom_genie_pm1_bs, 
@@ -165,11 +165,20 @@ namespace Main {
     //                std::vector<double> wgts_genie);
 
     void FillBootstrap(double fill_value1,
-                   double fill_value2,
-                   double evt_wgt,
-                   std::map<std::string,TH2D*> hmap_trkmom_genie_pm1_bs, 
-                   std::vector<std::string> fname, 
-                   std::vector<double> wgts_genie);
+                       double fill_value2,
+                       double evt_wgt,
+                       std::map<std::string,TH2D*> hmap_trkmom_genie_pm1_bs, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts_genie);
+
+    void FillBootstrap(double fill_value1, // reco value x (costheta)
+                       double fill_value2, // reco value y (momentum)
+                       int m, // true bin m (costheta)
+                       int n, // true bin n (momentum)
+                       double evt_wgt,
+                       std::map<std::string,std::vector<std::vector<TH2D*>>> bs_reco_per_true, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts);
 
     bool _maup_mecoff = false;
 

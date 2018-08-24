@@ -21,6 +21,11 @@ namespace Base {
     _tree = t;
   }
 
+  void MigrationMatrix4D::SetRecoPerTrueHistos(std::vector<std::vector<TH2D*>> h_reco_per_true)
+  {
+    _h_reco_per_true = h_reco_per_true;
+  }
+
   void MigrationMatrix4D::UseWeights(std::string weight_name, std::string weight_type)
   {
     _use_weights = true;
@@ -144,12 +149,12 @@ namespace Base {
         auto v1_bin = _var1_bins.at(m);
         auto v2_bin = _var2_bins.at(n);
 
+        // std::cout << "Done 1" << std::endl;
 
         // if(_verbose) std::cout << _prefix << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
         // if(_verbose) std::cout << _prefix << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
 
         _reco_per_true->Reset();
-
 
         for (Long64_t jentry=0; jentry < nentries;jentry++) {
           _tree->GetEntry(jentry);

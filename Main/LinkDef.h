@@ -19,6 +19,8 @@
 #pragma link C++ class std::vector<double>+;
 #pragma link C++ class std::vector<string>+;
 #pragma link C++ class size_t;
+#pragma link C++ class std::vector<std::vector<TH2D*>>+;
+#pragma link C++ class std::map<std::string,std::vector<std::vector<TH2D*>>>+;
 
 #pragma link C++ class Main::sample+;
 #pragma link C++ class Main::Maker+;

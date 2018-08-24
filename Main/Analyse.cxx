@@ -264,12 +264,22 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_dqdx_trunc_mc = *temp_map;
   TH2D* h_dqdx_trunc_length_mc = (TH2D*)mc_bnbcosmic_file->Get("h_dqdx_trunc_length");
 
+  // Reco Per True - GENIE Multisim
+  std::cout << ">> here jjjj" << std::endl;
+
+  std::vector<std::vector<TH2D*>> * temp_reco_per_true;
+  mc_bnbcosmic_file->GetObject("h_reco_per_true", temp_reco_per_true);
+  std::vector<std::vector<TH2D*>> h_reco_per_true_mc = *temp_reco_per_true;
+  std::cout << ">> here iiii" << std::endl;
+
 
   // Create placeholders to get stuff from file
   std::map<std::string,std::map<std::string,TH1D*>>* temp_map_bs;
   std::map<std::string,std::map<std::string,TH2D*>>* temp_map2d_bs;
   BootstrapTH1D * temp_bs;
   BootstrapTH2D * temp2d_bs;
+  std::map<std::string,std::vector<std::vector<TH2D*>>> * temp_bs_reco_per_true;
+
 
 
 
@@ -378,6 +388,7 @@ namespace Main {
 
   std::cout << ">> here7" << std::endl;
 
+
   //
   // Events - GENIE Multisim
   //
@@ -410,6 +421,17 @@ namespace Main {
     std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_multisim_bs_mc_dirt = *temp_map2d_bs;
     hmap_trktheta_trkmom_genie_multisim_bs_mc["dirt"] = hmap_trktheta_trkmom_genie_multisim_bs_mc_dirt["total"];
   } 
+
+  std::cout << ">> here aaa" << std::endl;
+
+
+  // Reco Per True - GENIE Multisim
+  mc_bnbcosmic_file->GetObject("bs_genie_multisim_reco_per_true", temp_bs_reco_per_true);
+  std::map<std::string,std::vector<std::vector<TH2D*>>> bs_genie_multisim_reco_per_true_mc = *temp_bs_reco_per_true;
+
+  std::cout << ">> here bbb" << std::endl;
+
+
 
 
   // Events - GENIE Models
@@ -479,7 +501,12 @@ std::cout << ">> here9" << std::endl;
 
 std::cout << ">> here10" << std::endl;
 
+  // Reco Per True - FLUX Multisim
+  mc_bnbcosmic_file->GetObject("bs_flux_multisim_reco_per_true", temp_bs_reco_per_true);
+  std::map<std::string,std::vector<std::vector<TH2D*>>> bs_flux_multisim_reco_per_true_mc = *temp_bs_reco_per_true;
 
+
+std::cout << ">> here11" << std::endl;
 
 
 
@@ -1401,6 +1428,7 @@ std::cout << "H here 5" << std::endl;
 
     MigrationMatrix4D migrationmatrix4d;
     migrationmatrix4d.SetTTree(tt); 
+    migrationmatrix4d.SetRecoPerTrueHistos(h_reco_per_true_mc);
 
     // int n_bins_double_mumom = 4;
     // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
