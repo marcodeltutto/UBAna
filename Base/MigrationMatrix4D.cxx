@@ -154,7 +154,7 @@ namespace Base {
         // if(_verbose) std::cout << _prefix << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
         // if(_verbose) std::cout << _prefix << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
 
-        _reco_per_true->Reset();
+       /* _reco_per_true->Reset();
 
         for (Long64_t jentry=0; jentry < nentries;jentry++) {
           _tree->GetEntry(jentry);
@@ -223,6 +223,8 @@ namespace Base {
             _reco_per_true->Fill(angle_reco, mom_mcs, evt_weight);
           }
         }
+        */
+        _reco_per_true = (TH2D*) _h_reco_per_true[m][n]->Clone("_reco_per_true");
 
         // Normalize to get a probability
         _reco_per_true->Scale(1./_reco_per_true->Integral());
