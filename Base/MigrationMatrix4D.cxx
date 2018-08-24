@@ -5,12 +5,6 @@
 
 namespace Base {
 
-	void MigrationMatrix4D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic)
-  {
-  
-    _configured = true;
-  }
-
   void MigrationMatrix4D::SetOutputFileName(std::string name) 
   {
     _f_out.open(name, std::ios::out | std::ios::trunc);
@@ -69,10 +63,10 @@ namespace Base {
 
     int counter = 0;
 
-    for (int i = 0; i < _var1_bins.size(); i++) {
-      for (int j = 0; j < _var2_bins.size(); j++) {
-        for (int m = 0; m < _var1_bins.size(); m++) {
-          for (int n = 0; n < _var2_bins.size(); n++) { 
+    for (size_t i = 0; i < _var1_bins.size(); i++) {
+      for (size_t j = 0; j < _var2_bins.size(); j++) {
+        for (size_t m = 0; m < _var1_bins.size(); m++) {
+          for (size_t n = 0; n < _var2_bins.size(); n++) { 
             if(_verbose) std::cout << "(" << i << ", " << j << ", " << m << ", " << n << ") => " << _S[i][j][m][n] << std::endl;
             counter++;
           }
@@ -86,8 +80,8 @@ namespace Base {
     // True bin m, n
     //int m = 0, n = 0;
 
-    for (int m = 0; m < _var1_bins.size(); m++) {
-      for (int n = 0; n < _var2_bins.size(); n++) {
+    for (size_t m = 0; m < _var1_bins.size(); m++) {
+      for (size_t n = 0; n < _var2_bins.size(); n++) {
 
         // std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
 
@@ -109,8 +103,8 @@ namespace Base {
         // Set values to matrix
         TCanvas *c = new TCanvas();
         _reco_per_true->Draw("colz text");
-        for (int i = 0; i < _var1_bins.size(); i++) {
-          for (int j = 0; j < _var2_bins.size(); j++) {
+        for (size_t i = 0; i < _var1_bins.size(); i++) {
+          for (size_t j = 0; j < _var2_bins.size(); j++) {
             if(_verbose) std::cout << "(" << i << ", " << j << ")" << _reco_per_true->GetBinContent(i+1, j+1) << std::endl;
 
             double value = _reco_per_true->GetBinContent(i+1, j+1);
@@ -142,10 +136,10 @@ namespace Base {
 
 
     if(_verbose) {
-      for (int i = 0; i < _var1_bins.size(); i++) {
-        for (int j = 0; j < _var2_bins.size(); j++) {
-          for (int m = 0; m < _var1_bins.size(); m++) {
-            for (int n = 0; n < _var2_bins.size(); n++) { 
+      for (size_t i = 0; i < _var1_bins.size(); i++) {
+        for (size_t j = 0; j < _var2_bins.size(); j++) {
+          for (size_t m = 0; m < _var1_bins.size(); m++) {
+            for (size_t n = 0; n < _var2_bins.size(); n++) { 
               std::cout << "(" << i << ", " << j << ", " << m << ", " << n << ") => " << _S[i][j][m][n] << std::endl;
             }
           }
@@ -164,10 +158,10 @@ namespace Base {
     TH2D *h_sm = new TH2D("h_sm", "", n_bins, 0, n_bins, n_bins, 0, n_bins);
 
 
-    for (int n = 0; n < _var2_bins.size(); n++) {   // pmu true
-      for (int m = 0; m < _var1_bins.size(); m++) {  // theta true
-        for (int j = 0; j < _var2_bins.size(); j++) {  // pmu reco
-          for (int i = 0; i < _var1_bins.size(); i++) {  // theta reco
+    for (size_t n = 0; n < _var2_bins.size(); n++) {   // pmu true
+      for (size_t m = 0; m < _var1_bins.size(); m++) {  // theta true
+        for (size_t j = 0; j < _var2_bins.size(); j++) {  // pmu reco
+          for (size_t i = 0; i < _var1_bins.size(); i++) {  // theta reco
         
             int reco_bin = i + j * _var1_bins.size() + 1;
             int true_bin = m + n * _var1_bins.size() + 1;
@@ -181,8 +175,8 @@ namespace Base {
 
     std::vector<std::string> bin_labels;
 
-    for (int j = 0; j < _var2_bins.size(); j++) {  
-      for (int i = 0; i < _var1_bins.size(); i++) {  
+    for (size_t j = 0; j < _var2_bins.size(); j++) {  
+      for (size_t i = 0; i < _var1_bins.size(); i++) {  
 
         //int bin = i + j * _var1_bins.size() + 1;
 
@@ -202,14 +196,14 @@ namespace Base {
 
     std::vector<TLine*> lines;
 
-    for (int i = 1; i < _var2_bins.size(); i++) {
+    for (size_t i = 1; i < _var2_bins.size(); i++) {
       TLine *line = new TLine(_var1_bins.size() * i, 0, _var1_bins.size() * i, n_bins);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
       lines.emplace_back(line);
     }
 
-    for (int i = 1; i < _var2_bins.size(); i++) {
+    for (size_t i = 1; i < _var2_bins.size(); i++) {
       TLine *line = new TLine(0, _var1_bins.size() * i, n_bins, _var1_bins.size() * i);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);

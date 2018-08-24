@@ -134,7 +134,7 @@ namespace Base {
   void CrossSectionCalculator1D::SetTruthXSec(TH1D* xsec, int n, int m) 
   {
     _truth_xsec = xsec;
-    if(_fake_data_mode) this->SmearTruth(m, m);
+    if(_fake_data_mode) this->SmearTruth(n, m);
   }
 
   TH1D* CrossSectionCalculator1D::GetMCCrossSection()

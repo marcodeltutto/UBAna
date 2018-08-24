@@ -892,7 +892,7 @@ namespace Base {
     }
 
 
-    for (int i = 0; i < xsec_mc_histos.size(); i++) {
+    for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
 
       c_test->cd(i+1);
 
@@ -1193,11 +1193,6 @@ namespace Base {
     h_main->SetLineColor(kGreen+2);
     h_main->SetFillColor(0); // fully transparent
     h_main->Draw("histo same");
-  }
-
-  void CrossSectionCalculator2D::DrawData(TH1D h)
-  {
-
   }
 
 

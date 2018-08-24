@@ -184,7 +184,7 @@ namespace Base {
   // Main method
   //
 
-	void CrossSectionBootstrapCalculator2D::Run(std::string weight_type) 
+	void CrossSectionBootstrapCalculator2D::Run() 
 	{
 
 		gROOT->SetBatch(kTRUE);
@@ -428,7 +428,7 @@ namespace Base {
       }
 
 
-      for (int i = 0; i < xsec_mc_histos.size(); i++) {
+      for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
         c_test->cd(i+1);
         gPad->SetBottomMargin(0.15);
         gPad->SetLeftMargin(0.15);

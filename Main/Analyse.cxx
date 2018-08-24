@@ -1342,7 +1342,7 @@ std::cout << "H here 5" << std::endl;
       _xsec_bs_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle_mumom");
       _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
-      _xsec_bs_calc.Run("genie_multisim");
+      _xsec_bs_calc.Run();
 
       _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle_mumom");
       _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
@@ -1373,7 +1373,7 @@ std::cout << "H here 5" << std::endl;
       _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
       _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
       _xsec_bs_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
-      _xsec_bs_calc.Run("flux_multisim");
+      _xsec_bs_calc.Run();
 
       _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_muangle_mumom");
       _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);

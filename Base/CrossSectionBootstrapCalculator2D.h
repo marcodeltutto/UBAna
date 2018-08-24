@@ -77,7 +77,7 @@ namespace Base {
     ~CrossSectionBootstrapCalculator2D(){}
 
     ///
-    void Run(std::string weight_type = "genie_multisim");
+    void Run();
 
     /// Configure function parameters
     void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
