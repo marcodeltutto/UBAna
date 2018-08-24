@@ -103,6 +103,8 @@ namespace Base {
 
           for (int n = 0; n < _bs.GetNbinsY(); n++) {
 
+            // std::cout << "i = " << i << ", j = " << j << ", m = " << m << ", n = " << n << std::endl;
+
             // Reset the matrix element
             _M[i][j][m][n] = 0.;
             _M_frac[i][j][m][n] = 0.;

@@ -141,9 +141,9 @@ namespace Base {
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
     flux_file += flux_file_name;
-    std::cout << _namebase << "Using flux file: " << flux_file << std::endl;
+    // std::cout << _namebase << "Using flux file: " << flux_file << std::endl;
 
-    std::cout << _namebase << "Flux correction weight: " << _flux_correction_weight << std::endl;
+    // std::cout << _namebase << "Flux correction weight: " << _flux_correction_weight << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();

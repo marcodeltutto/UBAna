@@ -1352,7 +1352,7 @@ std::cout << "H here 5" << std::endl;
       }
     }
 
-    if (false /*_import_genie_systs*/) {
+    if (_import_genie_systs) {
 
       TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_muangle_mumom");
@@ -1383,7 +1383,7 @@ std::cout << "H here 5" << std::endl;
       }
     }
 
-    if (false /*_import_flux_systs*/) {
+    if (_import_flux_systs) {
 
       TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_muangle_mumom");
@@ -1401,7 +1401,7 @@ std::cout << "H here 5" << std::endl;
     }
 
 
-    if (false /*_import_detector_systs*/) {
+    if (_import_detector_systs) {
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_detector_muangle_mumom");
@@ -1430,31 +1430,32 @@ std::cout << "H here 5" << std::endl;
     migrationmatrix4d.SetTTree(tt); 
     migrationmatrix4d.SetRecoPerTrueHistos(h_reco_per_true_mc);
 
+
     // int n_bins_double_mumom = 4;
     // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
     // int n_bins_double_mucostheta = 6;
     // double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
 
-    int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
-    double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
-    // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
-    // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
-    int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
-    double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+    // int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
+    // double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
+    // // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
+    // // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
+    // int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
+    // double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+
+    // Get the bins first
+    int n_bins_double_mucostheta = hmap_trktheta_trkmom_mc["total"]->GetNbinsX();
+    const double *bins_double_mucostheta = hmap_trktheta_trkmom_mc["total"]->GetXaxis()->GetXbins()->GetArray();
+    int n_bins_double_mumom = hmap_trktheta_trkmom_mc["total"]->GetNbinsY();
+    const double *bins_double_mumom = hmap_trktheta_trkmom_mc["total"]->GetYaxis()->GetXbins()->GetArray();
 
     migrationmatrix4d.SetBins(bins_double_mucostheta, n_bins_double_mucostheta, bins_double_mumom, n_bins_double_mumom);
-    std::cout << "Here 2.1" << std::endl;
     
     Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
-    std::cout << "Here 3" << std::endl;
     
     migrationmatrix4d.SetOutputFileName("latex_test.tex");
-    std::cout << "Here 4" << std::endl;
     migrationmatrix4d.PrintSmearingMatrixLatex();
-    std::cout << "Here 5" << std::endl;
     migrationmatrix4d.PlotMatrix();
-
-    std::cout << "Here 6" << std::endl;
 
     CrossSectionCalculator2D xseccalc2d;
     xseccalc2d.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb);
@@ -1477,12 +1478,10 @@ std::cout << "H here 5" << std::endl;
     }
     xseccalc2d.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
 
-    std::cout << "Here 8" << std::endl;
 
     TH2D * xsec_muangle_mumom = xseccalc2d.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
     TH2D * xsec_muangle_mumom_mc = xseccalc2d.GetMCCrossSection();
 
-    std::cout << "Here 9" << std::endl;
 
     file_out->cd();
     save_name = "xsec_muangle_mumom_" + _prefix;

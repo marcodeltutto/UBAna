@@ -56,63 +56,7 @@ namespace Base {
 
   Mat4D MigrationMatrix4D::CalculateMigrationMatrix() 
   {
-    Double_t        mom_true;
-    Double_t        mom_mcs;
-
-    Double_t        angle_true;
-    Double_t        angle_reco;
-
-    Double_t        event_weight;
-
-    std::vector<std::string> * wgtsnames_genie_multisim = 0;
-    std::vector<double> * wgts_genie_multisim = 0;
-
-    std::vector<std::string> * wgtsnames_genie_models = 0;
-    std::vector<double> * wgts_genie_models = 0;
-
-    std::vector<std::string> * wgtsnames_flux_multisim = 0;
-    std::vector<double> * wgts_flux_multisim = 0;
-
-    TBranch        *b_mom_true; 
-    TBranch        *b_mom_mcs;
-
-    TBranch        *b_angle_true;
-    TBranch        *b_angle_reco;
-
-    TBranch        *b_event_weight;
-
-    TBranch        *b_wgtsnames_genie_multisim;
-    TBranch        *b_wgts_genie_multisim;
-
-    TBranch        *b_wgtsnames_genie_models;
-    TBranch        *b_wgts_genie_models;
-
-    TBranch        *b_wgtsnames_flux_multisim;
-    TBranch        *b_wgts_flux_multisim;
-
-    _tree->SetMakeClass(1);
-
-    _tree->SetBranchAddress("mom_true", &mom_true, &b_mom_true);
-    _tree->SetBranchAddress("mom_mcs", &mom_mcs, &b_mom_mcs);
-
-    _tree->SetBranchAddress("angle_true", &angle_true, &b_angle_true);
-    _tree->SetBranchAddress("angle_reco", &angle_reco, &b_angle_reco);
-
-    _tree->SetBranchAddress("event_weight", &event_weight, &b_event_weight);
-
-    _tree->SetBranchAddress("wgtsnames_genie_multisim", &wgtsnames_genie_multisim, &b_wgtsnames_genie_multisim);
-    _tree->SetBranchAddress("wgts_genie_multisim", &wgts_genie_multisim, &b_wgts_genie_multisim);
-
-    _tree->SetBranchAddress("wgtsnames_genie_models", &wgtsnames_genie_models, &b_wgtsnames_genie_models);
-    _tree->SetBranchAddress("wgts_genie_models", &wgts_genie_models, &b_wgts_genie_models);
-
-    _tree->SetBranchAddress("wgtsnames_flux_multisim", &wgtsnames_flux_multisim, &b_wgtsnames_flux_multisim);
-    _tree->SetBranchAddress("wgts_flux_multisim", &wgts_flux_multisim, &b_wgts_flux_multisim);
-
-    Long64_t nentries = _tree->GetEntriesFast();
-
     
-
     // Resize the smearing matrix
     _S.resize( _var1_bins.size(), 
               std::vector<std::vector<std::vector<double>>> (_var2_bins.size(),
@@ -135,7 +79,8 @@ namespace Base {
         }
       }
     }
-    std::cout << _prefix << "Total entries: " << counter << std::endl;
+
+    // std::cout << _prefix << "Total migration matrix entries: " << counter << std::endl;
 
 
     // True bin m, n
@@ -144,7 +89,7 @@ namespace Base {
     for (int m = 0; m < _var1_bins.size(); m++) {
       for (int n = 0; n < _var2_bins.size(); n++) {
 
-        std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
+        // std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
 
         auto v1_bin = _var1_bins.at(m);
         auto v2_bin = _var2_bins.at(n);
@@ -154,77 +99,9 @@ namespace Base {
         // if(_verbose) std::cout << _prefix << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
         // if(_verbose) std::cout << _prefix << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
 
-       /* _reco_per_true->Reset();
 
-        for (Long64_t jentry=0; jentry < nentries;jentry++) {
-          _tree->GetEntry(jentry);
-
-
-          // Weights starts
-          double evt_weight = event_weight;
-
-          if (_use_weights && _weight_name != "nominal") {
-
-            std::cout << _prefix << "Using weight with name: " << _weight_name << std::endl;
-
-            bool found = false;
-
-            if (_weight_type == "genie_multisim") {
-
-              for (size_t i = 0; i < (*wgtsnames_genie_multisim).size(); i++) {
-                if ((*wgtsnames_genie_multisim).at(i) == _weight_name){
-                  evt_weight *= (*wgts_genie_multisim).at(i);
-                  // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
-                  found = true;
-                  break;
-                }
-              }
-            }
-
-            if (_weight_type == "genie_models") {
-
-              for (size_t i = 0; i < (*wgtsnames_genie_models).size(); i++) {
-                if ((*wgtsnames_genie_models).at(i) == _weight_name){
-                  evt_weight *= (*wgts_genie_models).at(i);
-                  // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
-                  found = true;
-                  break;
-                }
-              }
-            }
-
-            if (_weight_type == "flux_multisim") {
-
-              for (size_t i = 0; i < (*wgtsnames_flux_multisim).size(); i++) {
-                if ((*wgtsnames_flux_multisim).at(i) == _weight_name){
-                  evt_weight *= (*wgts_flux_multisim).at(i);
-                  // std::cout << _prefix << "Weight with name: " << _weight_name << " found." << std::endl;
-                  found = true;
-                  break;
-                }
-              }
-            }
-
-            if (!found) {
-              std::cout << _prefix << "Weight with name: " << _weight_name << " NOT found!" << std::endl;
-              throw std::exception();
-            }
-
-          }
-          // Weights ends
-
-          // std::cout << _prefix << "mom_true: " << mom_true << ", mom_mcs: " << mom_mcs << ", evt_weight: " << evt_weight << std::endl;
-
-         
-          if (  angle_true > v1_bin.first && angle_true < v1_bin.second
-             && mom_true > v2_bin.first   && mom_true < v2_bin.second) {
-
-            // Filling reco bin i, j
-            _reco_per_true->Fill(angle_reco, mom_mcs, evt_weight);
-          }
-        }
-        */
         _reco_per_true = (TH2D*) _h_reco_per_true[m][n]->Clone("_reco_per_true");
+
 
         // Normalize to get a probability
         _reco_per_true->Scale(1./_reco_per_true->Integral());

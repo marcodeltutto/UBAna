@@ -2623,7 +2623,7 @@ void Main::Maker::MakeFile()
       int n = _h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1;
       if (m < _h_reco_per_true[0][0]->GetNbinsX() && n < _h_reco_per_true[0][0]->GetNbinsY()) { // Avoid overflows
         // std::cout << "_angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << ", n " << n << std::endl;
-        _h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs);
+        _h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs, event_weight);
         FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_genie_multisim_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_flux_multisim_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
       }

@@ -97,9 +97,9 @@ namespace Base {
   {
 
     _hmap_bnbcosmic = bnbcosmic;
-    std::cout << "MC Histograms: " << std::endl;
+    // std::cout << "MC Histograms: " << std::endl;
     for (auto it : bnbcosmic) {
-      std::cout << "\t" << it.first << std::endl;
+      // std::cout << "\t" << it.first << std::endl;
       std::string this_name = it.second->GetName();
       _hmap_bnbcosmic[it.first] = (TH1D*)it.second->Clone((this_name + it.first + "_xsec_int").c_str());
     }
@@ -148,9 +148,9 @@ namespace Base {
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
     flux_file += flux_file_name;
-    std::cout << "[CrossSectionCalculator1D] Using flux file: " << flux_file << std::endl;
+    // std::cout << "[CrossSectionCalculator1D] Using flux file: " << flux_file << std::endl;
 
-    std::cout << "[CrossSectionCalculator1D] Flux correction weight: " << _flux_correction_weight << std::endl;
+    // std::cout << "[CrossSectionCalculator1D] Flux correction weight: " << _flux_correction_weight << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
@@ -172,20 +172,20 @@ namespace Base {
     h_flux_numu->Draw("histo");
 
     double mean = h_flux_numu-> GetMean();
-    std::cout << "The mean energy is: " << mean << std::endl;
+    // std::cout << "The mean energy is: " << mean << std::endl;
     int binmean = h_flux_numu -> FindBin(mean);
-    std::cout << "The bin of the mean is: " << binmean << std::endl;
+    // std::cout << "The bin of the mean is: " << binmean << std::endl;
 
     int n = h_flux_numu -> GetNbinsX();
 
-    std::cout << "Integral up to " << binmean << " is: " << h_flux_numu->Integral(1, binmean) << std::endl;
-    std::cout << "Integral from to " << binmean << " is: " << h_flux_numu->Integral(binmean, n) << std::endl;
+    // std::cout << "Integral up to " << binmean << " is: " << h_flux_numu->Integral(1, binmean) << std::endl;
+    // std::cout << "Integral from to " << binmean << " is: " << h_flux_numu->Integral(binmean, n) << std::endl;
 
 
     double lowerint = h_flux_numu -> Integral(1, binmean);
-    std::cout << "Lower Integral: " << lowerint << std::endl;
+    // std::cout << "Lower Integral: " << lowerint << std::endl;
     double lowerborder = lowerint * 0.32; //h_flux_numu->Integral() * 0.16;
-    std::cout << "Lower Border: " << lowerborder << std::endl;
+    // std::cout << "Lower Border: " << lowerborder << std::endl;
     double lowersum = 0;
     int i = 0;
     while (lowersum < lowerborder) {
@@ -194,11 +194,11 @@ namespace Base {
       std::cout << i << "\t" << lowersum << std::endl;
     }
 
-    std::cout << "Lower Sum: " << lowersum << std::endl;
+    // std::cout << "Lower Sum: " << lowersum << std::endl;
     double low = h_flux_numu -> GetBinCenter(i-1);
-    std::cout << "The lower edge bin is: " << i-1 << std::endl;
-    std::cout << "The lower edge center energy is: " << low << std::endl;
-    std::cout << "The lower energy error is: " << mean - low << std::endl;
+    // std::cout << "The lower edge bin is: " << i-1 << std::endl;
+    // std::cout << "The lower edge center energy is: " << low << std::endl;
+    // std::cout << "The lower energy error is: " << mean - low << std::endl;
 
     double upperint = h_flux_numu -> Integral(binmean, n);
     std::cout << upperint << std::endl;
@@ -211,14 +211,14 @@ namespace Base {
     }
 
     double up = h_flux_numu -> GetBinCenter(n+1 - (j-1));
-    std::cout << "The upper edge bin is: " << j-1 << std::endl;
-    std::cout << "The upper edge center energy is: " << up << std::endl;
-    std::cout << "The upper energy error is: " << up - mean << std::endl;
+    // std::cout << "The upper edge bin is: " << j-1 << std::endl;
+    // std::cout << "The upper edge center energy is: " << up << std::endl;
+    // std::cout << "The upper energy error is: " << up - mean << std::endl;
 
-    std::cout << "This should be ~0.68: " << h_flux_numu->Integral(i-1, n+1 - (j-1)) / h_flux_numu->Integral() << std::endl;
+    // std::cout << "This should be ~0.68: " << h_flux_numu->Integral(i-1, n+1 - (j-1)) / h_flux_numu->Integral() << std::endl;
 
-    std::cout << "Integral lower border: " << h_flux_numu->Integral(1, i-1) << " - " << h_flux_numu->Integral(1, i-1) / h_flux_numu->Integral() << std::endl;
-    std::cout << "Integral upper border: " << h_flux_numu->Integral(n+1 - (j-1), n) << " - " << h_flux_numu->Integral(n+1 - (j-1), n) / h_flux_numu->Integral() << std::endl;
+    // std::cout << "Integral lower border: " << h_flux_numu->Integral(1, i-1) << " - " << h_flux_numu->Integral(1, i-1) / h_flux_numu->Integral() << std::endl;
+    // std::cout << "Integral upper border: " << h_flux_numu->Integral(n+1 - (j-1), n) << " - " << h_flux_numu->Integral(n+1 - (j-1), n) / h_flux_numu->Integral() << std::endl;
 
     TGraph *gmean = new TGraph();
     gmean -> SetPoint(0, mean, 0);
