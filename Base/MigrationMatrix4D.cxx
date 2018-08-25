@@ -271,8 +271,8 @@ namespace Base {
     _f_out << "S_{ij" << true_m << true_n << "} =" << std::endl;
     _f_out << "\\begin{bmatrix}" << std::endl;
 
-    for (int i = 0; i < _var1_bins.size(); i++) {
-      for (int j = 0; j < _var2_bins.size(); j++) {
+    for (size_t i = 0; i < _var1_bins.size(); i++) {
+      for (size_t j = 0; j < _var2_bins.size(); j++) {
 
         _f_out << _S[i][j][true_m][true_n] << "  &  ";
 
