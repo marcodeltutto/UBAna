@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <map>
 #include <time.h>
+#include <algorithm>
 
 #include <TH1D.h>
 
@@ -105,12 +106,16 @@ namespace Base {
     std::vector<double> _bins; ///< Histogram bins array
 
     std::map<std::string, TH1D> _hmap; ///< Histogram map ("nominal", "universe1"...)
+    std::vector<TH1D> _h_v; ///< The vector of histograms 
+    std::vector<std::string> _name_v; ///< The name of the above histograms ("nominal", "universe1"...)
+
     size_t _n_weights; ///< Number of weigths to use
     std::vector<double> _weights; ///< Weigths to use
     std::vector<std::string> _wnames; ///< Weight names
 
     //std::map<std::string, TH1D*>::iterator _current_iterator = _hmap.begin();
     std::map<std::string, TH1D>::iterator _current_iterator; //!
+    int _current_vector_index = 0;
 
   };
 }

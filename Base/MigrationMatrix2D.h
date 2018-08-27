@@ -94,6 +94,9 @@ namespace Base {
     /// Plots S as an histogram
     void PlotMatrix();
 
+    ///
+    void SetVerbosity(bool verbosity) {_verbose = verbosity;}
+
   private:
 
     std::string _name = "[MigrationMatrix2D] ";

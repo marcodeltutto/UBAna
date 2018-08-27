@@ -124,6 +124,19 @@ void PlottingTools::DrawPOTRatio(double pot) {
   
 }
 
+void PlottingTools::DrawProgressBar(double progress, double barWidth, std::string message) {
+  
+  std::cout << "[";
+  int pos = barWidth * progress;
+  for (int i = 0; i < barWidth; ++i) {
+  if (i < pos) std::cout << "=";
+    else if (i == pos) std::cout << ">";
+    else std::cout << " ";
+  }
+  std::cout << "] " << int(progress * 100.0) << " % " << message << "\r";
+  std::cout.flush();
+}
+
 
 
 
@@ -134,7 +147,8 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   
   
   for (auto iter : themap) {
-    if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
+    if ( iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off" 
+      || iter.first == "dirt_cosmic" || iter.first == "dirt_outfv" || iter.first == "dirt") continue;
     iter.second->Scale(pot_scaling);
     // if (iter.first == "cosmic_nostopmu" || iter.first == "cosmic_nostopmu" || iter.first == "cosmic") iter.second->Scale(0.45);
   }
@@ -153,6 +167,19 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     themap["intimecosmic"]->SetFillStyle(3004);
     hs_trklen->Add(themap["intimecosmic"]);
   }
+
+  if (themap["dirt_cosmic"] != NULL && themap["dirt_outfv"] != NULL) {
+    themap["total"]->Add(themap["dirt_cosmic"]);
+    themap["total"]->Add(themap["dirt_outfv"]);
+
+    themap["dirt_cosmic"]->SetLineColor(kOrange+3);
+    themap["dirt_cosmic"]->SetFillColor(kOrange+3);
+    hs_trklen->Add(themap["dirt_cosmic"]);
+    themap["dirt_outfv"]->SetLineColor(kOrange+2);
+    themap["dirt_outfv"]->SetFillColor(kOrange+2);
+    hs_trklen->Add(themap["dirt_outfv"]);
+  }
+
 
 //   themap["total"]->Reset();
 //   themap["total"]->Add(themap["beam-off"]);
@@ -205,6 +232,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   themap["nue"]->SetLineColor(kMagenta+1);
   themap["nue"]->SetFillColor(kMagenta+1);
   hs_trklen->Add(themap["nue"]);
+
   
   if (_breakdownPlots) {
     themap["signal_nostopmu"]->SetLineColor(kRed+2);
@@ -237,7 +265,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   TLegend* leg2;
   if (_breakdownPlots){
     // leg2 = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
-    leg2 = new TLegend(0.6015038,0.3101075,0.9235589,0.8468817,NULL,"brNDC");
+    leg2 = new TLegend(0.5689223,0.3165432,0.8909774,0.8538272,NULL,"brNDC");
   } else {
     leg2 = new TLegend(0.5789474,0.4212346,0.8696742,0.8222222,NULL,"brNDC");
   }
@@ -323,6 +351,16 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     sstm << "Cosmic, " << std::setprecision(2)  << themap["cosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
     leg2->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
     sstm.str("");
+  }
+
+  if (themap["dirt_cosmic"] != NULL && themap["dirt_outfv"] != NULL) {
+    sstm << "Dirt (OUTFV), " << std::setprecision(2)  << themap["dirt_outfv"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["dirt_outfv"],sstm.str().c_str(),"f");
+    sstm.str("");
+    sstm << "Dirt (cosmic), " << std::setprecision(2)  << themap["dirt_cosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["dirt_cosmic"],sstm.str().c_str(),"f");
+    sstm.str("");
+    // leg2->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
   }
 
   if (themap["beam-off"] != NULL) {
@@ -513,7 +551,8 @@ TLegend* PlottingTools::DrawTHStack2(THStack *hs_trklen,
   
   
   for (auto iter : themap) {
-    if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
+    if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off"
+      || iter.first == "dirt_outfv" || iter.first == "dirt_outfv" || iter.first == "dirt") continue;
     iter.second->Scale(pot_scaling);
   }
   
@@ -523,6 +562,11 @@ TLegend* PlottingTools::DrawTHStack2(THStack *hs_trklen,
     themap["beam-off"]->SetFillStyle(3004);
     themap["total"]->Add(themap["beam-off"]);
     hs_trklen->Add(themap["beam-off"]);
+  }
+
+  if (themap["dirt"] != NULL) {
+    themap["background"]->Add(themap["dirt"]);
+    themap["total"]->Add(themap["dirt"]);
   }
   
   themap["background"]->SetLineColor(kBlue-3);

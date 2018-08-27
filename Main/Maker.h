@@ -103,9 +103,6 @@ namespace Main {
     void SetIsData(bool);
 
     ///
-    void SetTargetFluxSystematic(std::string);
-
-    ///
     void SetMaUpMECOff(bool option) {_maup_mecoff = option;};
 
     ///
@@ -126,6 +123,18 @@ namespace Main {
     ///
     void FillBootstrapGenie(bool option) {_fill_bootstrap_genie = option;}
 
+    ///
+    void FillBootstrapGenieModels(bool option) {_fill_bootstrap_genie_models = option;}
+
+    ///
+    void OverrideWithPoissonWeights(bool option) {_override_with_poisson_weights = option;}
+
+    ///
+    void SetTargetFluxSystematic(std::string s) { _target_flux_syst = s; }
+
+    ///
+    void SetTargetGenieModelsSystematic(std::string s) { _genie_models_target_syst = s; }
+
 
   private:
 
@@ -136,11 +145,19 @@ namespace Main {
     double eff_uncertainty(int _n, int _N);
 
     void FillBootstrap(double fill_value,
-                   double evt_wgt,
-                   std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_pm1_bs, 
-                   std::string channel_namel, 
-                   std::vector<std::string> fname, 
-                   std::vector<double> wgts_genie);
+                       double evt_wgt,
+                       std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_genie_pm1_bs, 
+                       std::string channel_namel, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts_genie);
+
+    void FillBootstrap(double fill_value1,
+                       double fill_value2,
+                       double evt_wgt,
+                       std::map<std::string,std::map<std::string,TH2D*>> hmap_trkmom_genie_pm1_bs, 
+                       std::string channel_namel, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts_genie);
 
     // void FillBootstrap(double fill_value,
     //                std::map<std::string,TH1D*> hmap_trkmom_genie_pm1_bs, 
@@ -148,11 +165,20 @@ namespace Main {
     //                std::vector<double> wgts_genie);
 
     void FillBootstrap(double fill_value1,
-                   double fill_value2,
-                   double evt_wgt,
-                   std::map<std::string,TH2D*> hmap_trkmom_genie_pm1_bs, 
-                   std::vector<std::string> fname, 
-                   std::vector<double> wgts_genie);
+                       double fill_value2,
+                       double evt_wgt,
+                       std::map<std::string,TH2D*> hmap_trkmom_genie_pm1_bs, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts_genie);
+
+    void FillBootstrap(double fill_value1, // reco value x (costheta)
+                       double fill_value2, // reco value y (momentum)
+                       int m, // true bin m (costheta)
+                       int n, // true bin n (momentum)
+                       double evt_wgt,
+                       std::map<std::string,std::vector<std::vector<TH2D*>>> bs_reco_per_true, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts);
 
     bool _maup_mecoff = false;
 
@@ -162,8 +188,10 @@ namespace Main {
     //const bool _fill_bootstrap = true;
     bool _fill_bootstrap_flux = false;
     bool _fill_bootstrap_genie = false;
+    bool _fill_bootstrap_genie_models = false;
 
     std::string _target_flux_syst = "";
+    std::string _genie_models_target_syst = "";
 
     const bool _check_duplicate_events = false;
 
@@ -195,8 +223,38 @@ namespace Main {
     // int n_bins_mumom = 20;
     // int n_bins_mucostheta = 25;
 
+    // int n_bins_double_mumom = 4; ///< Number of momentum bins for double differential
+    // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50}; ///< Momentum bins for double differential
+    int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
+    double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
+    // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
+    // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
+
+    // int n_bins_double_mucostheta = 6; ///< Number of costheta bins for double differential
+    // double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00}; ///< costheta bins for double differential
+    int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
+    double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+
     bool _scale_cosmics = false; ///< If true scales the cosmic background by _scale_factor_cosmic
     double _scale_factor_cosmic = 1.; ///< Factor used to scale the cosmic background (used only if _scale_cosmics is true)
+
+
+    // These variables are filled in the reco-true TTree in the code
+    double _mom_true, _mom_mcs;
+    bool _contained, _selected;
+    double _angle_true, _angle_reco;
+    double _event_weight_fortree;
+    std::vector<std::string> _wgtsnames_genie_multisim;
+    std::vector<double> _wgts_genie_multisim;
+    std::vector<std::string> _wgtsnames_genie_models;
+    std::vector<double> _wgts_genie_models;
+    std::vector<std::string> _wgtsnames_flux_multisim;
+    std::vector<double> _wgts_flux_multisim;
+
+
+    bool _override_with_poisson_weights = false; ///< If true, changes the GENIE multisim weights to be uncorrelated Poisson weights with mean 1
+
+    TRandom _random_engine; ///< The engine to generate random numbers
     
   };
 }

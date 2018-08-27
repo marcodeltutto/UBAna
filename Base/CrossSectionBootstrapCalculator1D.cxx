@@ -46,6 +46,11 @@ namespace Base {
     _pot = pot;
   }
 
+  void CrossSectionBootstrapCalculator1D::SetBkgToSubtract(std::vector<std::string> bkg_names)
+  {
+    _bkg_names = bkg_names;
+  }
+
   void CrossSectionBootstrapCalculator1D::SetNameAndLabel(std::string name, std::string label)
   {
     _name = name;
@@ -130,14 +135,15 @@ namespace Base {
 
   void CrossSectionBootstrapCalculator1D::SetSavePrefix(std::string s, std::string folder)
   {
+    std::string timestamp;
     if (folder != "") {
       auto now = std::time(nullptr);
       char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
-      std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
+      timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
       
-      system(("mkdir -p " + folder /*+ "_" + timestamp*/).c_str());    
+      system(("mkdir -p " + folder + "_" + timestamp).c_str());    
     }
-  	_save_prefix = folder + "/" + s;
+  	_save_prefix = folder + "_" + timestamp + "/" + s;
   }
 
   void CrossSectionBootstrapCalculator1D::SetFluxHistogramType(bool rwgt_flux, std::string flux_unc_type)
@@ -207,7 +213,7 @@ namespace Base {
 
     for (size_t s = 0; s < n_universe; s++) { 
 
-    	std::cout << "$>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is universe " << s << ", with name " << universe_names.at(s) << std::endl;
+    	std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> This is universe " << s << ", with name " << universe_names.at(s) << std::endl;
 
       //
     	// Construnct the hmap for the MC histograms
@@ -314,7 +320,7 @@ namespace Base {
       } else {
         _xsec_calc.DoNotSmear(); 
       }
-      TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+      TH1D* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
 
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;

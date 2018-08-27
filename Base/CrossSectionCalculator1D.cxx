@@ -97,7 +97,9 @@ namespace Base {
   {
 
     _hmap_bnbcosmic = bnbcosmic;
+    // std::cout << "MC Histograms: " << std::endl;
     for (auto it : bnbcosmic) {
+      // std::cout << "\t" << it.first << std::endl;
       std::string this_name = it.second->GetName();
       _hmap_bnbcosmic[it.first] = (TH1D*)it.second->Clone((this_name + it.first + "_xsec_int").c_str());
     }
@@ -132,7 +134,7 @@ namespace Base {
   void CrossSectionCalculator1D::SetTruthXSec(TH1D* xsec, int n, int m) 
   {
     _truth_xsec = xsec;
-    if(_fake_data_mode) this->SmearTruth(m, m);
+    if(_fake_data_mode) this->SmearTruth(n, m);
   }
 
   TH1D* CrossSectionCalculator1D::GetMCCrossSection()
@@ -146,9 +148,9 @@ namespace Base {
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
     flux_file += flux_file_name;
-    std::cout << "[CrossSectionCalculator1D] Using flux file: " << flux_file << std::endl;
+    // std::cout << "[CrossSectionCalculator1D] Using flux file: " << flux_file << std::endl;
 
-    std::cout << "[CrossSectionCalculator1D] Flux correction weight: " << _flux_correction_weight << std::endl;
+    // std::cout << "[CrossSectionCalculator1D] Flux correction weight: " << _flux_correction_weight << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
@@ -170,20 +172,20 @@ namespace Base {
     h_flux_numu->Draw("histo");
 
     double mean = h_flux_numu-> GetMean();
-    std::cout << "The mean energy is: " << mean << std::endl;
+    // std::cout << "The mean energy is: " << mean << std::endl;
     int binmean = h_flux_numu -> FindBin(mean);
-    std::cout << "The bin of the mean is: " << binmean << std::endl;
+    // std::cout << "The bin of the mean is: " << binmean << std::endl;
 
     int n = h_flux_numu -> GetNbinsX();
 
-    std::cout << "Integral up to " << binmean << " is: " << h_flux_numu->Integral(1, binmean) << std::endl;
-    std::cout << "Integral from to " << binmean << " is: " << h_flux_numu->Integral(binmean, n) << std::endl;
+    // std::cout << "Integral up to " << binmean << " is: " << h_flux_numu->Integral(1, binmean) << std::endl;
+    // std::cout << "Integral from to " << binmean << " is: " << h_flux_numu->Integral(binmean, n) << std::endl;
 
 
     double lowerint = h_flux_numu -> Integral(1, binmean);
-    std::cout << "Lower Integral: " << lowerint << std::endl;
+    // std::cout << "Lower Integral: " << lowerint << std::endl;
     double lowerborder = lowerint * 0.32; //h_flux_numu->Integral() * 0.16;
-    std::cout << "Lower Border: " << lowerborder << std::endl;
+    // std::cout << "Lower Border: " << lowerborder << std::endl;
     double lowersum = 0;
     int i = 0;
     while (lowersum < lowerborder) {
@@ -192,11 +194,11 @@ namespace Base {
       std::cout << i << "\t" << lowersum << std::endl;
     }
 
-    std::cout << "Lower Sum: " << lowersum << std::endl;
+    // std::cout << "Lower Sum: " << lowersum << std::endl;
     double low = h_flux_numu -> GetBinCenter(i-1);
-    std::cout << "The lower edge bin is: " << i-1 << std::endl;
-    std::cout << "The lower edge center energy is: " << low << std::endl;
-    std::cout << "The lower energy error is: " << mean - low << std::endl;
+    // std::cout << "The lower edge bin is: " << i-1 << std::endl;
+    // std::cout << "The lower edge center energy is: " << low << std::endl;
+    // std::cout << "The lower energy error is: " << mean - low << std::endl;
 
     double upperint = h_flux_numu -> Integral(binmean, n);
     std::cout << upperint << std::endl;
@@ -209,14 +211,14 @@ namespace Base {
     }
 
     double up = h_flux_numu -> GetBinCenter(n+1 - (j-1));
-    std::cout << "The upper edge bin is: " << j-1 << std::endl;
-    std::cout << "The upper edge center energy is: " << up << std::endl;
-    std::cout << "The upper energy error is: " << up - mean << std::endl;
+    // std::cout << "The upper edge bin is: " << j-1 << std::endl;
+    // std::cout << "The upper edge center energy is: " << up << std::endl;
+    // std::cout << "The upper energy error is: " << up - mean << std::endl;
 
-    std::cout << "This should be ~0.68: " << h_flux_numu->Integral(i-1, n+1 - (j-1)) / h_flux_numu->Integral() << std::endl;
+    // std::cout << "This should be ~0.68: " << h_flux_numu->Integral(i-1, n+1 - (j-1)) / h_flux_numu->Integral() << std::endl;
 
-    std::cout << "Integral lower border: " << h_flux_numu->Integral(1, i-1) << " - " << h_flux_numu->Integral(1, i-1) / h_flux_numu->Integral() << std::endl;
-    std::cout << "Integral upper border: " << h_flux_numu->Integral(n+1 - (j-1), n) << " - " << h_flux_numu->Integral(n+1 - (j-1), n) / h_flux_numu->Integral() << std::endl;
+    // std::cout << "Integral lower border: " << h_flux_numu->Integral(1, i-1) << " - " << h_flux_numu->Integral(1, i-1) / h_flux_numu->Integral() << std::endl;
+    // std::cout << "Integral upper border: " << h_flux_numu->Integral(n+1 - (j-1), n) << " - " << h_flux_numu->Integral(n+1 - (j-1), n) / h_flux_numu->Integral() << std::endl;
 
     TGraph *gmean = new TGraph();
     gmean -> SetPoint(0, mean, 0);
@@ -466,7 +468,8 @@ namespace Base {
 
     // Scale mc histograms
     for (auto iter : _hmap_bnbcosmic) {
-      if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
+      if ( iter.second == NULL  || iter.first == "intimecosmic" || iter.first == "beam-off"
+        || iter.first == "dirt" || iter.first == "dirt_outfv"   || iter.first == "dirt_cosmic") continue;
       iter.second->Sumw2();
       iter.second->Scale(_scale_factor_mc_bnbcosmic);
       if (bin_width_scale) {
@@ -501,6 +504,9 @@ namespace Base {
     // And update the total histogram
     _hmap_bnbcosmic["total"]->Add(_h_extbnb);
 
+    bool use_dirt = false;
+    if(_hmap_bnbcosmic.find("dirt") != _hmap_bnbcosmic.end()) use_dirt = true;
+
     std::cout << "beam-on integral "  << _h_bnbon->Integral() << std::endl;
     std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->Integral() << std::endl;
     std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
@@ -509,6 +515,7 @@ namespace Base {
     std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->Integral() << std::endl;
     std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
     std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
+    if (use_dirt) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->Integral() << std::endl;
 
     std::cout << "First Bin only: " << std::endl;
     std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
@@ -519,6 +526,7 @@ namespace Base {
     std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
     std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
     std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+    if (use_dirt) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
 
     if (_h_bnbon->GetNbinsX() == 1) {
       // If one bin means we are dealing with the total cross section, print the number of events
@@ -531,6 +539,7 @@ namespace Base {
       std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
       std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
       std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+      if (use_dirt) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
 
       TH1D* total_bkg_temp = (TH1D*) _hmap_bnbcosmic["beam-off"]->Clone("total_bkg_temp");
       total_bkg_temp->Add(_hmap_bnbcosmic["cosmic"]);
@@ -538,6 +547,7 @@ namespace Base {
       total_bkg_temp->Add(_hmap_bnbcosmic["nc"]);
       total_bkg_temp->Add(_hmap_bnbcosmic["nue"]);
       total_bkg_temp->Add(_hmap_bnbcosmic["anumu"]);
+      if (use_dirt) total_bkg_temp->Add(_hmap_bnbcosmic["dirt"]);
       std::cout << "total backround " << total_bkg_temp->GetBinContent(1) << " +- " << total_bkg_temp->GetBinError(1) << std::endl;
     }
 
@@ -592,7 +602,7 @@ namespace Base {
   }  
 
 
-  TH1D* CrossSectionCalculator1D::ExtractCrossSection(std::string xaxis_label, std::string yaxis_label) 
+  TH1D* CrossSectionCalculator1D::ExtractCrossSection(std::vector<std::string> bkg_names, std::string xaxis_label, std::string yaxis_label) 
   {
 
     //
@@ -605,12 +615,25 @@ namespace Base {
     _h_mc->SetTitle(_label.c_str());
     _h_data->Sumw2();
 
-    std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
+
+
+
+    // Print the statistical uncertainties on the screen
+    std::cout << "Statistical uncertainty for beam-on: " << _h_data->GetBinError(1) << std::endl;
+    if (_h_data->GetNbinsX() == 1) {
+      for (auto name : bkg_names) {
+        std::cout << "Statistical uncertainty for " << name << ": "<< _hmap_bnbcosmic[name]->GetBinError(1) << std::endl;
+      }
+    }
+
+
 
     for (auto name : bkg_names) 
     {
       _h_data->Add(_hmap_bnbcosmic[name], -1.);
     }
+
+    
 
     //
     // Create efficiency histogram
@@ -840,17 +863,27 @@ namespace Base {
     if (_covariance_matrix_is_set) {
 
       gStyle->SetPalette(kDeepSea);
-      gStyle->SetPaintTextFormat("4.3f");
+      gStyle->SetPaintTextFormat("4.5f");
 
-      const Int_t NCont = 100;
-      const Int_t NRGBs = 5;
-      Double_t mainColour[NRGBs]   = { 1.00, 1.00, 1.00, 1.00, 1.00 };
-      Double_t otherColour[NRGBs]   = { 0.99,0.80, 0.60, 0.40, 0.20 };
-      //Double_t otherOtherColour[NRGBs]   = { 0.9,0.80, 0.80, 0.80, 0.80 };
-      Double_t stops[NRGBs] = { 0.00, 0.05, 0.1, 0.4, 1.00 };
+      // const Int_t NCont = 100;
+      // const Int_t NRGBs = 5;
+      // Double_t mainColour[NRGBs]   = { 1.00, 1.00, 1.00, 1.00, 1.00 };
+      // Double_t otherColour[NRGBs]   = { 0.99,0.80, 0.60, 0.40, 0.20 };
+      // //Double_t otherOtherColour[NRGBs]   = { 0.9,0.80, 0.80, 0.80, 0.80 };
+      // Double_t stops[NRGBs] = { 0.00, 0.05, 0.1, 0.4, 1.00 };
 
-      TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
-      gStyle->SetNumberContours(NCont);
+      // TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
+      // gStyle->SetNumberContours(NCont);
+
+
+      const Int_t Number = 9;
+      Double_t Red[Number]    = { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
+      Double_t Green[Number]  = { 1.00, 0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20 };
+      Double_t Blue[Number]   = { 1.00, 0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20 };
+      Double_t Stops[Number] =  { 0.00, 0.15, 0.30, 0.40, 0.50, 0.60, 0.70, 0.85, 1.00 };
+      Int_t nb=100;
+      TColor::CreateGradientColorTable(Number,Stops,Red,Green,Blue,nb);
+   
 
       TH2F *h = new TH2F("h", "", _cov_matrix_total->GetNbinsX(), 0, _cov_matrix_total->GetNbinsX(),
                                   _cov_matrix_total->GetNbinsY(), 0, _cov_matrix_total->GetNbinsY());
@@ -886,8 +919,8 @@ namespace Base {
       _cov_matrix_total->GetXaxis()->SetTickLength(0);
       _cov_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // _cov_matrix_total->Draw("colz text same");
-      _cov_matrix_total->Draw("colz same");
+      _cov_matrix_total->Draw("colz text same");
+      // _cov_matrix_total->Draw("colz same");
       PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_covariance";
       cov_c->SaveAs(name + ".pdf");
@@ -905,8 +938,8 @@ namespace Base {
       _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
       _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // _frac_cov_matrix_total->Draw("colz text same");
-      _frac_cov_matrix_total->Draw("colz same");
+      _frac_cov_matrix_total->Draw("colz text same");
+      // _frac_cov_matrix_total->Draw("colz same");
       PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_fractional_covariance";
       cov_frac_c->SaveAs(name + ".pdf");
@@ -924,8 +957,8 @@ namespace Base {
       _corr_matrix_total->GetXaxis()->SetTickLength(0);
       _corr_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
-      // _corr_matrix_total->Draw("colz text same");
-      _corr_matrix_total->Draw("colz same");
+      _corr_matrix_total->Draw("colz text same");
+      // _corr_matrix_total->Draw("colz same");
       PlottingTools::DrawSimulationXSec();
       name = _folder +_name + "_tot_correlation";
       corr_c->SaveAs(name + ".pdf");

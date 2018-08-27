@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <map>
 #include <time.h>
+#include <algorithm>
 
 #include <TH2D.h>
 
@@ -45,6 +46,9 @@ namespace Base {
 
     /// Constructor
     BootstrapTH2D(std::string, std::string, int, double*, int, double*);
+
+    /// Constructor
+    // BootstrapTH2D(std::string, std::string, int, double, double);
     
     /// Default destructor
     ~BootstrapTH2D(){}
@@ -90,12 +94,12 @@ namespace Base {
     TH2D GetNominal();
 
     ///
-    void GetUniverseHisto(std::string, TH2D & histo);
+    void GetUniverseHisto(std::string, TH2D &);
 
     ///
-    void GetUniverseHistoFast(std::string, TH2D & histo);
+    void GetUniverseHistoFast(std::string, TH2D &);
 
-  private:
+  protected:
 
     std::string _name = "[BootstrapTH2D] ";
 
@@ -107,13 +111,17 @@ namespace Base {
     std::vector<double> _bins_y; ///< Histogram bins array Y
 
     std::map<std::string, TH2D> _hmap; ///< Histogram map ("nominal", "universe1"...)
+    std::vector<TH2D> _h_v; ///< The vector of histograms 
+    std::vector<std::string> _name_v; ///< The name of the above histograms ("nominal", "universe1"...)
+
     size_t _n_weights; ///< Number of weigths to use
     std::vector<double> _weights; ///< Weigths to use
     std::vector<std::string> _wnames; ///< Weight names
 
-    //std::map<std::string, TH2D*>::iterator _current_iterator = _hmap.begin();
+    //std::map<std::string, TH1D*>::iterator _current_iterator = _hmap.begin();
     std::map<std::string, TH2D>::iterator _current_iterator; //!
-    
+    size_t _current_vector_index = 0;
+
   };
 }
 

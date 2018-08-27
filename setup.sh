@@ -46,7 +46,7 @@ if [[ $missing ]]; then
 fi
 
 echo
-printf "\033[93mUBAna\033[00m FYI shell env. may useful for external packages:\n"
+printf "\033[93mUBAna\033[00m FYI shell env. May be useful for external packages:\n"
 printf "    \033[95mMYSW_INCDIR\033[00m   = $MYSW_INCDIR\n"
 printf "    \033[95mMYSW_LIBDIR\033[00m   = $MYSW_LIBDIR\n"
 printf "    \033[95mMYSW_BUILDDIR\033[00m = $MYSW_BUILDDIR\n"
@@ -62,7 +62,7 @@ if [ -z `command -v $MYSW_CXX` ]; then
     if [ -z `command -v $MYSW_CXX` ]; then
         echo
         echo Looks like you do not have neither clang or g++!
-        echo You need one of those to compile LArCaffe... Abort config...
+        echo You need one of those to compile UBAna... Abort config...
         echo
         return 1;
     fi
