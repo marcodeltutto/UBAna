@@ -141,9 +141,6 @@ namespace Base {
     /// Draw a TH1 on the current pad with MC style
     void DrawMC(TCanvas * c, int c_number, TH1D h);
 
-    /// Draw a TH1 on the current pad with Data style
-    void DrawData(TH1D h);
-
     ///
     void SetVerbosity(bool verbosity) {_verbose = verbosity;}
 

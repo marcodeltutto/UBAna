@@ -184,7 +184,7 @@ namespace Base {
   // Main method
   //
 
-	void CrossSectionBootstrapCalculator2D::Run(std::string weight_type) 
+	void CrossSectionBootstrapCalculator2D::Run() 
 	{
 
 		gROOT->SetBatch(kTRUE);
@@ -221,7 +221,7 @@ namespace Base {
     std::vector<std::vector<TH2D*>> this_reco_per_true;
     Mat4D S_4d;
 
-    n_universe = 5;
+    // n_universe = 5;
 
     for (size_t s = 0; s < n_universe; s++) { 
 
@@ -259,7 +259,7 @@ namespace Base {
       //
       // Costruct the reco_per_true histos for this universe
       //
-      auto iter =  _bs_reco_per_true.find(universe_names.at(s));
+      auto iter = _bs_reco_per_true.find(universe_names.at(s));
       if (iter == _bs_reco_per_true.end()) {
         std::cout << __PRETTY_FUNCTION__ << "Can't find bs_reco_per_true for universe " << universe_names.at(s) << std::endl;
         throw std::exception();
@@ -296,7 +296,6 @@ namespace Base {
         _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
 
-
       //
       // Calculate the migration matrix for this universe
       //
@@ -309,12 +308,16 @@ namespace Base {
         const double *bins_mumom_temp = input_map_mc["total"]->GetYaxis()->GetXbins()->GetArray();
 
         MigrationMatrix4D migrationmatrix4d;
-        migrationmatrix4d.SetTTree(_t_true_reco);
-        migrationmatrix4d.UseWeights(universe_names.at(s), weight_type);
+        // migrationmatrix4d.SetTTree(_t_true_reco);
+        migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
+        // migrationmatrix4d.UseWeights(universe_names.at(s), weight_type);
         migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
+
         S_4d = migrationmatrix4d.CalculateMigrationMatrix();
+
         migrationmatrix4d.SetOutputFileName("latex_test_bootstrap.tex");
         migrationmatrix4d.PrintSmearingMatrixLatex();
+
       }
 
 
@@ -340,6 +343,7 @@ namespace Base {
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
 
     } // endl loop over universes
+    std::cout << std::endl;
 
 
     
@@ -424,7 +428,7 @@ namespace Base {
       }
 
 
-      for (int i = 0; i < xsec_mc_histos.size(); i++) {
+      for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
         c_test->cd(i+1);
         gPad->SetBottomMargin(0.15);
         gPad->SetLeftMargin(0.15);

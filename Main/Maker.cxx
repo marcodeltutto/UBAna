@@ -1404,7 +1404,7 @@ void Main::Maker::MakeFile()
       if (std::count (event_numbers.begin(), event_numbers.end(), t->event) > 1) {
 
         // Now check the subrun
-        for (int i_ev = 0; i_ev < event_numbers.size(); i_ev++) {
+        for (size_t i_ev = 0; i_ev < event_numbers.size(); i_ev++) {
           if (event_numbers.at(i_ev) == t->event) {
 
             if (run_numbers.at(i_ev) == t->run && subrun_numbers.at(i_ev) == t->subrun) {
@@ -1874,13 +1874,13 @@ void Main::Maker::MakeFile()
 
         std::string histo_name;
         histo_name = "bs_flux_multisim_reco_per_true_" + fname_flux_multisim.at(i);
-        bs_flux_multisim_reco_per_true[fname_genie_multisim.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+        bs_flux_multisim_reco_per_true[fname_flux_multisim.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
 
         for (int m = 0; m < n_bins_double_mucostheta; m++) {
           for (int n = 0; n < n_bins_double_mumom; n++) { 
             std::stringstream sstm;
             sstm << histo_name << "_" << m << "_" << n;
-            bs_flux_multisim_reco_per_true[fname_genie_multisim.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+            bs_flux_multisim_reco_per_true[fname_flux_multisim.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
           }
         }
 
@@ -2621,9 +2621,11 @@ void Main::Maker::MakeFile()
       // *** Migr mat addition
       int m = _h_reco_per_true[0][0]->GetXaxis()->FindBin(_angle_true) - 1;
       int n = _h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1;
-      if (m < _h_reco_per_true[0][0]->GetNbinsX() && n < _h_reco_per_true[0][0]->GetNbinsY()) { // Avoid overflows
+      if (m >= 0 && n >= 0 
+          && m < _h_reco_per_true[0][0]->GetNbinsX()    // Avoid overflows
+          && n < _h_reco_per_true[0][0]->GetNbinsY()) { // Avoid overflows
         // std::cout << "_angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << ", n " << n << std::endl;
-        _h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs);
+        _h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs, event_weight);
         FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_genie_multisim_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_flux_multisim_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
       }

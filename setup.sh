@@ -46,7 +46,7 @@ if [[ $missing ]]; then
 fi
 
 echo
-printf "\033[93mUBAna\033[00m FYI shell env. may useful for external packages:\n"
+printf "\033[93mUBAna\033[00m FYI shell env. May be useful for external packages:\n"
 printf "    \033[95mMYSW_INCDIR\033[00m   = $MYSW_INCDIR\n"
 printf "    \033[95mMYSW_LIBDIR\033[00m   = $MYSW_LIBDIR\n"
 printf "    \033[95mMYSW_BUILDDIR\033[00m = $MYSW_BUILDDIR\n"

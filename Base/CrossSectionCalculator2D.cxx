@@ -141,9 +141,9 @@ namespace Base {
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
     flux_file += flux_file_name;
-    std::cout << _namebase << "Using flux file: " << flux_file << std::endl;
+    // std::cout << _namebase << "Using flux file: " << flux_file << std::endl;
 
-    std::cout << _namebase << "Flux correction weight: " << _flux_correction_weight << std::endl;
+    // std::cout << _namebase << "Flux correction weight: " << _flux_correction_weight << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
@@ -892,7 +892,7 @@ namespace Base {
     }
 
 
-    for (int i = 0; i < xsec_mc_histos.size(); i++) {
+    for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
 
       c_test->cd(i+1);
 
@@ -1193,11 +1193,6 @@ namespace Base {
     h_main->SetLineColor(kGreen+2);
     h_main->SetFillColor(0); // fully transparent
     h_main->Draw("histo same");
-  }
-
-  void CrossSectionCalculator2D::DrawData(TH1D h)
-  {
-
   }
 
 

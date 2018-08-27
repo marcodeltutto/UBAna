@@ -120,7 +120,7 @@ namespace Base {
 
     //std::map<std::string, TH1D*>::iterator _current_iterator = _hmap.begin();
     std::map<std::string, TH2D>::iterator _current_iterator; //!
-    int _current_vector_index = 0;
+    size_t _current_vector_index = 0;
 
   };
 }
