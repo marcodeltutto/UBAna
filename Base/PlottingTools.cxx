@@ -5,6 +5,19 @@
 
 namespace Base {
 
+  void PlottingTools::DrawProgressBar(double progress, double barWidth) {
+  
+    std::cout << "[";
+    int pos = barWidth * progress;
+    for (int i = 0; i < barWidth; ++i) {
+    if (i < pos) std::cout << "=";
+      else if (i == pos) std::cout << ">";
+      else std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " % completed.\r";
+    std::cout.flush();
+  }
+
   void PlottingTools::DrawPreliminary() {
     TLatex* prelim = new TLatex(0.94,0.93, "MicroBooNE Preliminary");
     prelim->SetTextFont(62);

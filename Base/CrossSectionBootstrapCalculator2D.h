@@ -80,7 +80,7 @@ namespace Base {
     void Run();
 
     /// Configure function parameters
-    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
+    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt = 0, double intimecosmic = 0);
 
     /// Sets the POT number
     void SetPOT(double pot);
@@ -95,7 +95,7 @@ namespace Base {
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms
-    void SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, TH2D* intimecosmic = 0);
+    void SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt = std::map<std::string,TH2D*>(), TH2D* intimecosmic = 0);
 
     /// Sets num and dem histograms for the efficiency and the reco per true 2D histos
     void SetTruthHistograms(BootstrapTH2D, BootstrapTH2D, std::map<std::string,std::vector<std::vector<TH2D*>>>);
@@ -152,6 +152,7 @@ namespace Base {
     double _scale_factor_mc_bnbcosmic;
     double _scale_factor_bnbon;
     double _scale_factor_extbnb;
+    double _scale_factor_mc_dirt;
     double _scale_factor_mc_intimecosmic;
 
     double _pot;
@@ -167,6 +168,7 @@ namespace Base {
 
     //std::map<std::string,BootstrapTH2D> _hmap_bnbcosmic;
     std::map<std::string,std::map<std::string,TH2D*>> _hmap_bnbcosmic;
+    std::map<std::string,TH2D*> _hmap_dirt;
     TH2D* _h_bnbon = nullptr;
     TH2D* _h_extbnb = nullptr;
     TH2D* _h_intimecosmic = nullptr;

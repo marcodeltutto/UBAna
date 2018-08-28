@@ -2,6 +2,7 @@
 #define __BASE_COVARIANCECALCULATOR4D_CXX__
 
 #include "CovarianceCalculator4D.h"
+#include "PlottingTools.h"
 
 namespace Base {
   
@@ -96,6 +97,8 @@ namespace Base {
     double number_of_universes = (double)_bs.GetNUniverses() - 1;
 
     for (int i = 0; i < _bs.GetNbinsX(); i++) {
+
+      PlottingTools::DrawProgressBar((double)i/(double)_bs.GetNbinsX(), 70);
 
       for (int j = 0; j < _bs.GetNbinsY(); j++) {
 

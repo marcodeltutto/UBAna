@@ -11,12 +11,12 @@ analyser = Main.Analyse()
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.9_500k.root") # tune 1
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6.root") # tune 1 high stat - genie and flux styst (from uboonegpvm)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled.root") # tune 1 high stat - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%)
-# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled_new.root") # tune 1 high stat - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%) (after neutrino analysis)
+analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled_new.root") # tune 1 high stat - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%) (after neutrino analysis)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled_cosmicscaled.root") # tune 1 high stat - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%) (with comisc blue bkg scaled by 0.54548, from the overlay)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_tune3_mcc8.9_test5.root") # tune 3
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_tune3.root") # tune 3 - genie and flux styst (from uboonegpvm)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_tune3_fluxscaled.root") # tune 3 - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%)
-analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # tune 1 - genie and flux styst (no high stat)
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # tune 1 - genie and flux styst (no high stat)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_maup_mecoff.root") # tune 1 - ma up, mec off
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_tune3_maup_mecoff.root ") # tune 3 - ma up, mec off
 
@@ -60,7 +60,7 @@ analyser.ImportGenieSystematics(False)
 analyser.DoGenieModelsSystematics(False)
 analyser.ImportGenieModelsSystematics(False)
 
-analyser.DoFluxSystematics(False)
+analyser.DoFluxSystematics(True)
 analyser.ImportFluxSystematics(False)
 analyser.SetExtraFluxUncertainty(0.)
 #analyser.SetTargetFluxSystematic("FluxUnisim");
