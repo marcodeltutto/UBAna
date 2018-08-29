@@ -60,28 +60,28 @@ namespace Base {
     ///
     void SetWeightNames(std::vector<std::string>);
 
-    ///
+    /// Emplaces all histograms on the fly
     void SetAllHistograms(std::map<std::string,TH1D*>);
 
-    ///
+    /// Returns the number of bins along x
     int GetNbinsX();
 
-    ///
+    /// Returns the number of universes
     int GetNUniverses();
 
-    ///
+    /// Returns the number of weigths (should be the same as the number of universes)
     size_t GetNWeights();
 
-    ///
+    /// Returns a vector with the names of the universes
     std::vector<std::string> GetUniverseNames();
 
-    ///
+    /// Sets the iterator to the first universe, use this at the beginning of a loop over universes
     void ResetIterator();
 
-    ///
+    /// Returns the hitogram for the next universe
     const TH1D & NextUniverse();
 
-    ///
+    /// Returns the hitogram for the current universe (has to be called after a NextUniverse())
     const TH1D & SameUniverse();
 
     ///
@@ -90,13 +90,13 @@ namespace Base {
     /// Fill the value bin with a general weight and the vector of weights
     void Fill(double, double, std::vector<double>);
 
-    ///
-    TH1D GetNominal();
+    /// Returns the nominal histogram
+    const TH1D& GetNominal();
 
-    ///
+    /// Returns the histogram for a particular universe
     void GetUniverseHisto(std::string, TH1D &);
 
-    ///
+    /// Returns the histogram for a particular universe, w/o checking if that universe exists (may crash)
     void GetUniverseHistoFast(std::string, TH1D &);
 
   protected:

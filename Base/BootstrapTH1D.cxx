@@ -72,19 +72,10 @@ namespace Base {
   void BootstrapTH1D::SetAllHistograms(std::map<std::string,TH1D*> input_map) 
   {
 
-
-  	// for (auto it : input_map) {
-  	// 	_hmap[it.first] = *it.second;
-   //    //std::cout << "[BootstrapTH1D] Setting up histogram " << it.first << std::endl;
-  	// }
-
     for (auto it : input_map) {
       _h_v.push_back(*it.second);
       _name_v.push_back(it.first);
-      //std::cout << "[BootstrapTH1D] Setting up histogram " << it.first << std::endl;
     }
-
-
 
     _nbins = _h_v.at(0).GetNbinsX();
 
@@ -98,7 +89,6 @@ namespace Base {
 
     _hname = _h_v.at(0).GetTitle();
     _title = _h_v.at(0).GetTitle();
-    //_wnames.push_back("nominal");
 
   }
 
@@ -109,7 +99,6 @@ namespace Base {
 
   int BootstrapTH1D::GetNUniverses()
   {
-    // return _hmap.size(); // To be removed
 
     if (_h_v.size() != _name_v.size()) {
       std::cout << _name << "Histo vector and name vector do not have the same number of entries" << std::endl;
@@ -127,7 +116,6 @@ namespace Base {
 
   std::vector<std::string> BootstrapTH1D::GetUniverseNames()
   {
-    // return _wnames; // To be removed
     std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
     return _name_v;
   }
@@ -141,10 +129,6 @@ namespace Base {
   const TH1D & BootstrapTH1D::NextUniverse() {
 
     _current_vector_index++;
-
-    // if (_current_iterator->first == "nominal") {
-    //   _current_iterator++;
-    // }
 
     if (_current_vector_index >= (int)_h_v.size()) {
       std::cout << "BootstrapTH1D::NextUniverse() error index from " << _name << std::endl;
@@ -160,41 +144,13 @@ namespace Base {
       }
     }
 
-    // if (_name_v.at(_current_vector_index) == "nominal") {
-    //   _current_vector_index++;
-    // }
-
-    // // if (_current_iterator == _hmap.end()) {
-    // //   std::cout << "NextUniverse false" << std::endl;
-    // //   return false;
-    // // }
-
-    // if ((size_t)_current_vector_index >= _h_v.size()) {
-    //   std::cout << "NextUniverse false" << std::endl;
-    //   return false;
-    // }
-
-    // uni_name = _current_iterator->first;
-    // uni_histo = _current_iterator->second;
-
-    // uni_name = _name_v.at(_current_vector_index);
-    // uni_histo = _h_v.at(_current_vector_index);
-
-    // _current_iterator++;
-    // _current_vector_index++;
-    
-    // return true;
-
     return _h_v.at(_current_vector_index);
-    
+
   } 
 
 
 
   const TH1D & BootstrapTH1D::SameUniverse() {
-
-    // std::cout << "same _current_vector_index " << _current_vector_index << std::endl;
-
 
     if (_current_vector_index < 0 || _current_vector_index > (int)_h_v.size()) {
       std::cout << "BootstrapTH1D::SameUniverse() error index from " << _name << std::endl;
@@ -220,8 +176,6 @@ namespace Base {
       if (pos != std::string::npos) {  
         std::string function_name = _name_v.at(i).substr (0, pos);
 
-        //std::cout << "Minus 1, substrig is " << function_name << std::endl;
-
         std::vector<TH1D> vec;
         vec.resize(2);
         vec.at(0) = _h_v.at(i);
@@ -235,42 +189,9 @@ namespace Base {
       if (pos != std::string::npos) {  
         std::string function_name = _name_v.at(i).substr (0, pos);
 
-        //std::cout << "Plus 1, substrig is " << function_name << std::endl;
-
         output_map[function_name].at(1) =  _h_v.at(i);
       }
     }
-
-
-
-    // for (auto iter : _hmap) {
-    //   if (iter.first == "nominal") continue;
-    //   //std::cout << "iter.first = " << iter.first << std::endl;
-
-    //   // Minus 1 sigma
-    //   std::size_t pos = iter.first.find("_m1");
-    //   if (pos != std::string::npos) {  
-    //     std::string function_name = iter.first.substr (0, pos);
-
-    //     //std::cout << "Minus 1, substrig is " << function_name << std::endl;
-
-    //     std::vector<TH1D> vec;
-    //     vec.resize(2);
-    //     vec.at(0) = iter.second;
-
-    //     output_map[function_name] = vec;
-    //   }
-
-    //   // Plus 1 sigma
-    //   pos = iter.first.find("_p1");
-    //   if (pos != std::string::npos) {  
-    //     std::string function_name = iter.first.substr (0, pos);
-
-    //     //std::cout << "Plus 1, substrig is " << function_name << std::endl;
-
-    //     output_map[function_name].at(1) = iter.second;
-    //   }
-    // }
 
     return output_map;
   }
@@ -287,12 +208,6 @@ namespace Base {
     _hmap["nominal"].Fill(value, weight);
     _h_v.at(0).Fill(value, weight); // The nominal histogram
 
-   //  for (size_t i = 0; i < _n_weights - 1; i++) {
-
-   //   _hmap[_wnames.at(i)].Fill(value, weight * weights.at(i));
-
-   // }
-
 
     for (size_t i = 1; i < _n_weights; i++) {
 
@@ -302,19 +217,13 @@ namespace Base {
 
   }
 
-  TH1D BootstrapTH1D::GetNominal()
+  const TH1D& BootstrapTH1D::GetNominal()
   {
-    // return _hmap["nominal"];
     return _h_v.at(0);
   }
 
   void BootstrapTH1D::GetUniverseHisto(std::string uni_name, TH1D & histo)
   {
-    // auto iter = _hmap.find(uni_name);
-    // if (iter == _hmap.end()) {
-    //   std::cout << __PRETTY_FUNCTION__ << " :: Histomgram for universe " << uni_name << " not found! This is Bootstrap " << _hname << "::" << _title << std::endl;
-    //   throw std::exception();
-    // }
 
     auto iter = std::find(_name_v.begin(), _name_v.end(), uni_name);
     if (iter == _name_v.end()) {
