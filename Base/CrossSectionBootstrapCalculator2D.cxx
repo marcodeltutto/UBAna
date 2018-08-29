@@ -31,11 +31,12 @@ namespace Base {
     //_h_true_reco_mom = NULL;
   }
 
-  void CrossSectionBootstrapCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic)
+  void CrossSectionBootstrapCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt, double intimecosmic)
   {
     _scale_factor_mc_bnbcosmic = bnbcosmic;
     _scale_factor_bnbon = bnbon;
     _scale_factor_extbnb = extbnb;
+    _scale_factor_mc_dirt = dirt;
     _scale_factor_mc_intimecosmic = intimecosmic;
 
     _configured = true;
@@ -86,11 +87,13 @@ namespace Base {
   }
   */
 
-  void CrossSectionBootstrapCalculator2D::SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, TH2D* intimecosmic) 
+  void CrossSectionBootstrapCalculator2D::SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt, TH2D* intimecosmic) 
   {
 
     _hmap_bnbcosmic = bnbcosmic;
     
+    _hmap_dirt = dirt;
+
     if (bnbon != NULL) {
       _h_bnbon = (TH2D*)bnbon->Clone("_h_bnbon");
     }
@@ -195,7 +198,7 @@ namespace Base {
 
 
 		CrossSectionCalculator2D _xsec_calc;
-    _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb);
+    _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb, _scale_factor_mc_dirt);
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
     _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
@@ -221,14 +224,14 @@ namespace Base {
     std::vector<std::vector<TH2D*>> this_reco_per_true;
     Mat4D S_4d;
 
-    // n_universe = 5;
+    // n_universe = 30;
 
     for (size_t s = 0; s < n_universe; s++) { 
 
       DrawProgressBar((double)s/(double)n_universe, 70);
 
       //
-    	// Construct the hmap for the MC histograms
+    	// Construct the hmap for the MC histograms (bnbcosmic)
       //
       std::map<std::string, TH2D*> input_map_mc;
       for (auto iter : _hmap_bnbcosmic) {
@@ -243,6 +246,23 @@ namespace Base {
           }
         }      
       }
+
+      //
+      // Construct the hmap for the MC histograms (dirt)
+      //
+      // std::map<std::string, TH2D*> input_map_mc_dirt;
+      // for (auto iter : _hmap_dirt) {
+
+      //   std::map<std::string, TH2D*> temp_map = iter.second;
+
+      //   for (auto i2 : temp_map) {
+
+      //     if (i2.first == universe_names.at(s)) {
+      //       input_map_mc_dirt[iter.first] = i2.second;
+      //       break;
+      //     }
+      //   }      
+      // }
 
 
       std::string hname; 
@@ -282,19 +302,30 @@ namespace Base {
       if (_rwgt_flux && universe_names.at(s) != "nominal") {
       	std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
+        // Find the universe number
+        std::string universe_number;
+        std::string::size_type pos = universe_names.at(s).find("universe");
+        if (universe_names.at(s).npos != pos) {
+          universe_number = universe_names.at(s).substr(pos+8);
+        } else {
+          std::cout << _prefix << "Universe name is not nominal nor universeXXX." << std::endl;
+          throw std::exception();
+        }
+
       	std::stringstream sstm;
-        sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << s << "_AV_TPC";
+        sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << universe_number << "_AV_TPC";
         std::string flux_name = sstm.str();
 
-        std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
+        // std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
         _xsec_calc.EstimateFlux(flux_file, flux_name);
       }
       if (universe_names.at(s) == "nominal") {
         std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
-        std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
+        // std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
         _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
+
 
       //
       // Calculate the migration matrix for this universe
@@ -326,7 +357,7 @@ namespace Base {
       //
       _xsec_calc.Reset();
       //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
-      _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb);  
+      _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb, _hmap_dirt);  
       if (_true_to_reco_is_set) {
         _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
       } else {

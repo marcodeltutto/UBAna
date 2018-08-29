@@ -2,6 +2,7 @@
 #define __BASE_COVARIANCECALCULATOR4D_CXX__
 
 #include "CovarianceCalculator4D.h"
+#include "PlottingTools.h"
 
 namespace Base {
   
@@ -89,6 +90,11 @@ namespace Base {
     //   }
     // }
 
+    // std::string uni_name;
+    // TH2D uni_histo;
+
+    int counter = 0;
+    int loop_length = _bs.GetNbinsX() * _bs.GetNbinsX() * _bs.GetNbinsY() * _bs.GetNbinsY();
 
     _bs.ResetIterator();
     std::cout << _name << " Calculating Cov Matrix with " << _bs.GetNUniverses() << " universes. Nominal histogram is excluded." << std::endl;
@@ -102,6 +108,9 @@ namespace Base {
         for (int m = 0; m < _bs.GetNbinsX(); m++) {
 
           for (int n = 0; n < _bs.GetNbinsY(); n++) {
+
+            counter++;
+            PlottingTools::DrawProgressBar((double)counter/(double)loop_length, 70);
 
             // std::cout << "i = " << i << ", j = " << j << ", m = " << m << ", n = " << n << std::endl;
 
@@ -129,14 +138,12 @@ namespace Base {
 
             for (int s = 0; s < number_of_universes; s++) {
 
-              std::string uni_name;
-              TH2D uni_histo;
-              _bs.NextUniverse(uni_name, uni_histo);
+              // _bs.NextUniverse(uni_name, uni_histo);
 
               // std::cout << "************************()()()()() this is universe " << uni_name << std::endl;
 
-              double N_ij_s = uni_histo.GetBinContent(i+1, j+1);
-              double N_mn_s = uni_histo.GetBinContent(m+1, n+1);
+              double N_ij_s = _bs.NextUniverse().GetBinContent(i+1, j+1);
+              double N_mn_s = _bs.SameUniverse().GetBinContent(m+1, n+1);
 
               // if (i == 2 && j == 2 && m == 2 && n == 2) {
               //   std::cout << "N_22_s = " << N_ij_s << std::endl;

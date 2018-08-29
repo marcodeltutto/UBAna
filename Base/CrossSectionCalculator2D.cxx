@@ -33,11 +33,12 @@ namespace Base {
     //_h_true_reco_mom = NULL;
   }
 
-  void CrossSectionCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic)
+  void CrossSectionCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt, double intimecosmic)
   {
     _scale_factor_mc_bnbcosmic = bnbcosmic;
     _scale_factor_bnbon = bnbon;
     _scale_factor_extbnb = extbnb;
+    _scale_factor_mc_dirt = dirt;
     _scale_factor_mc_intimecosmic = intimecosmic;
 
     _configured = true;
@@ -85,18 +86,29 @@ namespace Base {
 
   }
 
-  void CrossSectionCalculator2D::SetHistograms(std::map<std::string,TH2D*> bnbcosmic, TH2D* bnbon, TH2D* extbnb, TH2D* intimecosmic) 
+  void CrossSectionCalculator2D::SetHistograms(std::map<std::string,TH2D*> bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt, TH2D* intimecosmic) 
   {
 
-    _hmap_bnbcosmic = bnbcosmic;
-    _h_bnbon = bnbon;
-    _h_extbnb = extbnb;
-    _h_intimecosmic = intimecosmic;
+    // _hmap_bnbcosmic = bnbcosmic;
+    // _hmap_dirt = dirt;
+    // _h_bnbon = bnbon;
+    // _h_extbnb = extbnb;
+    // _h_intimecosmic = intimecosmic;
 
 
     for (auto it : bnbcosmic) {
       std::string this_name = it.second->GetName();
-      _hmap_bnbcosmic[it.first] = (TH2D*)it.second->Clone((this_name + it.first + "_xsec_int").c_str());
+      _hmap_bnbcosmic[it.first] = (TH2D*)it.second->Clone((this_name + it.first + "_xsec_int_bnbcosmic").c_str());
+    }
+
+    for (auto it : dirt) {
+      std::string this_name = it.second->GetName();
+      _hmap_dirt[it.first] = (TH2D*)it.second->Clone((this_name + it.first + "_xsec_int_dirt").c_str());
+    }
+
+    _dirt_is_set = false;
+    if (dirt.size() != 0) {
+      _dirt_is_set = true;
     }
     
     if (bnbon != NULL) {
@@ -165,32 +177,32 @@ namespace Base {
     h_flux_numu->Draw("histo");
 
     double mean = h_flux_numu-> GetMean();
-    if (_verbose) std::cout << "The mean energy is: " << mean << std::endl;
+    // if (_verbose) std::cout << "The mean energy is: " << mean << std::endl;
     int binmean = h_flux_numu -> FindBin(mean);
-    if (_verbose) std::cout << "The bin of the mean is: " << binmean << std::endl;
+    // if (_verbose) std::cout << "The bin of the mean is: " << binmean << std::endl;
 
     int n = h_flux_numu -> GetNbinsX();
 
     double lowerint = h_flux_numu -> Integral(1, binmean);
-    if (_verbose) std::cout << "Lower Integral: " << lowerint << std::endl;
+    // if (_verbose) std::cout << "Lower Integral: " << lowerint << std::endl;
     double lowerborder = lowerint * 0.32;
-    if (_verbose) std::cout << "Lower Border: " << lowerborder << std::endl;
+    // if (_verbose) std::cout << "Lower Border: " << lowerborder << std::endl;
     double lowersum = 0;
     int i = 0;
     while (lowersum < lowerborder) {
       i++;
       lowersum += h_flux_numu -> GetBinContent(i);
-      if (_verbose) std::cout << i << "\t" << lowersum << std::endl;
+      // if (_verbose) std::cout << i << "\t" << lowersum << std::endl;
     }
 
-    if (_verbose) std::cout << "Lower Sum: " << lowersum << std::endl;
+    // if (_verbose) std::cout << "Lower Sum: " << lowersum << std::endl;
     double low = h_flux_numu -> GetBinCenter(i-1);
-    if (_verbose) std::cout << "The lower edge bin is: " << i-1 << std::endl;
-    if (_verbose) std::cout << "The lower edge center energy is: " << low << std::endl;
-    if (_verbose) std::cout << "The lower energy error is: " << mean - low << std::endl;
+    // if (_verbose) std::cout << "The lower edge bin is: " << i-1 << std::endl;
+    // if (_verbose) std::cout << "The lower edge center energy is: " << low << std::endl;
+    // if (_verbose) std::cout << "The lower energy error is: " << mean - low << std::endl;
 
     double upperint = h_flux_numu -> Integral(binmean, n);
-    std::cout << upperint << std::endl;
+    // std::cout << upperint << std::endl;
     double upperborder = upperint * 0.32;
     double uppersum = 0;
     i = 0;
@@ -200,9 +212,9 @@ namespace Base {
     }
 
     double up = h_flux_numu -> GetBinCenter(n+1 - (i-1));
-    if (_verbose) std::cout << "The upper edge bin is: " << i-1 << std::endl;
-    if (_verbose) std::cout << "The upper edge center energy is: " << up << std::endl;
-    if (_verbose) std::cout << "The upper energy error is: " << up - mean << std::endl;
+    // if (_verbose) std::cout << "The upper edge bin is: " << i-1 << std::endl;
+    // if (_verbose) std::cout << "The upper edge center energy is: " << up << std::endl;
+    // if (_verbose) std::cout << "The upper energy error is: " << up - mean << std::endl;
 
     TGraph *gmean = new TGraph();
     gmean -> SetPoint(0, mean, 0);
@@ -414,12 +426,20 @@ namespace Base {
   void CrossSectionCalculator2D::ProcessPlots() 
   {
 
-    // Scale mc histograms
+    // Scale mc histograms (bnbcosmic)
     for (auto iter : _hmap_bnbcosmic) {
       if ( iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off"
         || iter.first == "dirt" || iter.first == "dirt_outfv"   || iter.first == "dirt_cosmic") continue;
       iter.second->Sumw2();
       iter.second->Scale(_scale_factor_mc_bnbcosmic);
+    }
+
+    // Scale mc histograms (dirt)
+    if (_dirt_is_set) {
+      for (auto iter : _hmap_dirt) {
+        iter.second->Sumw2();
+        iter.second->Scale(_scale_factor_mc_dirt);
+      }
     }
 
     // Scale data histograms
@@ -433,11 +453,30 @@ namespace Base {
     _h_data_sub->Sumw2();
     _h_data_sub->Add(_h_extbnb, -1.);
 
-    // Save beam off in the MC backgrounds
+
+    // Save beam off in the MC backgrounds ...
     _hmap_bnbcosmic["beam-off"] = _h_extbnb;
 
-    // And update the total histogram
+    // ... and update the total histogram
     _hmap_bnbcosmic["total"]->Add(_h_extbnb);
+
+
+    if (_dirt_is_set) {
+      // Save dirt in the MC backgrounds ...
+      _hmap_bnbcosmic["dirt"] = _hmap_dirt["total"];
+      _hmap_bnbcosmic["dirt_outfv"] = _hmap_dirt["outfv"];
+      _hmap_bnbcosmic["dirt_cosmic"] = _hmap_dirt["cosmic"];
+
+      // ... and update the total histogram
+      _hmap_bnbcosmic["total"]->Add(_hmap_dirt["total"]);
+    } else {
+      TH2D * h_empty = (TH2D*) _hmap_bnbcosmic["total"]->Clone("empty");
+      h_empty->Reset();
+
+      _hmap_bnbcosmic["dirt"] = h_empty;
+      _hmap_bnbcosmic["outfv_dirt"] = h_empty;
+      _hmap_bnbcosmic["cosmic_dirt"] = h_empty;
+    }
 
   }
 

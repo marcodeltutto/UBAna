@@ -69,6 +69,9 @@ namespace Base {
     ~PlottingTools(){}
 
     ///
+    static void DrawProgressBar(double progress, double barWidth);
+
+    ///
     static void DrawPreliminary();
 
     ///
