@@ -2,6 +2,7 @@
 #define __BASE_COVARIANCECALCULATOR2D_CXX__
 
 #include "CovarianceCalculator2D.h"
+#include "PlottingTools.h"
 
 namespace Base {
   
