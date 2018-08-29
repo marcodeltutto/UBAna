@@ -184,6 +184,7 @@ namespace Base {
 
 
 		CrossSectionCalculator1D _xsec_calc;
+    _xsec_calc.SetVerbose(false);
     _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb, _scale_factor_mc_dirt);
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
@@ -213,6 +214,7 @@ namespace Base {
     TH2D this_reco_true;
     TMatrix S_2d;
 
+    // n_universe = 30;
 
     for (size_t s = 0; s < n_universe; s++) { 
 
@@ -317,8 +319,6 @@ namespace Base {
       }
 
 
-      std::cout << "bla 1" << std::endl;
-
       // Calculate the migration matrix for this universe
       if (_true_to_reco_is_set) {
         S_2d.Clear(); S_2d.ResizeTo(_n, _m);
@@ -328,7 +328,6 @@ namespace Base {
         S_2d = migrationmatrix2d.CalculateMigrationMatrix();
         std::cout << "S_2d calculated" << std::endl;
       }
-      std::cout << "bla 2" << std::endl;
 
 
       // Calculate the cross section with these new objects in this universe

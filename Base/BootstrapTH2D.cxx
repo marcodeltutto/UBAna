@@ -121,7 +121,7 @@ namespace Base {
 
     _current_vector_index++;
 
-    if (_current_vector_index >= _h_v.size()) {
+    if (_current_vector_index >= (int)_h_v.size()) {
       std::cout << "BootstrapTH2D::NextUniverse() error index from " << _name << std::endl;
       throw std::exception();
     }
@@ -129,7 +129,7 @@ namespace Base {
     if (_name_v.at(_current_vector_index) == "nominal") {
       _current_vector_index++;
 
-      if (_current_vector_index >= _h_v.size()) {
+      if (_current_vector_index >= (int)_h_v.size()) {
         std::cout << "BootstrapTH2D::NextUniverse() error index from " << _name << std::endl;
         throw std::exception();
       }
@@ -141,7 +141,7 @@ namespace Base {
 
   const TH2D & BootstrapTH2D::SameUniverse() {
 
-    if (_current_vector_index < 0 || _current_vector_index > _h_v.size()) {
+    if (_current_vector_index < 0 || _current_vector_index > (int)_h_v.size()) {
       std::cout << "BootstrapTH2D::SameUniverse() error index from " << _name << std::endl;
       throw std::exception();
     }

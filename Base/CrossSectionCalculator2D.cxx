@@ -202,7 +202,7 @@ namespace Base {
     // if (_verbose) std::cout << "The lower energy error is: " << mean - low << std::endl;
 
     double upperint = h_flux_numu -> Integral(binmean, n);
-    std::cout << upperint << std::endl;
+    // std::cout << upperint << std::endl;
     double upperborder = upperint * 0.32;
     double uppersum = 0;
     i = 0;

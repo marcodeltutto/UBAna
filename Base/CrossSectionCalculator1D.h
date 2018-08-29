@@ -171,9 +171,13 @@ namespace Base {
     ///
     void Reset();
 
+    ///
+    void SetVerbose(bool verbose) {_verbose = verbose;}
+
   private:
     
     bool _configured = false;
+    bool _verbose = true;
 
     double _scale_factor_mc_bnbcosmic;
     double _scale_factor_bnbon;

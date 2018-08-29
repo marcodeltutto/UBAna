@@ -282,15 +282,17 @@ namespace Base {
   void CrossSectionCalculator1D::DoNotSmear() 
   {
 
-    double eff = _h_eff_mumom_num->GetBinContent(1) / _h_eff_mumom_den->GetBinContent(1);
+    // double eff = _h_eff_mumom_num->GetBinContent(1) / _h_eff_mumom_den->GetBinContent(1);
 
 
     TEfficiency* teff_reco = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
 
-    std::cout << "The efficiency is " << eff << std::endl;
-    std::cout << "The efficiency from is TEfficiency is " << teff_reco->GetEfficiency(1) 
-              << " + " << teff_reco->GetEfficiencyErrorUp(1) 
-              << " - " << teff_reco->GetEfficiencyErrorLow(1) << std::endl;
+    // std::cout << "The efficiency is " << eff << std::endl;
+    if (_verbose) {
+      std::cout << "The efficiency is " << teff_reco->GetEfficiency(1) 
+                << " + " << teff_reco->GetEfficiencyErrorUp(1) 
+                << " - " << teff_reco->GetEfficiencyErrorLow(1) << std::endl;
+    }
 
     _eff = teff_reco;
   }
@@ -546,30 +548,34 @@ namespace Base {
 
 
 
-    std::cout << "beam-on integral "  << _h_bnbon->Integral() << std::endl;
-    std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->Integral() << std::endl;
-    std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
-    std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->Integral() << std::endl;
-    std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->Integral() << std::endl;
-    std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->Integral() << std::endl;
-    std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
-    std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
-    if (_dirt_is_set) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->Integral() << std::endl;
+    if (_verbose) {
+      std::cout << "beam-on integral "  << _h_bnbon->Integral() << std::endl;
+      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->Integral() << std::endl;
+      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
+      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->Integral() << std::endl;
+      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->Integral() << std::endl;
+      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->Integral() << std::endl;
+      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
+      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
+      if (_dirt_is_set) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->Integral() << std::endl;
+    }
 
-    std::cout << "First Bin only: " << std::endl;
-    std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
-    std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
-    std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
-    std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
-    std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
-    std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
-    std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
-    std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
-    if (_dirt_is_set) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
+    if (_verbose) {
+      std::cout << "First Bin only: " << std::endl;
+      std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
+      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
+      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
+      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
+      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
+      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
+      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
+      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+      if (_dirt_is_set) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
+    }
 
-    if (_h_bnbon->GetNbinsX() == 1) {
+    if (_h_bnbon->GetNbinsX() == 1 && _verbose) {
       // If one bin means we are dealing with the total cross section, print the number of events
-      std::cout << "Number of events for POT: " << _pot << std::endl;
+      std::cout << "Number of events for " << _pot << " POT:" << std::endl;
       std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
       std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
       std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
@@ -658,10 +664,10 @@ namespace Base {
 
 
     // Print the statistical uncertainties on the screen
-    std::cout << "Statistical uncertainty for beam-on: " << _h_data->GetBinError(1) << std::endl;
+    if (_verbose) std::cout << "Statistical uncertainty for beam-on: " << _h_data->GetBinError(1) << std::endl;
     if (_h_data->GetNbinsX() == 1) {
       for (auto name : bkg_names) {
-        std::cout << "Statistical uncertainty for " << name << ": "<< _hmap_bnbcosmic[name]->GetBinError(1) << std::endl;
+        if (_verbose) std::cout << "Statistical uncertainty for " << name << ": "<< _hmap_bnbcosmic[name]->GetBinError(1) << std::endl;
       }
     }
 
@@ -705,9 +711,11 @@ namespace Base {
     // Divide by flux, and N_target and bin width
     //
 
-    std::cout << "FLUX: " << _flux
-    << "\nN_target: " << _n_target
-    << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
+    if (_verbose) {
+      std::cout << "FLUX: " << _flux
+      << "\nN_target: " << _n_target
+      << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
+    }
     double den = _flux * _n_target * 1e-38;
 
     _h_mc->Scale(1. / den, "width");
@@ -718,8 +726,10 @@ namespace Base {
     if (_fake_data_mode) _truth_xsec_smeared->Scale(1. / den, "width");
 
 
-    std::cout << "MC Integral: " << _h_mc->Integral() << std::endl;
-    std::cout << "Data Integral: " << _h_data->Integral() << std::endl;
+    if (_verbose) {
+      std::cout << "MC Integral: " << _h_mc->Integral() << std::endl;
+      std::cout << "Data Integral: " << _h_data->Integral() << std::endl;
+    }
 
 
     // Plot the cross section
@@ -773,7 +783,7 @@ namespace Base {
     //
 
     if (_extra_fractional_uncertainty != 0) {
-      std::cout << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
+      if (_verbose) std::cout << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
     }
 
     TH1D * h_syst_unc = (TH1D*) _h_data->Clone("h_syst_unc");
@@ -802,7 +812,7 @@ namespace Base {
           double unc_tot = std::sqrt(unc_stat_2 + unc_syst_2 + extra_unc_2);
 
           if (i == j) {
-            std::cout << "Bin " << i << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
+            if (_verbose) std::cout << "Bin " << i << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
             h_syst_unc->SetBinError(i+1, unc_tot); 
           }
 
@@ -893,7 +903,7 @@ namespace Base {
     c->SaveAs(name + ".pdf");
     c->SaveAs(name + ".C","C");
 
-    if (_h_data->GetNbinsX() == 1) {
+    if (_h_data->GetNbinsX() == 1 && _verbose) {
       std::cout << "Total cross section - DATA: " << _h_data->GetBinContent(1) << " +- " << _h_data->GetBinError(1) << std::endl;
       std::cout << "Total cross section - MC  : " << _h_mc->GetBinContent(1)   << " +- " << _h_mc->GetBinError(1) << std::endl;
     }
@@ -1025,7 +1035,7 @@ namespace Base {
 
     for (auto hname : histos_to_subtract) 
     {
-      std::cout << "[CrossSectionCalculator1D] Going to subtract histogram " << hname << std::endl;
+      if (_verbose) std::cout << "[CrossSectionCalculator1D] Going to subtract histogram " << hname << std::endl;
       // Need to remove from the data histogram
       _h_data_subtracted->Add(_hmap_bnbcosmic[hname], -1.);
       // But also form the total MC one, to properly propagate unc

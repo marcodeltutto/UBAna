@@ -60,7 +60,7 @@ analyser.ImportGenieSystematics(False)
 analyser.DoGenieModelsSystematics(False)
 analyser.ImportGenieModelsSystematics(False)
 
-analyser.DoFluxSystematics(False)
+analyser.DoFluxSystematics(True)
 analyser.ImportFluxSystematics(False)
 analyser.SetExtraFluxUncertainty(0.)
 #analyser.SetTargetFluxSystematic("FluxUnisim");

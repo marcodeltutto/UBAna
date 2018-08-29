@@ -316,21 +316,21 @@ namespace Base {
         sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << universe_number << "_AV_TPC";
         std::string flux_name = sstm.str();
 
-        std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
+        // std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
         _xsec_calc.EstimateFlux(flux_file, flux_name);
       }
       if (universe_names.at(s) == "nominal") {
         std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
-        std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
+        // std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
         _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
+
 
       //
       // Calculate the migration matrix for this universe
       //
       if (_true_to_reco_is_set) {
-
 
         // Get the bins first
         int n_bins_mucostheta_temp = input_map_mc["total"]->GetNbinsX();

@@ -837,6 +837,7 @@ std::cout << ">> here11" << std::endl;
     //
 
     _xsec_calc.Reset();
+    _xsec_calc.SetVerbose(true);
     _xsec_calc.SetHistograms(hmap_onebin_mc, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);  
     _xsec_calc.SetTruthHistograms(h_eff_onebin_num, h_eff_onebin_den);//, h_true_reco_mom); /*h_true_reco_mom is a placeholder*/
     _xsec_calc.SetTruthXSec(h_truth_xsec_mumom); /*h_truth_xsec_mumom is a placeholder*/
@@ -1094,6 +1095,7 @@ std::cout << ">> here11" << std::endl;
     migrationmatrix2d.PlotMatrix();
     migrationmatrix2d.SetOutputFileName("migration_matrix_2d_trkmom.tex");
     migrationmatrix2d.PrintSmearingMatrixLatex();
+
     _xsec_calc.Reset();
     _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.SetHistograms(hmap_trkmom_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);  
@@ -1102,7 +1104,6 @@ std::cout << ">> here11" << std::endl;
     if (_fake_data_mode) {
     	_xsec_calc.SetTruthXSec(h_truth_xsec_mumom_fake, 7, 7);
     }
-    std::cout << "H here 2" << std::endl;
     _xsec_calc.SetNameAndLabel("trkmom", ";p_{#mu}^{reco} [GeV]; Selected Events");
     _xsec_calc.ProcessPlots();
     _xsec_calc.SaveEventNumbers("trkmom_eventsperbin_table.tex");
@@ -1117,10 +1118,10 @@ std::cout << ">> here11" << std::endl;
       TH1D* h = (TH1D*)file_alt_mc->Get("xsec_mumom_mc_cv_tune3");
       _xsec_calc.ImportAlternativeMC(*h);
     }
-    std::cout << "H here 3" << std::endl;
+
     TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection(bkg_names, "p_{#mu}^{reco} [GeV]", "d#sigma/dp_{#mu}^{reco} [10^{-38} cm^{2}/GeV]");
+
     TH1D * xsec_mumom_mc = _xsec_calc.GetMCCrossSection();
-std::cout << "H here 4" << std::endl;
     file_out->cd();
     save_name = "xsec_mumom_" + _prefix;
     xsec_mumom->Write(save_name.c_str());
@@ -1129,7 +1130,6 @@ std::cout << "H here 4" << std::endl;
     save_name = "covariance_matrix_mumom_" + _prefix;
     covariance_matrix_mumom.Write(save_name.c_str());
 
-std::cout << "H here 5" << std::endl;
 
 
 
@@ -1391,7 +1391,7 @@ std::cout << "H here 5" << std::endl;
         
     }
 
-    // if (_do_flux_systs) {
+    if (_do_flux_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -1412,7 +1412,7 @@ std::cout << "H here 5" << std::endl;
       for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
         std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
       }
-    // }
+    }
 
     if (_import_flux_systs) {
 

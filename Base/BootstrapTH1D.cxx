@@ -123,7 +123,7 @@ namespace Base {
   void BootstrapTH1D::ResetIterator()
   {
     _current_iterator = _hmap.begin();
-    _current_vector_index = 0;
+    _current_vector_index = -1;
   }
 
   const TH1D & BootstrapTH1D::NextUniverse() {
@@ -156,7 +156,7 @@ namespace Base {
       std::cout << "BootstrapTH1D::SameUniverse() error index from " << _name << std::endl;
       throw std::exception();
     }
-    
+        
     return _h_v.at(_current_vector_index);
   }
 
