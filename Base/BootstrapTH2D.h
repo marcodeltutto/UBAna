@@ -82,7 +82,10 @@ namespace Base {
     void ResetIterator();
 
     ///
-    bool NextUniverse(std::string & uni_name, TH2D & uni_histo);
+    const TH2D & NextUniverse();
+
+    ///
+    const TH2D & SameUniverse();
 
     ///
     std::map<std::string, std::vector<TH2D>> UnpackPMHisto();
@@ -91,7 +94,7 @@ namespace Base {
     void Fill(double, double, double, std::vector<double>);
 
     ///
-    TH2D GetNominal();
+    const TH2D& GetNominal();
 
     ///
     void GetUniverseHisto(std::string, TH2D &);
@@ -120,7 +123,7 @@ namespace Base {
 
     //std::map<std::string, TH1D*>::iterator _current_iterator = _hmap.begin();
     std::map<std::string, TH2D>::iterator _current_iterator; //!
-    size_t _current_vector_index = 0;
+    int _current_vector_index = 0;
 
   };
 }

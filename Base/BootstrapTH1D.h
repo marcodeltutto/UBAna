@@ -79,7 +79,10 @@ namespace Base {
     void ResetIterator();
 
     ///
-    bool NextUniverse(std::string & uni_name, TH1D & uni_histo);
+    const TH1D & NextUniverse();
+
+    ///
+    const TH1D & SameUniverse();
 
     ///
     std::map<std::string, std::vector<TH1D>> UnpackPMHisto();

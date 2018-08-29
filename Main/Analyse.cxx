@@ -1391,7 +1391,7 @@ std::cout << "H here 5" << std::endl;
         
     }
 
-    if (_do_flux_systs) {
+    // if (_do_flux_systs) {
       _xsec_bs_calc.Reset();
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -1412,7 +1412,7 @@ std::cout << "H here 5" << std::endl;
       for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
         std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
       }
-    }
+    // }
 
     if (_import_flux_systs) {
 

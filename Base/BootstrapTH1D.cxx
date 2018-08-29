@@ -138,37 +138,73 @@ namespace Base {
     _current_vector_index = 0;
   }
 
-  bool BootstrapTH1D::NextUniverse(std::string & uni_name, TH1D & uni_histo) {
+  const TH1D & BootstrapTH1D::NextUniverse() {
+
+    _current_vector_index++;
 
     // if (_current_iterator->first == "nominal") {
     //   _current_iterator++;
     // }
 
-    if (_name_v.at(_current_vector_index) == "nominal") {
-      _current_vector_index++;
+    if (_current_vector_index >= (int)_h_v.size()) {
+      std::cout << "BootstrapTH1D::NextUniverse() error index from " << _name << std::endl;
+      throw std::exception();
     }
 
-    // if (_current_iterator == _hmap.end()) {
+    if (_name_v.at(_current_vector_index) == "nominal") {
+      _current_vector_index++;
+
+      if (_current_vector_index >= (int)_h_v.size()) {
+        std::cout << "BootstrapTH1D::NextUniverse() error index from " << _name << std::endl;
+        throw std::exception();
+      }
+    }
+
+    // if (_name_v.at(_current_vector_index) == "nominal") {
+    //   _current_vector_index++;
+    // }
+
+    // // if (_current_iterator == _hmap.end()) {
+    // //   std::cout << "NextUniverse false" << std::endl;
+    // //   return false;
+    // // }
+
+    // if ((size_t)_current_vector_index >= _h_v.size()) {
     //   std::cout << "NextUniverse false" << std::endl;
     //   return false;
     // }
 
-    if ((size_t)_current_vector_index >= _h_v.size()) {
-      std::cout << "NextUniverse false" << std::endl;
-      return false;
-    }
-
     // uni_name = _current_iterator->first;
     // uni_histo = _current_iterator->second;
 
-    uni_name = _name_v.at(_current_vector_index);
-    uni_histo = _h_v.at(_current_vector_index);
+    // uni_name = _name_v.at(_current_vector_index);
+    // uni_histo = _h_v.at(_current_vector_index);
 
     // _current_iterator++;
-    _current_vector_index++;
+    // _current_vector_index++;
     
-    return true;
+    // return true;
+
+    return _h_v.at(_current_vector_index);
+    
   } 
+
+
+
+  const TH1D & BootstrapTH1D::SameUniverse() {
+
+    // std::cout << "same _current_vector_index " << _current_vector_index << std::endl;
+
+
+    if (_current_vector_index < 0 || _current_vector_index > (int)_h_v.size()) {
+      std::cout << "BootstrapTH1D::SameUniverse() error index from " << _name << std::endl;
+      throw std::exception();
+    }
+    
+    return _h_v.at(_current_vector_index);
+  }
+
+
 
   std::map<std::string, std::vector<TH1D>> BootstrapTH1D::UnpackPMHisto()
   {

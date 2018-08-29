@@ -150,40 +150,57 @@ namespace Base {
   void BootstrapTH2D::ResetIterator()
   {
     _current_iterator = _hmap.begin();
-    _current_vector_index = 0;
+    _current_vector_index = -1;
   }
 
-  bool BootstrapTH2D::NextUniverse(std::string & uni_name, TH2D & uni_histo) {
+  const TH2D & BootstrapTH2D::NextUniverse() {
 
     // if (_current_iterator->first == "nominal") {
     //   _current_iterator++;
     // }
 
-    if (_name_v.at(_current_vector_index) == "nominal") {
-      _current_vector_index++;
-    }
-
-    // if (_current_iterator == _hmap.end()) {
-    //   std::cout << "NextUniverse false" << std::endl;
-    //   return false;
-    // }
+    _current_vector_index++;
 
     if (_current_vector_index >= _h_v.size()) {
-      std::cout << "NextUniverse false" << std::endl;
-      return false;
+      std::cout << "BootstrapTH2D::NextUniverse() error index from " << _name << std::endl;
+      throw std::exception();
     }
 
-    // uni_name = _current_iterator->first;
-    // uni_histo = _current_iterator->second;
+    if (_name_v.at(_current_vector_index) == "nominal") {
+      _current_vector_index++;
 
-    uni_name = _name_v.at(_current_vector_index);
-    uni_histo = _h_v.at(_current_vector_index);
+      if (_current_vector_index >= _h_v.size()) {
+        std::cout << "BootstrapTH2D::NextUniverse() error index from " << _name << std::endl;
+        throw std::exception();
+      }
+    }
+
+
+    // uni_name = _name_v.at(_current_vector_index);
+    // uni_histo = _h_v.at(_current_vector_index);
 
     // _current_iterator++;
-    _current_vector_index++;
+    // _current_vector_index++;
+
+    // std::cout << "next _current_vector_index " << _current_vector_index << std::endl;
     
-    return true;
+    return _h_v.at(_current_vector_index);
   } 
+
+
+  const TH2D & BootstrapTH2D::SameUniverse() {
+
+    // std::cout << "same _current_vector_index " << _current_vector_index << std::endl;
+
+
+    if (_current_vector_index < 0 || _current_vector_index > _h_v.size()) {
+      std::cout << "BootstrapTH2D::SameUniverse() error index from " << _name << std::endl;
+      throw std::exception();
+    }
+    
+    return _h_v.at(_current_vector_index);
+  }
+
 
   std::map<std::string, std::vector<TH2D>> BootstrapTH2D::UnpackPMHisto()
   {
@@ -281,7 +298,7 @@ namespace Base {
 
   }
 
-  TH2D BootstrapTH2D::GetNominal()
+  const TH2D& BootstrapTH2D::GetNominal()
   {
     // return _hmap["nominal"];
     return _h_v.at(0);

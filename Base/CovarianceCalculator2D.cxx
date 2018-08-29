@@ -49,6 +49,12 @@ namespace Base {
     }
 
 
+    // std::string uni_name;
+    // TH1D uni_histo;
+
+    int counter = 0;
+    int loop_length = _bs.GetNbinsX() * _bs.GetNbinsX();
+
     _bs.ResetIterator();
     std::cout << _name << " Calculating Cov Matrix with " << _bs.GetNUniverses() << " universes. Nominal histogram is excluded." << std::endl;
 
@@ -57,6 +63,9 @@ namespace Base {
     for (int i = 0; i < _bs.GetNbinsX(); i++) {
 
       for (int j = 0; j < _bs.GetNbinsX(); j++) {
+
+        counter++;
+        PlottingTools::DrawProgressBar((double)counter/(double)loop_length, 70);
 
         // Nominal cross section for bin i and j 
         double N_i_cv = _bs.GetNominal().GetBinContent(i+1);
@@ -68,14 +77,13 @@ namespace Base {
 
         for (int s = 0; s < number_of_universes; s++) {
 
-          std::string uni_name;
-          TH1D uni_histo;
-          _bs.NextUniverse(uni_name, uni_histo);
+          
+          // _bs.NextUniverse(uni_name, uni_histo);
 
           // std::cout << "************************()()()()() this is universe " << uni_name << std::endl;
 
-          double N_i_s = uni_histo.GetBinContent(i+1);
-          double N_j_s = uni_histo.GetBinContent(j+1);
+          double N_i_s = _bs.NextUniverse().GetBinContent(i+1);
+          double N_j_s = _bs.SameUniverse().GetBinContent(j+1);
           
 
           _M[i][j] += (N_i_s - N_i_cv) * (N_j_s - N_j_cv) / number_of_universes;
