@@ -79,14 +79,14 @@ maker.SetExtraWeight(1.028); # Flux correction
 maker.SetMaUpMECOff(False)
 # maker.ScaleCosmics(0.54548) # For overlay systematics
 
-maker.FillBootstrapGenie(True)
+maker.FillBootstrapGenie(False)
 
 maker.FillBootstrapGenieModels(False)
 maker.SetTargetGenieModelsSystematic("model_q0q3_ccmec_HistogramWeight")
 # maker.SetTargetGenieModelsSystematic("model_q0q3_ccqe_HistogramWeight")
 # maker.SetTargetGenieModelsSystematic("total")
 
-maker.FillBootstrapFlux(True)
+maker.FillBootstrapFlux(False)
 #maker.SetTargetFluxSystematic("FluxUnisim");
 #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
 #maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
