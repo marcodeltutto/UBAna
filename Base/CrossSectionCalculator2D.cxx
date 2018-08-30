@@ -493,11 +493,18 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
+    std::cout << "bullshit, (0, 4): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
 
     for (auto name : bkg_names) 
     {
       h_data->Add(_hmap_bnbcosmic[name], -1.);
+      std::cout << "bullshit,   subtracting " << name << ", with value " << _hmap_bnbcosmic[name]->GetBinContent(8+1, 0+1) << ", obtaining " << h_data->GetBinContent(8+1, 0+1) << std::endl;
     }
+
+    std::cout << "bullshit, (0, 4): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
+
+
+
 
     //
     // Create efficiency histogram
@@ -529,6 +536,10 @@ namespace Base {
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
+    std::cout << "bullshit, eff(0, 4): " << h_eff->GetBinContent(8+1, 0+1) << std::endl;
+    std::cout << "bullshit, h_data after divide eff (0, 4): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
+
+
     //
     // Divide by flux, and N_target and bin width
     //
@@ -542,6 +553,15 @@ namespace Base {
 
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
+
+    std::cout << "bullshit, h_data after divide denominator (0, 4): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
+
+
+    std::cout << "bullshit, den: " << den << std::endl;
+    // std::cout << "bullshit, binwidth: " << h_data->GetBinWidth(0+1, 4+1) << std::endl;
+
+    std::cout << "bullshit, xsec (8, 0): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
+
 
     // Do it also for the truth xsec
     //_truth_xsec->Scale(1. / den, "width");

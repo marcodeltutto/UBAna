@@ -128,8 +128,11 @@ namespace Main {
     /// Imports all the genie models systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
     void ImportGenieModelsSystematics(bool option, std::string file = "file.root") {_import_genie_models_systs = option; _genie_models_syst_file = file;}
 
-    /// Imports  the cosmic systs from files (previously calculated via external macro, and adds them togheter)
+    /// Imports the cosmic systs from files (previously calculated via external macro, and adds them togheter)
     void ImportCosmicSystematics(bool option, std::string file = "file.root") {_import_cosmic_systs = option; _cosmic_syst_file = file;}
+
+    /// Imports the dirt systs from files (previously calculated via external macro, and adds them togheter)
+    void ImportDirtSystematics(bool option, std::string file = "file.root") {_import_dirt_systs = option; _dirt_syst_file = file;}
 
     ///
     void DrawDataMC(TCanvas *c, THStack *hs_mc, double scale_factor_mc_bnbcosmic, bool breakdown_plots, std::map<std::string,TH1D*> hmap_mc, TH1D* h_data_bnbon, double bnbon_pot_meas);
@@ -192,6 +195,9 @@ namespace Main {
 
     bool _import_cosmic_systs = false;
     std::string _cosmic_syst_file = "";
+
+    bool _import_dirt_systs = false;
+    std::string _dirt_syst_file = "";
 
     bool _do_genie_systs = false;
     bool _import_genie_systs = false;

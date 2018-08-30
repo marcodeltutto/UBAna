@@ -215,18 +215,16 @@ namespace Main {
 
     double bins_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
     double bins_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00};
-    // double bins_mumom[21] = {0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.125, 1.25, 1.375, 1.5, 1.625, 1.75, 1.875, 2, 2.125, 2.25, 2.375, 2.5};
-    // double bins_mucostheta[26] = {-1, -0.92, -0.84, -0.76, -0.68, -0.6, -0.52, -0.44, -0.36, -0.28, -0.2, -0.12, -0.04, 0.04, 0.12, 0.2, 0.28, 0.36, 0.44, 0.52, 0.6, 0.68, 0.76, 0.84, 0.92, 1};
 
     int n_bins_mumom = 6;
     int n_bins_mucostheta = 9;
-    // int n_bins_mumom = 20;
-    // int n_bins_mucostheta = 25;
 
     // int n_bins_double_mumom = 4; ///< Number of momentum bins for double differential
     // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50}; ///< Momentum bins for double differential
-    int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
-    double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
+    // int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
+    // double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
+    int n_bins_double_mumom = 4; ///< Number of momentum bins for double differential
+    double bins_double_mumom[7] = {0.00, 0.30, 0.45, 0.77, 2.50}; ///< Momentum bins for double differential
     // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
     // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
 
