@@ -493,15 +493,10 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
-    std::cout << "bullshit, (0, 4): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
-
     for (auto name : bkg_names) 
     {
       h_data->Add(_hmap_bnbcosmic[name], -1.);
-      std::cout << "bullshit,   subtracting " << name << ", with value " << _hmap_bnbcosmic[name]->GetBinContent(8+1, 0+1) << ", obtaining " << h_data->GetBinContent(8+1, 0+1) << std::endl;
     }
-
-    std::cout << "bullshit, (0, 4): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
 
 
 
@@ -536,8 +531,6 @@ namespace Base {
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
-    std::cout << "bullshit, eff(0, 4): " << h_eff->GetBinContent(8+1, 0+1) << std::endl;
-    std::cout << "bullshit, h_data after divide eff (0, 4): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
 
 
     //
@@ -554,13 +547,19 @@ namespace Base {
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
 
-    std::cout << "bullshit, h_data after divide denominator (0, 4): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
+
+    for (int bin_i = 1; bin_i < h_data->GetNbinsX()+1; bin_i++) {
+      for (int bin_j = 1; bin_j < h_data->GetNbinsY()+1; bin_j++) {
+        if (h_data->GetBinContent(bin_i, bin_j) <= 0.) {
+          std::cout << "[CrossSectionCalculator2D] ******************************************" << std::endl;
+          std::cout << "[CrossSectionCalculator2D] Cross Section in bin " << bin_i-1 << ", " << bin_j-1 << " is <= 0, value:" << h_data->GetBinContent(bin_i, bin_j) << std::endl;
+          std::cout << "[CrossSectionCalculator2D] ******************************************" << std::endl;
+        }
+      }
+    }
 
 
-    std::cout << "bullshit, den: " << den << std::endl;
-    // std::cout << "bullshit, binwidth: " << h_data->GetBinWidth(0+1, 4+1) << std::endl;
 
-    std::cout << "bullshit, xsec (8, 0): " << h_data->GetBinContent(8+1, 0+1) << std::endl;
 
 
     // Do it also for the truth xsec
@@ -912,8 +911,19 @@ namespace Base {
     //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
     //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
-    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
-                                                  "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+    //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+    //                                               "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+    //                                               "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+    //                                               "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+    //                                               "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+    //                                               "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+    //                                               "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
+
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
                                                   "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
                                                   "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
                                                   "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
@@ -923,6 +933,7 @@ namespace Base {
                                                   "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
+
 
 
     if (_verbose) {
@@ -988,12 +999,19 @@ namespace Base {
       // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
       // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
 
-      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.50);
-      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.45);
-      if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.80);
-      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.00);
-      // if (i == 3) xsec_mc_histos.at(i).SetMinimum(-0.3);
-      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+      // if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.50);
+      // if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.45);
+      // if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.80);
+      // if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.00);
+      // // if (i == 3) xsec_mc_histos.at(i).SetMinimum(-0.3);
+      // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+      // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.35);
+      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.70);
+      if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.00);
+      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.25);
+      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.40);
       if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
 
       // The outer uncertainty bar

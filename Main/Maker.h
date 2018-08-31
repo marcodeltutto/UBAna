@@ -223,8 +223,8 @@ namespace Main {
     // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50}; ///< Momentum bins for double differential
     // int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
     // double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
-    int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
-    double bins_double_mumom[7] = {0.00, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
+    int n_bins_double_mumom = 4; ///< Number of momentum bins for double differential
+    double bins_double_mumom[7] = {0.00, 0.30, 0.45, 0.77, 2.50}; ///< Momentum bins for double differential
     // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
     // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
 
