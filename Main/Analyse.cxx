@@ -954,7 +954,7 @@ std::cout << ">> here11" << std::endl;
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
       _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
-      _xsec_bs_calc.set_verbosity(Base::msg::kNORMAL);
+      _xsec_bs_calc.set_verbosity(Base::msg::kINFO);
 
       if (_do_genie_systs) {
         _xsec_bs_calc.Reset();
@@ -1112,6 +1112,7 @@ std::cout << ">> here11" << std::endl;
     migrationmatrix2d.PrintSmearingMatrixLatex();
 
     _xsec_calc.Reset();
+    _xsec_calc.set_verbosity(Base::msg::kINFO);
     _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.SetHistograms(hmap_trkmom_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);  
     _xsec_calc.SetTruthHistograms(h_eff_mumom_num, h_eff_mumom_den, h_true_reco_mom);
@@ -1326,7 +1327,9 @@ std::cout << ">> here11" << std::endl;
     migrationmatrix2d.PlotMatrix();
     migrationmatrix2d.SetOutputFileName("migration_matrix_2d_trkangle.tex");
     migrationmatrix2d.PrintSmearingMatrixLatex();
+
     _xsec_calc.Reset();
+    _xsec_calc.set_verbosity(Base::msg::kINFO);
     _xsec_calc.SetMigrationMatrix(S_2d);
     _xsec_calc.SetHistograms(hmap_trktheta_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);  
     _xsec_calc.SetTruthHistograms(h_eff_muangle_num, h_eff_muangle_den, h_true_reco_costheta);
@@ -1523,6 +1526,7 @@ std::cout << ">> here11" << std::endl;
     migrationmatrix4d.PlotMatrix();
 
     CrossSectionCalculator2D xseccalc2d;
+    xseccalc2d.set_verbosity(Base::msg::kINFO);
     xseccalc2d.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
     xseccalc2d.SetPOT(bnbon_pot_meas);
     xseccalc2d.SetOutDir("output_data_mc_xsec2d");

@@ -110,6 +110,7 @@ namespace Base {
 
     _dirt_is_set = false;
     if (dirt.size() != 0) {
+      LOG_INFO() << "Dirt Histograms Set Up" << std::endl;
       _dirt_is_set = true;
     }
     
@@ -496,10 +497,14 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
+    LOG_INFO() << "Subtracting backgrouds: ";
+
     for (auto name : bkg_names) 
     {
+      std::cout << name << ", ";
       h_data->Add(_hmap_bnbcosmic[name], -1.);
     }
+    std::cout << std::endl;
 
 
 
@@ -937,7 +942,9 @@ namespace Base {
     LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
 
     int horizontal_division = 2;
-    int vertical_division = floor(h_data->GetNbinsX() / 2.) + 1;
+    int vertical_division = floor(h_data->GetNbinsX() / 2.);
+
+    if (h_data->GetNbinsX() / 2. != floor(h_data->GetNbinsX()) / 2.) vertical_division++;
 
     LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
     LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
@@ -1083,9 +1090,9 @@ namespace Base {
       }
 
       h->GetXaxis()->SetLabelOffset(0.004);
-      h->GetXaxis()->SetLabelSize(0.04);
+      h->GetXaxis()->SetLabelSize(0.03);
       h->GetYaxis()->SetLabelOffset(0.004);
-      h->GetYaxis()->SetLabelSize(0.04);
+      h->GetYaxis()->SetLabelSize(0.03);
       h->GetXaxis()->SetTitle("Bin i,j");
       h->GetYaxis()->SetTitle("Bin m,n");
       h->GetXaxis()->CenterTitle();
@@ -1131,15 +1138,17 @@ namespace Base {
 
 
 
-    // 
-    // Draw the proper matrices
-    //
+      // 
+      // Draw the proper matrices
+      //
+
+      float text_size = 0.9;
 
       TCanvas * cov_c = new TCanvas();
       cov_c->SetRightMargin(0.13);
       cov_c->SetFixedAspectRatio();
       _cov_matrix_total->SetMarkerColor(kBlack);
-      _cov_matrix_total->SetMarkerSize(1.1);
+      _cov_matrix_total->SetMarkerSize(text_size);
       _cov_matrix_total->GetXaxis()->CenterTitle();
       _cov_matrix_total->GetYaxis()->CenterTitle();
       _cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
@@ -1166,7 +1175,7 @@ namespace Base {
       cov_frac_c->SetRightMargin(0.13);
       cov_frac_c->SetFixedAspectRatio();
       _frac_cov_matrix_total->SetMarkerColor(kBlack);
-      _frac_cov_matrix_total->SetMarkerSize(1.1);
+      _frac_cov_matrix_total->SetMarkerSize(text_size);
       _frac_cov_matrix_total->GetXaxis()->CenterTitle();
       _frac_cov_matrix_total->GetYaxis()->CenterTitle();
       _frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
@@ -1192,7 +1201,7 @@ namespace Base {
       corr_c->SetRightMargin(0.13);
       corr_c->SetFixedAspectRatio();
       _corr_matrix_total->SetMarkerColor(kBlack);
-      _corr_matrix_total->SetMarkerSize(1.1);
+      _corr_matrix_total->SetMarkerSize(text_size);
       _corr_matrix_total->GetXaxis()->CenterTitle();
       _corr_matrix_total->GetYaxis()->CenterTitle();
       _corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
