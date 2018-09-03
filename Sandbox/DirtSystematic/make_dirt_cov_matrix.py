@@ -6,11 +6,11 @@ gROOT.ProcessLine(".x " + os.environ['MYSW_DIR'] + "/Utils/rootlogon.C")
 
 
 # Get the central value xsec
-file_cv = TFile("xsec_file_cv.root");
-xsec_onebin_cv = file_cv.Get("xsec_onebin_cv")
-xsec_mumom_cv = file_cv.Get("xsec_mumom_cv")
-xsec_muangle_cv = file_cv.Get("xsec_muangle_cv")
-xsec_muangle_mumom_cv = file_cv.Get("xsec_muangle_mumom_cv")
+file_cv = TFile("xsec_file_w_dirt.root");
+xsec_onebin_cv = file_cv.Get("xsec_onebin_w_dirt")
+xsec_mumom_cv = file_cv.Get("xsec_mumom_w_dirt")
+xsec_muangle_cv = file_cv.Get("xsec_muangle_w_dirt")
+xsec_muangle_mumom_cv = file_cv.Get("xsec_muangle_mumom_w_dirt")
 
 
 
@@ -63,13 +63,13 @@ for i in xrange(0, n_bins_muangle):
 
 
 
-file_name = "xsec_file_nodirt.root"
+file_name = "xsec_file_wo_dirt.root"
 file = TFile(file_name);
 
-xsec_onebin = file.Get("xsec_onebin_cv")
-xsec_mumom = file.Get("xsec_mumom_cv")
-xsec_muangle = file.Get("xsec_muangle_cv")
-xsec_muangle_mumom = file.Get("xsec_muangle_mumom_cv")
+xsec_onebin = file.Get("xsec_onebin_wo_dirt")
+xsec_mumom = file.Get("xsec_mumom_wo_dirt")
+xsec_muangle = file.Get("xsec_muangle_wo_dirt")
+xsec_muangle_mumom = file.Get("xsec_muangle_mumom_wo_dirt")
 
 if file.IsOpen():
 	print "Good to go!"
@@ -121,6 +121,14 @@ for i in xrange(0, n_bins_muangle):
 
 
 
+for a in xrange(0, n_bins_muangle*n_bins_mumom):
+	for b in xrange(0, n_bins_muangle*n_bins_mumom):
+		if cov_matrix_muangle_mumom.GetBinContent(a, a) != 0 and cov_matrix_muangle_mumom.GetBinContent(b, b) != 0:
+			print 'correlation in bin ', a, ',', b, ':',  cov_matrix_muangle_mumom.GetBinContent(a, b) / (math.sqrt(cov_matrix_muangle_mumom.GetBinContent(a, a)) * math.sqrt(cov_matrix_muangle_mumom.GetBinContent(b, b)))
+
+
+
+
 
 
 
@@ -128,11 +136,13 @@ gStyle.SetPaintTextFormat("4.5f");
 gStyle.SetPalette(kDeepSea);
 
 
+
+
 cov_file = TFile("covariance_dirt.root", "RECREATE");
 cov_file.cd();
 cov_matrix_mumom.Write("covariance_matrix_dirt_mumom");
 cov_matrix_muangle.Write("covariance_matrix_dirt_muangle");
-cov_matrix_muangle_mumom.Write("covariance_matrix_cosmic_muangle_mumom");
+cov_matrix_muangle_mumom.Write("covariance_matrix_dirt_muangle_mumom");
 cov_file.Close();
 
 c_mumom = TCanvas()

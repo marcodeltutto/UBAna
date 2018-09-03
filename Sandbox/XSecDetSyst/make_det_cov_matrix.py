@@ -229,7 +229,7 @@ gStyle.SetNumberContours(NCont)
 # cov_matrix_mumom
 # cov_matrix_mumom.Draw("colz TEXT")
 
-cov_file = TFile("covariance_detector_secondround.root", "RECREATE");
+cov_file = TFile("covariance_detector_firstround.root", "RECREATE");
 cov_file.cd();
 cov_matrix_mumom.Write("covariance_matrix_detector_mumom");
 cov_matrix_muangle.Write("covariance_matrix_detector_muangle");
