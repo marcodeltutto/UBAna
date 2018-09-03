@@ -59,7 +59,10 @@ namespace Base {
 
   void CrossSectionCalculator1D::SetOutDir(std::string dir)
   {
-    _outdir = dir;
+
+    std::string out_folder_base = std::getenv("MYSW_OUTDIR");
+
+    _outdir = out_folder_base + dir;
 
     auto now = std::time(nullptr);
     char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
@@ -479,8 +482,6 @@ namespace Base {
   void CrossSectionCalculator1D::ProcessPlots() 
   {
 
-    LOG_DEBUG() << "bullshit" << std::endl;
-
     bool bin_width_scale = false;
 
     // Scale mc histograms
@@ -709,9 +710,7 @@ namespace Base {
     // Divide by flux, and N_target and bin width
     //
 
-    LOG_INFO() << "FLUX: " << _flux
-      << "\nN_target: " << _n_target
-      << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
+    LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
     double den = _flux * _n_target * 1e-38;
 
     _h_mc->Scale(1. / den, "width");
@@ -722,8 +721,8 @@ namespace Base {
     if (_fake_data_mode) _truth_xsec_smeared->Scale(1. / den, "width");
 
 
-    LOG_INFO() << "MC Integral: " << _h_mc->Integral() << std::endl;
     LOG_INFO() << "Data Integral: " << _h_data->Integral() << std::endl;
+    LOG_INFO() << "MC Integral: " << _h_mc->Integral() << std::endl;
 
 
     // Plot the cross section
@@ -937,6 +936,7 @@ namespace Base {
         std::ostringstream oss;
         oss << i;
         std::string label = oss.str();
+        if (i == 0) continue;
         h->GetXaxis()->SetBinLabel(i,label.c_str());
         h->GetYaxis()->SetBinLabel(i,label.c_str());
       }

@@ -58,6 +58,8 @@
 #include "ubana/Base/CrossSectionBootstrapCalculator1D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator2D.h"
 
+#include "ubana/Base/LoggerFeature.h"
+
 using namespace Base;
 
 namespace Main {
@@ -67,7 +69,7 @@ namespace Main {
      User defined class Analyse ... these comments are used to generate
      doxygen documentation!
   */
-  class Analyse{
+  class Analyse : public LoggerFeature{
     
   public:
     

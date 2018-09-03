@@ -205,6 +205,7 @@ namespace Base {
     std::cout << _prefix << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
     std::cout << _prefix << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
     _xsec_calc.SetVerbosity(false);
+    _xsec_calc.set_verbosity(Base::msg::kNORMAL);
 
 
     size_t n_universe = _h_eff_mumom_num.GetNWeights();

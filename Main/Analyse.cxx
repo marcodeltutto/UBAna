@@ -83,8 +83,11 @@ namespace Main {
 	clock_t begin = clock();
 
 
-
-  system("mkdir -p output_data_mc/");
+  std::string analyser_outdir = std::getenv("MYSW_OUTDIR");
+  analyser_outdir += "output_data_mc/";
+  std::string mkdir_command = "mkdir -p ";
+  mkdir_command += analyser_outdir;
+  system(mkdir_command.c_str());
   
   //gROOT->SetBatch(kTRUE);
   gROOT->ProcessLine("gErrorIgnoreLevel = 2001;"); // 1001: INFO, 2001: WARNINGS, 3001: ERRORS
@@ -980,7 +983,6 @@ std::cout << ">> here11" << std::endl;
       	TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_mumom");
         covariance_matrix_genie = *m;
-        std::cout << "m here 1" << std::endl;
 
       }
 
@@ -1047,13 +1049,10 @@ std::cout << ">> here11" << std::endl;
       }
 
       if (_import_flux_systs) {
-        std::cout << "m here 1.0" << std::endl;
 
       	TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_mumom");
         covariance_matrix_flux = *m;
-                std::cout << "m here 1.1" << std::endl;
-
       }
 
     } // _do_reweighting_plots
@@ -1763,7 +1762,7 @@ std::cout << ">> here11" << std::endl;
   
   TLegend* leg;
   TString name;
-  TString outdir = "./output_data_mc/";
+  TString outdir = analyser_outdir;
   
   TCanvas* canvas_trklen = new TCanvas("canvas_trklen", "canvas", 800, 700);
   THStack *hs_trklen_mc = new THStack("hs_trklen",";Candidate Track Length [cm]; Selected Events");
