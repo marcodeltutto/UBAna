@@ -551,9 +551,9 @@ namespace Base {
     for (int bin_i = 1; bin_i < h_data->GetNbinsX()+1; bin_i++) {
       for (int bin_j = 1; bin_j < h_data->GetNbinsY()+1; bin_j++) {
         if (h_data->GetBinContent(bin_i, bin_j) <= 0.) {
-          std::cout << "[CrossSectionCalculator2D] ******************************************" << std::endl;
-          std::cout << "[CrossSectionCalculator2D] Cross Section in bin " << bin_i-1 << ", " << bin_j-1 << " is <= 0, value:" << h_data->GetBinContent(bin_i, bin_j) << std::endl;
-          std::cout << "[CrossSectionCalculator2D] ******************************************" << std::endl;
+          if (_verbose) std::cout << "[CrossSectionCalculator2D] ******************************************" << std::endl;
+          if (_verbose) std::cout << "[CrossSectionCalculator2D] Cross Section in bin " << bin_i-1 << ", " << bin_j-1 << " is <= 0, value: " << h_data->GetBinContent(bin_i, bin_j) << std::endl;
+          if (_verbose) std::cout << "[CrossSectionCalculator2D] ******************************************" << std::endl;
         }
       }
     }

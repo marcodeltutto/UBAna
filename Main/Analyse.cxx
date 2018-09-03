@@ -801,6 +801,8 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
     std::cout << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
 
+    _xsec_calc.set_verbosity(Base::msg::kDEBUG);
+
     if (_fake_data_mode) {
     	this->PrintFakeDataMessage();
     	_xsec_calc.SetFakeDataMode(true);
@@ -949,6 +951,7 @@ std::cout << ">> here11" << std::endl;
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
       _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
+      _xsec_bs_calc.set_verbosity(Base::msg::kNORMAL);
 
       if (_do_genie_systs) {
         _xsec_bs_calc.Reset();

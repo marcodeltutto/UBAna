@@ -154,17 +154,17 @@ namespace Base {
 // Compiler macro for saving us from text typing
 //
 /// Compiler macro for DEBUG message
-#define CT_DEBUG()    if( logger().debug   () ) logger().send(::Base::msg::kDEBUG,    __FUNCTION__, __LINE__, __FILE__)
+#define LOG_DEBUG()    if( logger().debug   () ) logger().send(::Base::msg::kDEBUG,    __FUNCTION__, __LINE__, __FILE__)
 /// Compiler macro for INFO message
-#define CT_INFO()     if( logger().info    () ) logger().send(::Base::msg::kINFO,     __FUNCTION__, __LINE__          )
+#define LOG_INFO()     if( logger().info    () ) logger().send(::Base::msg::kINFO,     __FUNCTION__, __LINE__          )
 /// Compiler macro for NORMAL message
-#define CT_NORMAL()   if( logger().normal  () ) logger().send(::Base::msg::kNORMAL,   __FUNCTION__                    )
+#define LOG_NORMAL()   if( logger().normal  () ) logger().send(::Base::msg::kNORMAL,   __FUNCTION__                    )
 /// Compiler macro for WARNING message
-#define CT_WARNING()  if( logger().warning () ) logger().send(::Base::msg::kWARNING,  __FUNCTION__                    )
+#define LOG_WARNING()  if( logger().warning () ) logger().send(::Base::msg::kWARNING,  __FUNCTION__                    )
 /// Compiler macro for ERROR message
-#define CT_ERROR()    if( logger().error   () ) logger().send(::Base::msg::kERROR,    __FUNCTION__, __LINE__          )
+#define LOG_ERROR()    if( logger().error   () ) logger().send(::Base::msg::kERROR,    __FUNCTION__, __LINE__          )
 /// Compiler macro for CRITICAL message
-#define CT_CRITICAL()                           logger().send(::Base::msg::kEXCEPTION, __FUNCTION__, __LINE__, __FILE__)
+#define LOG_CRITICAL()                           logger().send(::Base::msg::kEXCEPTION, __FUNCTION__, __LINE__, __FILE__)
   
 /** @} */ // end of doxygen group logger
 #endif

@@ -57,6 +57,7 @@
 #include "CrossSectionCalculator1D.h"
 #include "MigrationMatrix2D.h"
 #include "CovarianceCalculator2D.h"
+#include "LoggerFeature.h"
 
 
 namespace Base {
@@ -66,7 +67,7 @@ namespace Base {
      User defined class CrossSectionBootstrapCalculator1D ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionBootstrapCalculator1D{
+  class CrossSectionBootstrapCalculator1D : public LoggerFeature{
     
   public:
     

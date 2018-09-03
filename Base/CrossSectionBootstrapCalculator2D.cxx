@@ -450,8 +450,7 @@ namespace Base {
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
-      std::cout << "n bins x " << h_xsec_2d.GetNbinsX() << std::endl;
-      std::cout << "n bins y " << h_xsec_2d.GetNbinsY() << std::endl;    
+     
 
       for (int i = 0; i < h_xsec_2d.GetNbinsX(); i++) {
         // xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
