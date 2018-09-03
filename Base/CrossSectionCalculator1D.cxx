@@ -59,7 +59,10 @@ namespace Base {
 
   void CrossSectionCalculator1D::SetOutDir(std::string dir)
   {
-    _outdir = dir;
+
+    std::string out_folder_base = std::getenv("MYSW_OUTDIR");
+
+    _outdir = out_folder_base + dir;
 
     auto now = std::time(nullptr);
     char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
@@ -214,7 +217,7 @@ namespace Base {
     // std::cout << "The lower energy error is: " << mean - low << std::endl;
 
     double upperint = h_flux_numu -> Integral(binmean, n);
-    std::cout << upperint << std::endl;
+    // std::cout << upperint << std::endl;
     double upperborder = upperint * 0.32; //h_flux_numu->Integral() * 0.16;
     double uppersum = 0;
     int j = 0;
@@ -276,6 +279,8 @@ namespace Base {
 
     f->Close();
 
+    // LOG_INFO() << "Flux is " << _flux << std::endl;
+
     return _flux;
   }
 
@@ -288,11 +293,9 @@ namespace Base {
     TEfficiency* teff_reco = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
 
     // std::cout << "The efficiency is " << eff << std::endl;
-    if (_verbose) {
-      std::cout << "The efficiency is " << teff_reco->GetEfficiency(1) 
+    LOG_INFO() << "The efficiency is " << teff_reco->GetEfficiency(1) 
                 << " + " << teff_reco->GetEfficiencyErrorUp(1) 
                 << " - " << teff_reco->GetEfficiencyErrorLow(1) << std::endl;
-    }
 
     _eff = teff_reco;
   }
@@ -415,8 +418,8 @@ namespace Base {
     name = _folder +_name + "all_selected";
     c->SaveAs(name + ".pdf");
 
-    std::cout << "_h_eff_mumom_num->Integral(): " << _h_eff_mumom_num->Integral() << std::endl;
-    std::cout << "_h_eff_mumom_den->Integral(): " << _h_eff_mumom_den->Integral() << std::endl;
+    LOG_INFO() << "_h_eff_mumom_num->Integral(): " << _h_eff_mumom_num->Integral() << std::endl;
+    LOG_INFO() << "_h_eff_mumom_den->Integral(): " << _h_eff_mumom_den->Integral() << std::endl;
 
 
 
@@ -439,8 +442,8 @@ namespace Base {
     name = _folder +_name + "_all_selected_smear";
     c_smear->SaveAs(name + ".pdf");
 
-    std::cout << "h_eff_mumom_num_smear->Integral(): " << h_eff_mumom_num_smear->Integral() << std::endl;
-    std::cout << "h_eff_mumom_den_smear->Integral(): " << h_eff_mumom_den_smear->Integral() << std::endl;
+    LOG_INFO() << "h_eff_mumom_num_smear->Integral(): " << h_eff_mumom_num_smear->Integral() << std::endl;
+    LOG_INFO() << "h_eff_mumom_den_smear->Integral(): " << h_eff_mumom_den_smear->Integral() << std::endl;
 
 
     //
@@ -466,9 +469,9 @@ namespace Base {
     name = _folder +_name + "_efficiecy_reco";
     c_eff_reco->SaveAs(name + ".pdf");
 
-    std::cout << "Statistic option used for efficiency calculation: " << teff_reco->GetStatisticOption() << ", check https://root.cern.ch/doc/v608/classTEfficiency.html#af27fb4e93a1b16ed7a5b593398f86312." << std::endl;
-    std::cout << "Efficiency bin 1: " << teff_reco->GetEfficiency(1) << " - " << teff_reco->GetEfficiencyErrorLow(1) << " + " << teff_reco->GetEfficiencyErrorUp(1) << std::endl;
-    std::cout << "Efficiency bin 2: " << teff_reco->GetEfficiency(2) << " - " << teff_reco->GetEfficiencyErrorLow(2) << " + " << teff_reco->GetEfficiencyErrorUp(2) << std::endl;
+    LOG_INFO() << "Statistic option used for efficiency calculation: " << teff_reco->GetStatisticOption() << ", check https://root.cern.ch/doc/v608/classTEfficiency.html#af27fb4e93a1b16ed7a5b593398f86312." << std::endl;
+    LOG_INFO() << "Efficiency bin 1: " << teff_reco->GetEfficiency(1) << " - " << teff_reco->GetEfficiencyErrorLow(1) << " + " << teff_reco->GetEfficiencyErrorUp(1) << std::endl;
+    LOG_INFO() << "Efficiency bin 2: " << teff_reco->GetEfficiency(2) << " - " << teff_reco->GetEfficiencyErrorLow(2) << " + " << teff_reco->GetEfficiencyErrorUp(2) << std::endl;
 
     _eff = teff_reco;
 
@@ -548,43 +551,39 @@ namespace Base {
 
 
 
-    if (_verbose) {
-      std::cout << "beam-on integral "  << _h_bnbon->Integral() << std::endl;
-      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->Integral() << std::endl;
-      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
-      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->Integral() << std::endl;
-      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->Integral() << std::endl;
-      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->Integral() << std::endl;
-      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
-      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
-      if (_dirt_is_set) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->Integral() << std::endl;
-    }
+      LOG_INFO() << "Beam-on integral "  << _h_bnbon->Integral() << std::endl;
+      LOG_INFO() << "Beam-off integral " << _hmap_bnbcosmic["beam-off"]->Integral() << std::endl;
+      LOG_INFO() << "MC signal "         << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
+      LOG_INFO() << "MC cosmic "         << _hmap_bnbcosmic["cosmic"]->Integral() << std::endl;
+      LOG_INFO() << "MC outfv "          << _hmap_bnbcosmic["outfv"]->Integral() << std::endl;
+      LOG_INFO() << "MC nc "             << _hmap_bnbcosmic["nc"]->Integral() << std::endl;
+      LOG_INFO() << "MC nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
+      LOG_INFO() << "MC anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
+      if (_dirt_is_set) LOG_INFO() << "MC dirt "           << _hmap_bnbcosmic["dirt"]->Integral() << std::endl;
 
-    if (_verbose) {
-      std::cout << "First Bin only: " << std::endl;
-      std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
-      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
-      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
-      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
-      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
-      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
-      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
-      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
-      if (_dirt_is_set) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
-    }
+      LOG_INFO() << "First Bin only: " << std::endl;
+      LOG_INFO() << "Beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
+      LOG_INFO() << "Beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+      if (_dirt_is_set) LOG_INFO() << "MC dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
 
-    if (_h_bnbon->GetNbinsX() == 1 && _verbose) {
+    if (_h_bnbon->GetNbinsX() == 1) {
       // If one bin means we are dealing with the total cross section, print the number of events
-      std::cout << "Number of events for " << _pot << " POT:" << std::endl;
-      std::cout << "beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
-      std::cout << "beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
-      std::cout << "mc signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
-      std::cout << "mc cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
-      std::cout << "mc outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
-      std::cout << "mc nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
-      std::cout << "mc nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
-      std::cout << "mc anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
-      if (_dirt_is_set) std::cout << "mc dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "Number of events for " << _pot << " POT:" << std::endl;
+      LOG_INFO() << "Beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
+      LOG_INFO() << "Beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
+      LOG_INFO() << "MC anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+      if (_dirt_is_set) LOG_INFO() << "MC dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
 
       TH1D* total_bkg_temp = (TH1D*) _hmap_bnbcosmic["beam-off"]->Clone("total_bkg_temp");
       total_bkg_temp->Add(_hmap_bnbcosmic["cosmic"]);
@@ -593,7 +592,7 @@ namespace Base {
       total_bkg_temp->Add(_hmap_bnbcosmic["nue"]);
       total_bkg_temp->Add(_hmap_bnbcosmic["anumu"]);
       if (_dirt_is_set) total_bkg_temp->Add(_hmap_bnbcosmic["dirt"]);
-      std::cout << "total backround " << total_bkg_temp->GetBinContent(1) << " +- " << total_bkg_temp->GetBinError(1) << std::endl;
+      LOG_INFO() << "Total backround " << total_bkg_temp->GetBinContent(1) << " +- " << total_bkg_temp->GetBinError(1) << std::endl;
     }
 
   }
@@ -664,10 +663,10 @@ namespace Base {
 
 
     // Print the statistical uncertainties on the screen
-    if (_verbose) std::cout << "Statistical uncertainty for beam-on: " << _h_data->GetBinError(1) << std::endl;
+    LOG_INFO() << "Statistical uncertainty for beam-on: " << _h_data->GetBinError(1) << std::endl;
     if (_h_data->GetNbinsX() == 1) {
       for (auto name : bkg_names) {
-        if (_verbose) std::cout << "Statistical uncertainty for " << name << ": "<< _hmap_bnbcosmic[name]->GetBinError(1) << std::endl;
+        LOG_INFO() << "Statistical uncertainty for " << name << ": "<< _hmap_bnbcosmic[name]->GetBinError(1) << std::endl;
       }
     }
 
@@ -711,11 +710,7 @@ namespace Base {
     // Divide by flux, and N_target and bin width
     //
 
-    if (_verbose) {
-      std::cout << "FLUX: " << _flux
-      << "\nN_target: " << _n_target
-      << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
-    }
+    LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
     double den = _flux * _n_target * 1e-38;
 
     _h_mc->Scale(1. / den, "width");
@@ -726,10 +721,8 @@ namespace Base {
     if (_fake_data_mode) _truth_xsec_smeared->Scale(1. / den, "width");
 
 
-    if (_verbose) {
-      std::cout << "MC Integral: " << _h_mc->Integral() << std::endl;
-      std::cout << "Data Integral: " << _h_data->Integral() << std::endl;
-    }
+    LOG_INFO() << "Data Integral: " << _h_data->Integral() << std::endl;
+    LOG_INFO() << "MC Integral: " << _h_mc->Integral() << std::endl;
 
 
     // Plot the cross section
@@ -903,9 +896,9 @@ namespace Base {
     c->SaveAs(name + ".pdf");
     c->SaveAs(name + ".C","C");
 
-    if (_h_data->GetNbinsX() == 1 && _verbose) {
-      std::cout << "Total cross section - DATA: " << _h_data->GetBinContent(1) << " +- " << _h_data->GetBinError(1) << std::endl;
-      std::cout << "Total cross section - MC  : " << _h_mc->GetBinContent(1)   << " +- " << _h_mc->GetBinError(1) << std::endl;
+    if (_h_data->GetNbinsX() == 1) {
+      LOG_INFO() << "Total cross section - DATA: " << _h_data->GetBinContent(1) << " +- " << _h_data->GetBinError(1) << std::endl;
+      LOG_INFO() << "Total cross section - MC  : " << _h_mc->GetBinContent(1)   << " +- " << _h_mc->GetBinError(1) << std::endl;
     }
 
 
@@ -943,6 +936,7 @@ namespace Base {
         std::ostringstream oss;
         oss << i;
         std::string label = oss.str();
+        if (i == 0) continue;
         h->GetXaxis()->SetBinLabel(i,label.c_str());
         h->GetYaxis()->SetBinLabel(i,label.c_str());
       }
@@ -1035,7 +1029,7 @@ namespace Base {
 
     for (auto hname : histos_to_subtract) 
     {
-      if (_verbose) std::cout << "[CrossSectionCalculator1D] Going to subtract histogram " << hname << std::endl;
+      LOG_INFO() << "[CrossSectionCalculator1D] Going to subtract histogram " << hname << std::endl;
       // Need to remove from the data histogram
       _h_data_subtracted->Add(_hmap_bnbcosmic[hname], -1.);
       // But also form the total MC one, to properly propagate unc

@@ -295,6 +295,7 @@ namespace Base {
       }
       j_label_number++;
       std::string label = oss.str();
+      if (i == 0) continue;
       h->GetXaxis()->SetBinLabel(i,label.c_str());
       h->GetYaxis()->SetBinLabel(i,label.c_str());
     }

@@ -101,9 +101,7 @@ namespace Base {
 
     std::string _name = "[MigrationMatrix2D] ";
 
-    bool _configured = false;
-
-    TTree *_tree;
+    // TTree *_tree;
 
     //std::vector<std::pair<double, double>> _var1_bins;
     //std::vector<std::pair<double, double>> _var2_bins;

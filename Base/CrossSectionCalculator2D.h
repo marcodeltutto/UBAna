@@ -54,6 +54,7 @@
 
 #include "Types.h"
 #include "PlottingTools.h"
+#include "LoggerFeature.h"
 
 namespace Base {
 
@@ -62,7 +63,7 @@ namespace Base {
      User defined class CrossSectionCalculator2D ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionCalculator2D{
+  class CrossSectionCalculator2D : public LoggerFeature {
     
   public:
     

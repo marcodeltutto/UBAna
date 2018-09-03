@@ -55,6 +55,8 @@
 
 #include "PlottingTools.h"
 
+#include "LoggerFeature.h"
+
 namespace Base {
 
   /**
@@ -62,7 +64,7 @@ namespace Base {
      User defined class CrossSectionCalculator1D ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionCalculator1D{
+  class CrossSectionCalculator1D : public LoggerFeature {
     
   public:
     

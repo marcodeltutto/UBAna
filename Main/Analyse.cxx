@@ -83,8 +83,11 @@ namespace Main {
 	clock_t begin = clock();
 
 
-
-  system("mkdir -p output_data_mc/");
+  std::string analyser_outdir = std::getenv("MYSW_OUTDIR");
+  analyser_outdir += "output_data_mc/";
+  std::string mkdir_command = "mkdir -p ";
+  mkdir_command += analyser_outdir;
+  system(mkdir_command.c_str());
   
   //gROOT->SetBatch(kTRUE);
   gROOT->ProcessLine("gErrorIgnoreLevel = 2001;"); // 1001: INFO, 2001: WARNINGS, 3001: ERRORS
@@ -801,6 +804,8 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
     std::cout << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
 
+    _xsec_calc.set_verbosity(Base::msg::kDEBUG);
+
     if (_fake_data_mode) {
     	this->PrintFakeDataMessage();
     	_xsec_calc.SetFakeDataMode(true);
@@ -934,6 +939,7 @@ std::cout << ">> here11" << std::endl;
     TH2D covariance_matrix_flux;
     TH2D covariance_matrix_detector;
     TH2D covariance_matrix_cosmic;
+    TH2D covariance_matrix_dirt;
 
 
     // 
@@ -948,6 +954,7 @@ std::cout << ">> here11" << std::endl;
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
       _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
+      _xsec_bs_calc.set_verbosity(Base::msg::kNORMAL);
 
       if (_do_genie_systs) {
         _xsec_bs_calc.Reset();
@@ -973,7 +980,7 @@ std::cout << ">> here11" << std::endl;
 
       if (_import_genie_systs) {
 
-      	TFile* cov_file = TFile::Open("covariance_genie.root", "WRITE");
+      	TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_mumom");
         covariance_matrix_genie = *m;
 
@@ -1003,7 +1010,7 @@ std::cout << ">> here11" << std::endl;
 
       if (_import_genie_models_systs) {
 
-        TFile* cov_file = TFile::Open("covariance_genie_models.root", "WRITE");
+        TFile* cov_file = TFile::Open("covariance_genie_models.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_genie_models_mumom");
         covariance_matrix_genie_models = *m;
 
@@ -1030,7 +1037,7 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
         _xsec_bs_calc.Run();
 
-        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_mumom");
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_mumom");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
 
         file_out->cd();
@@ -1043,7 +1050,7 @@ std::cout << ">> here11" << std::endl;
 
       if (_import_flux_systs) {
 
-      	TFile* cov_file = TFile::Open("covariance_flux.root", "WRITE");
+      	TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_flux_mumom");
         covariance_matrix_flux = *m;
       }
@@ -1063,7 +1070,13 @@ std::cout << ">> here11" << std::endl;
       TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_cosmic_mumom");
       covariance_matrix_cosmic = *m;
+    }
 
+    if (_import_dirt_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_dirt.root", "READ");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_dirt_mumom");
+      covariance_matrix_dirt = *m;
     }
 
 
@@ -1072,6 +1085,8 @@ std::cout << ">> here11" << std::endl;
     covariance_matrix_mumom.Add(&covariance_matrix_flux);
     covariance_matrix_mumom.Add(&covariance_matrix_detector);
     covariance_matrix_mumom.Add(&covariance_matrix_cosmic);
+    covariance_matrix_mumom.Add(&covariance_matrix_dirt);
+
 
     // if (_extra_fractional_uncertainty != 0.) {
     //   std::cout << "Adding extra uncertainty of " << _extra_fractional_uncertainty << std::endl;
@@ -1239,7 +1254,7 @@ std::cout << ">> here11" << std::endl;
         _xsec_bs_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
         _xsec_bs_calc.Run();
 
-        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux_full.root", "covariance_matrix_flux_muangle");
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_muangle");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
 
         file_out->cd();
@@ -1260,17 +1275,6 @@ std::cout << ">> here11" << std::endl;
 
     } // _do_reweighting_plots
 
-
-
-    if (_import_cosmic_systs) {
-
-      TFile* cov_file = TFile::Open("covariance_cosmic.root", "WRITE");
-      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_cosmic_muangle");
-      covariance_matrix_cosmic = *m;
-        
-    }
-
-
     if (_import_detector_systs) {
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
@@ -1279,12 +1283,30 @@ std::cout << ">> here11" << std::endl;
     }
 
 
+    if (_import_cosmic_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_cosmic.root", "WRITE");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_cosmic_muangle");
+      covariance_matrix_cosmic = *m; 
+    }
+
+
+    if (_import_dirt_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_dirt.root", "WRITE");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_dirt_muangle");
+      covariance_matrix_dirt = *m; 
+    }
+
+
+
 
     TH2D covariance_matrix_muangle = * ((TH2D*)covariance_matrix_genie.Clone("covariance_matrix"));
     covariance_matrix_muangle.Add(&covariance_matrix_genie_models);
     covariance_matrix_muangle.Add(&covariance_matrix_flux);
     covariance_matrix_muangle.Add(&covariance_matrix_detector);
     covariance_matrix_muangle.Add(&covariance_matrix_cosmic);
+    covariance_matrix_muangle.Add(&covariance_matrix_dirt);
 
     for (int i = 0; i < covariance_matrix_muangle.GetNbinsX(); i++) {
       std::cout << "TOTAL - Angle - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_muangle.GetBinContent(i+1, i+1) << std::endl;
@@ -1423,15 +1445,6 @@ std::cout << ">> here11" << std::endl;
     }
 
 
-    if (_import_cosmic_systs) {
-
-      TFile* cov_file = TFile::Open("covariance_cosmic.root", "WRITE");
-      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_cosmic_muangle_mumom");
-      covariance_matrix_cosmic = *m;
-        
-    }
-
-
     if (_import_detector_systs) {
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
@@ -1440,10 +1453,26 @@ std::cout << ">> here11" << std::endl;
     }
 
 
+    if (_import_cosmic_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_cosmic.root", "WRITE");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_cosmic_muangle_mumom");
+      covariance_matrix_cosmic = *m;
+    }
+
+
+    if (_import_dirt_systs) {
+
+      TFile* cov_file = TFile::Open("covariance_dirt.root", "WRITE");
+      TH2D* m = (TH2D*)cov_file->Get("covariance_matrix_dirt_muangle_mumom");
+      covariance_matrix_dirt = *m;
+    }
+
     TH2D covariance_matrix_muangle_mumom = * ((TH2D*)covariance_matrix_genie.Clone("covariance_matrix"));
     covariance_matrix_muangle_mumom.Add(&covariance_matrix_flux);
     covariance_matrix_muangle_mumom.Add(&covariance_matrix_detector);
     covariance_matrix_muangle_mumom.Add(&covariance_matrix_cosmic);
+    covariance_matrix_muangle_mumom.Add(&covariance_matrix_dirt);
 
     for (int i = 0; i < covariance_matrix_muangle_mumom.GetNbinsX(); i++) {
       std::cout << "TOTAL - Angle - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_muangle_mumom.GetBinContent(i+1, i+1) << std::endl;
@@ -1733,7 +1762,7 @@ std::cout << ">> here11" << std::endl;
   
   TLegend* leg;
   TString name;
-  TString outdir = "./output_data_mc/";
+  TString outdir = analyser_outdir;
   
   TCanvas* canvas_trklen = new TCanvas("canvas_trklen", "canvas", 800, 700);
   THStack *hs_trklen_mc = new THStack("hs_trklen",";Candidate Track Length [cm]; Selected Events");

@@ -57,7 +57,9 @@ namespace Base {
 
   void CrossSectionCalculator2D::SetOutDir(std::string dir)
   {
-    _outdir = dir;
+    std::string out_folder_base = std::getenv("MYSW_OUTDIR");
+
+    _outdir = out_folder_base + dir;
 
     auto now = std::time(nullptr);
     char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
@@ -153,9 +155,9 @@ namespace Base {
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
     flux_file += flux_file_name;
-    // std::cout << _namebase << "Using flux file: " << flux_file << std::endl;
+    LOG_DEBUG() << "Using flux file: " << flux_file << std::endl;
 
-    // std::cout << _namebase << "Flux correction weight: " << _flux_correction_weight << std::endl;
+    LOG_DEBUG() << "Flux correction weight: " << _flux_correction_weight << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
@@ -177,32 +179,33 @@ namespace Base {
     h_flux_numu->Draw("histo");
 
     double mean = h_flux_numu-> GetMean();
-    // if (_verbose) std::cout << "The mean energy is: " << mean << std::endl;
+    LOG_DEBUG() << "The mean energy is: " << mean << std::endl;
     int binmean = h_flux_numu -> FindBin(mean);
-    // if (_verbose) std::cout << "The bin of the mean is: " << binmean << std::endl;
+    LOG_DEBUG() << "The bin of the mean is: " << binmean << std::endl;
 
     int n = h_flux_numu -> GetNbinsX();
 
     double lowerint = h_flux_numu -> Integral(1, binmean);
-    // if (_verbose) std::cout << "Lower Integral: " << lowerint << std::endl;
+    LOG_DEBUG() << "Lower Integral: " << lowerint << std::endl;
     double lowerborder = lowerint * 0.32;
-    // if (_verbose) std::cout << "Lower Border: " << lowerborder << std::endl;
+    LOG_DEBUG() << "Lower Border: " << lowerborder << std::endl;
     double lowersum = 0;
     int i = 0;
     while (lowersum < lowerborder) {
       i++;
       lowersum += h_flux_numu -> GetBinContent(i);
-      // if (_verbose) std::cout << i << "\t" << lowersum << std::endl;
+      LOG_DEBUG() << i << "\t" << lowersum << std::endl;
     }
 
-    // if (_verbose) std::cout << "Lower Sum: " << lowersum << std::endl;
     double low = h_flux_numu -> GetBinCenter(i-1);
-    // if (_verbose) std::cout << "The lower edge bin is: " << i-1 << std::endl;
-    // if (_verbose) std::cout << "The lower edge center energy is: " << low << std::endl;
-    // if (_verbose) std::cout << "The lower energy error is: " << mean - low << std::endl;
+
+    LOG_DEBUG() << "Lower Sum: " << lowersum << std::endl;
+    LOG_DEBUG() << "The lower edge bin is: " << i-1 << std::endl;
+    LOG_DEBUG() << "The lower edge center energy is: " << low << std::endl;
+    LOG_DEBUG() << "The lower energy error is: " << mean - low << std::endl;
 
     double upperint = h_flux_numu -> Integral(binmean, n);
-    // std::cout << upperint << std::endl;
+    LOG_DEBUG() << upperint << std::endl;
     double upperborder = upperint * 0.32;
     double uppersum = 0;
     i = 0;
@@ -212,9 +215,9 @@ namespace Base {
     }
 
     double up = h_flux_numu -> GetBinCenter(n+1 - (i-1));
-    // if (_verbose) std::cout << "The upper edge bin is: " << i-1 << std::endl;
-    // if (_verbose) std::cout << "The upper edge center energy is: " << up << std::endl;
-    // if (_verbose) std::cout << "The upper energy error is: " << up - mean << std::endl;
+    LOG_DEBUG() << "The upper edge bin is: " << i-1 << std::endl;
+    LOG_DEBUG() << "The upper edge center energy is: " << up << std::endl;
+    LOG_DEBUG() << "The upper energy error is: " << up - mean << std::endl;
 
     TGraph *gmean = new TGraph();
     gmean -> SetPoint(0, mean, 0);
@@ -493,11 +496,13 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
-
     for (auto name : bkg_names) 
     {
       h_data->Add(_hmap_bnbcosmic[name], -1.);
     }
+
+
+
 
     //
     // Create efficiency histogram
@@ -529,27 +534,38 @@ namespace Base {
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
+
+
     //
     // Divide by flux, and N_target and bin width
     //
 
-    if (_verbose) {
-      std::cout << "FLUX: " << _flux
-                << "\nN_target: " << _n_target
-                << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
-    }
+    LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
     double den = _flux * _n_target * 1e-38;
 
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
 
+
+    for (int bin_i = 1; bin_i < h_data->GetNbinsX()+1; bin_i++) {
+      for (int bin_j = 1; bin_j < h_data->GetNbinsY()+1; bin_j++) {
+        if (h_data->GetBinContent(bin_i, bin_j) <= 0.) {
+          LOG_INFO() << "******************************************" << std::endl;
+          LOG_INFO() << "Cross Section in bin " << bin_i-1 << ", " << bin_j-1 << " is <= 0, value: " << h_data->GetBinContent(bin_i, bin_j) << std::endl;
+          LOG_INFO() << "******************************************" << std::endl;
+        }
+      }
+    }
+
+
+
+
+
     // Do it also for the truth xsec
     //_truth_xsec->Scale(1. / den, "width");
 
-    if (_verbose) {
-      std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
-      std::cout << "Data Integral: " << h_data->Integral() << std::endl;
-    }
+    LOG_INFO() << "MC Integral: " << h_mc->Integral() << std::endl;
+    LOG_INFO() << "Data Integral: " << h_data->Integral() << std::endl;
 
 
     //
@@ -892,8 +908,19 @@ namespace Base {
     //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
     //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
-    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
-                                                  "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+    //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+    //                                               "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+    //                                               "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+    //                                               "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+    //                                               "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+    //                                               "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+    //                                               "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
+
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
                                                   "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
                                                   "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
                                                   "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
@@ -905,18 +932,15 @@ namespace Base {
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
 
-    if (_verbose) {
-      std::cout << "n bins x " << h_data->GetNbinsX() << std::endl;
-      std::cout << "n bins y " << h_data->GetNbinsY() << std::endl;
-    }
+
+    LOG_INFO() << "n bins x " << h_data->GetNbinsX() << std::endl;
+    LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
 
     int horizontal_division = 2;
     int vertical_division = floor(h_data->GetNbinsX() / 2.) + 1;
 
-    if (_verbose) {
-      std::cout << "Horizontal divisions " << horizontal_division << std::endl;
-      std::cout << "Vertical divisions " << vertical_division << std::endl;
-    }
+    LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
+    LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
 
     // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
     TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
@@ -968,12 +992,19 @@ namespace Base {
       // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
       // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
 
-      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.50);
-      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.45);
-      if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.80);
-      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.00);
-      // if (i == 3) xsec_mc_histos.at(i).SetMinimum(-0.3);
-      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+      // if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.50);
+      // if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.45);
+      // if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.80);
+      // if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.00);
+      // // if (i == 3) xsec_mc_histos.at(i).SetMinimum(-0.3);
+      // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+      // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.35);
+      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.70);
+      if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.00);
+      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.25);
+      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.40);
       if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
 
       // The outer uncertainty bar
@@ -1046,6 +1077,7 @@ namespace Base {
         }
         j_label_number++;
         std::string label = oss.str();
+        if (i == 0) continue;
         h->GetXaxis()->SetBinLabel(i,label.c_str());
         h->GetYaxis()->SetBinLabel(i,label.c_str());
       }
