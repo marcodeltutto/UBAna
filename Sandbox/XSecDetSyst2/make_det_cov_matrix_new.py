@@ -64,9 +64,9 @@ for i in xrange(0, n_bins_muangle):
 				cov_matrix_muangle_mumom.SetBinContent(a, b, 0)
 				cov_matrix_muangle_mumom_frac.SetBinContent(a, b, 0)
 
-for i in xrange(0, n_bins_muangle):
-	for j in xrange(0, n_bins_mumom):
-		print "Cross Section at ", i, j , xsec_muangle_mumom_cv.GetBinContent(i+1, j+1)
+# for i in xrange(0, n_bins_muangle):
+# 	for j in xrange(0, n_bins_mumom):
+# 		print "Cross Section at ", i, j , xsec_muangle_mumom_cv.GetBinContent(i+1, j+1)
 
 
 
@@ -105,6 +105,11 @@ for syst_name in det_syst_list:
  	xsec_mumom         = file.Get("xsec_mumom_" + syst_name)
  	xsec_muangle       = file.Get("xsec_muangle_" + syst_name)
  	xsec_muangle_mumom = file.Get("xsec_muangle_mumom_" + syst_name)
+
+	# for i in xrange(0, n_bins_muangle):
+	# 	for j in xrange(0, n_bins_mumom):
+	# 		print syst_name, "Cross Section at ", i, j , xsec_muangle_mumom.GetBinContent(i+1, j+1), xsec_muangle_mumom_cv.GetBinContent(i+1, j+1)
+
 
 	perc_diff = (xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1)) / xsec_onebin_cv.GetBinContent(1)
 	print syst_name, " & ", xsec_onebin.GetBinContent(1), " & ", perc_diff*100, "  \\\\"
@@ -146,18 +151,29 @@ for syst_name in det_syst_list:
 				for n in xrange(0, n_bins_mumom):
 					a = j + i * n_bins_mumom + 1;
 					b = n + m * n_bins_mumom + 1;
+					# print 'a', a, 'b', b
+					my_a = 49 #5
+					my_b = 49 #5
+					if (a==my_a and b==my_b): print 'Here starts', syst_name
+					if (a==my_a and b==my_b): print 'i', i, ', j', j, ', m', m, ', n', n
+					if (a==my_a and b==my_b): print 'syst', xsec_muangle_mumom.GetBinContent(i+1, j+1), '   cv', xsec_muangle_mumom_cv.GetBinContent(i+1, j+1)
 					d0 = (xsec_muangle_mumom.GetBinContent(i+1, j+1) - xsec_muangle_mumom_cv.GetBinContent(i+1, j+1))*(xsec_muangle_mumom.GetBinContent(m+1, n+1) - xsec_muangle_mumom_cv.GetBinContent(m+1, n+1))
 					den = ((xsec_muangle_mumom_cv.GetBinContent(i+1, j+1))*xsec_muangle_mumom_cv.GetBinContent(m+1, n+1))
 					cov_matrix_muangle_mumom.SetBinContent(a, b, cov_matrix_muangle_mumom.GetBinContent(a, b) + d0)
+					# print 'd0', d0
+					if (a==my_a and b==my_b): print 'd0', d0, 'den', den
 					if (den != 0):
 						d0_frac = d0 / den
+						if (a==my_a and b==my_b): print 'd0_frac', d0_frac 
 						cov_matrix_muangle_mumom_frac.SetBinContent(a, b, cov_matrix_muangle_mumom_frac.GetBinContent(a, b) + d0_frac)
+					if (a==my_a and b==my_b): print 'Here ends', syst_name
+
 
 print "Total onebin syst err:", math.sqrt(syst_total_xsec)
 print "Total onebin syst err (relative):", math.sqrt(syst_total_xsec) / xsec_onebin_cv.GetBinContent(1)
 
-for i in xrange(0, xsec_mumom_cv.GetNbinsX()):
-	print "bin", i+1, "sqrt of d0_frac", math.sqrt(syst_mumom[i]) 
+# for i in xrange(0, xsec_mumom_cv.GetNbinsX()):
+# 	print "bin", i+1, "sqrt of d0_frac", math.sqrt(syst_mumom[i]) 
 
 
 

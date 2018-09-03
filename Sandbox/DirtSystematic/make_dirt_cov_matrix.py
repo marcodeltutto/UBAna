@@ -30,11 +30,11 @@ cov_matrix_muangle_mumom_frac = TH2D("cov_matrix_muangle_mumom_frac", "", n_bins
 
 
 
-print "CV cross section", xsec_onebin_cv.GetBinContent(1)
+# print "CV cross section", xsec_onebin_cv.GetBinContent(1)
 
-print "Systematic parameter & Cross section & Total xsec perc difference \\\\"
+# print "Systematic parameter & Cross section & Total xsec perc difference \\\\"
 
-print "cv & ", xsec_onebin_cv.GetBinContent(1), " &  0.0  \\\\"
+# print "cv & ", xsec_onebin_cv.GetBinContent(1), " &  0.0  \\\\"
 
 
 
@@ -75,8 +75,10 @@ if file.IsOpen():
 	print "Good to go!"
 
 syst_total_xsec = abs(xsec_onebin_cv.GetBinContent(1) - xsec_onebin.GetBinContent(1))**2
-import math
 
+import math
+print "CV Total Cross Section", xsec_onebin_cv.GetBinContent(1)
+print "NoDirt Total Cross Section", xsec_onebin.GetBinContent(1)
 print "Total onebin syst err:", math.sqrt(syst_total_xsec)
 print "Total onebin syst err (relative):", math.sqrt(syst_total_xsec) / xsec_onebin_cv.GetBinContent(1) 
 
