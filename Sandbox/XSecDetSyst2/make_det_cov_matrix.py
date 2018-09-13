@@ -152,8 +152,8 @@ for syst_name in det_syst_list:
 					a = j + i * n_bins_mumom + 1;
 					b = n + m * n_bins_mumom + 1;
 					# print 'a', a, 'b', b
-					my_a = 49 #5
-					my_b = 49 #5
+					my_a = 12 #5
+					my_b = 12 #5
 					if (a==my_a and b==my_b): print 'Here starts', syst_name
 					if (a==my_a and b==my_b): print 'i', i, ', j', j, ', m', m, ', n', n
 					if (a==my_a and b==my_b): print 'syst', xsec_muangle_mumom.GetBinContent(i+1, j+1), '   cv', xsec_muangle_mumom_cv.GetBinContent(i+1, j+1)
