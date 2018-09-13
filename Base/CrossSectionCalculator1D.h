@@ -26,7 +26,6 @@
 #include <map>
 #include <time.h>
 #include <fstream>
-#include <sstream>
 
 #include <TSystem.h>
 #include <TApplication.h>
@@ -56,6 +55,8 @@
 
 #include "PlottingTools.h"
 
+#include "LoggerFeature.h"
+
 namespace Base {
 
   /**
@@ -63,7 +64,7 @@ namespace Base {
      User defined class CrossSectionCalculator1D ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionCalculator1D{
+  class CrossSectionCalculator1D : public LoggerFeature {
     
   public:
     
@@ -74,7 +75,7 @@ namespace Base {
     ~CrossSectionCalculator1D(){}
 
     /// Configure function parameters
-    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
+    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt = 0, double intimecosmic = 0);
 
     /// Sets the POT number
     void SetPOT(double pot);
@@ -86,7 +87,7 @@ namespace Base {
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms
-    void SetHistograms(std::map<std::string,TH1D*> bnbcosmic, TH1D* bnbon, TH1D* extbnb, TH1D* intimecosmic = 0);
+    void SetHistograms(std::map<std::string,TH1D*> bnbcosmic, TH1D* bnbon, TH1D* extbnb, std::map<std::string,TH1D*> dirt = std::map<std::string,TH1D*>(), TH1D* intimecosmic = 0);
 
     /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
     void SetTruthHistograms(TH1D*, TH1D*, TH2D*);
@@ -124,8 +125,8 @@ namespace Base {
     ///
     TH1D* ProcessDataHisto(TH1D* histo);
 
-    ///
-    TH1D* ExtractCrossSection(std::string, std::string);
+    /// Extracts the cross section, provide a vector of background names to be subtracted in the first argument
+    TH1D* ExtractCrossSection(std::vector<std::string>, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
     TH1D* GetMCCrossSection();
@@ -172,14 +173,21 @@ namespace Base {
     ///
     void Reset();
 
+    ///
+    void SetVerbose(bool verbose) {_verbose = verbose;}
+
   private:
     
     bool _configured = false;
+    bool _verbose = true;
 
     double _scale_factor_mc_bnbcosmic;
     double _scale_factor_bnbon;
     double _scale_factor_extbnb;
+    double _scale_factor_mc_dirt;
     double _scale_factor_mc_intimecosmic;
+
+    bool _dirt_is_set = false;
 
     double _pot;
     double _flux;
@@ -193,6 +201,7 @@ namespace Base {
     std::string _folder;
 
     std::map<std::string,TH1D*> _hmap_bnbcosmic;
+    std::map<std::string,TH1D*> _hmap_dirt;
     TH1D* _h_bnbon;
     TH1D* _h_extbnb;
     TH1D* _h_intimecosmic;

@@ -2,6 +2,7 @@
 #define __BASE_CROSSSECTIONBOOTSTRAPCALCULATOR1D_CXX__
 
 #include "CrossSectionBootstrapCalculator1D.h"
+#include "PlottingTools.h"
 
 namespace Base {
 
@@ -31,11 +32,12 @@ namespace Base {
     //_h_true_reco_mom = NULL;
   }
 
-  void CrossSectionBootstrapCalculator1D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic)
+  void CrossSectionBootstrapCalculator1D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt, double intimecosmic)
   {
     _scale_factor_mc_bnbcosmic = bnbcosmic;
     _scale_factor_bnbon = bnbon;
     _scale_factor_extbnb = extbnb;
+    _scale_factor_mc_dirt = dirt;
     _scale_factor_mc_intimecosmic = intimecosmic;
 
     _configured = true;
@@ -44,6 +46,11 @@ namespace Base {
   void CrossSectionBootstrapCalculator1D::SetPOT(double pot)
   {
     _pot = pot;
+  }
+
+  void CrossSectionBootstrapCalculator1D::SetBkgToSubtract(std::vector<std::string> bkg_names)
+  {
+    _bkg_names = bkg_names;
   }
 
   void CrossSectionBootstrapCalculator1D::SetNameAndLabel(std::string name, std::string label)
@@ -81,11 +88,13 @@ namespace Base {
   }
   */
 
-  void CrossSectionBootstrapCalculator1D::SetHistograms(std::map<std::string,std::map<std::string,TH1D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH1D* bnbon, TH1D* extbnb, TH1D* intimecosmic) 
+  void CrossSectionBootstrapCalculator1D::SetHistograms(std::map<std::string,std::map<std::string,TH1D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH1D* bnbon, TH1D* extbnb, std::map<std::string,TH1D*> dirt, TH1D* intimecosmic) 
   {
 
     _hmap_bnbcosmic = bnbcosmic;
     
+    _hmap_dirt = dirt;
+
     if (bnbon != NULL) {
       _h_bnbon = (TH1D*)bnbon->Clone("_h_bnbon");
     }
@@ -106,7 +115,7 @@ namespace Base {
 
     _true_to_reco_is_set = true;
 
-    std::cout << "_true_to_reco_is_set is true" << std::endl;
+    LOG_DEBUG() << "_true_to_reco_is_set is true" << std::endl;
 
   }
 
@@ -114,6 +123,7 @@ namespace Base {
   {
     _h_eff_mumom_num = num;
     _h_eff_mumom_den = den;
+    LOG_DEBUG() << "called SetTruthHistograms with no true to reco" << std::endl;
   }
 
   void CrossSectionBootstrapCalculator1D::SetMigrationMatrixDimensions(int n, int m) 
@@ -130,14 +140,15 @@ namespace Base {
 
   void CrossSectionBootstrapCalculator1D::SetSavePrefix(std::string s, std::string folder)
   {
+    std::string timestamp;
     if (folder != "") {
       auto now = std::time(nullptr);
       char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
-      std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
+      timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
       
-      system(("mkdir -p " + folder /*+ "_" + timestamp*/).c_str());    
+      system(("mkdir -p " + folder + "_" + timestamp).c_str());    
     }
-  	_save_prefix = folder + "/" + s;
+  	_save_prefix = folder + "_" + timestamp + "/" + s;
   }
 
   void CrossSectionBootstrapCalculator1D::SetFluxHistogramType(bool rwgt_flux, std::string flux_unc_type)
@@ -169,18 +180,20 @@ namespace Base {
 
 		gROOT->SetBatch(kTRUE);
 
-		std::cout << "CrossSectionBootstrapCalculator1D::Run() called" << std::endl;
+		LOG_NORMAL() << "CrossSectionBootstrapCalculator1D Starts Running" << std::endl;
 
 		std::map<std::string, TH1D*> xsec_mumom_per_universe;
 
 
 		CrossSectionCalculator1D _xsec_calc;
-    _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb);
+    _xsec_calc.SetVerbose(false);
+    _xsec_calc.set_verbosity(Base::msg::kNORMAL);
+    _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb, _scale_factor_mc_dirt);
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
     _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
-    std::cout << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
-    std::cout << "CrossSectionBootstrapCalculator1D FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
+    LOG_NORMAL() << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
+    LOG_NORMAL() << "CrossSectionBootstrapCalculator1D FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
 
     std::vector<std::string> hist_to_subtract = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
 
@@ -190,12 +203,12 @@ namespace Base {
     size_t n_universe = _h_eff_mumom_num.GetNWeights();
     std::vector<std::string> universe_names = _h_eff_mumom_num.GetUniverseNames();
 
-    std::cout << "n_universe " << n_universe << std::endl;
-    std::cout << "universe_names.size() " << universe_names.size() << std::endl;
-
+    LOG_NORMAL() << "Number of universes: " << n_universe << std::endl;
+    LOG_NORMAL() << "Universes names: "; 
     for (auto s : universe_names) {
-    	std::cout << ">>>>>>> name is " << s << std::endl;
+    	std::cout << s << ", ";
     }
+    std::cout << std::endl;
 
     
     TH1D this_h;
@@ -204,13 +217,16 @@ namespace Base {
     TH2D this_reco_true;
     TMatrix S_2d;
 
+    // n_universe = 30;
 
     for (size_t s = 0; s < n_universe; s++) { 
 
-    	std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> This is universe " << s << ", with name " << universe_names.at(s) << std::endl;
+      PlottingTools::DrawProgressBar((double)s/(double)n_universe, 70);
+
+    	LOG_INFO() << ">>>>>>>>>>>>>>>>>>>>>>>>>> This is universe " << s << ", with name " << universe_names.at(s) << std::endl;
 
       //
-    	// Construnct the hmap for the MC histograms
+    	// Construnct the hmap for the MC histograms (bnbcosmic)
       //
       // to be removed int counter = 0;
       std::map<std::string, TH1D*> input_map_mc;
@@ -226,6 +242,24 @@ namespace Base {
           }
         }      
       }
+
+      //
+      // Construnct the hmap for the MC histograms (dirt)
+      //
+      // to be removed int counter = 0;
+      // std::map<std::string, TH1D*> input_map_mc_dirt;
+      // for (auto iter : _hmap_dirt) {
+
+      //   std::map<std::string, TH1D*> temp_map = iter.second;
+
+      //   for (auto i2 : temp_map) {
+
+      //     if (i2.first == universe_names.at(s)) {
+      //       input_map_mc_dirt[iter.first] = i2.second;
+      //       break;
+      //     }
+      //   }      
+      // }
 
         //std::string hname = "this_h" + iter.first;
       	//TH1D * this_h = (TH1D*) iter.second.GetUniverseHisto(universe_names.at(s)).Clone(hname.c_str());
@@ -265,21 +299,29 @@ namespace Base {
       if (_rwgt_flux && universe_names.at(s) != "nominal") {
       	std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
+        // Find the universe number
+        std::string universe_number;
+        std::string::size_type pos = universe_names.at(s).find("universe");
+        if (universe_names.at(s).npos != pos) {
+          universe_number = universe_names.at(s).substr(pos+8);
+        } else {
+          LOG_CRITICAL() << "[CrossSectionBootstrapCalculator1D] Universe name is not nominal nor universeXXX." << std::endl;
+          throw std::exception();
+        }
+
       	std::stringstream sstm;
-        sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << s << "_AV_TPC";
+        sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << universe_number << "_AV_TPC";
         std::string flux_name = sstm.str();
 
-        std::cout << "[CrossSectionBootstrapCalculator1D] Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
+        LOG_INFO() << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
         _xsec_calc.EstimateFlux(flux_file, flux_name);
       }
       if (universe_names.at(s) == "nominal") {
         std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
-        std::cout << "[CrossSectionBootstrapCalculator1D] Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
+        LOG_INFO() << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
         _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
-
-
 
 
       // Calculate the migration matrix for this universe
@@ -289,7 +331,7 @@ namespace Base {
         migrationmatrix2d.SetNBins(_n, _m);
         migrationmatrix2d.SetTrueRecoHistogram(&this_reco_true);
         S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-        std::cout << "S_2d calculated" << std::endl;
+        LOG_INFO() << "S_2d calculated" << std::endl;
       }
 
 
@@ -297,7 +339,7 @@ namespace Base {
 
       _xsec_calc.Reset();
       //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
-      _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb);  
+      _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb, _hmap_dirt);  
       if (_true_to_reco_is_set) {
         _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den, &this_reco_true);
       } else {
@@ -314,7 +356,7 @@ namespace Base {
       } else {
         _xsec_calc.DoNotSmear(); 
       }
-      TH1D* universe_xsec = _xsec_calc.ExtractCrossSection("p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
+      TH1D* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "p_{#mu} [GeV]", "d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
 
 
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
@@ -333,7 +375,7 @@ namespace Base {
     BootstrapTH1D xsec_mumom_bs;
     xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
 
-    std::cout << "xsec_mumom_bs.GetNbinsX() " << xsec_mumom_bs.GetNbinsX() << std::endl;
+    LOG_NORMAL() << "xsec_mumom_bs.GetNbinsX() " << xsec_mumom_bs.GetNbinsX() << std::endl;
 
     //genie_rw_plotter.SetXSecBootstrap(xsec_mumom_bs);
     //genie_rw_plotter.MakeXsecDiffPlots(true);
@@ -500,7 +542,7 @@ namespace Base {
 
 
 
-    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+    LOG_NORMAL() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 
 	}
 }

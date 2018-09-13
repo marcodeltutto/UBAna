@@ -38,10 +38,11 @@
 #include <TStyle.h>
 #include <TString.h>
 #include <TMatrix.h>
-#include <TObject.h>
+#include <TLine.h>
 
 #include "BootstrapTH2D.h"
 #include "Types.h"
+#include "PlottingTools.h"
 
 namespace Base {
 
@@ -94,7 +95,7 @@ namespace Base {
     TH2D _M_frac_h;  ///< The fractional covariance matrix in histogram form
     TH2D _RHO_h;     ///< The correlation matrix in histogram form
 
-    bool _verbose = true;
+    // bool _verbose = true;
 
     double _extra_relative_uncertainty = 0.; ///< Extra uncertainty to be added to the diagonal
     

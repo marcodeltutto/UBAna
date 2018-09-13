@@ -15,7 +15,10 @@ namespace Base {
 
   void MigrationMatrix2D::SetOutDir(std::string dir)
   {
-    _outdir = dir;
+
+    std::string out_folder_base = std::getenv("MYSW_OUTDIR");
+
+    _outdir = out_folder_base + dir;
 
     auto now = std::time(nullptr);
     char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
@@ -121,7 +124,6 @@ namespace Base {
     TCanvas * c_smatrix = new TCanvas;
     smearing_matrix_histo->SetMarkerColor(kWhite);
     smearing_matrix_histo->SetMarkerSize(2.0);
-    //smearing_matrix_histo->GetXaxis()->SetBinLabel(1, "test");
     smearing_matrix_histo->GetXaxis()->CenterTitle();
     smearing_matrix_histo->GetYaxis()->CenterTitle();
     smearing_matrix_histo->GetXaxis()->SetTitle("True Bin j");

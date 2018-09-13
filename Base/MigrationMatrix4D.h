@@ -72,17 +72,17 @@ namespace Base {
     /// Default destructor
     ~MigrationMatrix4D(){}
 
-    /// Configure function parameters
-    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
-
     ///
     Mat4D CalculateMigrationMatrix(); 
 
-    ///
+    /// Sets the TTree for all signal selected events, to construct S (no longer used)
     void SetTTree(TTree*);
 
+    /// Set 2D reco histogram for every true bin m,n
+    void SetRecoPerTrueHistos(std::vector<std::vector<TH2D*>>);
+
     ///
-    void SetBins(double *, int, double *, int);
+    void SetBins(const double *, int, const double *, int);
 
     ///
     void SetOutputFileName(std::string name);
@@ -97,15 +97,15 @@ namespace Base {
     void PlotMatrix();
 
     /// If called uses the weights with name specified
-    void UseWeights(std::string weight_name);
+    void UseWeights(std::string weight_name = "universe0", std::string weight_type = "genie_multisim");
+
 
   private:
-
-    bool _configured = false;
 
     std::string _prefix = "[MigrationMatrix4D] ";
 
     TTree *_tree;
+    std::vector<std::vector<TH2D*>> _h_reco_per_true; ///< 2D reco histogram for every true bin m,n
 
     std::vector<std::pair<double, double>> _var1_bins;
     std::vector<std::pair<double, double>> _var2_bins;
@@ -122,6 +122,7 @@ namespace Base {
 
     bool _use_weights = false; ///< If true uses additional wights (usually for multisim)
     std::string _weight_name = "not_set";
+    std::string _weight_type = "not_set";
     
   };
 }

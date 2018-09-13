@@ -33,11 +33,12 @@ namespace Base {
     //_h_true_reco_mom = NULL;
   }
 
-  void CrossSectionCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic)
+  void CrossSectionCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt, double intimecosmic)
   {
     _scale_factor_mc_bnbcosmic = bnbcosmic;
     _scale_factor_bnbon = bnbon;
     _scale_factor_extbnb = extbnb;
+    _scale_factor_mc_dirt = dirt;
     _scale_factor_mc_intimecosmic = intimecosmic;
 
     _configured = true;
@@ -56,7 +57,9 @@ namespace Base {
 
   void CrossSectionCalculator2D::SetOutDir(std::string dir)
   {
-    _outdir = dir;
+    std::string out_folder_base = std::getenv("MYSW_OUTDIR");
+
+    _outdir = out_folder_base + dir;
 
     auto now = std::time(nullptr);
     char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
@@ -66,6 +69,12 @@ namespace Base {
 
     system(("mkdir " + _folder).c_str());
 
+  }
+
+  void CrossSectionCalculator2D::SetCovarianceMatrix(TH2D h)
+  {
+    _covariance_matrix = h;
+    _covariance_matrix_is_set = true;
   }
 
   void CrossSectionCalculator2D::PrintConfig() {
@@ -79,13 +88,41 @@ namespace Base {
 
   }
 
-  void CrossSectionCalculator2D::SetHistograms(std::map<std::string,TH2D*> bnbcosmic, TH2D* bnbon, TH2D* extbnb, TH2D* intimecosmic) 
+  void CrossSectionCalculator2D::SetHistograms(std::map<std::string,TH2D*> bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt, TH2D* intimecosmic) 
   {
 
-    _hmap_bnbcosmic = bnbcosmic;
-    _h_bnbon = bnbon;
-    _h_extbnb = extbnb;
-    _h_intimecosmic = intimecosmic;
+    // _hmap_bnbcosmic = bnbcosmic;
+    // _hmap_dirt = dirt;
+    // _h_bnbon = bnbon;
+    // _h_extbnb = extbnb;
+    // _h_intimecosmic = intimecosmic;
+
+
+    for (auto it : bnbcosmic) {
+      std::string this_name = it.second->GetName();
+      _hmap_bnbcosmic[it.first] = (TH2D*)it.second->Clone((this_name + it.first + "_xsec_int_bnbcosmic").c_str());
+    }
+
+    for (auto it : dirt) {
+      std::string this_name = it.second->GetName();
+      _hmap_dirt[it.first] = (TH2D*)it.second->Clone((this_name + it.first + "_xsec_int_dirt").c_str());
+    }
+
+    _dirt_is_set = false;
+    if (dirt.size() != 0) {
+      LOG_INFO() << "Dirt Histograms Set Up" << std::endl;
+      _dirt_is_set = true;
+    }
+    
+    if (bnbon != NULL) {
+      _h_bnbon = (TH2D*)bnbon->Clone("_h_bnbon");
+    }
+    if (extbnb != NULL) {
+      _h_extbnb = (TH2D*)extbnb->Clone("_h_extbnb");
+    }
+    if (intimecosmic != NULL) {
+      _h_intimecosmic = (TH2D*)intimecosmic->Clone("_h_intimecosmic");
+    }
 
   }
 
@@ -93,19 +130,6 @@ namespace Base {
   {
     _h_eff_mumom_num = num;
     _h_eff_mumom_den = den;
-
-    //_h_true_reco_mom = h;
-
-    //std::cout << "_h_true_reco_mom->GetBinContent(1, 1) = " << _h_true_reco_mom->GetBinContent(1, 1) << std::endl;
-
-/*
-    TCanvas * c_eff = new TCanvas();
-    _eff->Draw();
-
-    TString name = _folder + "_eff";
-    c_eff->SaveAs(name + ".pdf");
-    c_eff->SaveAs(name + ".C","C");
-*/
   }
 
   void CrossSectionCalculator2D::SetTruthXSec(TH1D* xsec) 
@@ -119,9 +143,9 @@ namespace Base {
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
     flux_file += flux_file_name;
-    std::cout << _namebase << "Using flux file: " << flux_file << std::endl;
+    LOG_DEBUG() << "Using flux file: " << flux_file << std::endl;
 
-    std::cout << _namebase << "Flux correction weight: " << _flux_correction_weight << std::endl;
+    LOG_DEBUG() << "Flux correction weight: " << _flux_correction_weight << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
@@ -143,32 +167,33 @@ namespace Base {
     h_flux_numu->Draw("histo");
 
     double mean = h_flux_numu-> GetMean();
-    if (_verbose) std::cout << "The mean energy is: " << mean << std::endl;
+    LOG_DEBUG() << "The mean energy is: " << mean << std::endl;
     int binmean = h_flux_numu -> FindBin(mean);
-    if (_verbose) std::cout << "The bin of the mean is: " << binmean << std::endl;
+    LOG_DEBUG() << "The bin of the mean is: " << binmean << std::endl;
 
     int n = h_flux_numu -> GetNbinsX();
 
     double lowerint = h_flux_numu -> Integral(1, binmean);
-    if (_verbose) std::cout << "Lower Integral: " << lowerint << std::endl;
+    LOG_DEBUG() << "Lower Integral: " << lowerint << std::endl;
     double lowerborder = lowerint * 0.32;
-    if (_verbose) std::cout << "Lower Border: " << lowerborder << std::endl;
+    LOG_DEBUG() << "Lower Border: " << lowerborder << std::endl;
     double lowersum = 0;
     int i = 0;
     while (lowersum < lowerborder) {
       i++;
       lowersum += h_flux_numu -> GetBinContent(i);
-      std::cout << i << "\t" << lowersum << std::endl;
+      LOG_DEBUG() << i << "\t" << lowersum << std::endl;
     }
 
-    if (_verbose) std::cout << "Lower Sum: " << lowersum << std::endl;
     double low = h_flux_numu -> GetBinCenter(i-1);
-    if (_verbose) std::cout << "The lower edge bin is: " << i-1 << std::endl;
-    if (_verbose) std::cout << "The lower edge center energy is: " << low << std::endl;
-    if (_verbose) std::cout << "The lower energy error is: " << mean - low << std::endl;
+
+    LOG_DEBUG() << "Lower Sum: " << lowersum << std::endl;
+    LOG_DEBUG() << "The lower edge bin is: " << i-1 << std::endl;
+    LOG_DEBUG() << "The lower edge center energy is: " << low << std::endl;
+    LOG_DEBUG() << "The lower energy error is: " << mean - low << std::endl;
 
     double upperint = h_flux_numu -> Integral(binmean, n);
-    std::cout << upperint << std::endl;
+    LOG_DEBUG() << upperint << std::endl;
     double upperborder = upperint * 0.32;
     double uppersum = 0;
     i = 0;
@@ -178,9 +203,9 @@ namespace Base {
     }
 
     double up = h_flux_numu -> GetBinCenter(n+1 - (i-1));
-    if (_verbose) std::cout << "The upper edge bin is: " << i-1 << std::endl;
-    if (_verbose) std::cout << "The upper edge center energy is: " << up << std::endl;
-    if (_verbose) std::cout << "The upper energy error is: " << up - mean << std::endl;
+    LOG_DEBUG() << "The upper edge bin is: " << i-1 << std::endl;
+    LOG_DEBUG() << "The upper edge center energy is: " << up << std::endl;
+    LOG_DEBUG() << "The upper energy error is: " << up - mean << std::endl;
 
     TGraph *gmean = new TGraph();
     gmean -> SetPoint(0, mean, 0);
@@ -284,6 +309,8 @@ namespace Base {
     Mat2D matrix_angle_mom_num_smear;
     matrix_angle_mom_num_smear.resize(_h_eff_mumom_num->GetNbinsX(), std::vector<double>(_h_eff_mumom_num->GetNbinsY(), 0));
 
+
+
     // Reco bins i, j
     for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
       for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {  
@@ -300,15 +327,20 @@ namespace Base {
       }
     }
 
+
+    //
     // Make a plottable histo of the smeared distributions
+    //
     TH2D * h_eff_den_smear = (TH2D*) _h_eff_mumom_den->Clone("h_eff_den_smear");
     TH2D * h_eff_num_smear = (TH2D*) _h_eff_mumom_num->Clone("h_eff_num_smear");
     for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
       for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {
-        h_eff_den_smear->SetBinContent(i, j, matrix_angle_mom_den_smear[i][j]);
-        h_eff_num_smear->SetBinContent(i, j, matrix_angle_mom_num_smear[i][j]);
+        h_eff_den_smear->SetBinContent(i+1, j+1, matrix_angle_mom_den_smear[i][j]);
+        h_eff_num_smear->SetBinContent(i+1, j+1, matrix_angle_mom_num_smear[i][j]);
       } 
     }
+
+
 
     TCanvas * c_smear_den = new TCanvas;
     h_eff_den_smear->SetMarkerColor(kWhite);
@@ -332,6 +364,7 @@ namespace Base {
     name = _folder +_name + "selected_smear";
     c_smear_num->SaveAs(name + ".pdf");
 
+
     //
     // Efficiency (true)
     //
@@ -339,20 +372,19 @@ namespace Base {
     TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
 
     TCanvas * c_eff_true = new TCanvas;
-    //teff_true->SetTitle("true;True Muon Momentum [GeV];Efficiency");
     teff_true->SetMarkerColor(kWhite);
     teff_true->SetMarkerSize(1.6);
     teff_true->SetTitle("Efficiency;cos(#theta_{#mu}^{true});p_{#mu}^{true}");
-    //teff_true->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");
-    //teff_true->GetYaxis()->SetTitle("p_{#mu}^{truth}");
-    //teff_true->SetLineColor(kGreen+3);
-    //teff_true->SetMarkerColor(kGreen+3);
-    //teff_true->SetMarkerStyle(20);
-    //teff_true->SetMarkerSize(0.5);
     teff_true->Draw("colz text");
+    gPad->Update(); 
+    auto graph_t = teff_true->GetPaintedHistogram(); 
+    graph_t->SetMinimum(0);
+    graph_t->SetMaximum(1); 
+    gPad->Update();
 
     name = _folder +_name + "efficiency_true";
     c_eff_true->SaveAs(name + ".pdf");
+    c_eff_true->SaveAs(name + ".C");
 
 
     //
@@ -362,16 +394,9 @@ namespace Base {
     TEfficiency* teff_reco = new TEfficiency(*h_eff_num_smear,*h_eff_den_smear);
 
     TCanvas * c_eff_reco = new TCanvas;
-    //teff_reco->SetTitle("reco;Reco Muon Momentum [GeV];Efficiency");
     teff_reco->SetMarkerColor(kWhite);
     teff_reco->SetMarkerSize(1.6);
     teff_reco->SetTitle("Efficiency;cos(#theta_{#mu}^{reco});p_{#mu}^{reco}");
-    //teff_reco->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
-    //teff_reco->GetYaxis()->SetTitle("p_{#mu}^{reco}");
-    //teff_reco->SetLineColor(kGreen+3);
-    //teff_reco->SetMarkerColor(kGreen+3);
-    //teff_reco->SetMarkerStyle(20);
-    //teff_reco->SetMarkerSize(0.5);
     teff_reco->Draw("colz text");
     gPad->Update(); 
     auto graph = teff_reco->GetPaintedHistogram(); 
@@ -381,9 +406,11 @@ namespace Base {
 
     name = _folder +_name + "_efficiency_reco";
     c_eff_reco->SaveAs(name + ".pdf");
+    c_eff_reco->SaveAs(name + ".C");
+
+    
 
     _eff = teff_reco;
-
 
   }
 
@@ -392,11 +419,20 @@ namespace Base {
   void CrossSectionCalculator2D::ProcessPlots() 
   {
 
-    // Scale mc histograms
+    // Scale mc histograms (bnbcosmic)
     for (auto iter : _hmap_bnbcosmic) {
-      if (iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off") continue;
+      if ( iter.second == NULL || iter.first == "intimecosmic" || iter.first == "beam-off"
+        || iter.first == "dirt" || iter.first == "dirt_outfv"   || iter.first == "dirt_cosmic") continue;
       iter.second->Sumw2();
       iter.second->Scale(_scale_factor_mc_bnbcosmic);
+    }
+
+    // Scale mc histograms (dirt)
+    if (_dirt_is_set) {
+      for (auto iter : _hmap_dirt) {
+        iter.second->Sumw2();
+        iter.second->Scale(_scale_factor_mc_dirt);
+      }
     }
 
     // Scale data histograms
@@ -410,16 +446,35 @@ namespace Base {
     _h_data_sub->Sumw2();
     _h_data_sub->Add(_h_extbnb, -1.);
 
-    // Save beam off in the MC backgrounds
+
+    // Save beam off in the MC backgrounds ...
     _hmap_bnbcosmic["beam-off"] = _h_extbnb;
 
-    // And update the total histogram
+    // ... and update the total histogram
     _hmap_bnbcosmic["total"]->Add(_h_extbnb);
+
+
+    if (_dirt_is_set) {
+      // Save dirt in the MC backgrounds ...
+      _hmap_bnbcosmic["dirt"] = _hmap_dirt["total"];
+      _hmap_bnbcosmic["dirt_outfv"] = _hmap_dirt["outfv"];
+      _hmap_bnbcosmic["dirt_cosmic"] = _hmap_dirt["cosmic"];
+
+      // ... and update the total histogram
+      _hmap_bnbcosmic["total"]->Add(_hmap_dirt["total"]);
+    } else {
+      TH2D * h_empty = (TH2D*) _hmap_bnbcosmic["total"]->Clone("empty");
+      h_empty->Reset();
+
+      _hmap_bnbcosmic["dirt"] = h_empty;
+      _hmap_bnbcosmic["outfv_dirt"] = h_empty;
+      _hmap_bnbcosmic["cosmic_dirt"] = h_empty;
+    }
 
   }
 
 
-  TH2D* CrossSectionCalculator2D::ExtractCrossSection(std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
+  TH2D* CrossSectionCalculator2D::ExtractCrossSection(std::vector<std::string> bkg_names, std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
   {
 
     //
@@ -431,20 +486,20 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
-    std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
-
+    LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_names) 
     {
+      std::cout << name << ", ";
       h_data->Add(_hmap_bnbcosmic[name], -1.);
     }
+    std::cout << std::endl;
+
+
+
 
     //
     // Create efficiency histogram
     //
-
-    //TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
-    //_eff = teff_true;
-
     TH2D * h_eff = (TH2D*)h_mc->Clone("h_eff");
     h_eff->Sumw2();
     for (int i = 1; i < h_mc->GetNbinsX() + 1; i++) {
@@ -461,6 +516,8 @@ namespace Base {
       }
     }
 
+
+
     //
     // Divide by efficiency
     //
@@ -468,31 +525,127 @@ namespace Base {
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
+
+
+
     //
     // Divide by flux, and N_target and bin width
     //
 
-    std::cout << "FLUX: " << _flux
-    << "\nN_target: " << _n_target
-    << "\nFLUX x N_target: " << _flux*_n_target << std::endl;
+    LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
     double den = _flux * _n_target * 1e-38;
 
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
 
+
+
+    for (int bin_i = 1; bin_i < h_data->GetNbinsX()+1; bin_i++) {
+      for (int bin_j = 1; bin_j < h_data->GetNbinsY()+1; bin_j++) {
+        if (h_data->GetBinContent(bin_i, bin_j) <= 0.) {
+          LOG_INFO() << "******************************************" << std::endl;
+          LOG_INFO() << "Cross Section in bin " << bin_i-1 << ", " << bin_j-1 << " is <= 0, value: " << h_data->GetBinContent(bin_i, bin_j) << std::endl;
+          LOG_INFO() << "******************************************" << std::endl;
+        }
+      }
+    }
+
+
+
+
+
     // Do it also for the truth xsec
     //_truth_xsec->Scale(1. / den, "width");
 
+    LOG_INFO() << "MC Integral: " << h_mc->Integral() << std::endl;
+    LOG_INFO() << "Data Integral: " << h_data->Integral() << std::endl;
 
-    std::cout << "MC Integral: " << h_mc->Integral() << std::endl;
-    std::cout << "Data Integral: " << h_data->Integral() << std::endl;
+
+    //
+    // Add systs uncertainties (if cov. matrix is set)
+    //
+
+    if (_extra_fractional_uncertainty != 0) {
+      std::cout << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
+    }
+
+    TH2D * h_syst_unc = (TH2D*) h_data->Clone("h_syst_unc");
+
+    if (_covariance_matrix_is_set) {
+
+      // Just to set the right bins:
+      _cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");
+      _frac_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_frac_cov_matrix_total");
+      _corr_matrix_total = (TH2D*)_covariance_matrix.Clone("_corr_matrix_total");
+
+      int i = 0, j = 0, m = 0, n = 0;
+ 
+      for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {
+
+        for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
+
+          // Unroll a and b lablel into a = i,j and b = m,n
+          if (a % h_data->GetNbinsY() == 0){
+              i = a / h_data->GetNbinsY();
+          }
+          j = a % h_data->GetNbinsY();
+
+          if (b % h_data->GetNbinsY() == 0){
+              m = b / h_data->GetNbinsY();
+          }
+          n = b % h_data->GetNbinsY();
+
+          // std::cout << "a = " << a << ", i = " << i << ", j = " << j << std::endl;
+          // std::cout << "b = " << b << ", m = " << m << ", n = " << n << std::endl;
+
+
+          // The statictial uncertainty squared
+          double unc_stat_2 = h_data->GetBinError(i+1, j+1) * h_data->GetBinError(m+1, n+1);
+
+          // The systematic uncertainty squared
+          double unc_syst_2 = _covariance_matrix.GetBinContent(a+1, b+1);
+
+          // The extra systematic uncertainty squared (POT normalisation, ...)
+          double extra_unc_2 = _extra_fractional_uncertainty * h_data->GetBinContent(i+1, j+1)   *    _extra_fractional_uncertainty * h_data->GetBinContent(m+1, n+1);
+
+          // The total uncertainty (quadrature sum)
+          double unc_tot = std::sqrt(unc_stat_2 + unc_syst_2 + extra_unc_2);
+
+          if (a == b) {
+            std::cout << "Bin " << a << " (aka i = " << i << ", j = " << j << ")" << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
+            h_syst_unc->SetBinError(i+1, j+1, unc_tot); 
+          }
+
+          // Also construct the total syst covariance matrix
+          double total_syst_unc_2 = unc_syst_2 + extra_unc_2;
+
+          _cov_matrix_total->SetBinContent(a+1, b+1, total_syst_unc_2);
+          if (h_data->GetBinContent(i+1, j+1) != 0. && h_data->GetBinContent(m+1, n+1) != 0.) {
+            _frac_cov_matrix_total->SetBinContent(a+1, b+1, (total_syst_unc_2) / (h_data->GetBinContent(i+1, j+1) * h_data->GetBinContent(m+1, n+1)));
+          } else {
+            _frac_cov_matrix_total->SetBinContent(a+1, b+1, 0.);
+          }
+
+        } // j
+      } // i
+
+      // And also the correlation matrix
+      for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {
+        for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
+          if (_cov_matrix_total->GetBinContent(a+1, a+1) != 0. && _cov_matrix_total->GetBinContent(b+1, b+1) != 0.) {
+            _corr_matrix_total->SetBinContent(a+1, b+1, _cov_matrix_total->GetBinContent(a+1, b+1) / (std::sqrt(_cov_matrix_total->GetBinContent(a+1, a+1)) * std::sqrt(_cov_matrix_total->GetBinContent(b+1, b+1))));
+          } else {
+            _corr_matrix_total->SetBinContent(a+1, b+1, 0.);
+          }
+        }
+      }
+    }
 
 
 
     //
     // General for plotting
     //
-
 
     TLatex* prelim = new TLatex(0.982808,0.9494737, "MicroBooNE Preliminary"); //0.9, 0.93
     prelim->SetTextColor(kGray+1);
@@ -724,40 +877,87 @@ namespace Base {
     c_xsec_data2->SaveAs(name + ".C","C");
 
 
+
+
+
+
+
+
+
+
+
+
     //
     // Project in cos(theta) bins
     //
 
     std::vector<TH1D> xsec_data_histos;
     std::vector<TH1D> xsec_mc_histos;
-    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
-                                                  "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
-                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
-                                                  "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
-                                                  "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
-                                                  "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
+    std::vector<TH1D> xsec_data_unc_histos;
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+    //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
+    //                                               "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
+    //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
+    //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
-    std::cout << "n bins x " << h_data->GetNbinsX() << std::endl;
-    std::cout << "n bins y " << h_data->GetNbinsY() << std::endl;
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+    //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+    //                                               "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+    //                                               "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+    //                                               "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+    //                                               "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+    //                                               "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+    //                                               "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
+                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+                                                  "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+                                                  "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+                                                  "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+                                                  "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+                                                  "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+                                                  "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
+
+
+
+    LOG_INFO() << "n bins x " << h_data->GetNbinsX() << std::endl;
+    LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
+
+    int horizontal_division = 2;
+    int vertical_division = floor(h_data->GetNbinsX() / 2.);
+
+    if (h_data->GetNbinsX() / 2. != floor(h_data->GetNbinsX()) / 2.) vertical_division++;
+
+    LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
+    LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
 
     // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
     TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
     c_test->SetBottomMargin(0.15);
     // gStyle->SetOptStat(0);
-    c_test->Divide(2,3,0.01,0.01);
+    c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
 
     for (int i = 0; i < h_data->GetNbinsX(); i++) {
-      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
-      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, i+2));
+      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+1));
+      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, i+1));
+      xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1, i+1));
     }
 
 
-    for (int i = 0; i < xsec_mc_histos.size(); i++) {
+    for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
+
       c_test->cd(i+1);
+
       gPad->SetBottomMargin(0.15);
       gPad->SetLeftMargin(0.15);
       gPad->SetTopMargin(0.1128947);
+
       xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
       xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
       xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
@@ -774,11 +974,44 @@ namespace Base {
       h_main->Draw("histo same");
 
       xsec_mc_histos.at(i).SetMinimum(0.);
-      if (i == 0) {
-        xsec_mc_histos.at(i).SetMaximum(0.7);
-      }
+      // if (i == 0) {
+      //   xsec_mc_histos.at(i).SetMaximum(0.4);
+      // } else if (i == 1) {
+      //   xsec_mc_histos.at(i).SetMaximum(0.4);
+      // } 
 
+      // if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.40);
+      // if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.40);
+      // if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.60);
+      // if (i == 3) xsec_mc_histos.at(i).SetMaximum(0.80);
+      // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+      // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+      // if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.50);
+      // if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.45);
+      // if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.80);
+      // if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.00);
+      // // if (i == 3) xsec_mc_histos.at(i).SetMinimum(-0.3);
+      // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
+      // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.35);
+      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.70);
+      if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.00);
+      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.25);
+      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.40);
+      if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+      // The outer uncertainty bar
+      xsec_data_unc_histos.at(i).SetMarkerStyle(20);
+      xsec_data_unc_histos.at(i).SetMarkerSize(0.1);
+      xsec_data_unc_histos.at(i).Draw("E1 X0 same");
+
+      // The proper data points
+      xsec_data_histos.at(i).SetMarkerStyle(20);
+      xsec_data_histos.at(i).SetMarkerSize(0.5);
       xsec_data_histos.at(i).Draw("E1 X0 same");
+
       if (i == 0) {
         TLegend *l;
         l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
@@ -792,55 +1025,217 @@ namespace Base {
     }
     // PlottingTools::DrawPreliminaryXSec();
 
-    // c_test->cd(1);
-    // // DrawMC(c_test, 1, xsec_mc_histos.at(0));
-    // // xsec_mc_histos.at(0).Draw("histo");
-    // xsec_mc_histos.at(0).SetLineColor(kGreen+2);
-    // xsec_mc_histos.at(0).SetFillColor(29);
-    // xsec_mc_histos.at(0).Draw("E2");
-    // TH1D* h_main = (TH1D*) xsec_mc_histos.at(0).Clone("h_main");
-    // h_main->SetLineColor(kGreen+2);
-    // h_main->SetFillColor(0); // fully transparent
-    // h_main->Draw("histo same");
-    // xsec_data_histos.at(0).Draw("E1 X0 same");
 
-    // c_test->cd(2);
-    // xsec_mc_histos.at(1).Draw("histo");
-    // xsec_data_histos.at(1).Draw("E1 X0 same");
-    
-    // c_test->cd(3);
-    // xsec_mc_histos.at(2).Draw("histo");
-    // xsec_data_histos.at(2).Draw("E1 X0 same");
-
-    // c_test->cd(4);
-    // xsec_mc_histos.at(3).Draw("histo");
-    // xsec_data_histos.at(3).Draw("E1 X0 same");
-
-    // c_test->cd(5);
-    // xsec_mc_histos.at(4).Draw("histo");
-    // xsec_data_histos.at(4).Draw("E1 X0 same");
-
-    // c_test->cd(6);
-    // xsec_mc_histos.at(5).Draw("histo");
-    // xsec_data_histos.at(5).Draw("E1 X0 same");
-    
-
-
-    // TCanvas * c_test = new TCanvas();
-    // // TH1D * test = h_data->ProjectionY("fuck", 1, 2);
-    // xsec_data_histos.at(0).Draw("histo");
-
-    name = _folder +_name + "_test";
+    name = _folder +_name + "_xsec_anglesplit";
     c_test->SaveAs(name + ".pdf");
     c_test->SaveAs(name + ".C","C");
 
 
 
 
+
+
+
+    //
+    // Now plot the covariance matrices
+    //
+
+    if (_covariance_matrix_is_set) {
+
+      gStyle->SetPalette(kDeepSea);
+      gStyle->SetPaintTextFormat("4.2f");
+
+      const Int_t NCont = 100;
+      const Int_t NRGBs = 5;
+      Double_t mainColour[NRGBs]   = { 1.00, 1.00, 1.00, 1.00, 1.00 };
+      Double_t otherColour[NRGBs]   = { 0.99,0.80, 0.60, 0.40, 0.20 };
+      //Double_t otherOtherColour[NRGBs]   = { 0.9,0.80, 0.80, 0.80, 0.80 };
+      Double_t stops[NRGBs] = { 0.00, 0.05, 0.1, 0.4, 1.00 };
+
+      TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
+      gStyle->SetNumberContours(NCont);
+
+
+      TH2F *h = new TH2F("h", "", _covariance_matrix.GetNbinsX(), 0, _covariance_matrix.GetNbinsX(),
+        _covariance_matrix.GetNbinsY(), 0, _covariance_matrix.GetNbinsY());
+
+      // h->SetMaximum(1);
+
+      int i_label_number = 0;
+      int j_label_number = 0;
+      for (int i = 0; i <  _covariance_matrix.GetNbinsX()+1; i++) {
+        std::ostringstream oss;
+        oss << i_label_number << "," << j_label_number;
+        if (j_label_number % h_data->GetNbinsY() == 0) {
+          i_label_number ++;
+          j_label_number = 0;
+        }
+        j_label_number++;
+        std::string label = oss.str();
+        if (i == 0) continue;
+        h->GetXaxis()->SetBinLabel(i,label.c_str());
+        h->GetYaxis()->SetBinLabel(i,label.c_str());
+      }
+
+      h->GetXaxis()->SetLabelOffset(0.004);
+      h->GetXaxis()->SetLabelSize(0.03);
+      h->GetYaxis()->SetLabelOffset(0.004);
+      h->GetYaxis()->SetLabelSize(0.03);
+      h->GetXaxis()->SetTitle("Bin i,j");
+      h->GetYaxis()->SetTitle("Bin m,n");
+      h->GetXaxis()->CenterTitle();
+      h->GetYaxis()->CenterTitle();
+
+      //
+      // Create lines to divide primary bins
+      //
+
+      std::vector<TLine*> lines;
+
+      for (int i = 1; i < h_data->GetNbinsX(); i++) {
+        TLine *line = new TLine(h_data->GetNbinsY()  * i, 0, h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX());
+        line->SetLineColor(kGreen+2);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+      }
+
+      for (int i = 1; i < h_data->GetNbinsX(); i++) {
+        TLine *line = new TLine(0, h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX(), h_data->GetNbinsY() * i);
+        line->SetLineColor(kGreen+2);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+      }
+
+      //
+      // Create TLatex lables
+      //
+
+      TLatex* tl1 = new TLatex(0.10,0.97, "i, m = cos(#theta_{#mu}) bins");
+      tl1->SetTextColor(kBlack);
+      tl1->SetTextFont(42);
+      tl1->SetNDC();
+      tl1->SetTextSize(1/30.);
+      tl1->SetTextAlign(12);
+
+      TLatex* tl2 = new TLatex(0.10,0.93, "j, n = p_{#mu} bins");
+      tl2->SetTextColor(kBlack);
+      tl2->SetTextFont(42);
+      tl2->SetNDC();
+      tl2->SetTextSize(1/30.);
+      tl2->SetTextAlign(12);
+
+
+
+      // 
+      // Draw the proper matrices
+      //
+
+      float text_size = 0.9;
+
+      TCanvas * cov_c = new TCanvas();
+      cov_c->SetRightMargin(0.13);
+      cov_c->SetFixedAspectRatio();
+      _cov_matrix_total->SetMarkerColor(kBlack);
+      _cov_matrix_total->SetMarkerSize(text_size);
+      _cov_matrix_total->GetXaxis()->CenterTitle();
+      _cov_matrix_total->GetYaxis()->CenterTitle();
+      _cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _cov_matrix_total->GetYaxis()->SetTickLength(0);
+      h->Draw();
+      _cov_matrix_total->Draw("colz text same");
+      // _cov_matrix_total->Draw("colz same");
+
+      for (auto l : lines)
+        l->Draw();
+
+      tl1->Draw();
+      tl2->Draw();
+
+      PlottingTools::DrawSimulationXSec();
+      name = _folder +_name + "_tot_covariance";
+      cov_c->SaveAs(name + ".pdf");
+      cov_c->SaveAs(name + ".C","C");
+
+
+      TCanvas * cov_frac_c = new TCanvas();
+      cov_frac_c->SetRightMargin(0.13);
+      cov_frac_c->SetFixedAspectRatio();
+      _frac_cov_matrix_total->SetMarkerColor(kBlack);
+      _frac_cov_matrix_total->SetMarkerSize(text_size);
+      _frac_cov_matrix_total->GetXaxis()->CenterTitle();
+      _frac_cov_matrix_total->GetYaxis()->CenterTitle();
+      _frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _frac_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
+      h->Draw();
+      _frac_cov_matrix_total->Draw("colz text same");
+      // _frac_cov_matrix_total->Draw("colz same");
+
+      for (auto l : lines)
+        l->Draw();
+
+      tl1->Draw();
+      tl2->Draw();
+
+      PlottingTools::DrawSimulationXSec();
+      name = _folder +_name + "_tot_fractional_covariance";
+      cov_frac_c->SaveAs(name + ".pdf");
+      cov_frac_c->SaveAs(name + ".C","C");
+
+      TCanvas * corr_c = new TCanvas();
+      corr_c->SetRightMargin(0.13);
+      corr_c->SetFixedAspectRatio();
+      _corr_matrix_total->SetMarkerColor(kBlack);
+      _corr_matrix_total->SetMarkerSize(text_size);
+      _corr_matrix_total->GetXaxis()->CenterTitle();
+      _corr_matrix_total->GetYaxis()->CenterTitle();
+      _corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _corr_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _corr_matrix_total->GetXaxis()->SetTickLength(0);
+      _corr_matrix_total->GetYaxis()->SetTickLength(0);
+      h->Draw();
+      _corr_matrix_total->Draw("colz text same");
+      // _corr_matrix_total->Draw("colz same");
+
+      for (auto l : lines)
+        l->Draw();
+
+      tl1->Draw();
+      tl2->Draw();
+
+      PlottingTools::DrawSimulationXSec();
+      name = _folder +_name + "_tot_correlation";
+      corr_c->SaveAs(name + ".pdf");
+      corr_c->SaveAs(name + ".C","C");
+
+      gStyle->SetPalette(kRainBow);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    _h_data = h_data;
+    _h_mc = h_mc;
+
     return h_data;
 
-
   }
+
 
   void CrossSectionCalculator2D::DrawMC(TCanvas * c, int c_number, TH1D h)
   {
@@ -866,11 +1261,6 @@ namespace Base {
     h_main->SetLineColor(kGreen+2);
     h_main->SetFillColor(0); // fully transparent
     h_main->Draw("histo same");
-  }
-
-  void CrossSectionCalculator2D::DrawData(TH1D h)
-  {
-
   }
 
 
@@ -917,50 +1307,150 @@ namespace Base {
 
   }
 
+
+
   void CrossSectionCalculator2D::Draw() 
   {
 
-    TLegend* leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");;
+    TString name = _folder +_name + "_selected_events";
+    DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, false);
 
-    TCanvas* canvas = new TCanvas();
+    name = _folder +_name + "_selected_events_scalebinwidth";
+    DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, true);
 
-    std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
-    THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
-
-    TH2D* data = ProcessDataHisto(_h_bnbon);
-
-    hs_mc->Draw("hist");
-    _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
-    data->Draw("same");
-
-    leg->AddEntry(data, "Data (Beam-on)", "lep");
-    leg->Draw();
-
-
-    TLatex* l = this->GetPOTLatex(_pot);
-    l->Draw();
+  }
 
 
 
-    /*
-    THStack *hs_mc = new THStack("hs",";Test [cm]; Selected Events");
-    //hmap_trklen_mc["beam-off"] = h_trklen_total_extbnb;
-    leg = this->DrawTHStack(hs_mc, 1, true, _hmap_bnbcosmic);
-    std::cout << "\t             MC BNBCOSMIC: " << _hmap_bnbcosmic["total"]->Integral() << std::endl;
-    //DrawDataHisto(h_trklen_total_bnbon);
-    //leg->AddEntry(hmap_trklen_mc["beam-off"],"Data (Beam-off)","f");
-    //leg->AddEntry(h_trklen_total_bnbon,"Data (Beam-on)","lep");
-    this->DrawDataHisto(_h_data_sub);
-    leg->AddEntry(_h_data_sub,"Data (Beam-on - Beam-off)","lep");
-    //DrawPOT(_pot);
-*/
+  void CrossSectionCalculator2D::DrawInProjections(TH2D* h_data, std::map<std::string,TH2D*> mc, TString save_path, bool scale_bin_width) 
+  {
 
-    TString name = _folder +_name + "_test";
-    canvas->SaveAs(name + ".pdf");
-    canvas->SaveAs(name + ".C","C");
+    std::vector<TH1D> xsec_data_histos;
+    std::map<std::string,std::vector<TH1D*>> xsec_mc_histos;
+    std::vector<THStack*> xsec_mc_hs;
+          
+
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
+                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+                                                  "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+                                                  "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+                                                  "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+                                                  "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+                                                  "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+                                                  "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
 
-  } 
+    int horizontal_division = 2;
+    int vertical_division = floor(h_data->GetNbinsX() / 2.);
+
+    if (h_data->GetNbinsX() / 2. != floor(h_data->GetNbinsX()) / 2.) vertical_division++;
+
+    LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
+    LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
+
+    // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
+    TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
+    c_test->SetBottomMargin(0.15);
+    // gStyle->SetOptStat(0);
+    c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
+
+
+    xsec_mc_hs.resize(h_data->GetNbinsX());
+    for (auto iter : mc) {
+      xsec_mc_histos[iter.first].resize(h_data->GetNbinsX());
+    }
+
+
+    for (int i = 0; i < h_data->GetNbinsX(); i++) {
+      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+1));
+      if (scale_bin_width) xsec_data_histos.at(i).Scale(1, "width");
+      for (auto iter : mc) {
+        xsec_mc_histos[iter.first].at(i) = iter.second->ProjectionY(("fuck" + iter.first + costhetamu_ranges.at(i)).c_str(), i+1, i+1);
+        if (scale_bin_width) xsec_mc_histos[iter.first].at(i)->Scale(1, "width");
+      }
+      xsec_mc_hs.at(i) = new THStack("bs",";BS;BS");
+    }
+
+
+
+    for (size_t i = 0; i < xsec_data_histos.size(); i++) {
+
+      c_test->cd(i+1);
+
+      gPad->SetBottomMargin(0.15);
+      gPad->SetLeftMargin(0.15);
+      gPad->SetTopMargin(0.1128947);
+
+
+      // xsec_mc_histos["beam-off"].at(i)->GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
+      // xsec_mc_histos["beam-off"].at(i)->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
+      // xsec_mc_histos["beam-off"].at(i)->GetXaxis()->CenterTitle();
+      // xsec_mc_histos["beam-off"].at(i)->GetYaxis()->CenterTitle();
+      // xsec_mc_histos["beam-off"].at(i)->GetXaxis()->SetTitleOffset(0.92);
+      // xsec_mc_histos["beam-off"].at(i)->GetYaxis()->SetTitleOffset(1.11);
+
+      xsec_mc_histos["beam-off"].at(i)->SetLineColor(kBlue+2);
+      xsec_mc_histos["beam-off"].at(i)->SetFillColor(kBlue+2);
+      xsec_mc_histos["beam-off"].at(i)->SetFillStyle(3004);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["beam-off"].at(i));
+
+      xsec_mc_histos["dirt"].at(i)->SetLineColor(kOrange+3);
+      xsec_mc_histos["dirt"].at(i)->SetFillColor(kOrange+3);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["dirt"].at(i));
+
+
+      xsec_mc_histos["cosmic"].at(i)->SetLineColor(kBlue-3);
+      xsec_mc_histos["cosmic"].at(i)->SetFillColor(kBlue-3);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["cosmic"].at(i));
+
+      xsec_mc_histos["outfv"].at(i)->SetLineColor(kGreen+2);
+      xsec_mc_histos["outfv"].at(i)->SetFillColor(kGreen+2);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["outfv"].at(i));
+      xsec_mc_histos["nc"].at(i)->SetLineColor(kGray);
+      xsec_mc_histos["nc"].at(i)->SetFillColor(kGray);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["nc"].at(i));
+      xsec_mc_histos["anumu"].at(i)->SetLineColor(kOrange-3);
+      xsec_mc_histos["anumu"].at(i)->SetFillColor(kOrange-3);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["anumu"].at(i));
+      xsec_mc_histos["nue"].at(i)->SetLineColor(kMagenta+1);
+      xsec_mc_histos["nue"].at(i)->SetFillColor(kMagenta+1);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["nue"].at(i));
+      xsec_mc_histos["signal"].at(i)->SetLineColor(kRed-4);
+      xsec_mc_histos["signal"].at(i)->SetFillColor(kRed-4);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["signal"].at(i));
+
+      if (scale_bin_width) xsec_mc_hs.at(i)->SetTitle((costhetamu_ranges.at(i) + ";p_{#mu}^{reco};Selected Events / GeV").c_str());
+      else xsec_mc_hs.at(i)->SetTitle((costhetamu_ranges.at(i) + ";p_{#mu}^{reco};Selected Events").c_str());
+      xsec_mc_hs.at(i)->Draw("hist");
+
+      xsec_mc_hs.at(i)->SetMinimum(0.);
+
+
+
+      // The proper data points
+      xsec_data_histos.at(i).SetMarkerStyle(20);
+      xsec_data_histos.at(i).SetMarkerSize(0.5);
+      xsec_data_histos.at(i).Draw("E1 X0 same");
+
+      gPad->Modified(); gPad->Update();
+
+
+      // if (i == 0) {
+      //   PlottingTools::DrawPreliminaryXSec();
+
+      //   TLatex* l = this->GetPOTLatex(_pot);
+      //   l->Draw();
+      // }
+
+    }
+    
+    c_test->SaveAs(save_path + ".pdf");
+    c_test->SaveAs(save_path + ".C","C");
+
+  }
+
 
 
 

@@ -69,6 +69,9 @@ namespace Base {
     ~PlottingTools(){}
 
     ///
+    static void DrawProgressBar(double progress, double barWidth);
+
+    ///
     static void DrawPreliminary();
 
     ///
@@ -91,6 +94,9 @@ namespace Base {
 
     ///
     static void DrawPOTRatio(double pot);
+
+    ///
+    static void DrawProgressBar(double progress, double barWidth, std::string message);
 
     ///
     static TLegend* DrawTHStack(THStack *hs_trklen,

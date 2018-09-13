@@ -50,9 +50,11 @@
 #include "Math/SMatrix.h"
 #include "TMatrix.h"
 #include "TGraphAsymmErrors.h"
+#include "TLine.h"
 
 #include "Types.h"
 #include "PlottingTools.h"
+#include "LoggerFeature.h"
 
 namespace Base {
 
@@ -61,7 +63,7 @@ namespace Base {
      User defined class CrossSectionCalculator2D ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionCalculator2D{
+  class CrossSectionCalculator2D : public LoggerFeature {
     
   public:
     
@@ -72,7 +74,7 @@ namespace Base {
     ~CrossSectionCalculator2D(){}
 
     /// Configure function parameters
-    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
+    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt = 0, double intimecosmic = 0);
 
     /// Sets the POT number
     void SetPOT(double pot);
@@ -84,7 +86,7 @@ namespace Base {
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms
-    void SetHistograms(std::map<std::string,TH2D*> bnbcosmic, TH2D* bnbon, TH2D* extbnb, TH2D* intimecosmic = 0);
+    void SetHistograms(std::map<std::string,TH2D*> bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt = std::map<std::string, TH2D*>(), TH2D* intimecosmic = 0);
 
     /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
     void SetTruthHistograms(TH2D*, TH2D*/*, TH2D**/);
@@ -104,6 +106,9 @@ namespace Base {
     ///
     void Draw(std::vector<std::string> histos_to_subtract);
 
+    ///   
+    void DrawInProjections(TH2D* h_data, std::map<std::string,TH2D*> mc, TString save_path, bool scale_bin_width = false); 
+
     /// 
     double EstimateFlux(std::string flux_file_name = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_name = "numu/numu_CV_AV_TPC");
 
@@ -113,11 +118,17 @@ namespace Base {
     ///
     TH2D* ProcessDataHisto(TH2D* histo);
 
-    ///
-    TH2D* ExtractCrossSection(std::string, std::string, std::string);
+    /// Extracts the cross section, provide a vector of background names to be subtracted in the first argument
+    TH2D* ExtractCrossSection(std::vector<std::string> bkg_names, std::string, std::string, std::string);
+
+    /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
+    TH2D* GetMCCrossSection() {return _h_mc;}
 
     ///
     void SetSmearingMatrix(std::vector<std::vector<std::vector<std::vector<double>>>>);
+
+    ///
+    void SetCovarianceMatrix(TH2D);
 
     ///
     void Smear();
@@ -134,19 +145,25 @@ namespace Base {
     /// Draw a TH1 on the current pad with MC style
     void DrawMC(TCanvas * c, int c_number, TH1D h);
 
-    /// Draw a TH1 on the current pad with Data style
-    void DrawData(TH1D h);
+    ///
+    void SetVerbosity(bool verbosity) {_verbose = verbosity;}
+
+    ///
+    void AddExtraDiagonalUncertainty(double v) {_extra_fractional_uncertainty = v;};
 
   private:
 
-    std::string _namebase = "CrossSectionCalculator2D] ";
+    std::string _namebase = "[CrossSectionCalculator2D] ";
     
     bool _configured = false;
 
     double _scale_factor_mc_bnbcosmic;
     double _scale_factor_bnbon;
     double _scale_factor_extbnb;
+    double _scale_factor_mc_dirt;
     double _scale_factor_mc_intimecosmic;
+
+    bool _dirt_is_set = false;
 
     double _pot;
     double _flux;
@@ -160,6 +177,7 @@ namespace Base {
     std::string _folder;
 
     std::map<std::string,TH2D*> _hmap_bnbcosmic;
+    std::map<std::string,TH2D*> _hmap_dirt;
     TH2D* _h_bnbon;
     TH2D* _h_extbnb;
     TH2D* _h_intimecosmic;
@@ -174,13 +192,24 @@ namespace Base {
 
     TEfficiency* _eff;
 
+    TH2D* _h_mc = NULL; ///< The to-be extracted MC cross section
+    TH2D* _h_data = NULL; ///< The to-be extracted data cross section
+
     std::vector<std::vector<std::vector<std::vector<double>>>> _S;
 
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
-    bool _verbose = false;
+    bool _verbose = true;
 
-    
+    double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
+
+    TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
+    bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
+
+    TH2D *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    TH2D *_cov_matrix_total = NULL; ///< Total  covariance matrix
+    TH2D *_corr_matrix_total = NULL; ///< Total correlation matrix
+
   };
 }
 

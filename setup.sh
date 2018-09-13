@@ -2,11 +2,15 @@
 
 # clean up previously set env
 if [[ -z $FORCE_MYSW_DIR ]]; then
-    export MYSW_DIR=`pwd`
+    where="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    export MYSW_DIR=${where}
+    #export MYSW_DIR=`pwd`
 else
     export MYSW_DIR=$FORCE_MYSW_DIR
 fi
 export MYSW_BINDIR=$MYSW_DIR/bin
+
+export MYSW_OUTDIR=$MYSW_DIR/Output/
 
 # set the build dir
 unset MYSW_BUILDDIR
@@ -18,6 +22,8 @@ export MYSW_INCDIR=$MYSW_BUILDDIR/include
 mkdir -p $MYSW_BUILDDIR;
 mkdir -p $MYSW_LIBDIR;
 mkdir -p $MYSW_BINDIR;
+
+mkdir -p $MYSW_OUTDIR
 
 # Abort if ROOT not installed. Let's check rootcint for this.
 if [ `command -v rootcling` ]; then
@@ -46,7 +52,7 @@ if [[ $missing ]]; then
 fi
 
 echo
-printf "\033[93mUBAna\033[00m FYI shell env. may useful for external packages:\n"
+printf "\033[93mUBAna\033[00m FYI shell env. May be useful for external packages:\n"
 printf "    \033[95mMYSW_INCDIR\033[00m   = $MYSW_INCDIR\n"
 printf "    \033[95mMYSW_LIBDIR\033[00m   = $MYSW_LIBDIR\n"
 printf "    \033[95mMYSW_BUILDDIR\033[00m = $MYSW_BUILDDIR\n"
@@ -62,11 +68,16 @@ if [ -z `command -v $MYSW_CXX` ]; then
     if [ -z `command -v $MYSW_CXX` ]; then
         echo
         echo Looks like you do not have neither clang or g++!
-        echo You need one of those to compile LArCaffe... Abort config...
+        echo You need one of those to compile UBAna... Abort config...
         echo
         return 1;
     fi
 fi
+
+echo
+echo 
+printf "Output files will be saved in \033[95mMYSW_OUTDIR\033[00m = $MYSW_OUTDIR"
+echo
 
 echo
 echo "Finish configuration. To build, type:"

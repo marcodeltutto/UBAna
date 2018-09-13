@@ -80,10 +80,13 @@ namespace Base {
     void Run();
 
     /// Configure function parameters
-    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
+    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt = 0, double intimecosmic = 0);
 
     /// Sets the POT number
     void SetPOT(double pot);
+
+    /// Set the names of the backreounds to subtract
+    void SetBkgToSubtract(std::vector<std::string> bkg_names);
 
     /// Set the plot name for saving and the label for the axis
     void SetNameAndLabel(std::string name, std::string label);
@@ -92,10 +95,10 @@ namespace Base {
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms
-    void SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, TH2D* intimecosmic = 0);
+    void SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt = std::map<std::string,TH2D*>(), TH2D* intimecosmic = 0);
 
-    /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
-    void SetTruthHistograms(BootstrapTH2D, BootstrapTH2D, TTree*);
+    /// Sets num and dem histograms for the efficiency and the reco per true 2D histos
+    void SetTruthHistograms(BootstrapTH2D, BootstrapTH2D, std::map<std::string,std::vector<std::vector<TH2D*>>>);
 
     /// Sets num and dem histograms for the efficiency
     void SetTruthHistograms(BootstrapTH2D, BootstrapTH2D);
@@ -116,7 +119,10 @@ namespace Base {
     void Reset();
  
     ///
-    void SetSavePrefix(std::string s, std::string folder = "covariance_plots");
+    void SetSavePrefix(std::string s, std::string folder = "output_covariance_plots");
+
+    ///
+    void DrawProgressBar(double progress, double barWidth);
 
     ///
     void SetUpperLabel(std::string s) {_upper_label = s;}
@@ -133,6 +139,10 @@ namespace Base {
     ///
     void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
 
+    ///
+    void DrawXSec(std::map<std::string, TH2D*> xsec_mumom_per_universe);
+  
+
   private:
 
     std::string _prefix = "[CrossSectionBootstrapCalculator2D] ";
@@ -142,6 +152,7 @@ namespace Base {
     double _scale_factor_mc_bnbcosmic;
     double _scale_factor_bnbon;
     double _scale_factor_extbnb;
+    double _scale_factor_mc_dirt;
     double _scale_factor_mc_intimecosmic;
 
     double _pot;
@@ -157,6 +168,7 @@ namespace Base {
 
     //std::map<std::string,BootstrapTH2D> _hmap_bnbcosmic;
     std::map<std::string,std::map<std::string,TH2D*>> _hmap_bnbcosmic;
+    std::map<std::string,TH2D*> _hmap_dirt;
     TH2D* _h_bnbon = nullptr;
     TH2D* _h_extbnb = nullptr;
     TH2D* _h_intimecosmic = nullptr;
@@ -164,7 +176,8 @@ namespace Base {
     BootstrapTH2D _h_eff_mumom_num; ///< The efficiency numerator
     BootstrapTH2D _h_eff_mumom_den; ///< The efficiency denominator
 
-    TTree * _t_true_reco; ///< The TTree containing the mapping true to reco
+    TTree * _t_true_reco; ///< The TTree containing the mapping true to reco (no longer used)
+    std::map<std::string,std::vector<std::vector<TH2D*>>> _bs_reco_per_true; ///< The Bootstrap containing the reco per true histos for every universe
 
     TTree* true_reco_tree = nullptr; ///< The tree that containes the true to reco mapping
 
@@ -180,6 +193,8 @@ namespace Base {
 
     int _n, _m;
     bool _do_smear = true;
+
+    std::vector<std::string> _bkg_names; ///< List of bkg names used to subtract backgrounds for the cross section
 
     std::string _save_prefix = "PREFIX_"; ///< Prefix name used to save output plots
     std::string _upper_label = "NOT SET"; ///< The label that will happer in the upper plot of the reweighted cross sections

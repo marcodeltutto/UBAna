@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <map>
 #include <time.h>
+#include <algorithm>
 
 #include <TH2D.h>
 
@@ -59,29 +60,32 @@ namespace Base {
     ///
     void SetWeightNames(std::vector<std::string>);
 
-    ///
+    /// Emplaces all histograms on the fly
     void SetAllHistograms(std::map<std::string,TH2D*>);
 
-    ///
+    /// Returns the number of bins along x
     int GetNbinsX();
 
-    ///
+    /// Returns the number of bins along y
     int GetNbinsY();
 
-    ///
+    /// Returns the number of universes
     int GetNUniverses();
 
-    ///
+    /// Returns the number of weigths (should be the same as the number of universes)
     size_t GetNWeights();
 
-    ///
+    /// Returns a vector with the names of the universes
     std::vector<std::string> GetUniverseNames();
 
-    ///
+    /// Sets the iterator to the first universe, use this at the beginning of a loop over universes
     void ResetIterator();
 
-    ///
-    bool NextUniverse(std::string & uni_name, TH2D & uni_histo);
+    /// Returns the hitogram for the next universe
+    const TH2D & NextUniverse();
+
+    /// Returns the hitogram for the current universe (has to be called after a NextUniverse())
+    const TH2D & SameUniverse();
 
     ///
     std::map<std::string, std::vector<TH2D>> UnpackPMHisto();
@@ -89,13 +93,13 @@ namespace Base {
     /// Fill the value bin with a general weight and the vector of weights
     void Fill(double, double, double, std::vector<double>);
 
-    ///
-    TH2D GetNominal();
+    /// Returns the nominal histogram
+    const TH2D& GetNominal();
 
-    ///
+    /// Returns the histogram for a particular universe
     void GetUniverseHisto(std::string, TH2D &);
 
-    ///
+    /// Returns the histogram for a particular universe, w/o checking if that universe exists (may crash)
     void GetUniverseHistoFast(std::string, TH2D &);
 
   protected:
