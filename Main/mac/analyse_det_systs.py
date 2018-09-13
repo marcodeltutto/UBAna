@@ -48,10 +48,10 @@ analyser.SetExtraFluxUncertainty(0.)
 
 #det_syst_list = ["nospacecharge", "dicharge", "lightyeild", "nodeltaray", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "birksrecomb", "nohadronic"]
 # det_syst_list = ["cv", "nospacecharge", "dicharge", "lightyeild", "stretchRes", "altDeadChannels", "deadSaturatedChannels", "noPEnoise", "noShortedResp", "whitenoise", "enhancedexttpcvis", "lifetime10ms", "dl0", "dt0", "birksrecomb"] #, "nohadronic"]
-det_syst_list = ["CV", "dataSCE", "withDIC", "stretchResp", "squeezeResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp"]
+det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp"]
 
 
-# det_syst_list = ["CV"]
+# det_syst_list = ["withDIC"]
 # det_syst_list = ["cherenkov"]
 # det_syst_list = ["cherenkov2"]
 # det_syst_list = ["cherenkov3"]

@@ -51,7 +51,7 @@ analyser.SetBreakdownPlots(True)
 extra_unc = math.sqrt(0.02*0.02 + 0.04*0.04) # POT counting, beam window
 # analyser.SetExtraUncertainty(extra_unc)
 
-analyser.ImportDetectorSystematics(True)
+analyser.ImportDetectorSystematics(False)
 
 analyser.ImportCosmicSystematics(False)
 

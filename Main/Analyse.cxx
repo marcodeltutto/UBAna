@@ -1516,10 +1516,8 @@ std::cout << ">> here11" << std::endl;
     const double *bins_double_mumom = hmap_trktheta_trkmom_mc["total"]->GetYaxis()->GetXbins()->GetArray();
 
     migrationmatrix4d.SetBins(bins_double_mucostheta, n_bins_double_mucostheta, bins_double_mumom, n_bins_double_mumom);
-    std::cout << "Here 5" << std::endl;
     
     Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
-    std::cout << "Here 6" << std::endl;
     
     migrationmatrix4d.SetOutputFileName("latex_test.tex");
     migrationmatrix4d.PrintSmearingMatrixLatex();
@@ -1533,14 +1531,13 @@ std::cout << ">> here11" << std::endl;
     xseccalc2d.SetFluxCorrectionWeight(_flux_correction_weight);
     std::cout << "FLUX: " << xseccalc2d.EstimateFlux() << std::endl;
 
-    std::cout << "Here 7" << std::endl;
-
     xseccalc2d.SetHistograms(hmap_trktheta_trkmom_mc, h_trktheta_trkmom_total_bnbon, h_trktheta_trkmom_total_extbnb, hmap_trktheta_trkmom_mc_dirt);
     xseccalc2d.SetTruthHistograms(h_eff_muangle_mumom_num, h_eff_muangle_mumom_den);
     xseccalc2d.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
     xseccalc2d.ProcessPlots();
     xseccalc2d.SetSmearingMatrix(S_4d);
     xseccalc2d.Smear();
+    xseccalc2d.Draw();
 
     if (covariance_matrix_muangle_mumom.GetNbinsX() > 1) {
       xseccalc2d.SetCovarianceMatrix(covariance_matrix_muangle_mumom);

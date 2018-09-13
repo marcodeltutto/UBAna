@@ -130,19 +130,6 @@ namespace Base {
   {
     _h_eff_mumom_num = num;
     _h_eff_mumom_den = den;
-
-    //_h_true_reco_mom = h;
-
-    //std::cout << "_h_true_reco_mom->GetBinContent(1, 1) = " << _h_true_reco_mom->GetBinContent(1, 1) << std::endl;
-
-/*
-    TCanvas * c_eff = new TCanvas();
-    _eff->Draw();
-
-    TString name = _folder + "_eff";
-    c_eff->SaveAs(name + ".pdf");
-    c_eff->SaveAs(name + ".C","C");
-*/
   }
 
   void CrossSectionCalculator2D::SetTruthXSec(TH1D* xsec) 
@@ -322,6 +309,8 @@ namespace Base {
     Mat2D matrix_angle_mom_num_smear;
     matrix_angle_mom_num_smear.resize(_h_eff_mumom_num->GetNbinsX(), std::vector<double>(_h_eff_mumom_num->GetNbinsY(), 0));
 
+
+
     // Reco bins i, j
     for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
       for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {  
@@ -338,15 +327,20 @@ namespace Base {
       }
     }
 
+
+    //
     // Make a plottable histo of the smeared distributions
+    //
     TH2D * h_eff_den_smear = (TH2D*) _h_eff_mumom_den->Clone("h_eff_den_smear");
     TH2D * h_eff_num_smear = (TH2D*) _h_eff_mumom_num->Clone("h_eff_num_smear");
     for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
       for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {
-        h_eff_den_smear->SetBinContent(i, j, matrix_angle_mom_den_smear[i][j]);
-        h_eff_num_smear->SetBinContent(i, j, matrix_angle_mom_num_smear[i][j]);
+        h_eff_den_smear->SetBinContent(i+1, j+1, matrix_angle_mom_den_smear[i][j]);
+        h_eff_num_smear->SetBinContent(i+1, j+1, matrix_angle_mom_num_smear[i][j]);
       } 
     }
+
+
 
     TCanvas * c_smear_den = new TCanvas;
     h_eff_den_smear->SetMarkerColor(kWhite);
@@ -370,6 +364,7 @@ namespace Base {
     name = _folder +_name + "selected_smear";
     c_smear_num->SaveAs(name + ".pdf");
 
+
     //
     // Efficiency (true)
     //
@@ -377,20 +372,19 @@ namespace Base {
     TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
 
     TCanvas * c_eff_true = new TCanvas;
-    //teff_true->SetTitle("true;True Muon Momentum [GeV];Efficiency");
     teff_true->SetMarkerColor(kWhite);
     teff_true->SetMarkerSize(1.6);
     teff_true->SetTitle("Efficiency;cos(#theta_{#mu}^{true});p_{#mu}^{true}");
-    //teff_true->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");
-    //teff_true->GetYaxis()->SetTitle("p_{#mu}^{truth}");
-    //teff_true->SetLineColor(kGreen+3);
-    //teff_true->SetMarkerColor(kGreen+3);
-    //teff_true->SetMarkerStyle(20);
-    //teff_true->SetMarkerSize(0.5);
     teff_true->Draw("colz text");
+    gPad->Update(); 
+    auto graph_t = teff_true->GetPaintedHistogram(); 
+    graph_t->SetMinimum(0);
+    graph_t->SetMaximum(1); 
+    gPad->Update();
 
     name = _folder +_name + "efficiency_true";
     c_eff_true->SaveAs(name + ".pdf");
+    c_eff_true->SaveAs(name + ".C");
 
 
     //
@@ -400,16 +394,9 @@ namespace Base {
     TEfficiency* teff_reco = new TEfficiency(*h_eff_num_smear,*h_eff_den_smear);
 
     TCanvas * c_eff_reco = new TCanvas;
-    //teff_reco->SetTitle("reco;Reco Muon Momentum [GeV];Efficiency");
     teff_reco->SetMarkerColor(kWhite);
     teff_reco->SetMarkerSize(1.6);
     teff_reco->SetTitle("Efficiency;cos(#theta_{#mu}^{reco});p_{#mu}^{reco}");
-    //teff_reco->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
-    //teff_reco->GetYaxis()->SetTitle("p_{#mu}^{reco}");
-    //teff_reco->SetLineColor(kGreen+3);
-    //teff_reco->SetMarkerColor(kGreen+3);
-    //teff_reco->SetMarkerStyle(20);
-    //teff_reco->SetMarkerSize(0.5);
     teff_reco->Draw("colz text");
     gPad->Update(); 
     auto graph = teff_reco->GetPaintedHistogram(); 
@@ -419,9 +406,11 @@ namespace Base {
 
     name = _folder +_name + "_efficiency_reco";
     c_eff_reco->SaveAs(name + ".pdf");
+    c_eff_reco->SaveAs(name + ".C");
+
+    
 
     _eff = teff_reco;
-
 
   }
 
@@ -498,7 +487,6 @@ namespace Base {
     h_data->Sumw2();
 
     LOG_INFO() << "Subtracting backgrouds: ";
-
     for (auto name : bkg_names) 
     {
       std::cout << name << ", ";
@@ -512,10 +500,6 @@ namespace Base {
     //
     // Create efficiency histogram
     //
-
-    //TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
-    //_eff = teff_true;
-
     TH2D * h_eff = (TH2D*)h_mc->Clone("h_eff");
     h_eff->Sumw2();
     for (int i = 1; i < h_mc->GetNbinsX() + 1; i++) {
@@ -532,12 +516,15 @@ namespace Base {
       }
     }
 
+
+
     //
     // Divide by efficiency
     //
 
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
+
 
 
 
@@ -550,6 +537,7 @@ namespace Base {
 
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
+
 
 
     for (int bin_i = 1; bin_i < h_data->GetNbinsX()+1; bin_i++) {
@@ -1319,50 +1307,150 @@ namespace Base {
 
   }
 
+
+
   void CrossSectionCalculator2D::Draw() 
   {
 
-    TLegend* leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");;
+    TString name = _folder +_name + "_selected_events";
+    DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, false);
 
-    TCanvas* canvas = new TCanvas();
+    name = _folder +_name + "_selected_events_scalebinwidth";
+    DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, true);
 
-    std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
-    THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
-
-    TH2D* data = ProcessDataHisto(_h_bnbon);
-
-    hs_mc->Draw("hist");
-    _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
-    data->Draw("same");
-
-    leg->AddEntry(data, "Data (Beam-on)", "lep");
-    leg->Draw();
-
-
-    TLatex* l = this->GetPOTLatex(_pot);
-    l->Draw();
+  }
 
 
 
-    /*
-    THStack *hs_mc = new THStack("hs",";Test [cm]; Selected Events");
-    //hmap_trklen_mc["beam-off"] = h_trklen_total_extbnb;
-    leg = this->DrawTHStack(hs_mc, 1, true, _hmap_bnbcosmic);
-    std::cout << "\t             MC BNBCOSMIC: " << _hmap_bnbcosmic["total"]->Integral() << std::endl;
-    //DrawDataHisto(h_trklen_total_bnbon);
-    //leg->AddEntry(hmap_trklen_mc["beam-off"],"Data (Beam-off)","f");
-    //leg->AddEntry(h_trklen_total_bnbon,"Data (Beam-on)","lep");
-    this->DrawDataHisto(_h_data_sub);
-    leg->AddEntry(_h_data_sub,"Data (Beam-on - Beam-off)","lep");
-    //DrawPOT(_pot);
-*/
+  void CrossSectionCalculator2D::DrawInProjections(TH2D* h_data, std::map<std::string,TH2D*> mc, TString save_path, bool scale_bin_width) 
+  {
 
-    TString name = _folder +_name + "_test";
-    canvas->SaveAs(name + ".pdf");
-    canvas->SaveAs(name + ".C","C");
+    std::vector<TH1D> xsec_data_histos;
+    std::map<std::string,std::vector<TH1D*>> xsec_mc_histos;
+    std::vector<THStack*> xsec_mc_hs;
+          
+
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
+                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+                                                  "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+                                                  "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+                                                  "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+                                                  "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+                                                  "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+                                                  "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
 
-  } 
+    int horizontal_division = 2;
+    int vertical_division = floor(h_data->GetNbinsX() / 2.);
+
+    if (h_data->GetNbinsX() / 2. != floor(h_data->GetNbinsX()) / 2.) vertical_division++;
+
+    LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
+    LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
+
+    // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
+    TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
+    c_test->SetBottomMargin(0.15);
+    // gStyle->SetOptStat(0);
+    c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
+
+
+    xsec_mc_hs.resize(h_data->GetNbinsX());
+    for (auto iter : mc) {
+      xsec_mc_histos[iter.first].resize(h_data->GetNbinsX());
+    }
+
+
+    for (int i = 0; i < h_data->GetNbinsX(); i++) {
+      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+1));
+      if (scale_bin_width) xsec_data_histos.at(i).Scale(1, "width");
+      for (auto iter : mc) {
+        xsec_mc_histos[iter.first].at(i) = iter.second->ProjectionY(("fuck" + iter.first + costhetamu_ranges.at(i)).c_str(), i+1, i+1);
+        if (scale_bin_width) xsec_mc_histos[iter.first].at(i)->Scale(1, "width");
+      }
+      xsec_mc_hs.at(i) = new THStack("bs",";BS;BS");
+    }
+
+
+
+    for (size_t i = 0; i < xsec_data_histos.size(); i++) {
+
+      c_test->cd(i+1);
+
+      gPad->SetBottomMargin(0.15);
+      gPad->SetLeftMargin(0.15);
+      gPad->SetTopMargin(0.1128947);
+
+
+      // xsec_mc_histos["beam-off"].at(i)->GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
+      // xsec_mc_histos["beam-off"].at(i)->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
+      // xsec_mc_histos["beam-off"].at(i)->GetXaxis()->CenterTitle();
+      // xsec_mc_histos["beam-off"].at(i)->GetYaxis()->CenterTitle();
+      // xsec_mc_histos["beam-off"].at(i)->GetXaxis()->SetTitleOffset(0.92);
+      // xsec_mc_histos["beam-off"].at(i)->GetYaxis()->SetTitleOffset(1.11);
+
+      xsec_mc_histos["beam-off"].at(i)->SetLineColor(kBlue+2);
+      xsec_mc_histos["beam-off"].at(i)->SetFillColor(kBlue+2);
+      xsec_mc_histos["beam-off"].at(i)->SetFillStyle(3004);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["beam-off"].at(i));
+
+      xsec_mc_histos["dirt"].at(i)->SetLineColor(kOrange+3);
+      xsec_mc_histos["dirt"].at(i)->SetFillColor(kOrange+3);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["dirt"].at(i));
+
+
+      xsec_mc_histos["cosmic"].at(i)->SetLineColor(kBlue-3);
+      xsec_mc_histos["cosmic"].at(i)->SetFillColor(kBlue-3);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["cosmic"].at(i));
+
+      xsec_mc_histos["outfv"].at(i)->SetLineColor(kGreen+2);
+      xsec_mc_histos["outfv"].at(i)->SetFillColor(kGreen+2);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["outfv"].at(i));
+      xsec_mc_histos["nc"].at(i)->SetLineColor(kGray);
+      xsec_mc_histos["nc"].at(i)->SetFillColor(kGray);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["nc"].at(i));
+      xsec_mc_histos["anumu"].at(i)->SetLineColor(kOrange-3);
+      xsec_mc_histos["anumu"].at(i)->SetFillColor(kOrange-3);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["anumu"].at(i));
+      xsec_mc_histos["nue"].at(i)->SetLineColor(kMagenta+1);
+      xsec_mc_histos["nue"].at(i)->SetFillColor(kMagenta+1);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["nue"].at(i));
+      xsec_mc_histos["signal"].at(i)->SetLineColor(kRed-4);
+      xsec_mc_histos["signal"].at(i)->SetFillColor(kRed-4);
+      xsec_mc_hs.at(i)->Add(xsec_mc_histos["signal"].at(i));
+
+      if (scale_bin_width) xsec_mc_hs.at(i)->SetTitle((costhetamu_ranges.at(i) + ";p_{#mu}^{reco};Selected Events / GeV").c_str());
+      else xsec_mc_hs.at(i)->SetTitle((costhetamu_ranges.at(i) + ";p_{#mu}^{reco};Selected Events").c_str());
+      xsec_mc_hs.at(i)->Draw("hist");
+
+      xsec_mc_hs.at(i)->SetMinimum(0.);
+
+
+
+      // The proper data points
+      xsec_data_histos.at(i).SetMarkerStyle(20);
+      xsec_data_histos.at(i).SetMarkerSize(0.5);
+      xsec_data_histos.at(i).Draw("E1 X0 same");
+
+      gPad->Modified(); gPad->Update();
+
+
+      // if (i == 0) {
+      //   PlottingTools::DrawPreliminaryXSec();
+
+      //   TLatex* l = this->GetPOTLatex(_pot);
+      //   l->Draw();
+      // }
+
+    }
+    
+    c_test->SaveAs(save_path + ".pdf");
+    c_test->SaveAs(save_path + ".C","C");
+
+  }
+
 
 
 

@@ -106,6 +106,9 @@ namespace Base {
     ///
     void Draw(std::vector<std::string> histos_to_subtract);
 
+    ///   
+    void DrawInProjections(TH2D* h_data, std::map<std::string,TH2D*> mc, TString save_path, bool scale_bin_width = false); 
+
     /// 
     double EstimateFlux(std::string flux_file_name = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_name = "numu/numu_CV_AV_TPC");
 
