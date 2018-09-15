@@ -9,7 +9,7 @@ OSNAMEMODE      = $(OSNAME)
 
 include $(MYSW_DIR)/Makefile/Makefile.${OSNAME}
 
-SUBDIRS := Base Main
+SUBDIRS := Base DataTypes Main
 
 .phony: all clean
 

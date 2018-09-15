@@ -44,6 +44,8 @@
 #include <TH2D.h>
 #include <TLatex.h>
 #include <TCanvas.h>
+#include <TH2Poly.h>
+#include "ubana/DataTypes/UBTH2Poly.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
@@ -61,6 +63,8 @@
 #include "ubana/Base/LoggerFeature.h"
 
 using namespace Base;
+using namespace DataTypes;
+
 
 namespace Main {
 

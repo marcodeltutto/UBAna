@@ -777,6 +777,13 @@ std::cout << ">> here11" << std::endl;
     // hmap_trktheta_trkmom_mc["cosmic_dirt"] = h_empty;
   }
 
+  std::map<std::string,UBTH2Poly*>* temp_poly_map2;
+  mc_bnbcosmic_file->GetObject("hmap_trktheta_trkmom_poly", temp_poly_map2);
+  std::map<std::string,UBTH2Poly*> hmap_trktheta_trkmom_poly_mc = *temp_poly_map2;
+  
+    std::cout << "JJJJJ Just before" << std::endl;
+    std::cout << "maximum " << hmap_trktheta_trkmom_poly_mc["signal"]->GetMaximum() << std::endl;
+    std::cout << "JJJJJ Just after" << std::endl;
 
 
   gROOT->SetBatch(kTRUE);
@@ -1848,6 +1855,21 @@ std::cout << ">> here11" << std::endl;
   // name = outdir + "trkmomclassic_sub";
   // canvas_trkmom_classic_sub->SaveAs(name + ".pdf");
   // canvas_trkmom_classic_sub->SaveAs(name + ".C","C");
+
+
+
+
+  TCanvas* canvas_trktheta_trkmom_poly = new TCanvas("canvas_trktheta_trkmom_poly", "canvas", 800, 700);
+
+  hmap_trktheta_trkmom_poly_mc["signal"]->Draw("colz");
+
+  name = outdir + "trktheta_trkmom_poly_signal";
+  canvas_trktheta_trkmom_poly->SaveAs(name + ".pdf");
+  canvas_trktheta_trkmom_poly->SaveAs(name + ".C","C");
+
+
+
+
 
 
   TCanvas* canvas_trkmom_classic = new TCanvas("canvas_trkmom_classic", "canvas", 800, 700);

@@ -46,11 +46,16 @@
 #include <TLatex.h>
 #include <TCanvas.h>
 #include "TMath.h"
+#include "TH2Poly.h"
+#include "ubana/DataTypes/UBTH2Poly.h"
+
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
 #include "ubana/Base/BootstrapTH2D.h"
 #include "ubana/Base/PlottingTools.h"
+
+using namespace DataTypes;
 
 namespace Main {
 

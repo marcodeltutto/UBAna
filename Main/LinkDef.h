@@ -14,8 +14,12 @@
 #pragma link C++ class map<string,TH1D*>+;
 #pragma link C++ class map<string,TH1D>+;
 #pragma link C++ class map<string,TH2D*>+;
+#pragma link C++ class map<string,TH2Poly*>+;
+#pragma link C++ class map<string,UBTH2Poly*>+;
 #pragma link C++ class std::map<std::string,std::map<std::string,TH1D*>>+;
 #pragma link C++ class std::map<std::string,std::map<std::string,TH2D*>>+;
+#pragma link C++ class std::map<std::string,std::map<std::string,TH2Poly*>>+;
+#pragma link C++ class std::map<std::string,std::map<std::string,UBTH2Poly*>>+;
 #pragma link C++ class std::vector<double>+;
 #pragma link C++ class std::vector<string>+;
 #pragma link C++ class size_t;
