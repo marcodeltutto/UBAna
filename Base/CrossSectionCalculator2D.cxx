@@ -1315,8 +1315,8 @@ namespace Base {
     TString name = _folder +_name + "_selected_events";
     DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, false);
 
-    name = _folder +_name + "_selected_events_scalebinwidth";
-    DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, true);
+    // name = _folder +_name + "_selected_events_scalebinwidth";
+    // DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, true);
 
   }
 
@@ -1369,11 +1369,17 @@ namespace Base {
       for (auto iter : mc) {
         xsec_mc_histos[iter.first].at(i) = iter.second->ProjectionY(("fuck" + iter.first + costhetamu_ranges.at(i)).c_str(), i+1, i+1);
         if (scale_bin_width) xsec_mc_histos[iter.first].at(i)->Scale(1, "width");
+        // xsec_mc_histos[iter.first].at(i)->Scale(1/_scale_factor_mc_bnbcosmic);
       }
       xsec_mc_hs.at(i) = new THStack("bs",";BS;BS");
     }
 
 
+
+    std::fstream fs;
+    fs.open ("test.txt", std::fstream::out | std::fstream::app);
+
+    fs << "  & ";
 
     for (size_t i = 0; i < xsec_data_histos.size(); i++) {
 
@@ -1390,6 +1396,20 @@ namespace Base {
       // xsec_mc_histos["beam-off"].at(i)->GetYaxis()->CenterTitle();
       // xsec_mc_histos["beam-off"].at(i)->GetXaxis()->SetTitleOffset(0.92);
       // xsec_mc_histos["beam-off"].at(i)->GetYaxis()->SetTitleOffset(1.11);
+
+      double total_background = xsec_mc_histos["beam-off"].at(i)->Integral() / _scale_factor_extbnb + 
+                                xsec_mc_histos["dirt"].at(i)->Integral() / _scale_factor_mc_bnbcosmic + 
+                                xsec_mc_histos["cosmic"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic + 
+                                xsec_mc_histos["outfv"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic + 
+                                xsec_mc_histos["nc"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic + 
+                                xsec_mc_histos["anumu"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic + 
+                                xsec_mc_histos["nue"].at(i)->Integral() / _scale_factor_mc_bnbcosmic; 
+
+      LOG_CRITICAL() << "In cos(theta) bin " << i << ", total signal " << xsec_mc_histos["signal"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic << ", total background " << total_background  << std::endl;
+
+      
+      fs << xsec_mc_histos["signal"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic << " & " << total_background << " & ";
+
 
       xsec_mc_histos["beam-off"].at(i)->SetLineColor(kBlue+2);
       xsec_mc_histos["beam-off"].at(i)->SetFillColor(kBlue+2);
@@ -1445,6 +1465,8 @@ namespace Base {
       // }
 
     }
+
+    fs << " \\\\ " << std::endl;
     
     c_test->SaveAs(save_path + ".pdf");
     c_test->SaveAs(save_path + ".C","C");

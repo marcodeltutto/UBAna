@@ -230,8 +230,10 @@ namespace Main {
 
     // int n_bins_double_mucostheta = 6; ///< Number of costheta bins for double differential
     // double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00}; ///< costheta bins for double differential
-    int n_bins_double_mucostheta = 8; ///< Number of costheta bins for double differential
-    double bins_double_mucostheta[10] = {-1.00, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+    // int n_bins_double_mucostheta = 8; ///< Number of costheta bins for double differential
+    // double bins_double_mucostheta[10] = {-1.00, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+    int n_bins_double_mucostheta = 7; ///< Number of costheta bins for double differential
+    double bins_double_mucostheta[10] = {-1.00, 0.00, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
 
     bool _scale_cosmics = false; ///< If true scales the cosmic background by _scale_factor_cosmic
     double _scale_factor_cosmic = 1.; ///< Factor used to scale the cosmic background (used only if _scale_cosmics is true)
