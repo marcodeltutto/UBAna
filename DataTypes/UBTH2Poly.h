@@ -14,7 +14,17 @@
 #ifndef __DATATYPES_UBTH2POLY_H__
 #define __DATATYPES_UBTH2POLY_H__
 
-#include "TH2Poly.h"
+
+#include <TSystem.h>
+#include <TString.h>
+#include <TROOT.h>
+
+
+#include <TH2Poly.h>
+
+#include <iostream>
+#include <map>
+
 
 namespace DataTypes {
 
@@ -41,7 +51,14 @@ namespace DataTypes {
     /// Default destructor
     ~UBTH2Poly(){}
 
-    ClassDef(DataTypes::UBTH2Poly, 1)  
+    /// Projects in Y slices
+    TH1D* ProjectionY(const char *name, Int_t firstxbin/*, Int_t lastxbin, Option_t *option*/) const;
+
+    /// Creates a UBTH2Poly with bin numbers in place of bin content
+    UBTH2Poly* GetCopyWithBinNumbers(const char *name) const;
+
+
+    ClassDef(DataTypes::UBTH2Poly, 1) // TH2 with polygonal bins (extended for MicroBooNE)
     
   };
 }

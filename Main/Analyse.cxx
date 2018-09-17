@@ -92,6 +92,9 @@ namespace Main {
   //gROOT->SetBatch(kTRUE);
   gROOT->ProcessLine("gErrorIgnoreLevel = 2001;"); // 1001: INFO, 2001: WARNINGS, 3001: ERRORS
 
+  TH1::SetDefaultSumw2();
+  TH2::SetDefaultSumw2();
+
   int bnbon_total_events = 1000;
   int extbnb_total_events = 1000;
   //int intimecosmic_total_events = 1000;
@@ -783,6 +786,14 @@ std::cout << ">> here11" << std::endl;
   
     std::cout << "JJJJJ Just before" << std::endl;
     std::cout << "maximum " << hmap_trktheta_trkmom_poly_mc["signal"]->GetMaximum() << std::endl;
+    std::cout << "calling ProjectionY " << std::endl;
+    TH1D * h_test = hmap_trktheta_trkmom_poly_mc["signal"]->ProjectionY("test", 1);
+    std::cout << "before calling GetCopyWithBinNumbers" << std::endl;
+    UBTH2Poly* h_poly_binnumber = hmap_trktheta_trkmom_poly_mc["signal"]->GetCopyWithBinNumbers("bs");
+    std::cout << "after calling GetCopyWithBinNumbers" << std::endl;
+    std::cout << "Original   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
+    std::cout << "Projection bin 2, content: " << h_test->GetBinContent(2) << " +- " << h_test->GetBinError(2) << std::endl;
+
     std::cout << "JJJJJ Just after" << std::endl;
 
 
@@ -1861,13 +1872,19 @@ std::cout << ">> here11" << std::endl;
 
   TCanvas* canvas_trktheta_trkmom_poly = new TCanvas("canvas_trktheta_trkmom_poly", "canvas", 800, 700);
 
-  hmap_trktheta_trkmom_poly_mc["signal"]->Draw("colz");
+  hmap_trktheta_trkmom_poly_mc["signal"]->Draw("colz text");
 
   name = outdir + "trktheta_trkmom_poly_signal";
   canvas_trktheta_trkmom_poly->SaveAs(name + ".pdf");
   canvas_trktheta_trkmom_poly->SaveAs(name + ".C","C");
 
+TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 800, 700);
 
+  h_poly_binnumber->Draw("colz text");
+
+  name = outdir + "binnumber_poly_signal";
+  canvas_binnumber_poly->SaveAs(name + ".pdf");
+  canvas_binnumber_poly->SaveAs(name + ".C","C");
 
 
 

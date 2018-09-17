@@ -486,11 +486,18 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
+    if (h_mc->GetSumw2N() == 0) { 
+      LOG_WARNING() << "MC cross section histogram does not have Sum2w active." << std::endl;
+    }
+
     LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_names) 
     {
       std::cout << name << ", ";
       h_data->Add(_hmap_bnbcosmic[name], -1.);
+      if (_hmap_bnbcosmic[name]->GetSumw2N() == 0) {
+        LOG_WARNING() << "Bkg " << name << " does not have Sum2w active." << std::endl;
+      }
     }
     std::cout << std::endl;
 

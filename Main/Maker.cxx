@@ -314,6 +314,8 @@ void Main::Maker::MakeFile()
   //TApplication* rootapp = new TApplication("ROOT Application",&argc, argv);
   gROOT->SetBatch(kTRUE);
   gROOT->ProcessLine("gErrorIgnoreLevel = 2001;"); // 1001: INFO, 2001: WARNINGS, 3001: ERRORS
+  TH1::SetDefaultSumw2();
+  TH2::SetDefaultSumw2();
 
 
   //gROOT->ProcessLine(".x rootlogon.C");
