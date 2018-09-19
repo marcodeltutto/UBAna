@@ -10,11 +10,14 @@ HEADERS = $(filter-out $(FMWK_HEADERS), $(wildcard *.h))
 
 # include options for this package
 INCFLAGS  = -I.                       #Include itself
+INCFLAGS += -I$(MYSW_INCDIR) 
 
 # platform-specific options
 OSNAME          = $(shell uname -s)
 HOST            = $(shell uname -n)
 OSNAMEMODE      = $(OSNAME)
+
+LDFLAGS += -L$(MYSW_LIBDIR) -lUBAna_DataTypes
 
 # call kernel specific compiler setup
 include $(MYSW_DIR)/Makefile/Makefile.${OSNAME}
