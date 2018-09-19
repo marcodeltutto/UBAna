@@ -490,16 +490,29 @@ namespace Base {
       LOG_WARNING() << "MC cross section histogram does not have Sum2w active." << std::endl;
     }
 
+    LOG_CRITICAL() << "Original bin 4, 2 , content: " <<h_data->GetBinContent(4, 2) << " +- " << h_data->GetBinError(4, 2) << std::endl;
+    LOG_CRITICAL() << "h_data->GetSumw2N(): " << h_data->GetSumw2N() << std::endl;
+
+
     LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_names) 
     {
       std::cout << name << ", ";
+    LOG_CRITICAL() << name << " bin 4, 2 , content: " << _hmap_bnbcosmic[name]->GetBinContent(4, 2) << " +- " << _hmap_bnbcosmic[name]->GetBinError(4, 2) << std::endl;
+
       h_data->Add(_hmap_bnbcosmic[name], -1.);
+    LOG_CRITICAL() << "After this subtraction bin 4, 2 , content: " <<h_data->GetBinContent(4, 2) << " +- " << h_data->GetBinError(4, 2) << std::endl;
+    LOG_CRITICAL() << "h_data->GetSumw2N(): " << h_data->GetSumw2N() << std::endl;
+    
+
       if (_hmap_bnbcosmic[name]->GetSumw2N() == 0) {
         LOG_WARNING() << "Bkg " << name << " does not have Sum2w active." << std::endl;
       }
     }
     std::cout << std::endl;
+
+    LOG_CRITICAL() << "h_data->GetSumw2N(): " << h_data->GetSumw2N() << std::endl;
+
 
 
 

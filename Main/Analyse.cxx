@@ -783,6 +783,17 @@ std::cout << ">> here11" << std::endl;
   std::map<std::string,UBTH2Poly*>* temp_poly_map2;
   mc_bnbcosmic_file->GetObject("hmap_trktheta_trkmom_poly", temp_poly_map2);
   std::map<std::string,UBTH2Poly*> hmap_trktheta_trkmom_poly_mc = *temp_poly_map2;
+
+  UBTH2Poly* h_eff_muangle_mumom_poly_num = (UBTH2Poly*)mc_bnbcosmic_file->Get("h_eff_muangle_mumom_poly_num");
+  UBTH2Poly* h_eff_muangle_mumom_poly_den = (UBTH2Poly*)mc_bnbcosmic_file->Get("h_eff_muangle_mumom_poly_den");
+
+  bnbon_file->GetObject("hmap_trktheta_trkmom_poly", temp_poly_map2);
+  UBTH2Poly* h_trktheta_trkmom_total_poly_bnbon = (*temp_poly_map2)["total"];
+
+  extbnb_file->GetObject("hmap_trktheta_trkmom_poly", temp_poly_map2);
+  UBTH2Poly* h_trktheta_trkmom_total_poly_extbnb = (*temp_poly_map2)["total"];
+
+
   
     std::cout << "JJJJJ Just before" << std::endl;
     std::cout << "maximum " << hmap_trktheta_trkmom_poly_mc["signal"]->GetMaximum() << std::endl;
@@ -794,7 +805,28 @@ std::cout << ">> here11" << std::endl;
     std::cout << "Original   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
     std::cout << "Projection bin 2, content: " << h_test->GetBinContent(2) << " +- " << h_test->GetBinError(2) << std::endl;
 
+    std::cout << "Just before subtratcion" << std::endl;
+    std::cout << "Subtracting   h_trktheta_trkmom_total_poly_bnbonbin 2, content: " << h_trktheta_trkmom_total_poly_bnbon->GetBinContent(9) << " +- " << h_trktheta_trkmom_total_poly_bnbon->GetBinError(9) << std::endl;
+    hmap_trktheta_trkmom_poly_mc["signal"]->Add(h_trktheta_trkmom_total_poly_bnbon, -1);
+    std::cout << "After subtraction   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
+    std::cout << "Just after subtratcion" << std::endl;
+    std::cout << "h_trktheta_trkmom_total_poly_bnbon->GetSumw2N() " << h_trktheta_trkmom_total_poly_bnbon->GetSumw2N() << std::endl;
+
+
     std::cout << "JJJJJ Just after" << std::endl;
+
+
+  
+
+  std::cout << "maximum h_eff_muangle_mumom_poly_num " << h_eff_muangle_mumom_poly_num->GetMaximum() << std::endl;
+  std::cout << "maximum h_eff_muangle_mumom_poly_den " << h_eff_muangle_mumom_poly_den->GetMaximum() << std::endl;
+  std::cout << "maximum h_trktheta_trkmom_total_poly_bnbon " << h_trktheta_trkmom_total_poly_bnbon->GetMaximum() << std::endl;
+  std::cout << "maximum h_trktheta_trkmom_total_poly_extbnb " << h_trktheta_trkmom_total_poly_extbnb->GetMaximum() << std::endl;
+  
+
+
+
+
 
 
   gROOT->SetBatch(kTRUE);

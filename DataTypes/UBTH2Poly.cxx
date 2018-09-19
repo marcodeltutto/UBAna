@@ -7,6 +7,13 @@ ClassImp(DataTypes::UBTH2Poly)
 
 namespace DataTypes {
 
+  UBTH2Poly& UBTH2Poly::operator=(const UBTH2Poly &h1)
+  {
+    Warning("operator=","Assignemet operator called, but lacks full implementation.");    
+    if (this != &h1)  ((UBTH2Poly&)h1).Copy(*this);
+    return *this;
+  }
+
 
   UBTH2Poly* UBTH2Poly::GetCopyWithBinNumbers(const char *name) const {
 
@@ -21,6 +28,104 @@ namespace DataTypes {
     
     return h;
 
+  }
+
+
+  Bool_t UBTH2Poly::Add(const TH1 *h1, Double_t c1)
+  {
+     Int_t bin;
+  
+     TH2Poly *h1p = (TH2Poly *)h1;
+  
+     // Check if number of bins is the same.
+     if (h1p->GetNumberOfBins() != GetNumberOfBins()) {
+        Error("Add", "Attempt to add histograms with different number of bins");
+        return kFALSE;
+     }
+  
+     // Check if the bins are the same.
+     TList *h1pBins = h1p->GetBins();
+     TH2PolyBin *thisBin, *h1pBin;
+     for (bin = 1; bin <= GetNumberOfBins(); bin++) {
+        thisBin = (TH2PolyBin *)fBins->At(bin - 1);
+        h1pBin  = (TH2PolyBin *)h1pBins->At(bin - 1);
+        if (thisBin->GetXMin() != h1pBin->GetXMin() ||
+              thisBin->GetXMax() != h1pBin->GetXMax() ||
+              thisBin->GetYMin() != h1pBin->GetYMin() ||
+              thisBin->GetYMax() != h1pBin->GetYMax()) {
+           Error("Add", "Attempt to add histograms with different bin limits");
+           return kFALSE;
+        }
+        if ( thisBin->GetBinNumber() != h1pBin->GetBinNumber() ) {
+           Error("Add", "Attempt to add histograms with different bin numbers. Have you called AddBin() in the same order for both histograms?");
+           return kFALSE;
+        }
+     }
+  
+  
+     // Create Sumw2 if h1p has Sumw2 set
+     if (fSumw2.fN == 0 && h1p->GetSumw2N() != 0) Sumw2();
+  
+     // statistics can be preserved only in case of positive coefficients
+     // otherwise with negative c1 (histogram subtraction) one risks to get negative variances
+     Bool_t resetStats = (c1 < 0);
+     Double_t s1[kNstat] = {0};
+     Double_t s2[kNstat] = {0};
+     if (!resetStats) {
+        // need to initialize to zero s1 and s2 since
+        // GetStats fills only used elements depending on dimension and type
+        GetStats(s1);
+        h1->GetStats(s2);
+     }
+  
+    // Perform the Add.
+    Double_t factor = 1;
+    if (h1p->GetNormFactor() != 0) {
+      factor = h1p->GetNormFactor() / h1p->GetSumOfWeights();
+    }
+
+    // TH2PolyBin *thisBin;
+    // for (Int_t bin = 1; bin <= GetNumberOfBins(); bin++) {
+    //   thisBin = (TH2PolyBin *)fBins->At(bin - 1);
+    //   Double_t y = RetrieveBinContent(thisBin->GetBinNumber()) + c1 * h1p->GetBinContent(thisBin->GetBinNumber());
+    //   UpdateBinContent(bin, y);
+    //   if (fSumw2.fN) {
+    //     Double_t esq = factor * factor * pow(h1p->GetBinError(bin), 2);
+    //     fSumw2.fArray[bin] += c1 * c1 * factor * factor * esq;
+    //   }
+    // }
+           std::cout << ">>>>>>>>>>>>>>>> fSumw2.fN is " << fSumw2.fN << std::endl; 
+           std::cout << ">>>>>>>>>>>>>>>> h1p->GetSumw2N() is " << h1p->GetSumw2N() << std::endl; 
+
+     Int_t bi;
+     // Int_t NOverflow = 9; // has to be hardcoded for older ROOT versions
+
+     for (bin = 1; bin <= GetNumberOfBins(); bin++) {
+        thisBin = (TH2PolyBin *)fBins->At(bin - 1);
+        h1pBin  = (TH2PolyBin *)h1pBins->At(bin - 1);
+        bi = thisBin->GetBinNumber()-1;
+        thisBin->SetContent(thisBin->GetContent() + c1 * h1pBin->GetContent());
+        if (fSumw2.fN) {
+           Double_t e1 = factor * h1p->GetBinError(bin);
+           std::cout << ">>>>>>>>>>>>>>>> e1 is " << e1 << std::endl; 
+
+           fSumw2.fArray[bi] += c1 * c1 * e1 * e1;
+        }
+     }
+  
+     // update statistics (do here to avoid changes by SetBinContent)
+     if (resetStats)  {
+        // statistics need to be reset in case coefficient are negative
+        ResetStats();
+     } else {
+        for (Int_t i = 0; i < kNstat; i++) {
+           if (i == 1) s1[i] += c1 * c1 * s2[i];
+           else        s1[i] += c1 * s2[i];
+        }
+        PutStats(s1);
+        SetEntries(std::abs(GetEntries() + c1 * h1->GetEntries()));
+     }
+     return kTRUE;
   }
 
 
@@ -60,13 +165,14 @@ namespace DataTypes {
 
 
     TH1D *h1 = 0;
-
     // if (opt.Contains("e") || GetSumw2N() ) h1->Sumw2();
-    if (GetSumw2N()) h1->Sumw2();
 
     int bin_counter = 1;
 
     h1 = new TH1D(name, GetTitle(), loweredge_to_bin.size(), fYaxis.GetXmin(), fYaxis.GetXmax());
+
+    if (GetSumw2N()) h1->Sumw2();
+
     for (auto it : loweredge_to_bin) {
       h1->SetBinContent(bin_counter, RetrieveBinContent(it.second->GetBinNumber()));
       h1->SetBinError(bin_counter, GetBinError(it.second->GetBinNumber()));

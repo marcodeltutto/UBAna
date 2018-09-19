@@ -42,11 +42,11 @@ namespace DataTypes {
 
     /// Ctor
     UBTH2Poly(const char *name,const char *title, Double_t xlow, Double_t xup, Double_t ylow, Double_t yup) 
-    : TH2Poly(name, title, xlow, xup, ylow, yup) {}
+    : TH2Poly(name, title, xlow, xup, ylow, yup) {if (fgDefaultSumw2) Sumw2();}
 
     /// Ctor
     UBTH2Poly(const char *name,const char *title, Int_t nX, Double_t xlow, Double_t xup,  Int_t nY, Double_t ylow, Double_t yup)
-    : TH2Poly(name, title, nX, xlow, xup, nY, ylow, yup) {}
+    : TH2Poly(name, title, nX, xlow, xup, nY, ylow, yup) {if (fgDefaultSumw2) Sumw2();}
     
     /// Default destructor
     ~UBTH2Poly(){}
@@ -56,6 +56,15 @@ namespace DataTypes {
 
     /// Creates a UBTH2Poly with bin numbers in place of bin content
     UBTH2Poly* GetCopyWithBinNumbers(const char *name) const;
+
+    /// Add another UBTH2Poly, multiplied by c1: this = this + c1 * h1
+    Bool_t Add(const TH1 *h1, Double_t c1 = 1.0);
+
+    ///
+    Int_t Fill(Double_t x, Double_t y, Double_t w) {if (!fSumw2.fN && w != 1.0 && !TestBit(TH1::kIsNotW)) Sumw2(); return TH2Poly::Fill(x, y, w);}
+
+    /// Operator =
+    UBTH2Poly & operator= (const UBTH2Poly &h1);
 
 
     ClassDef(DataTypes::UBTH2Poly, 1) // TH2 with polygonal bins (extended for MicroBooNE)
