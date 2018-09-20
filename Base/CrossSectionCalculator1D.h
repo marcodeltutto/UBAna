@@ -104,6 +104,9 @@ namespace Base {
     ///
     void SetCovarianceMatrix(TH2D);
 
+    ///
+    void SetFractionalCovarianceMatrix(TH2D);
+
     /// Printd the current configuration
     void PrintConfig();
 
@@ -221,6 +224,9 @@ namespace Base {
 
     TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
+
+    TH2D _frac_covariance_matrix; ///< 2D Histogram representing the fractional covariance matrix (to be set externally)
+    bool _frac_covariance_matrix_is_set = false; ///< Flag that remembers if the fractional covariance matrix was set for this cross section calculation (if not, no syst will be added)
     
     bool _fake_data_mode = false;
     bool _overlay_mode = false;

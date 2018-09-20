@@ -172,11 +172,24 @@ namespace Base {
     h = _cov_matrix;
   }
 
+  void CrossSectionBootstrapCalculator2D::GetFractionalCovarianceMatrix(TH2D & h)
+  {
+    h = _frac_cov_matrix;
+  }
+
   void CrossSectionBootstrapCalculator2D::SaveCovarianceMatrix(std::string file_name, std::string name)
   {
     TFile* cov_file = TFile::Open(file_name.c_str(), "UPDATE");
     cov_file->cd();
     _cov_matrix.Write(name.c_str());
+    cov_file->Close();
+  }
+
+  void CrossSectionBootstrapCalculator2D::SaveFractionalCovarianceMatrix(std::string file_name, std::string name)
+  {
+    TFile* cov_file = TFile::Open(file_name.c_str(), "UPDATE");
+    cov_file->cd();
+    _frac_cov_matrix.Write(name.c_str());
     cov_file->Close();
   }
 
@@ -398,6 +411,7 @@ namespace Base {
     _cov_calc.CalculateCovarianceMatrix();
     _cov_calc.PlotMatrices();
     _cov_calc.GetCovarianceMatrix(_cov_matrix);
+    _cov_calc.GetFractionalCovarianceMatrix(_frac_cov_matrix);
 
 
 

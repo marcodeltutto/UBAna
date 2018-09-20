@@ -31,6 +31,9 @@ namespace Base {
     _h_eff_mumom_den = NULL;
 
     //_h_true_reco_mom = NULL;
+
+    _covariance_matrix_is_set = false;
+    _frac_covariance_matrix_is_set = false;
   }
 
   void CrossSectionCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt, double intimecosmic)
@@ -75,6 +78,22 @@ namespace Base {
   {
     _covariance_matrix = h;
     _covariance_matrix_is_set = true;
+
+    if (_frac_covariance_matrix_is_set) {
+      LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
+      throw std::exception();
+    }
+  }
+
+  void CrossSectionCalculator2D::SetFractionalCovarianceMatrix(TH2D h)
+  {
+    _frac_covariance_matrix = h;
+    _frac_covariance_matrix_is_set = true;
+
+    if (_covariance_matrix_is_set) {
+      LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
+      throw std::exception();
+    }
   }
 
   void CrossSectionCalculator2D::PrintConfig() {
@@ -486,13 +505,13 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
-    LOG_INFO() << "Subtracting backgrouds: ";
+    // LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_names) 
     {
-      std::cout << name << ", ";
+      // std::cout << name << ", ";
       h_data->Add(_hmap_bnbcosmic[name], -1.);
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
 
 
 
@@ -571,6 +590,37 @@ namespace Base {
 
     TH2D * h_syst_unc = (TH2D*) h_data->Clone("h_syst_unc");
 
+    if (_frac_covariance_matrix_is_set) {
+
+      _covariance_matrix = * ( (TH2D*)_frac_covariance_matrix.Clone("_covariance_matrix") );
+      _covariance_matrix.Reset();
+
+      // Loop over the bins and multiply this fractional covariance matrix by the xsec
+      // so to obtain a covariance matrix
+      int i = 0, j = 0, m = 0, n = 0;
+ 
+      for (int a = 0; a < _frac_covariance_matrix.GetNbinsX(); a++) {
+
+        for (int b = 0; b < _frac_covariance_matrix.GetNbinsX(); b++) {
+
+          // Unroll a and b labels into a = i,j and b = m,n
+          if (a % h_data->GetNbinsY() == 0){
+              i = a / h_data->GetNbinsY();
+          }
+          j = a % h_data->GetNbinsY();
+
+          if (b % h_data->GetNbinsY() == 0){
+              m = b / h_data->GetNbinsY();
+          }
+          n = b % h_data->GetNbinsY();
+
+          _covariance_matrix.SetBinContent(a+1, b+1, _frac_covariance_matrix.GetBinContent(a+1, b+1) * (h_data->GetBinContent(i+1, j+1) * h_data->GetBinContent(m+1, n+1)) );
+        }
+      }
+
+      _covariance_matrix_is_set = true;
+    }
+
     if (_covariance_matrix_is_set) {
 
       // Just to set the right bins:
@@ -584,7 +634,7 @@ namespace Base {
 
         for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
 
-          // Unroll a and b lablel into a = i,j and b = m,n
+          // Unroll a and b labels into a = i,j and b = m,n
           if (a % h_data->GetNbinsY() == 0){
               i = a / h_data->GetNbinsY();
           }
@@ -913,9 +963,19 @@ namespace Base {
     //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
     //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
-    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
-                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
-                                                  "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
+    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+    //                                               "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+    //                                               "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+    //                                               "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+    //                                               "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+    //                                               "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+    //                                               "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
+
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.45",
                                                   "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
                                                   "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
                                                   "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
@@ -925,14 +985,13 @@ namespace Base {
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
 
-
     LOG_INFO() << "n bins x " << h_data->GetNbinsX() << std::endl;
     LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
 
     int horizontal_division = 2;
     int vertical_division = floor(h_data->GetNbinsX() / 2.);
-
-    if (h_data->GetNbinsX() / 2. != floor(h_data->GetNbinsX()) / 2.) vertical_division++;
+    
+    if ( h_data->GetNbinsX() / 2. != floor(h_data->GetNbinsX() / 2.) ) vertical_division++;
 
     LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
     LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
@@ -974,6 +1033,8 @@ namespace Base {
       h_main->Draw("histo same");
 
       xsec_mc_histos.at(i).SetMinimum(0.);
+      if (i == 0) xsec_mc_histos.at(i).SetMinimum( -0.0006);
+      if (i == 1) xsec_mc_histos.at(i).SetMinimum( -0.007);
       // if (i == 0) {
       //   xsec_mc_histos.at(i).SetMaximum(0.4);
       // } else if (i == 1) {
@@ -995,12 +1056,20 @@ namespace Base {
       // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
       // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
 
-      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.35);
-      if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.70);
-      if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.00);
-      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.25);
-      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.40);
-      if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+      // if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.35);
+      // if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.70);
+      // if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.00);
+      // if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.25);
+      // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.40);
+      // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.50);
+      if (i == 1) xsec_mc_histos.at(i).SetMaximum(1.00);
+      if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.50);
+      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.60);
+      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+
 
       // The outer uncertainty bar
       xsec_data_unc_histos.at(i).SetMarkerStyle(20);
