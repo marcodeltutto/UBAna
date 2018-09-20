@@ -1803,7 +1803,7 @@ void Main::Maker::MakeFile()
 
         for (size_t i_wgt = 0; i_wgt < fname_extra_syst.size(); i_wgt++) {
 
-          std::cout << "weight number " << i_wgt << " = " << t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt) << std::endl;
+          // std::cout << "weight number " << i_wgt << " = " << t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt) << std::endl;
 
           wgts_extra_syst.at(i_wgt) *= t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt);
         }

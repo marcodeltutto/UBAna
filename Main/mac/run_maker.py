@@ -88,10 +88,10 @@ maker.SetMaUpMECOff(False)
 
 maker.FillBootstrapGenie(True)
 
-maker.FillBootstrapGenieModels(False)
-maker.SetTargetGenieModelsSystematic("model_q0q3_ccmec_HistogramWeight")
-# maker.SetTargetGenieModelsSystematic("model_q0q3_ccqe_HistogramWeight")
-# maker.SetTargetGenieModelsSystematic("total")
+maker.FillBootstrapExtraSyst(False)
+maker.SetTargetExtraSystematic("model_q0q3_ccmec_HistogramWeight")
+# maker.SetTargetExtraSystematic("model_q0q3_ccqe_HistogramWeight")
+# maker.SetTargetExtraSystematic("total")
 
 maker.FillBootstrapFlux(True)
 #maker.SetTargetFluxSystematic("FluxUnisim");
