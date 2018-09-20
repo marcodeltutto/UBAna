@@ -10,12 +10,12 @@ analyser = Main.Analyse()
 
 analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # tune 1 - genie and flux styst (no high stat)
 
-analyser.SetDirtFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15.root") # dirt v15 (used for nuint)
+# analyser.SetDirtFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15.root") # dirt v15 (used for nuint)
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 
 analyser.SetBNBONFile         ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_run1_ubcodev06_26_01_22__v1.root")    
-analyser.SetEXTBNBFile        ("/Users/deltutto/CCInclusiveFiles/Output/ubxsec_output_data_extbnb_run1_ubcodev06_26_01_22__v1.root")
+analyser.SetEXTBNBFile        ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v1.root")
 analyser.SetBNBPOT(1.159e+20)    
 analyser.SetBNBONTriggers(25848208.0)   
 analyser.SetEXTBNBTriggers(28745873)
@@ -38,7 +38,7 @@ analyser.ImportCosmicSystematics(False)
 
 analyser.ImportDirtSystematics(False)
 
-analyser.DoGenieSystematics(True)
+analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)
 
 analyser.DoGenieModelsSystematics(False)
