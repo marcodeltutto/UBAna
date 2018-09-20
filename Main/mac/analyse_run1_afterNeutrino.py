@@ -8,7 +8,7 @@ from ROOT import Main
 analyser = Main.Analyse()
 
 
-analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # tune 1 - genie and flux styst (no high stat)
+analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v1_ccqe.root")
 
 # analyser.SetDirtFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15.root") # dirt v15 (used for nuint)
 
@@ -41,8 +41,8 @@ analyser.ImportDirtSystematics(False)
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)
 
-analyser.DoGenieModelsSystematics(False)
-analyser.ImportGenieModelsSystematics(False)
+analyser.DoExtraSystematics(True)
+analyser.ImportExtraSystematics(False)
 
 analyser.DoFluxSystematics(False)
 analyser.ImportFluxSystematics(False)

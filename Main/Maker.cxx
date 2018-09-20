@@ -1681,7 +1681,7 @@ void Main::Maker::MakeFile()
         // }
 
         fname_extra_syst.clear();
-        fname_extra_syst.resize(200/*t->evtwgt_extra_syst_multisim_nweight.at(i_func)*/);
+        fname_extra_syst.resize(100/*t->evtwgt_extra_syst_multisim_nweight.at(i_func)*/);
 
         std::ostringstream oss;
         for (size_t i_wgt = 0; i_wgt < fname_extra_syst.size(); i_wgt++) {
