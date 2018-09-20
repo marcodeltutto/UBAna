@@ -51,7 +51,7 @@ det_syst_list = ["cv", "nospacecharge", "dicharge", "lightyeild", "stretchRes", 
 # det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp"]
 
 
-# det_syst_list = ["noiseAmpUp"]
+# det_syst_list = ["altDeadChannels"]
 # det_syst_list = ["cherenkov"]
 # det_syst_list = ["cherenkov2"]
 # det_syst_list = ["cherenkov3"]
