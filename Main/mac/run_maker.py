@@ -184,8 +184,8 @@ maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_da
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_ubcodev06_26_01_18__v12.root") 
 
 maker.SetEntries(-1)
-maker.SetBeamSpillStart(3.5)    
-maker.SetBeamSpillEnd(5.3) 
+maker.SetBeamSpillStart(3.6)    
+maker.SetBeamSpillEnd(5.4) 
 # maker.SetBeamSpillStart(3.65)    
 # maker.SetBeamSpillEnd(5.25)   
 maker.SetFlashShift(0.406)    
