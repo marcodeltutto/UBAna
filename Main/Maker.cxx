@@ -497,13 +497,22 @@ void Main::Maker::MakeFile()
     }
   }
 
+  std::map<std::string,std::vector<std::vector<TH2D*>>> bs_extra_syst_multisim_reco_per_true;
+  bs_extra_syst_multisim_reco_per_true["nominal"].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+  for (int m = 0; m < n_bins_double_mucostheta; m++) {
+    for (int n = 0; n < n_bins_double_mumom; n++) { 
+      std::stringstream sstm;
+      sstm << "bs_extra_syst_multisim_reco_per_true_nominal_" << m << "_" << n;
+      bs_extra_syst_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+    }
+  }
 
   std::map<std::string,std::vector<std::vector<TH2D*>>> bs_flux_multisim_reco_per_true;
   bs_flux_multisim_reco_per_true["nominal"].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
   for (int m = 0; m < n_bins_double_mucostheta; m++) {
     for (int n = 0; n < n_bins_double_mumom; n++) { 
       std::stringstream sstm;
-      sstm << "bs_genie_multisim_reco_per_true_nominal_" << m << "_" << n;
+      sstm << "bs_flux_multisim_reco_per_true_nominal_" << m << "_" << n;
       bs_flux_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
     }
   }
@@ -1690,7 +1699,7 @@ void Main::Maker::MakeFile()
           fname_extra_syst.at(i_wgt) = oss.str();
         }
 
-        std::cout << "GENIE Models Number of universes: " << fname_extra_syst.size() << std::endl;
+        std::cout << "EXTRA SYST Number of universes: " << fname_extra_syst.size() << std::endl;
 
         // Number of events
         for (auto & iter : hmap_trkmom_extra_syst_bs /*map_bs_trkmom_extra_syst*/) {
@@ -1720,6 +1729,22 @@ void Main::Maker::MakeFile()
             hmap_trktheta_trkmom_extra_syst_bs[this_name][fname_extra_syst.at(i)] = new TH2D(histo_name.c_str(), "; Track angle;", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
           }
+
+          for (size_t i = 0; i < fname_extra_syst.size(); i++) {
+
+          std::string histo_name;
+          histo_name = "bs_extra_syst_multisim_reco_per_true_" + fname_extra_syst.at(i);
+          bs_extra_syst_multisim_reco_per_true[fname_extra_syst.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+          
+          for (int m = 0; m < n_bins_double_mucostheta; m++) {
+            for (int n = 0; n < n_bins_double_mumom; n++) { 
+              std::stringstream sstm;
+              sstm << histo_name << "_" << m << "_" << n;
+              bs_extra_syst_multisim_reco_per_true[fname_extra_syst.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+            }
+          }
+
+        }
 
         }
 
@@ -2627,6 +2652,7 @@ void Main::Maker::MakeFile()
         // std::cout << "_angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << ", n " << n << std::endl;
         _h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_genie_multisim_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
+        if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_extra_syst_multisim_reco_per_true, fname_extra_syst, wgts_extra_syst);
         if(!isdata && _fill_bootstrap_flux) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_flux_multisim_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
       }
       // *** addition ends
@@ -4354,6 +4380,7 @@ void Main::Maker::MakeFile()
   h_true_reco_costheta->Write();
   file_out->WriteObject(&_h_reco_per_true, "h_reco_per_true");
   file_out->WriteObject(&bs_genie_multisim_reco_per_true, "bs_genie_multisim_reco_per_true");
+  file_out->WriteObject(&bs_extra_syst_multisim_reco_per_true, "bs_extra_syst_multisim_reco_per_true");
   file_out->WriteObject(&bs_flux_multisim_reco_per_true, "bs_flux_multisim_reco_per_true");
 
   file_out->Write();
