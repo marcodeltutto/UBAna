@@ -1448,7 +1448,7 @@ std::cout << ">> here11" << std::endl;
       _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_extra_syst);
 
       for (int i = 0; i < covariance_matrix_extra_syst.GetNbinsX(); i++) {
-        std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
+        std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
       }
     }
 

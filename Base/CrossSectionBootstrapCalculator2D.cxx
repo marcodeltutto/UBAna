@@ -131,7 +131,7 @@ namespace Base {
     char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
     timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
       
-    system(("mkdir -p " + out_folder + "_" + timestamp).c_str());    
+    system(("mkdir -p " + out_folder + "_" + s + "_" + timestamp).c_str());    
     _save_prefix = out_folder + "_" + s + "_" + timestamp + "/" + s;
   }
 
