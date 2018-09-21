@@ -64,10 +64,14 @@ namespace DataTypes {
     Bool_t Divide(const TH1 *h1);// {fNcells++; Bool_t status = TH2Poly::Divide(h1); fNcells--; return status;}
 
     /// Multiply this histogram by a constant c1. Divides by bin width is "width" is specified in option
-    void Scale (Double_t c1, Option_t* option);
+    void Scale (Double_t c1, Option_t* option = "");
 
     ///
     Int_t Fill(Double_t x, Double_t y, Double_t w) {if (!fSumw2.fN && w != 1.0 && !TestBit(TH1::kIsNotW)) Sumw2(); return TH2Poly::Fill(x, y, w);}
+
+    /// Calculates sum of bin content (multiplied by bin width is "width" or "area" is passed as option)
+    Double_t Integral(Option_t* option = "") const;
+
 
     /// Operator =
     UBTH2Poly & operator= (const UBTH2Poly &h1);

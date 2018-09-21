@@ -229,6 +229,36 @@ namespace DataTypes {
 
 
 
+  Double_t UBTH2Poly::Integral(Option_t* option) const
+  {
+    TString opt = option;
+    opt.ToLower();
+
+    Bool_t width = kFALSE;
+    if ((opt.Contains("width")) || (opt.Contains("area"))) {
+      width = kTRUE;
+    }
+
+    Double_t w;
+    Double_t integral = 0.;
+
+    TIter    next(fBins);
+    TObject *obj;
+    TH2PolyBin *bin;
+    while ((obj=next())) {
+      bin = (TH2PolyBin*) obj;
+      w = bin->GetArea();
+      if (width) integral += w * bin->GetContent();
+      else integral += bin->GetContent();
+    }
+
+    return integral;
+  }
+
+
+
+
+
 
 
 
