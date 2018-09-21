@@ -33,6 +33,7 @@ namespace DataTypes {
 
   Bool_t UBTH2Poly::Add(const TH1 *h1, Double_t c1)
   {
+
      Int_t bin;
   
      TH2Poly *h1p = (TH2Poly *)h1;
@@ -62,7 +63,6 @@ namespace DataTypes {
         }
      }
   
-  
      // Create Sumw2 if h1p has Sumw2 set
      if (fSumw2.fN == 0 && h1p->GetSumw2N() != 0) Sumw2();
   
@@ -83,19 +83,7 @@ namespace DataTypes {
     if (h1p->GetNormFactor() != 0) {
       factor = h1p->GetNormFactor() / h1p->GetSumOfWeights();
     }
-
-    // TH2PolyBin *thisBin;
-    // for (Int_t bin = 1; bin <= GetNumberOfBins(); bin++) {
-    //   thisBin = (TH2PolyBin *)fBins->At(bin - 1);
-    //   Double_t y = RetrieveBinContent(thisBin->GetBinNumber()) + c1 * h1p->GetBinContent(thisBin->GetBinNumber());
-    //   UpdateBinContent(bin, y);
-    //   if (fSumw2.fN) {
-    //     Double_t esq = factor * factor * pow(h1p->GetBinError(bin), 2);
-    //     fSumw2.fArray[bin] += c1 * c1 * factor * factor * esq;
-    //   }
-    // }
-           std::cout << ">>>>>>>>>>>>>>>> fSumw2.fN is " << fSumw2.fN << std::endl; 
-           std::cout << ">>>>>>>>>>>>>>>> h1p->GetSumw2N() is " << h1p->GetSumw2N() << std::endl; 
+           
 
      Int_t bi;
      // Int_t NOverflow = 9; // has to be hardcoded for older ROOT versions
@@ -103,11 +91,10 @@ namespace DataTypes {
      for (bin = 1; bin <= GetNumberOfBins(); bin++) {
         thisBin = (TH2PolyBin *)fBins->At(bin - 1);
         h1pBin  = (TH2PolyBin *)h1pBins->At(bin - 1);
-        bi = thisBin->GetBinNumber()-1;
+        bi = thisBin->GetBinNumber() - 1;
         thisBin->SetContent(thisBin->GetContent() + c1 * h1pBin->GetContent());
         if (fSumw2.fN) {
            Double_t e1 = factor * h1p->GetBinError(bin);
-           std::cout << ">>>>>>>>>>>>>>>> e1 is " << e1 << std::endl; 
 
            fSumw2.fArray[bi] += c1 * c1 * e1 * e1;
         }
@@ -127,6 +114,121 @@ namespace DataTypes {
      }
      return kTRUE;
   }
+
+
+  Bool_t UBTH2Poly::Divide(const TH1 *h1)
+  {
+
+     Int_t bin;
+  
+     TH2Poly *h1p = (TH2Poly *)h1;
+  
+     // Check if number of bins is the same.
+     if (h1p->GetNumberOfBins() != GetNumberOfBins()) {
+        Error("Add", "Attempt to add histograms with different number of bins");
+        return kFALSE;
+     }
+  
+     // Check if the bins are the same.
+     TList *h1pBins = h1p->GetBins();
+     TH2PolyBin *thisBin, *h1pBin;
+     for (bin = 1; bin <= GetNumberOfBins(); bin++) {
+        thisBin = (TH2PolyBin *)fBins->At(bin - 1);
+        h1pBin  = (TH2PolyBin *)h1pBins->At(bin - 1);
+        if (thisBin->GetXMin() != h1pBin->GetXMin() ||
+              thisBin->GetXMax() != h1pBin->GetXMax() ||
+              thisBin->GetYMin() != h1pBin->GetYMin() ||
+              thisBin->GetYMax() != h1pBin->GetYMax()) {
+           Error("Add", "Attempt to add histograms with different bin limits");
+           return kFALSE;
+        }
+        if ( thisBin->GetBinNumber() != h1pBin->GetBinNumber() ) {
+           Error("Add", "Attempt to add histograms with different bin numbers. Have you called AddBin() in the same order for both histograms?");
+           return kFALSE;
+        }
+     }
+  
+     // Create Sumw2 if h1p has Sumw2 set
+     if (fSumw2.fN == 0 && h1p->GetSumw2N() != 0) Sumw2();
+  
+     
+  
+    // Perform the Add.
+    Double_t factor = 1;
+    if (h1p->GetNormFactor() != 0) {
+      factor = h1p->GetNormFactor() / h1p->GetSumOfWeights();
+    }
+           
+
+     Int_t bi;
+     // Int_t NOverflow = 9; // has to be hardcoded for older ROOT versions
+
+     for (bin = 1; bin <= GetNumberOfBins(); bin++) {
+        thisBin = (TH2PolyBin *)fBins->At(bin - 1);
+        h1pBin  = (TH2PolyBin *)h1pBins->At(bin - 1);
+
+        bi = thisBin->GetBinNumber() - 1;
+
+        Double_t c0 = thisBin->GetContent();
+        Double_t c1 = h1pBin->GetContent();
+
+        if (c1) thisBin->SetContent(c0 / c1);
+        else thisBin->SetContent(0.0);
+
+        if (fSumw2.fN) {
+           if (c1 == 0) { fSumw2.fArray[bi] = 0; continue; }
+           Double_t c1sq = c1 * c1;
+           fSumw2.fArray[bi] = (GetBinError(bin) * GetBinError(bin) * c1sq + h1p->GetBinError(bin) * h1p->GetBinError(bin) * c0 * c0) / (c1sq * c1sq);
+        }
+     }
+  
+     ResetStats();
+     return kTRUE;
+  }
+
+
+
+
+  void UBTH2Poly::Scale(Double_t c1, Option_t* option) {
+
+    Bool_t normaliseWidth = kFALSE;
+    TString opt = option; opt.ToLower();
+    
+    // store bin errors when scaling since cannot anymore be computed as sqrt(N)
+    if (!opt.Contains("nosw2") && GetSumw2N() == 0) Sumw2();
+
+    if (opt.Contains("width")) {
+      normaliseWidth = kTRUE;
+    }
+    else {
+      for( int i = 0; i < this->GetNumberOfBins(); i++ ) {
+        this->SetBinContent(i+1, c1 * this->GetBinContent(i+1));
+      }
+      if (fSumw2.fN) {
+        for(Int_t i = 0; i < this->GetNumberOfBins(); ++i) fSumw2.fArray[i] *= (c1 * c1); // update errors
+      }
+    }
+
+    if (normaliseWidth) {
+
+      TH2PolyBin *thisBin;
+      for (Int_t bin = 1; bin <= GetNumberOfBins(); bin++) {
+        thisBin = (TH2PolyBin *)fBins->At(bin - 1);
+
+        Double_t w = thisBin->GetArea();
+        SetBinContent(bin, c1 * GetBinContent(bin) / w);
+        if (fSumw2.fN) {
+          Double_t e1 = GetBinError(bin) / w;
+          fSumw2.fArray[bin - 1] = c1 * c1 * e1 * e1;
+        }
+      }
+    }
+
+  }
+
+
+
+
 
 
 

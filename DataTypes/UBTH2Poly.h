@@ -60,6 +60,12 @@ namespace DataTypes {
     /// Add another UBTH2Poly, multiplied by c1: this = this + c1 * h1
     Bool_t Add(const TH1 *h1, Double_t c1 = 1.0);
 
+    /// Add another UBTH2Poly, multiplied by c1: this = this + c1 * h1
+    Bool_t Divide(const TH1 *h1);// {fNcells++; Bool_t status = TH2Poly::Divide(h1); fNcells--; return status;}
+
+    /// Multiply this histogram by a constant c1. Divides by bin width is "width" is specified in option
+    void Scale (Double_t c1, Option_t* option);
+
     ///
     Int_t Fill(Double_t x, Double_t y, Double_t w) {if (!fSumw2.fN && w != 1.0 && !TestBit(TH1::kIsNotW)) Sumw2(); return TH2Poly::Fill(x, y, w);}
 
