@@ -278,11 +278,11 @@ namespace DataTypes {
     }
     boundaries.push_back(fXaxis.GetXmax());
 
-    for (auto b : boundaries) {
-      std::cout << "boundary: " << b << std::endl;
-    }
+    // for (auto b : boundaries) {
+    //   std::cout << "boundary: " << b << std::endl;
+    // }
 
-    Int_t index = (firstxbin - 1) * 2;
+    Int_t index = (firstxbin - 1);
     double boundary_low = boundaries.at(index);
     double boundary_up  = boundaries.at(index + 1);
 
