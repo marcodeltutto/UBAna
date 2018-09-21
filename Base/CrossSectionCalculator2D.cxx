@@ -486,24 +486,19 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
+    LOG_INFO() << "Initial - Cross section in bin (6, 2) is " << h_data->GetBinContent(6, 2) << std::endl;
+
     if (h_mc->GetSumw2N() == 0) { 
       LOG_WARNING() << "MC cross section histogram does not have Sum2w active." << std::endl;
     }
-
-    LOG_CRITICAL() << "Original bin 4, 2 , content: " <<h_data->GetBinContent(4, 2) << " +- " << h_data->GetBinError(4, 2) << std::endl;
-    LOG_CRITICAL() << "h_data->GetSumw2N(): " << h_data->GetSumw2N() << std::endl;
 
 
     LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_names) 
     {
       std::cout << name << ", ";
-    LOG_CRITICAL() << name << " bin 4, 2 , content: " << _hmap_bnbcosmic[name]->GetBinContent(4, 2) << " +- " << _hmap_bnbcosmic[name]->GetBinError(4, 2) << std::endl;
 
       h_data->Add(_hmap_bnbcosmic[name], -1.);
-    LOG_CRITICAL() << "After this subtraction bin 4, 2 , content: " <<h_data->GetBinContent(4, 2) << " +- " << h_data->GetBinError(4, 2) << std::endl;
-    LOG_CRITICAL() << "h_data->GetSumw2N(): " << h_data->GetSumw2N() << std::endl;
-    
 
       if (_hmap_bnbcosmic[name]->GetSumw2N() == 0) {
         LOG_WARNING() << "Bkg " << name << " does not have Sum2w active." << std::endl;
@@ -511,8 +506,8 @@ namespace Base {
     }
     std::cout << std::endl;
 
-    LOG_CRITICAL() << "h_data->GetSumw2N(): " << h_data->GetSumw2N() << std::endl;
 
+    LOG_INFO() << "Subtraction - Cross section in bin (6, 2) is " << h_data->GetBinContent(6, 2) << std::endl;
 
 
 
@@ -545,6 +540,8 @@ namespace Base {
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
+    LOG_INFO() << "Efficiency in bin (6, 2) is " << h_eff->GetBinContent(6, 2) << std::endl;
+    LOG_INFO() << "Efficiency - Cross section in bin (6, 2) is " << h_data->GetBinContent(6, 2) << std::endl;
 
 
 
@@ -557,6 +554,8 @@ namespace Base {
 
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
+
+    LOG_INFO() << "Cross section in bin (6, 2) is " << h_data->GetBinContent(6, 2) << std::endl;
 
 
 

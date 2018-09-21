@@ -262,11 +262,42 @@ void Main::Maker::FillBootstrap(double fill_value1, // reco value x (costheta)
 }
 
 
+//___________________________________________________________________________________________________
+void Main::Maker::FillBootstrap(double fill_value1, // reco value x (costheta)
+                                double fill_value2, // reco value y (momentum)
+                                int m, // true bin m (1 number, unrolled)
+                                double evt_wgt,
+                                std::map<std::string,std::vector<UBTH2Poly*>> bs_poly_reco_per_true, 
+                                std::vector<std::string> fname, 
+                                std::vector<double> wgts) {
+
+
+  bs_poly_reco_per_true["nominal"][m]->Fill(fill_value1, fill_value2, evt_wgt);
+
+  for (size_t i = 0; i < fname.size(); i++) {
+
+    bs_poly_reco_per_true[fname.at(i)][m]->Fill(fill_value1, fill_value2, wgts.at(i) * evt_wgt);
+
+    //std::cout << "Fill value: " << fill_value << ", weight: " << wgts_genie_pm1.at(i) << std::endl;
+
+  }
+
+}
 
 
 
 
-
+//___________________________________________________________________________________________________
+void Main::Maker::AddPolyBins(UBTH2Poly * h) {
+  for (int y = 0; y < n_bins_double_mumom; y++) {
+    for (int x = 0; x < n_bins_double_mucostheta; x++) {
+      if (x == 0 && y == 2) continue;
+      if (x == 0 && y == 3) continue; 
+      h->AddBin(bins_double_mucostheta[x], bins_double_mumom[y], bins_double_mucostheta[x+1], bins_double_mumom[y+1]);
+    }
+  }
+  h->AddBin(bins_double_mucostheta[0], bins_double_mumom[2], bins_double_mucostheta[0+1], bins_double_mumom[3+1]);
+}
 
 
 
@@ -505,11 +536,39 @@ void Main::Maker::MakeFile()
   for (int m = 0; m < n_bins_double_mucostheta; m++) {
     for (int n = 0; n < n_bins_double_mumom; n++) { 
       std::stringstream sstm;
-      sstm << "bs_genie_multisim_reco_per_true_nominal_" << m << "_" << n;
+      sstm << "bs_flux_multisim_reco_per_true_nominal_" << m << "_" << n;
       bs_flux_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
     }
   }
 
+
+  std::vector<UBTH2Poly*> _h_poly_reco_per_true; ///< Per true bins m,n, it contains the distribution of the reco quantity
+  _h_poly_reco_per_true.resize(_n_poly_bins);
+  for (int m = 0; m < _n_poly_bins; m++) {
+    std::stringstream sstm;
+    sstm << "poly_reco_per_true_" << m; 
+    _h_poly_reco_per_true[m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
+    AddPolyBins(_h_poly_reco_per_true[m]);
+  }
+
+
+  std::map<std::string,std::vector<UBTH2Poly*>> bs_genie_multisim_poly_reco_per_true;
+  bs_genie_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
+  for (int m = 0; m < _n_poly_bins; m++) {
+    std::stringstream sstm;
+    sstm << "bs_genie_multisim_poly_reco_per_true_nominal_" << m;
+    bs_genie_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
+    AddPolyBins(bs_genie_multisim_poly_reco_per_true["nominal"][m]);
+  }
+
+  std::map<std::string,std::vector<UBTH2Poly*>> bs_flux_multisim_poly_reco_per_true;
+  bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
+  for (int m = 0; m < _n_poly_bins; m++) {
+    std::stringstream sstm;
+    sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
+    bs_flux_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
+    AddPolyBins(bs_flux_multisim_poly_reco_per_true["nominal"][m]);
+  }
 
   // std::map<std::string,TTree*> tmap_mom_tree_gene_multisim_bs;
   // tmap_mom_tree_gene_multisim_bs["nominal"] = new TTree("mom_tree_genie_multisim_nominal", "mom_tree");
@@ -1665,6 +1724,7 @@ void Main::Maker::MakeFile()
 
         for (size_t i = 0; i < fname_genie_multisim.size(); i++) {
 
+          // Normal Bins
           std::string histo_name;
           histo_name = "bs_genie_multisim_reco_per_true_" + fname_genie_multisim.at(i);
           bs_genie_multisim_reco_per_true[fname_genie_multisim.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
@@ -1675,6 +1735,17 @@ void Main::Maker::MakeFile()
               sstm << histo_name << "_" << m << "_" << n;
               bs_genie_multisim_reco_per_true[fname_genie_multisim.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
             }
+          }
+
+          // Poly bins
+          histo_name = "bs_genie_multisim_poly_reco_per_true_" + fname_genie_multisim.at(i);
+          bs_genie_multisim_poly_reco_per_true[fname_genie_multisim.at(i)].resize(_n_poly_bins);
+          
+          for (int m = 0; m < _n_poly_bins; m++) {
+            std::stringstream sstm;
+            sstm << histo_name << "_" << m;
+            bs_genie_multisim_poly_reco_per_true[fname_genie_multisim.at(i)][m] = new UBTH2Poly(sstm.str().c_str(), "reco_per_true", -1, 1, 0, 2.5);
+            AddPolyBins(bs_genie_multisim_poly_reco_per_true[fname_genie_multisim.at(i)][m]);
           }
 
         }
@@ -1924,6 +1995,7 @@ void Main::Maker::MakeFile()
       // Reco per true
       for (size_t i = 0; i < fname_flux_multisim.size(); i++) {
 
+        // Normal Bins
         std::string histo_name;
         histo_name = "bs_flux_multisim_reco_per_true_" + fname_flux_multisim.at(i);
         bs_flux_multisim_reco_per_true[fname_flux_multisim.at(i)].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
@@ -1934,6 +2006,17 @@ void Main::Maker::MakeFile()
             sstm << histo_name << "_" << m << "_" << n;
             bs_flux_multisim_reco_per_true[fname_flux_multisim.at(i)][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
           }
+        }
+
+        // Poly bins
+        histo_name = "bs_flux_multisim_poly_reco_per_true_" + fname_flux_multisim.at(i);
+        bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)].resize(_n_poly_bins);
+
+        for (int m = 0; m < _n_poly_bins; m++) {
+          std::stringstream sstm;
+          sstm << histo_name << "_" << m;
+          bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)][m] = new UBTH2Poly(sstm.str().c_str(), "reco_per_true", -1, 1, 0, 2.5);
+          AddPolyBins(bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)][m]);
         }
 
       }
@@ -2682,6 +2765,15 @@ void Main::Maker::MakeFile()
         _h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_genie_multisim_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_flux) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_flux_multisim_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
+      }
+
+      // For the poly version
+      m = _h_poly_reco_per_true[0]->FindBin(_angle_true, _mom_true) - 1;
+      // std::cout << "n bins " << _h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << std::endl;
+      if (m >= 0 && m < _h_poly_reco_per_true[0]->GetNumberOfBins()+1) {
+        _h_poly_reco_per_true[m]->Fill(_angle_reco, _mom_mcs, event_weight);
+        if(!isdata && _fill_bootstrap_genie) FillBootstrap(_angle_reco, _mom_mcs, m, event_weight, bs_genie_multisim_poly_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
+        if(!isdata && _fill_bootstrap_flux) FillBootstrap(_angle_reco, _mom_mcs, m, event_weight, bs_flux_multisim_poly_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
       }
       // *** addition ends
 
@@ -4428,6 +4520,9 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&_h_reco_per_true, "h_reco_per_true");
   file_out->WriteObject(&bs_genie_multisim_reco_per_true, "bs_genie_multisim_reco_per_true");
   file_out->WriteObject(&bs_flux_multisim_reco_per_true, "bs_flux_multisim_reco_per_true");
+  file_out->WriteObject(&_h_poly_reco_per_true, "h_poly_reco_per_true");
+  file_out->WriteObject(&bs_genie_multisim_poly_reco_per_true, "bs_genie_multisim_poly_reco_per_true");
+  file_out->WriteObject(&bs_flux_multisim_poly_reco_per_true, "bs_flux_multisim_poly_reco_per_true");
 
   file_out->Write();
   

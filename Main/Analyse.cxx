@@ -793,27 +793,43 @@ std::cout << ">> here11" << std::endl;
   extbnb_file->GetObject("hmap_trktheta_trkmom_poly", temp_poly_map2);
   UBTH2Poly* h_trktheta_trkmom_total_poly_extbnb = (*temp_poly_map2)["total"];
 
+  // Reco Per True - GENIE Multisim
+  std::vector<UBTH2Poly*> * temp_poly_reco_per_true;
+  mc_bnbcosmic_file->GetObject("h_poly_reco_per_true", temp_poly_reco_per_true);
+  std::vector<UBTH2Poly*> h_poly_reco_per_true_mc = *temp_poly_reco_per_true;
+
 
   
     std::cout << "JJJJJ Just before" << std::endl;
+    // hmap_trktheta_trkmom_poly_mc["signal"]->ChangePartition(50, 50);
+    // h_trktheta_trkmom_total_poly_bnbon->ChangePartition(50, 50);
     std::cout << "maximum " << hmap_trktheta_trkmom_poly_mc["signal"]->GetMaximum() << std::endl;
     std::cout << "calling ProjectionY " << std::endl;
     TH1D * h_test = hmap_trktheta_trkmom_poly_mc["signal"]->ProjectionY("test", 1);
     std::cout << "before calling GetCopyWithBinNumbers" << std::endl;
     UBTH2Poly* h_poly_binnumber = hmap_trktheta_trkmom_poly_mc["signal"]->GetCopyWithBinNumbers("bs");
     std::cout << "after calling GetCopyWithBinNumbers" << std::endl;
+
     std::cout << "Original   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
     std::cout << "Projection bin 2, content: " << h_test->GetBinContent(2) << " +- " << h_test->GetBinError(2) << std::endl;
 
-    std::cout << "Just before subtratcion" << std::endl;
-    std::cout << "Subtracting   h_trktheta_trkmom_total_poly_bnbonbin 2, content: " << h_trktheta_trkmom_total_poly_bnbon->GetBinContent(9) << " +- " << h_trktheta_trkmom_total_poly_bnbon->GetBinError(9) << std::endl;
-    hmap_trktheta_trkmom_poly_mc["signal"]->Add(h_trktheta_trkmom_total_poly_bnbon, -1);
-    std::cout << "After subtraction   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
-    std::cout << "Just after subtratcion" << std::endl;
-    std::cout << "h_trktheta_trkmom_total_poly_bnbon->GetSumw2N() " << h_trktheta_trkmom_total_poly_bnbon->GetSumw2N() << std::endl;
+    // std::cout << "Just before subtratcion" << std::endl;
+    // std::cout << "Subtracting   h_trktheta_trkmom_total_poly_bnbonbin 2, content: " << h_trktheta_trkmom_total_poly_bnbon->GetBinContent(9) << " +- " << h_trktheta_trkmom_total_poly_bnbon->GetBinError(9) << std::endl;
+    // hmap_trktheta_trkmom_poly_mc["signal"]->Add(h_trktheta_trkmom_total_poly_bnbon, 1);
+    // std::cout << "After subtraction   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
+    // std::cout << "Just after subtratcion" << std::endl;
+    // std::cout << "h_trktheta_trkmom_total_poly_bnbon->GetSumw2N() " << h_trktheta_trkmom_total_poly_bnbon->GetSumw2N() << std::endl;
 
 
-    std::cout << "JJJJJ Just after" << std::endl;
+    // std::cout << "JJJJJ Just after" << std::endl;
+
+    // std::cout << "Just before divide" << std::endl;
+    // std::cout << "Before divide   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
+    // std::cout << "Before divide   h_trktheta_trkmom_total_poly_bnbonbin 2, content: " << h_trktheta_trkmom_total_poly_bnbon->GetBinContent(9) << " +- " << h_trktheta_trkmom_total_poly_bnbon->GetBinError(9) << std::endl;
+    // hmap_trktheta_trkmom_poly_mc["signal"]->Divide(h_trktheta_trkmom_total_poly_bnbon);
+    // std::cout << "After divide   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
+    // std::cout << "Just after divide" << std::endl;
+
 
 
   
@@ -822,7 +838,67 @@ std::cout << ">> here11" << std::endl;
   std::cout << "maximum h_eff_muangle_mumom_poly_den " << h_eff_muangle_mumom_poly_den->GetMaximum() << std::endl;
   std::cout << "maximum h_trktheta_trkmom_total_poly_bnbon " << h_trktheta_trkmom_total_poly_bnbon->GetMaximum() << std::endl;
   std::cout << "maximum h_trktheta_trkmom_total_poly_extbnb " << h_trktheta_trkmom_total_poly_extbnb->GetMaximum() << std::endl;
+
+
+
   
+    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+
+
+    MigrationMatrix4DPoly migrationmatrix4dpoly;
+    migrationmatrix4dpoly.SetRecoPerTrueHistos(h_poly_reco_per_true_mc);
+    migrationmatrix4dpoly.SetBins(hmap_trktheta_trkmom_poly_mc["signal"]->GetNumberOfBins());
+    TMatrix S = migrationmatrix4dpoly.CalculateMigrationMatrix();
+    
+    // migrationmatrix4dpoly.SetOutputFileName("latex_test.tex");
+    // migrationmatrix4dpoly.PrintSmearingMatrixLatex();
+    // migrationmatrix4dpoly.PlotMatrix();
+
+    // int n_bins = h_eff_muangle_mumom_poly_num->GetNumberOfBins();
+    // std::cout << "Number of bins: " << n_bins << std::endl;
+    // TMatrix S;
+    // S.Clear(); 
+    // S.ResizeTo(n_bins, n_bins);
+    // for (int i = 0; i < n_bins; i++) {
+    //   for (int j = 0; j < n_bins; j++) {
+    //     S[i][j] = 0;
+    //     if (i == j) S[i][j] = 1;
+    //   }
+    // }
+
+    CrossSectionCalculator2DPoly xsec_calc_poly;
+    xsec_calc_poly.set_verbosity(Base::msg::kDEBUG);
+    xsec_calc_poly.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+    xsec_calc_poly.SetPOT(bnbon_pot_meas);
+    xsec_calc_poly.SetOutDir("output_data_mc_xsec2d_POLY");
+    xsec_calc_poly.SetFluxCorrectionWeight(_flux_correction_weight);
+    std::cout << "FLUX: " << xsec_calc_poly.EstimateFlux() << std::endl;
+
+    xsec_calc_poly.SetHistograms(hmap_trktheta_trkmom_poly_mc, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
+    xsec_calc_poly.SetTruthHistograms(h_eff_muangle_mumom_poly_num, h_eff_muangle_mumom_poly_den);
+    xsec_calc_poly.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
+    xsec_calc_poly.ProcessPlots();
+    xsec_calc_poly.SetSmearingMatrix(S);
+    xsec_calc_poly.Smear();
+    xsec_calc_poly.Draw();
+
+    std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
+    UBTH2Poly * xsec_muangle_mumom = xsec_calc_poly.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+    UBTH2Poly * xsec_muangle_mumom_mc = xsec_calc_poly.GetMCCrossSection();
+
+
+    // file_out->cd();
+    // save_name = "xsec_muangle_mumom_POLY_" + _prefix;
+    // xsec_muangle_mumom->Write(save_name.c_str());
+    // save_name = "xsec_muangle_mumom_POLY_mc_" + _prefix;
+    // xsec_muangle_mumom_mc->Write(save_name.c_str());
+    // save_name = "covariance_matrix_muangle_mumom_POLY_" + _prefix;
+    // covariance_matrix_muangle_mumom.Write(save_name.c_str());
+  
+
+
+
+    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 
 
 

@@ -252,8 +252,9 @@ namespace Base {
     return _flux;
   }
 
-  void CrossSectionCalculator2DPoly::SetSmearingMatrix(Mat4D s)
+  void CrossSectionCalculator2DPoly::SetSmearingMatrix(TMatrix s)
   {
+    _S.ResizeTo(s.GetNrows(), s.GetNcols());
     _S = s;
   }
 
@@ -261,20 +262,34 @@ namespace Base {
   void CrossSectionCalculator2DPoly::Smear()
   {
 
-    Mat2D matrix_angle_mom_den_truth;
-    matrix_angle_mom_den_truth.resize(_h_eff_mumom_den->GetNbinsX(), std::vector<double>(_h_eff_mumom_den->GetNbinsY(), 0));
+    int n_bins = _h_eff_mumom_den->GetNumberOfBins();
 
-    Mat2D matrix_angle_mom_num_truth;
-    matrix_angle_mom_num_truth.resize(_h_eff_mumom_num->GetNbinsX(), std::vector<double>(_h_eff_mumom_num->GetNbinsY(), 0));
+    LOG_DEBUG() << "Number of bins: " << n_bins << std::endl;
 
-    for (int m = 0; m < _h_eff_mumom_den->GetNbinsX(); m++) {
-      for (int n = 0; n < _h_eff_mumom_den->GetNbinsY(); n++) {
-        matrix_angle_mom_den_truth[m][n] = _h_eff_mumom_den->GetBinContent(m+1, n+1);
-        matrix_angle_mom_num_truth[m][n] = _h_eff_mumom_num->GetBinContent(m+1, n+1);
-        //std::cout << "den (" << m << ", " << n << ") = " << matrix_angle_mom_den_truth[m][n] << std::endl;
-        //std::cout << "num (" << m << ", " << n << ") = " << matrix_angle_mom_num_truth[m][n] << std::endl;
-      }
+    TMatrix matrix_angle_mom_den_truth; matrix_angle_mom_den_truth.Clear(); matrix_angle_mom_den_truth.ResizeTo(n_bins, 1);
+    TMatrix matrix_angle_mom_num_truth; matrix_angle_mom_num_truth.Clear(); matrix_angle_mom_num_truth.ResizeTo(n_bins, 1);
+
+    for (int i = 0; i < n_bins; i++) {
+
+      matrix_angle_mom_den_truth[i] = _h_eff_mumom_den->GetBinContent(i+1);
+      matrix_angle_mom_num_truth[i] = _h_eff_mumom_num->GetBinContent(i+1);
+
     }
+
+    // Mat2D matrix_angle_mom_den_truth;
+    // matrix_angle_mom_den_truth.resize(_h_eff_mumom_den->GetNbinsX(), std::vector<double>(_h_eff_mumom_den->GetNbinsY(), 0));
+
+    // Mat2D matrix_angle_mom_num_truth;
+    // matrix_angle_mom_num_truth.resize(_h_eff_mumom_num->GetNbinsX(), std::vector<double>(_h_eff_mumom_num->GetNbinsY(), 0));
+
+    // for (int m = 0; m < _h_eff_mumom_den->GetNbinsX(); m++) {
+    //   for (int n = 0; n < _h_eff_mumom_den->GetNbinsY(); n++) {
+    //     matrix_angle_mom_den_truth[m][n] = _h_eff_mumom_den->GetBinContent(m+1, n+1);
+    //     matrix_angle_mom_num_truth[m][n] = _h_eff_mumom_num->GetBinContent(m+1, n+1);
+    //     //std::cout << "den (" << m << ", " << n << ") = " << matrix_angle_mom_den_truth[m][n] << std::endl;
+    //     //std::cout << "num (" << m << ", " << n << ") = " << matrix_angle_mom_num_truth[m][n] << std::endl;
+    //   }
+    // }
 
     TCanvas * c_truth_den = new TCanvas;
     _h_eff_mumom_den->SetMarkerColor(kWhite);
@@ -284,7 +299,7 @@ namespace Base {
     _h_eff_mumom_den->GetYaxis()->SetTitle("p_{#mu}^{truth}");
     _h_eff_mumom_den->Draw("colz text");
 
-    TString name = _folder +_name + "all";
+    TString name = _folder +_name + "all_truth";
     c_truth_den->SaveAs(name + ".pdf");
 
     TCanvas * c_truth_num = new TCanvas;
@@ -295,50 +310,77 @@ namespace Base {
     _h_eff_mumom_num->GetYaxis()->SetTitle("p_{#mu}^{truth}");
     _h_eff_mumom_num->Draw("colz text");
 
-    name = _folder +_name + "selected";
+    name = _folder +_name + "selected_truth";
     c_truth_num->SaveAs(name + ".pdf");
 
 
     //
     // Smearing 
     //
+// TMatrix S;
+//     S.Clear(); 
+//     S.ResizeTo(n_bins, n_bins);
+//     for (int i = 0; i < n_bins; i++) {
+//       for (int j = 0; j < n_bins; j++) {
+//         S[i][j] = 0;
+//         if (i == j) S[i][j] = 1;
+//       }
+//     }
+    // TMatrix matrix_angle_mom_den_smear; matrix_angle_mom_den_smear.Clear(); matrix_angle_mom_den_smear.ResizeTo(n_bins, 1);
+    // TMatrix matrix_angle_mom_num_smear; matrix_angle_mom_num_smear.Clear(); matrix_angle_mom_num_smear.ResizeTo(n_bins, 1);
 
-    Mat2D matrix_angle_mom_den_smear;
-    matrix_angle_mom_den_smear.resize(_h_eff_mumom_den->GetNbinsX(), std::vector<double>(_h_eff_mumom_den->GetNbinsY(), 0));
+    TMatrix matrix_angle_mom_den_smear = _S * matrix_angle_mom_den_truth;
+    TMatrix matrix_angle_mom_num_smear = _S * matrix_angle_mom_num_truth;
 
-    Mat2D matrix_angle_mom_num_smear;
-    matrix_angle_mom_num_smear.resize(_h_eff_mumom_num->GetNbinsX(), std::vector<double>(_h_eff_mumom_num->GetNbinsY(), 0));
+    // for (int i = 0; i < n_bins; i++) {
+    //   for (int j = 0; j < n_bins; j++) {
+
+    //     matrix_angle_mom_den_smear[i] +=  _S[i][j] * matrix_angle_mom_den_truth[j];
+    //     matrix_angle_mom_num_smear[i] +=  _S[i][j] * matrix_angle_mom_num_truth[j];
+
+    //   }
+    // }
 
 
+    // Mat2D matrix_angle_mom_den_smear;
+    // matrix_angle_mom_den_smear.resize(_h_eff_mumom_den->GetNbinsX(), std::vector<double>(_h_eff_mumom_den->GetNbinsY(), 0));
 
-    // Reco bins i, j
-    for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
-      for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {  
+    // Mat2D matrix_angle_mom_num_smear;
+    // matrix_angle_mom_num_smear.resize(_h_eff_mumom_num->GetNbinsX(), std::vector<double>(_h_eff_mumom_num->GetNbinsY(), 0));
 
-        // Truth bins m, n
-        for (int m = 0; m < _h_eff_mumom_den->GetNbinsX(); m++) {
-          for (int n = 0; n < _h_eff_mumom_den->GetNbinsY(); n++) {
 
-            matrix_angle_mom_den_smear[i][j] +=  _S[i][j][m][n] * matrix_angle_mom_den_truth[m][n];
-            matrix_angle_mom_num_smear[i][j] +=  _S[i][j][m][n] * matrix_angle_mom_num_truth[m][n];
+    // // Reco bins i, j
+    // for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
+    //   for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {  
 
-          }
-        }
-      }
-    }
+    //     // Truth bins m, n
+    //     for (int m = 0; m < _h_eff_mumom_den->GetNbinsX(); m++) {
+    //       for (int n = 0; n < _h_eff_mumom_den->GetNbinsY(); n++) {
+
+    //         matrix_angle_mom_den_smear[i][j] +=  _S[i][j][m][n] * matrix_angle_mom_den_truth[m][n];
+    //         matrix_angle_mom_num_smear[i][j] +=  _S[i][j][m][n] * matrix_angle_mom_num_truth[m][n];
+
+    //       }
+    //     }
+    //   }
+    // }
 
 
     //
     // Make a plottable histo of the smeared distributions
     //
-    TH2D * h_eff_den_smear = (TH2D*) _h_eff_mumom_den->Clone("h_eff_den_smear");
-    TH2D * h_eff_num_smear = (TH2D*) _h_eff_mumom_num->Clone("h_eff_num_smear");
-    for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
-      for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {
-        h_eff_den_smear->SetBinContent(i+1, j+1, matrix_angle_mom_den_smear[i][j]);
-        h_eff_num_smear->SetBinContent(i+1, j+1, matrix_angle_mom_num_smear[i][j]);
-      } 
+    UBTH2Poly * h_eff_den_smear = (UBTH2Poly*) _h_eff_mumom_den->Clone("h_eff_den_smear");
+    UBTH2Poly * h_eff_num_smear = (UBTH2Poly*) _h_eff_mumom_num->Clone("h_eff_num_smear");
+    for (int i = 0; i < n_bins; i++) {
+      h_eff_den_smear->SetBinContent(i+1, matrix_angle_mom_den_smear[i][0]);
+      h_eff_num_smear->SetBinContent(i+1, matrix_angle_mom_num_smear[i][0]);
     }
+    // for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
+    //   for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {
+    //     h_eff_den_smear->SetBinContent(i+1, j+1, matrix_angle_mom_den_smear[i][j]);
+    //     h_eff_num_smear->SetBinContent(i+1, j+1, matrix_angle_mom_num_smear[i][j]);
+    //   } 
+    // }
 
 
 
@@ -350,7 +392,7 @@ namespace Base {
     h_eff_den_smear->GetYaxis()->SetTitle("p_{#mu}^{reco}");
     h_eff_den_smear->Draw("colz text");
 
-    name = _folder +_name + "all_smear";
+    name = _folder +_name + "all_smeared";
     c_smear_den->SaveAs(name + ".pdf");
 
     TCanvas * c_smear_num = new TCanvas;
@@ -361,7 +403,7 @@ namespace Base {
     h_eff_num_smear->GetYaxis()->SetTitle("p_{#mu}^{reco}");
     h_eff_num_smear->Draw("colz text");
 
-    name = _folder +_name + "selected_smear";
+    name = _folder +_name + "selected_smeared";
     c_smear_num->SaveAs(name + ".pdf");
 
 
@@ -369,48 +411,49 @@ namespace Base {
     // Efficiency (true)
     //
 
-    TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
+    // TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
 
-    TCanvas * c_eff_true = new TCanvas;
-    teff_true->SetMarkerColor(kWhite);
-    teff_true->SetMarkerSize(1.6);
-    teff_true->SetTitle("Efficiency;cos(#theta_{#mu}^{true});p_{#mu}^{true}");
-    teff_true->Draw("colz text");
-    gPad->Update(); 
-    auto graph_t = teff_true->GetPaintedHistogram(); 
-    graph_t->SetMinimum(0);
-    graph_t->SetMaximum(1); 
-    gPad->Update();
+    // TCanvas * c_eff_true = new TCanvas;
+    // teff_true->SetMarkerColor(kWhite);
+    // teff_true->SetMarkerSize(1.6);
+    // teff_true->SetTitle("Efficiency;cos(#theta_{#mu}^{true});p_{#mu}^{true}");
+    // teff_true->Draw("colz text");
+    // gPad->Update(); 
+    // auto graph_t = teff_true->GetPaintedHistogram(); 
+    // graph_t->SetMinimum(0);
+    // graph_t->SetMaximum(1); 
+    // gPad->Update();
 
-    name = _folder +_name + "efficiency_true";
-    c_eff_true->SaveAs(name + ".pdf");
-    c_eff_true->SaveAs(name + ".C");
+    // name = _folder +_name + "efficiency_true";
+    // c_eff_true->SaveAs(name + ".pdf");
+    // c_eff_true->SaveAs(name + ".C");
 
 
     //
     // Efficiency (reco)
     //
 
-    TEfficiency* teff_reco = new TEfficiency(*h_eff_num_smear,*h_eff_den_smear);
+    // TEfficiency* teff_reco = new TEfficiency(*h_eff_num_smear,*h_eff_den_smear);
 
-    TCanvas * c_eff_reco = new TCanvas;
-    teff_reco->SetMarkerColor(kWhite);
-    teff_reco->SetMarkerSize(1.6);
-    teff_reco->SetTitle("Efficiency;cos(#theta_{#mu}^{reco});p_{#mu}^{reco}");
-    teff_reco->Draw("colz text");
-    gPad->Update(); 
-    auto graph = teff_reco->GetPaintedHistogram(); 
-    graph->SetMinimum(0);
-    graph->SetMaximum(1); 
-    gPad->Update();
+    // TCanvas * c_eff_reco = new TCanvas;
+    // teff_reco->SetMarkerColor(kWhite);
+    // teff_reco->SetMarkerSize(1.6);
+    // teff_reco->SetTitle("Efficiency;cos(#theta_{#mu}^{reco});p_{#mu}^{reco}");
+    // teff_reco->Draw("colz text");
+    // gPad->Update(); 
+    // auto graph = teff_reco->GetPaintedHistogram(); 
+    // graph->SetMinimum(0);
+    // graph->SetMaximum(1); 
+    // gPad->Update();
 
-    name = _folder +_name + "_efficiency_reco";
-    c_eff_reco->SaveAs(name + ".pdf");
-    c_eff_reco->SaveAs(name + ".C");
+    // name = _folder +_name + "_efficiency_reco";
+    // c_eff_reco->SaveAs(name + ".pdf");
+    // c_eff_reco->SaveAs(name + ".C");
 
     
 
-    _eff = teff_reco;
+    _eff = h_eff_num_smear;
+    _eff->Divide(h_eff_den_smear);
 
   }
 
@@ -486,6 +529,8 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
+    LOG_DEBUG() << "initial h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
+
     if (h_mc->GetSumw2N() == 0) { 
       LOG_WARNING() << "MC cross section histogram does not have Sum2w active." << std::endl;
     }
@@ -501,29 +546,32 @@ namespace Base {
     }
     std::cout << std::endl;
 
+    LOG_DEBUG() << "sub h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
+
+
 
 
 
     //
     // Create efficiency histogram
     //
-    UBTH2Poly * h_eff = (UBTH2Poly*)h_mc->Clone("h_eff");
-    h_eff->Sumw2();
-    for (int i = 1; i < h_mc->GetNbinsX() + 1; i++) {
-      for (int j = 1; j < h_mc->GetNbinsY() + 1; j++) {
+    // UBTH2Poly * h_eff = (UBTH2Poly*)h_mc->Clone("h_eff");
+    // h_eff->Sumw2();
+    // for (int i = 1; i < h_mc->GetNbinsX() + 1; i++) {
+    //   for (int j = 1; j < h_mc->GetNbinsY() + 1; j++) {
     
-        h_eff->SetBinContent(i, j, _eff->GetEfficiency(_eff->GetGlobalBin(i, j)));
-        double unc = 0.;
-        unc += _eff->GetEfficiencyErrorLow(_eff->GetGlobalBin(i, j));
-        unc += _eff->GetEfficiencyErrorUp(_eff->GetGlobalBin(i, j));
-        unc /= 2.;
-        h_eff->SetBinError(i, j, unc);
+    //     h_eff->SetBinContent(i, j, _eff->GetEfficiency(_eff->GetGlobalBin(i, j)));
+    //     double unc = 0.;
+    //     unc += _eff->GetEfficiencyErrorLow(_eff->GetGlobalBin(i, j));
+    //     unc += _eff->GetEfficiencyErrorUp(_eff->GetGlobalBin(i, j));
+    //     unc /= 2.;
+    //     h_eff->SetBinError(i, j, unc);
 
-        //std::cout << "Efficiency at bin " << i << ", " << j << ": " << h_eff->GetBinContent(i, j) << " =- " << unc << std::endl;
-      }
-    }
+    //     //std::cout << "Efficiency at bin " << i << ", " << j << ": " << h_eff->GetBinContent(i, j) << " =- " << unc << std::endl;
+    //   }
+    // }
 
-
+    UBTH2Poly * h_eff = _eff;
 
     //
     // Divide by efficiency
@@ -531,6 +579,9 @@ namespace Base {
 
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
+
+    LOG_INFO() << "Efficiency in bin (6, 2) is " << h_eff->GetBinContent(14) << std::endl;
+    LOG_DEBUG() << "eff h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
 
 
 
@@ -545,17 +596,20 @@ namespace Base {
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
 
+    LOG_DEBUG() << "scale h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
 
 
-    for (int bin_i = 1; bin_i < h_data->GetNbinsX()+1; bin_i++) {
-      for (int bin_j = 1; bin_j < h_data->GetNbinsY()+1; bin_j++) {
-        if (h_data->GetBinContent(bin_i, bin_j) <= 0.) {
-          LOG_INFO() << "******************************************" << std::endl;
-          LOG_INFO() << "Cross Section in bin " << bin_i-1 << ", " << bin_j-1 << " is <= 0, value: " << h_data->GetBinContent(bin_i, bin_j) << std::endl;
-          LOG_INFO() << "******************************************" << std::endl;
-        }
-      }
-    }
+
+
+    // for (int bin_i = 1; bin_i < h_data->GetNbinsX()+1; bin_i++) {
+    //   for (int bin_j = 1; bin_j < h_data->GetNbinsY()+1; bin_j++) {
+    //     if (h_data->GetBinContent(bin_i, bin_j) <= 0.) {
+    //       LOG_INFO() << "******************************************" << std::endl;
+    //       LOG_INFO() << "Cross Section in bin " << bin_i-1 << ", " << bin_j-1 << " is <= 0, value: " << h_data->GetBinContent(bin_i, bin_j) << std::endl;
+    //       LOG_INFO() << "******************************************" << std::endl;
+    //     }
+    //   }
+    // }
 
 
 
@@ -685,95 +739,92 @@ namespace Base {
     // Plot the cross section for MC
     //
 
-    // TCanvas * c_xsec_mc = new TCanvas();
-    // h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
-    // h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
-    // h_mc->GetYaxis()->SetTitleOffset(0.77);
-    // h_mc->Draw("lego1");
+    TCanvas * c_xsec_mc = new TCanvas();
+    h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
+    h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    h_mc->GetYaxis()->SetTitleOffset(0.77);
+    h_mc->Draw("lego1");
 
-    // sim->Draw();
+    sim->Draw();
 
-    // xsec_label->Draw();
+    xsec_label->Draw();
 
-    // TString name = _folder +_name + "_xsec_mc";
-    // c_xsec_mc->SaveAs(name + ".pdf");
-    // c_xsec_mc->SaveAs(name + ".C","C");
-
-
-
-
-    // double central_size = 0.02;
-    // UBTH2Poly* h_mc_empty_bottom = (UBTH2Poly*)h_mc->Clone("h_mc_empty_bottom");
-    // UBTH2Poly* h_mc_error_low = (UBTH2Poly*)h_mc->Clone("h_mc_error_low");
-    // UBTH2Poly* h_mc_error_up = (UBTH2Poly*)h_mc->Clone("h_mc_error_up");
-    // UBTH2Poly* h_mc_central = (UBTH2Poly*)h_mc->Clone("h_mc_central");
-
-    // for (int i = 1; i < h_mc->GetNbinsX()+1; i++) {
-    //   for (int j = 1; j < h_mc->GetNbinsY()+1; j++) {
-
-    //     double content = h_mc->GetBinContent(i, j);
-    //     double unc = h_mc->GetBinError(i, j);
-
-    //     //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
-
-    //     if (content != 0) {
-    //       h_mc_empty_bottom->SetBinContent(i, j, content - unc);
-    //       h_mc_error_low->SetBinContent(i, j, unc);
-    //       h_mc_error_up->SetBinContent(i, j, unc);
-    //       h_mc_central->SetBinContent(i, j, central_size);
-    //     } else {
-    //       h_mc_empty_bottom->SetBinContent(i, j, 0.);
-    //       h_mc_error_low->SetBinContent(i, j, 0.);
-    //       h_mc_error_up->SetBinContent(i, j, 0.);
-    //       h_mc_central->SetBinContent(i, j, 0.);
-    //     }
-
-    //   }
-    // }
+    TString name = _folder +_name + "_xsec_mc";
+    c_xsec_mc->SaveAs(name + ".pdf");
+    c_xsec_mc->SaveAs(name + ".C","C");
 
 
 
-    // h_mc_empty_bottom->SetFillColor(kWhite);
-    // h_mc_empty_bottom->SetLineWidth(1);
-    // h_mc_error_low->SetFillColor(29);
-    // h_mc_error_low->SetLineWidth(1);
-    // h_mc_central->SetFillColor(kGreen+2);
-    // h_mc_central->SetLineWidth(1);
-    // h_mc_error_up->SetFillColor(29);
-    // h_mc_error_up->SetLineWidth(1);
 
-    // THStack *hs_mc = new THStack("hs_mc", "");
-    // hs_mc->Add(h_mc_empty_bottom);
-    // hs_mc->Add(h_mc_error_low);
-    // hs_mc->Add(h_mc_central);
-    // hs_mc->Add(h_mc_error_up);
+    double central_size = 0.02;
+    UBTH2Poly* h_mc_empty_bottom = (UBTH2Poly*)h_mc->Clone("h_mc_empty_bottom");
+    UBTH2Poly* h_mc_error_low = (UBTH2Poly*)h_mc->Clone("h_mc_error_low");
+    UBTH2Poly* h_mc_error_up = (UBTH2Poly*)h_mc->Clone("h_mc_error_up");
+    UBTH2Poly* h_mc_central = (UBTH2Poly*)h_mc->Clone("h_mc_central");
 
-    // TCanvas * c_xsec_mc2 = new TCanvas();
-    // //hs_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
-    // //hs_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
-    // //hs_mc->GetYaxis()->SetTitleOffset(0.77);
+    for (int i = 1; i < h_mc->GetNumberOfBins()+1; i++) {
+
+      double content = h_mc->GetBinContent(i);
+      double unc = h_mc->GetBinError(i);
+
+      //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
+
+      if (content != 0) {
+        h_mc_empty_bottom->SetBinContent(i, content - unc);
+        h_mc_error_low->SetBinContent(i, unc);
+        h_mc_error_up->SetBinContent(i, unc);
+        h_mc_central->SetBinContent(i, central_size);
+      } else {
+        h_mc_empty_bottom->SetBinContent(i, 0.);
+        h_mc_error_low->SetBinContent(i, 0.);
+        h_mc_error_up->SetBinContent(i, 0.);
+        h_mc_central->SetBinContent(i, 0.);
+      }
+    }
+
+
+
+    h_mc_empty_bottom->SetFillColor(kWhite);
+    h_mc_empty_bottom->SetLineWidth(1);
+    h_mc_error_low->SetFillColor(29);
+    h_mc_error_low->SetLineWidth(1);
+    h_mc_central->SetFillColor(kGreen+2);
+    h_mc_central->SetLineWidth(1);
+    h_mc_error_up->SetFillColor(29);
+    h_mc_error_up->SetLineWidth(1);
+
+    THStack *hs_mc = new THStack("hs_mc", "");
+    hs_mc->Add(h_mc_empty_bottom);
+    hs_mc->Add(h_mc_error_low);
+    hs_mc->Add(h_mc_central);
+    hs_mc->Add(h_mc_error_up);
+
+    TCanvas * c_xsec_mc2 = new TCanvas();
+    //hs_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
+    //hs_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    //hs_mc->GetYaxis()->SetTitleOffset(0.77);
     
-    // hs_mc->Draw("lego4");
-    // hs_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
-    // hs_mc->GetXaxis()->SetTitleOffset(1.45);
-    // hs_mc->GetYaxis()->SetTitleOffset(1.45);
-    // hs_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
-    // c_xsec_mc2->Modified();
+    hs_mc->Draw("lego4");
+    hs_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
+    hs_mc->GetXaxis()->SetTitleOffset(1.45);
+    hs_mc->GetYaxis()->SetTitleOffset(1.45);
+    hs_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    c_xsec_mc2->Modified();
 
-    // sim->Draw();
+    sim->Draw();
 
-    // xsec_label->Draw();
+    xsec_label->Draw();
 
-    // TLegend *ll = new TLegend(0.722063,0.8210526,0.9971347,0.92,NULL,"brNDC");
-    // TH1D * dummymc = new TH1D("dummymc", "dummymc", 1, 0, 1);
-    // dummymc->SetLineColor(kGreen+2);
-    // ll->AddEntry(dummymc, "MC", "l");
-    // ll->AddEntry(h_mc_error_low, "Stat. Uncertainty", "f");
-    // ll->Draw();
+    TLegend *ll = new TLegend(0.722063,0.8210526,0.9971347,0.92,NULL,"brNDC");
+    TH1D * dummymc = new TH1D("dummymc", "dummymc", 1, 0, 1);
+    dummymc->SetLineColor(kGreen+2);
+    ll->AddEntry(dummymc, "MC", "l");
+    ll->AddEntry(h_mc_error_low, "Stat. Uncertainty", "f");
+    ll->Draw();
 
-    // name = _folder +_name + "_xsec_mc2";
-    // c_xsec_mc2->SaveAs(name + ".pdf");
-    // c_xsec_mc2->SaveAs(name + ".C","C");
+    name = _folder +_name + "_xsec_mc2";
+    c_xsec_mc2->SaveAs(name + ".pdf");
+    c_xsec_mc2->SaveAs(name + ".C","C");
 
 
 
@@ -785,98 +836,95 @@ namespace Base {
     //
 
     // Prepare 2d hist with error bars
-    // UBTH2Poly* h_data_empty_bottom = (UBTH2Poly*)h_data->Clone("h_data_empty_bottom");
-    // UBTH2Poly* h_data_error_low = (UBTH2Poly*)h_data->Clone("h_data_error_low");
-    // UBTH2Poly* h_data_error_up = (UBTH2Poly*)h_data->Clone("h_data_error_up");
-    // UBTH2Poly* h_data_central = (UBTH2Poly*)h_data->Clone("h_data_central");
+    UBTH2Poly* h_data_empty_bottom = (UBTH2Poly*)h_data->Clone("h_data_empty_bottom");
+    UBTH2Poly* h_data_error_low = (UBTH2Poly*)h_data->Clone("h_data_error_low");
+    UBTH2Poly* h_data_error_up = (UBTH2Poly*)h_data->Clone("h_data_error_up");
+    UBTH2Poly* h_data_central = (UBTH2Poly*)h_data->Clone("h_data_central");
 
-    // for (int i = 1; i < h_data->GetNbinsX()+1; i++) {
-    //   for (int j = 1; j < h_data->GetNbinsY()+1; j++) {
+    for (int i = 1; i < h_data->GetNumberOfBins()+1; i++) {
 
-    //     double content = h_data->GetBinContent(i, j);
-    //     double unc = h_data->GetBinError(i, j);
+      double content = h_data->GetBinContent(i);
+      double unc = h_data->GetBinError(i);
 
-    //     //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
+      //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
 
-    //     if (content != 0) {
-    //       h_data_empty_bottom->SetBinContent(i, j, content - unc);
-    //       h_data_error_low->SetBinContent(i, j, unc);
-    //       h_data_error_up->SetBinContent(i, j, unc);
-    //       h_data_central->SetBinContent(i, j, central_size);
-    //     } else {
-    //       h_data_empty_bottom->SetBinContent(i, j, 0.);
-    //       h_data_error_low->SetBinContent(i, j, 0.);
-    //       h_data_error_up->SetBinContent(i, j, 0.);
-    //       h_data_central->SetBinContent(i, j, 0.);
-    //     }
+      if (content != 0) {
+        h_data_empty_bottom->SetBinContent(i, content - unc);
+        h_data_error_low->SetBinContent(i, unc);
+        h_data_error_up->SetBinContent(i, unc);
+        h_data_central->SetBinContent(i, central_size);
+      } else {
+        h_data_empty_bottom->SetBinContent(i, 0.);
+        h_data_error_low->SetBinContent(i, 0.);
+        h_data_error_up->SetBinContent(i, 0.);
+        h_data_central->SetBinContent(i, 0.);
+      }
+    }
 
-    //   }
-    // }
+    h_data_empty_bottom->GetXaxis()->SetTitle(xaxis_label.c_str());
+    h_data_empty_bottom->GetYaxis()->SetTitle(yaxis_label.c_str());
+    h_data_empty_bottom->GetZaxis()->SetTitle(zaxis_label.c_str());
 
-    // h_data_empty_bottom->GetXaxis()->SetTitle(xaxis_label.c_str());
-    // h_data_empty_bottom->GetYaxis()->SetTitle(yaxis_label.c_str());
-    // h_data_empty_bottom->GetZaxis()->SetTitle(zaxis_label.c_str());
+    h_data_empty_bottom->SetFillColor(kWhite);
+    h_data_empty_bottom->SetLineWidth(1);
+    h_data_error_low->SetFillColor(kRed-10);
+    h_data_error_low->SetLineWidth(1);
+    h_data_central->SetFillColor(kRed);
+    h_data_central->SetLineWidth(1);
+    h_data_error_up->SetFillColor(kRed-10);
+    h_data_error_up->SetLineWidth(1);
 
-    // h_data_empty_bottom->SetFillColor(kWhite);
-    // h_data_empty_bottom->SetLineWidth(1);
-    // h_data_error_low->SetFillColor(kRed-10);
-    // h_data_error_low->SetLineWidth(1);
-    // h_data_central->SetFillColor(kRed);
-    // h_data_central->SetLineWidth(1);
-    // h_data_error_up->SetFillColor(kRed-10);
-    // h_data_error_up->SetLineWidth(1);
-
-    // THStack *hs_data = new THStack("hs_data", "");
-    // hs_data->Add(h_data_empty_bottom);
-    // hs_data->Add(h_data_error_low);
-    // hs_data->Add(h_data_central);
-    // hs_data->Add(h_data_error_up);
+    THStack *hs_data = new THStack("hs_data", "");
+    hs_data->Add(h_data_empty_bottom);
+    hs_data->Add(h_data_error_low);
+    hs_data->Add(h_data_central);
+    hs_data->Add(h_data_error_up);
 
 
-    // TCanvas * c_xsec_data = new TCanvas();
-    // //h_data->SetMarkerStyle(kFullCircle);
-    // //h_data->SetMarkerSize(0.6);
-    // h_data->SetFillColor(kGreen+2);
-    // h_data->SetLineColor(kBlack);
-    // h_data->GetXaxis()->SetTitle(xaxis_label.c_str());
-    // h_data->GetYaxis()->SetTitle(yaxis_label.c_str());
-    // h_data->GetZaxis()->SetTitle(zaxis_label.c_str());
-    // h_data->GetYaxis()->SetTitleOffset(0.77);
+    TCanvas * c_xsec_data = new TCanvas();
+    //h_data->SetMarkerStyle(kFullCircle);
+    //h_data->SetMarkerSize(0.6);
+    h_data->SetFillColor(kGreen+2);
+    h_data->SetLineColor(kBlack);
+    h_data->GetXaxis()->SetTitle(xaxis_label.c_str());
+    h_data->GetYaxis()->SetTitle(yaxis_label.c_str());
+    h_data->GetZaxis()->SetTitle(zaxis_label.c_str());
+    h_data->GetYaxis()->SetTitleOffset(0.77);
 
-    // xsec_label->Draw();
-    // prelim->Draw();
+    xsec_label->Draw();
+    prelim->Draw();
 
-    // h_data->Draw("e2");
+    h_data->Draw("e2");
     
 
-    // name = _folder +_name + "_xsec_data";
-    // c_xsec_data->SaveAs(name + ".pdf");
-    // c_xsec_data->SaveAs(name + ".C","C");
+    name = _folder +_name + "_xsec_data";
+    c_xsec_data->SaveAs(name + ".pdf");
+    c_xsec_data->SaveAs(name + ".C","C");
 
 
-    // TCanvas * c_xsec_data2 = new TCanvas();
+    TCanvas * c_xsec_data2 = new TCanvas();
 
-    // //hs_data->GetYaxis()->SetTitleOffset(0.77);
-    // hs_data->Draw("lego4");
-    // hs_data->GetXaxis()->SetTitle(xaxis_label.c_str());
-    // hs_data->GetXaxis()->SetTitleOffset(1.45);
-    // hs_data->GetYaxis()->SetTitleOffset(1.45);
-    // hs_data->GetYaxis()->SetTitle(yaxis_label.c_str());
-    // c_xsec_data2->Modified();
+    //hs_data->GetYaxis()->SetTitleOffset(0.77);
+    hs_data->Draw("lego4");
+    hs_data->GetXaxis()->SetTitle(xaxis_label.c_str());
+    hs_data->GetXaxis()->SetTitleOffset(1.45);
+    hs_data->GetYaxis()->SetTitleOffset(1.45);
+    hs_data->GetYaxis()->SetTitle(yaxis_label.c_str());
+    c_xsec_data2->Modified();
 
-    // xsec_label->Draw();
-    // prelim->Draw();
+    xsec_label->Draw();
+    prelim->Draw();
 
-    // TLegend *l = new TLegend(0.722063,0.8210526,0.9971347,0.92,NULL,"brNDC");
-    // TH1D * dummy = new TH1D("dummy", "dummy", 1, 0, 1);
-    // dummy->SetLineColor(kRed);
-    // l->AddEntry(dummy, "Data", "l");
-    // l->AddEntry(h_data_error_low, "Stat. Uncertainty", "f");
-    // l->Draw();
+    TLegend *l = new TLegend(0.722063,0.8210526,0.9971347,0.92,NULL,"brNDC");
+    TH1D * dummy = new TH1D("dummy", "dummy", 1, 0, 1);
+    dummy->SetLineColor(kRed);
+    l->AddEntry(dummy, "Data", "l");
+    l->AddEntry(h_data_error_low, "Stat. Uncertainty", "f");
+    l->Draw();
 
-    // name = _folder +_name + "_xsec_dat2";
-    // c_xsec_data2->SaveAs(name + ".pdf");
-    // c_xsec_data2->SaveAs(name + ".C","C");
+    name = _folder +_name + "_xsec_dat2";
+    c_xsec_data2->SaveAs(name + ".pdf");
+    c_xsec_data2->SaveAs(name + ".C","C");
 
 
 
@@ -893,29 +941,18 @@ namespace Base {
     // Project in cos(theta) bins
     //
 
-    // std::vector<TH1D> xsec_data_histos;
-    // std::vector<TH1D> xsec_mc_histos;
-    // std::vector<TH1D> xsec_data_unc_histos;
-    // // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
-    // //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
-    // //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
-    // //                                               "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
-    // //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
-    // //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
+    std::vector<TH1D> xsec_data_histos;
+    std::vector<TH1D> xsec_mc_histos;
+    std::vector<TH1D> xsec_data_unc_histos;
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+    //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
+    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.25",
+    //                                               "0.25 #leq cos(#theta_{#mu}^{reco}) < 0.50",
+    //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
+    //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
-    // // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
-    // //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
-    // //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
-    // //                                               "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
-    // //                                               "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
-    // //                                               "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
-    // //                                               "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
-    // //                                               "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
-    // //                                               "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
-    // //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
-    // //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
-
-    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+    //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
     //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
     //                                               "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
     //                                               "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
@@ -926,111 +963,112 @@ namespace Base {
     //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
     //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
+                                                  "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+                                                  "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+                                                  "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+                                                  "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+                                                  "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+                                                  "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+                                                  "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+                                                  "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
 
-    // LOG_INFO() << "n bins x " << h_data->GetNbinsX() << std::endl;
-    // LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
+    int x_bins = 8;
+    LOG_INFO() << "n bins x " << h_data->GetNbinsX() << std::endl;
+    LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
 
-    // int horizontal_division = 2;
-    // int vertical_division = floor(h_data->GetNbinsX() / 2.);
+    int horizontal_division = 2;
+    int vertical_division = floor(x_bins / 2.);
 
-    // if (h_data->GetNbinsX() / 2. != floor(h_data->GetNbinsX()) / 2.) vertical_division++;
+    if (x_bins / 2. != floor(x_bins / 2.)) vertical_division++;
 
-    // LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
-    // LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
+    LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
+    LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
 
-    // // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
-    // TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
-    // c_test->SetBottomMargin(0.15);
-    // // gStyle->SetOptStat(0);
-    // c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
+    // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
+    TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
+    c_test->SetBottomMargin(0.15);
+    // gStyle->SetOptStat(0);
+    c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
 
-    // for (int i = 0; i < h_data->GetNbinsX(); i++) {
-    //   xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+1));
-    //   xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, i+1));
-    //   xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1, i+1));
-    // }
+    for (int i = 0; i < x_bins; i++) {
+    LOG_CRITICAL() << "i = "<< i << std::endl;
 
+      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1));
+      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1));
+      xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1));
+    }
 
-    // for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
-
-    //   c_test->cd(i+1);
-
-    //   gPad->SetBottomMargin(0.15);
-    //   gPad->SetLeftMargin(0.15);
-    //   gPad->SetTopMargin(0.1128947);
-
-    //   xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
-    //   xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
-    //   xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
-    //   xsec_mc_histos.at(i).GetXaxis()->CenterTitle();
-    //   xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
-    //   xsec_mc_histos.at(i).SetLineColor(kGreen+2);
-    //   xsec_mc_histos.at(i).SetFillColor(29);
-    //   xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
-    //   xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
-    //   xsec_mc_histos.at(i).Draw("E2");
-    //   TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
-    //   h_main->SetLineColor(kGreen+2);
-    //   h_main->SetFillColor(0); // fully transparent
-    //   h_main->Draw("histo same");
-
-    //   xsec_mc_histos.at(i).SetMinimum(0.);
-    //   // if (i == 0) {
-    //   //   xsec_mc_histos.at(i).SetMaximum(0.4);
-    //   // } else if (i == 1) {
-    //   //   xsec_mc_histos.at(i).SetMaximum(0.4);
-    //   // } 
-
-    //   // if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.40);
-    //   // if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.40);
-    //   // if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.60);
-    //   // if (i == 3) xsec_mc_histos.at(i).SetMaximum(0.80);
-    //   // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
-    //   // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
-
-    //   // if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.50);
-    //   // if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.45);
-    //   // if (i == 2) xsec_mc_histos.at(i).SetMaximum(0.80);
-    //   // if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.00);
-    //   // // if (i == 3) xsec_mc_histos.at(i).SetMinimum(-0.3);
-    //   // if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.25);
-    //   // if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
-
-    //   if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.35);
-    //   if (i == 1) xsec_mc_histos.at(i).SetMaximum(0.70);
-    //   if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.00);
-    //   if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.25);
-    //   if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.40);
-    //   if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
-
-    //   // The outer uncertainty bar
-    //   xsec_data_unc_histos.at(i).SetMarkerStyle(20);
-    //   xsec_data_unc_histos.at(i).SetMarkerSize(0.1);
-    //   xsec_data_unc_histos.at(i).Draw("E1 X0 same");
-
-    //   // The proper data points
-    //   xsec_data_histos.at(i).SetMarkerStyle(20);
-    //   xsec_data_histos.at(i).SetMarkerSize(0.5);
-    //   xsec_data_histos.at(i).Draw("E1 X0 same");
-
-    //   if (i == 0) {
-    //     TLegend *l;
-    //     l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
-    //     l->SetFillColor(0);
-    //     l->SetFillStyle(0);
-    //     l->SetTextSize(0.03407284);
-    //     l->AddEntry(&xsec_mc_histos.at(i), "GENIE Default + Emp. MEC (Stat. Unc.)");
-    //     l->AddEntry(&xsec_data_histos.at(i), "Measured (Stat. Unc.)", "ep");
-    //     l->Draw();
-    //   }
-    // }
-    // // PlottingTools::DrawPreliminaryXSec();
+    LOG_CRITICAL() << "After projection" << std::endl;
 
 
-    // name = _folder +_name + "_xsec_anglesplit";
-    // c_test->SaveAs(name + ".pdf");
-    // c_test->SaveAs(name + ".C","C");
+    for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
+    LOG_CRITICAL() << "i = " << i  << std::endl;
+
+      c_test->cd(i+1);
+
+      gPad->SetBottomMargin(0.15);
+      gPad->SetLeftMargin(0.15);
+      gPad->SetTopMargin(0.1128947);
+
+      xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
+      xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
+      xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
+      xsec_mc_histos.at(i).GetXaxis()->CenterTitle();
+      xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
+      xsec_mc_histos.at(i).SetLineColor(kGreen+2);
+      xsec_mc_histos.at(i).SetFillColor(29);
+      xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
+      xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
+      xsec_mc_histos.at(i).Draw("E2");
+      TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
+      h_main->SetLineColor(kGreen+2);
+      h_main->SetFillColor(0); // fully transparent
+      h_main->Draw("histo same");
+
+      xsec_mc_histos.at(i).SetMinimum(0.);
+      // if (i == 0) {
+      //   xsec_mc_histos.at(i).SetMaximum(0.4);
+      // } else if (i == 1) {
+      //   xsec_mc_histos.at(i).SetMaximum(0.4);
+      // } 
+
+      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.5);
+      if (i == 1) xsec_mc_histos.at(i).SetMaximum(1.00);
+      if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.00);
+      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.25);
+      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.60);
+      if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+
+      // The outer uncertainty bar
+      xsec_data_unc_histos.at(i).SetMarkerStyle(20);
+      xsec_data_unc_histos.at(i).SetMarkerSize(0.1);
+      xsec_data_unc_histos.at(i).Draw("E1 X0 same");
+
+      // The proper data points
+      xsec_data_histos.at(i).SetMarkerStyle(20);
+      xsec_data_histos.at(i).SetMarkerSize(0.5);
+      xsec_data_histos.at(i).Draw("E1 X0 same");
+
+      if (i == 0) {
+        TLegend *l;
+        l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
+        l->SetFillColor(0);
+        l->SetFillStyle(0);
+        l->SetTextSize(0.03407284);
+        l->AddEntry(&xsec_mc_histos.at(i), "GENIE Default + Emp. MEC (Stat. Unc.)");
+        l->AddEntry(&xsec_data_histos.at(i), "Measured (Stat. Unc.)", "ep");
+        l->Draw();
+      }
+    }
+    // PlottingTools::DrawPreliminaryXSec();
+
+
+    name = _folder +_name + "_xsec_anglesplit";
+    c_test->SaveAs(name + ".pdf");
+    c_test->SaveAs(name + ".C","C");
 
 
 

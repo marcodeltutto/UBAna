@@ -54,11 +54,13 @@
 #include "ubana/Base/CrossSectionCalculator1D.h"
 #include "ubana/Base/MigrationMatrix2D.h"
 #include "ubana/Base/MigrationMatrix4D.h"
+#include "ubana/Base/MigrationMatrix4DPoly.h"
 #include "ubana/Base/CrossSectionCalculator2D.h"
 #include "ubana/Base/ReweightingPlotter.h"
 #include "ubana/Base/CovarianceCalculator2D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator1D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator2D.h"
+#include "ubana/Base/CrossSectionCalculator2DPoly.h"
 
 #include "ubana/Base/LoggerFeature.h"
 

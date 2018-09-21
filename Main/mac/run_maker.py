@@ -60,7 +60,7 @@ maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bn
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v12.root") # Adam test file truthfiltered
 
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_dirt_ubcodev06_26_01_20__v15.root") # Dirt v15
-# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15.root") # Dirt v15
+# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15_POLY.root") # Dirt v15
 
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)
@@ -108,7 +108,7 @@ maker.MakeFile()
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_mcc8.7_test6.root") # 5e19
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_mcc8.7_test6.root") # 5e19
 maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_a_mcc8.9_test4.root") # 1.6e20
-maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root") # 1.6e20
+maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_a_mcc8.9_test4_POLY.root") # 1.6e20
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_mcc8.9_test7.root")
@@ -148,7 +148,7 @@ maker.MakeFile()
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_mcc8.7_test6.root") # 5e19
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_extbnb_mcc8.7_test6.root") # 5e19
 maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_a_mcc8.9_test4.root") # 1.6e20
-maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root") # 1.6e20
+maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_extbnb_a_mcc8.9_test4_POLY.root") # 1.6e20
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_extbnb_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_mcc8.9_test7.root")

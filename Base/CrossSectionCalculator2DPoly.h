@@ -129,7 +129,7 @@ namespace Base {
     UBTH2Poly* GetMCCrossSection() {return _h_mc;}
 
     ///
-    void SetSmearingMatrix(std::vector<std::vector<std::vector<std::vector<double>>>>);
+    void SetSmearingMatrix(TMatrix);
 
     ///
     void SetCovarianceMatrix(UBTH2Poly);
@@ -193,12 +193,12 @@ namespace Base {
 
     UBTH2Poly* _h_data_sub;
 
-    TEfficiency* _eff;
+    UBTH2Poly* _eff;
 
     UBTH2Poly* _h_mc = NULL; ///< The to-be extracted MC cross section
     UBTH2Poly* _h_data = NULL; ///< The to-be extracted data cross section
 
-    std::vector<std::vector<std::vector<std::vector<double>>>> _S;
+    TMatrix _S; ///< The migration matrix (to be set externally)
 
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
