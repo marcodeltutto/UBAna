@@ -10,6 +10,22 @@ namespace Base {
     _f_out.open(name, std::ios::out | std::ios::trunc);
   }
 
+  void MigrationMatrix4D::SetOutDir(std::string dir)
+  {
+    std::string out_folder_base = std::getenv("MYSW_OUTDIR");
+
+    _outdir = out_folder_base + dir;
+
+    auto now = std::time(nullptr);
+    char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
+    std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
+
+    _folder = _outdir + "_" + timestamp + "/";
+
+    system(("mkdir " + _folder).c_str());
+
+  }
+
   void MigrationMatrix4D::SetTTree(TTree *t)
   {
     _tree = t;

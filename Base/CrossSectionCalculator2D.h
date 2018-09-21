@@ -82,7 +82,7 @@ namespace Base {
     /// Set the plot name for saving and the label for the axis
     void SetNameAndLabel(std::string name, std::string label);
 
-    /// Sets the outputdirectory
+    /// Sets the output directory
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms

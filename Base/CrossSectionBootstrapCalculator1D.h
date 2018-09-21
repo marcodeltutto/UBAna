@@ -92,9 +92,6 @@ namespace Base {
     /// Set the plot name for saving and the label for the axis
     void SetNameAndLabel(std::string name, std::string label);
 
-    /// Sets the outputdirectory
-    void SetOutDir(std::string dir);
-
     /// Sets all the histograms
     void SetHistograms(std::map<std::string,std::map<std::string,TH1D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH1D* bnbon, TH1D* extbnb, std::map<std::string,TH1D*> dirt = std::map<std::string,TH1D*>(), TH1D* intimecosmic = 0);
 
@@ -119,7 +116,7 @@ namespace Base {
     ///
     void Reset();
  
-    ///
+    /// Sets the output directory
     void SetSavePrefix(std::string s, std::string folder = "output_covariance_plots");
 
     ///
