@@ -10,7 +10,7 @@ namespace Base {
     _f_out.open(name, std::ios::out | std::ios::trunc);
   }
 
-  void MigrationMatrix4D::SetOutDir(std::string dir)
+  void MigrationMatrix4DPoly::SetOutDir(std::string dir)
   {
     std::string out_folder_base = std::getenv("MYSW_OUTDIR");
 

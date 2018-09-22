@@ -128,6 +128,7 @@ namespace Base {
 
     bool _verbose = false;
 
+    std::string _outdir;
     std::string _folder = "MigrationMatrix4DPolyPlots/";
 
     bool _use_weights = false; ///< If true uses additional wights (usually for multisim)
