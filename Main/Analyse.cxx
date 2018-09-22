@@ -852,6 +852,8 @@ std::cout << ">> here11" << std::endl;
     MigrationMatrix4DPoly migrationmatrix4dpoly;
     migrationmatrix4dpoly.SetRecoPerTrueHistos(h_poly_reco_per_true_mc);
     migrationmatrix4dpoly.SetBins(hmap_trktheta_trkmom_poly_mc["signal"]->GetNumberOfBins());
+    migrationmatrix4dpoly.SetOutDir();
+    
     TMatrix S = migrationmatrix4dpoly.CalculateMigrationMatrix();
     
     // migrationmatrix4dpoly.SetOutputFileName("latex_test.tex");
