@@ -159,10 +159,10 @@ public :
    vector<string>  evtwgt_genie_multisim_funcname;
    vector<int>     evtwgt_genie_multisim_nweight;
    vector<vector<double> > evtwgt_genie_multisim_weight;
-   Int_t           evtwgt_genie_models_multisim_nfunc;
-   vector<string>  evtwgt_genie_models_multisim_funcname;
-   vector<int>     evtwgt_genie_models_multisim_nweight;
-   vector<vector<double> > evtwgt_genie_models_multisim_weight;
+   Int_t           evtwgt_extra_syst_multisim_nfunc;
+   vector<string>  evtwgt_extra_syst_multisim_funcname;
+   vector<int>     evtwgt_extra_syst_multisim_nweight;
+   vector<vector<double> > evtwgt_extra_syst_multisim_weight;
    Int_t           evtwgt_flux_multisim_nfunc;
    vector<string>  evtwgt_flux_multisim_funcname;
    vector<int>     evtwgt_flux_multisim_nweight;
@@ -304,10 +304,10 @@ public :
    TBranch        *b_ubxsec_event_split_evtwgt_genie_multisim_funcname;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_genie_multisim_nweight;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_genie_multisim_weight;   //!
-   TBranch        *b_ubxsec_event_split_evtwgt_genie_models_multisim_nfunc;   //!
-   TBranch        *b_ubxsec_event_split_evtwgt_genie_models_multisim_funcname;   //!
-   TBranch        *b_ubxsec_event_split_evtwgt_genie_models_multisim_nweight;   //!
-   TBranch        *b_ubxsec_event_split_evtwgt_genie_models_multisim_weight;   //!
+   TBranch        *b_ubxsec_event_split_evtwgt_extra_syst_multisim_nfunc;   //!
+   TBranch        *b_ubxsec_event_split_evtwgt_extra_syst_multisim_funcname;   //!
+   TBranch        *b_ubxsec_event_split_evtwgt_extra_syst_multisim_nweight;   //!
+   TBranch        *b_ubxsec_event_split_evtwgt_extra_syst_multisim_weight;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_flux_multisim_nfunc;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_flux_multisim_funcname;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_flux_multisim_nweight;   //!
@@ -519,10 +519,10 @@ void UBXSecEvent::Init(TTree *tree)
    fChain->SetBranchAddress("evtwgt_genie_multisim_funcname", &evtwgt_genie_multisim_funcname, &b_ubxsec_event_split_evtwgt_genie_multisim_funcname);
    fChain->SetBranchAddress("evtwgt_genie_multisim_nweight", &evtwgt_genie_multisim_nweight, &b_ubxsec_event_split_evtwgt_genie_multisim_nweight);
    fChain->SetBranchAddress("evtwgt_genie_multisim_weight", &evtwgt_genie_multisim_weight, &b_ubxsec_event_split_evtwgt_genie_multisim_weight);
-   fChain->SetBranchAddress("evtwgt_genie_models_multisim_nfunc", &evtwgt_genie_models_multisim_nfunc, &b_ubxsec_event_split_evtwgt_genie_models_multisim_nfunc);
-   fChain->SetBranchAddress("evtwgt_genie_models_multisim_funcname", &evtwgt_genie_models_multisim_funcname, &b_ubxsec_event_split_evtwgt_genie_models_multisim_funcname);
-   fChain->SetBranchAddress("evtwgt_genie_models_multisim_nweight", &evtwgt_genie_models_multisim_nweight, &b_ubxsec_event_split_evtwgt_genie_models_multisim_nweight);
-   fChain->SetBranchAddress("evtwgt_genie_models_multisim_weight", &evtwgt_genie_models_multisim_weight, &b_ubxsec_event_split_evtwgt_genie_models_multisim_weight);
+   fChain->SetBranchAddress("evtwgt_extra_syst_multisim_nfunc", &evtwgt_extra_syst_multisim_nfunc, &b_ubxsec_event_split_evtwgt_extra_syst_multisim_nfunc);
+   fChain->SetBranchAddress("evtwgt_extra_syst_multisim_funcname", &evtwgt_extra_syst_multisim_funcname, &b_ubxsec_event_split_evtwgt_extra_syst_multisim_funcname);
+   fChain->SetBranchAddress("evtwgt_extra_syst_multisim_nweight", &evtwgt_extra_syst_multisim_nweight, &b_ubxsec_event_split_evtwgt_extra_syst_multisim_nweight);
+   fChain->SetBranchAddress("evtwgt_extra_syst_multisim_weight", &evtwgt_extra_syst_multisim_weight, &b_ubxsec_event_split_evtwgt_extra_syst_multisim_weight);
    fChain->SetBranchAddress("evtwgt_flux_multisim_nfunc", &evtwgt_flux_multisim_nfunc, &b_ubxsec_event_split_evtwgt_flux_multisim_nfunc);
    fChain->SetBranchAddress("evtwgt_flux_multisim_funcname", &evtwgt_flux_multisim_funcname, &b_ubxsec_event_split_evtwgt_flux_multisim_funcname);
    fChain->SetBranchAddress("evtwgt_flux_multisim_nweight", &evtwgt_flux_multisim_nweight, &b_ubxsec_event_split_evtwgt_flux_multisim_nweight);

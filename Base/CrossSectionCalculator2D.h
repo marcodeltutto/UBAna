@@ -82,7 +82,7 @@ namespace Base {
     /// Set the plot name for saving and the label for the axis
     void SetNameAndLabel(std::string name, std::string label);
 
-    /// Sets the outputdirectory
+    /// Sets the output directory
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms
@@ -129,6 +129,9 @@ namespace Base {
 
     ///
     void SetCovarianceMatrix(TH2D);
+
+    ///
+    void SetFractionalCovarianceMatrix(TH2D);
 
     ///
     void Smear();
@@ -206,9 +209,12 @@ namespace Base {
     TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
 
-    TH2D *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
-    TH2D *_cov_matrix_total = NULL; ///< Total  covariance matrix
-    TH2D *_corr_matrix_total = NULL; ///< Total correlation matrix
+    TH2D _frac_covariance_matrix; ///< 2D Histogram representing the fractionalcovariance matrix (to be set externally)
+    bool _frac_covariance_matrix_is_set = false; ///< Flag that remembers if the fractionalcovariance matrix was set for this cross section calculation (if not, no syst will be added)
+
+    TH2D *_frac_cov_matrix_total = NULL; ///< Total final fractional covariance matrix
+    TH2D *_cov_matrix_total = NULL; ///< Total final covariance matrix
+    TH2D *_corr_matrix_total = NULL; ///< Total final correlation matrix
 
   };
 }

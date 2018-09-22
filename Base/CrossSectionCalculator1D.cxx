@@ -33,6 +33,7 @@ namespace Base {
     _h_true_reco_mom = NULL;
 
     _covariance_matrix_is_set = false;
+    _frac_covariance_matrix_is_set = false;
   }
 
   void CrossSectionCalculator1D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt, double intimecosmic)
@@ -78,6 +79,22 @@ namespace Base {
   {
     _covariance_matrix = h;
     _covariance_matrix_is_set = true;
+
+    if (_frac_covariance_matrix_is_set) {
+      LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
+      throw std::exception();
+    }
+  }
+
+  void CrossSectionCalculator1D::SetFractionalCovarianceMatrix(TH2D h)
+  {
+    _frac_covariance_matrix = h;
+    _frac_covariance_matrix_is_set = true;
+
+    if (_covariance_matrix_is_set) {
+      LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
+      throw std::exception();
+    }
   }
 
   void CrossSectionCalculator1D::SetMigrationMatrix(TMatrix s) 
@@ -788,7 +805,30 @@ namespace Base {
 
     TH1D * h_syst_unc = (TH1D*) _h_data->Clone("h_syst_unc");
 
+    if (_frac_covariance_matrix_is_set) {
+
+      LOG_INFO() << "Building covariance matrix from imported fractional covariance matrix." << std::endl;
+
+      _covariance_matrix = * ( (TH2D*) _frac_covariance_matrix.Clone("_covariance_matrix"));
+      _covariance_matrix.Reset();
+
+      // Loop over the bins and multiply this fractional covariance matrix by the xsec
+      // so to obtain a covariance matrix
+      for (int i = 0; i < _covariance_matrix.GetNbinsX(); i++) {
+
+        for (int j = 0; j < _covariance_matrix.GetNbinsX(); j++) {
+
+          _covariance_matrix.SetBinContent(i+1, j+1, _frac_covariance_matrix.GetBinContent(i+1, j+1) * (_h_data->GetBinContent(i+1) * _h_data->GetBinContent(j+1)) );
+
+        }
+      }
+
+      _covariance_matrix_is_set = true;
+    }
+
     if (_covariance_matrix_is_set) {
+
+      LOG_INFO() << "Evaluating systematic uncertainties from covariance matrix." << std::endl;
 
       // Just to set the right bins:
       _cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");

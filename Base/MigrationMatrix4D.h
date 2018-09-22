@@ -87,6 +87,9 @@ namespace Base {
     ///
     void SetOutputFileName(std::string name);
 
+    /// Sets the output directory
+    void SetOutDir(std::string dir = "migration_matrix_4D_plots");
+
     ///
     void PrintSmearingMatrixLatex();
 
@@ -118,6 +121,7 @@ namespace Base {
 
     bool _verbose = false;
 
+    std::string _outdir;
     std::string _folder = "MigrationMatrix4DPlots/";
 
     bool _use_weights = false; ///< If true uses additional wights (usually for multisim)

@@ -73,6 +73,9 @@ namespace Base {
     /// 
     void GetCovarianceMatrix(TH2D &);
 
+    /// 
+    void GetFractionalCovarianceMatrix(TH2D &);
+
     ///
     void PlotMatrices();
 

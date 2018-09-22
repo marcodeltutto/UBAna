@@ -24,6 +24,11 @@ namespace Base {
     h = _M_h;
   }
 
+  void CovarianceCalculator4D::GetFractionalCovarianceMatrix(TH2D &h)
+  {
+    h = _M_frac_h;
+  }
+
   void CovarianceCalculator4D::AddExtraDiagonalUncertainty(double value) 
   {
     _extra_relative_uncertainty = value;

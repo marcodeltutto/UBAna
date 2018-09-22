@@ -58,34 +58,6 @@ namespace Base {
     _label = label;
   }
 
-  void CrossSectionBootstrapCalculator2D::SetOutDir(std::string dir)
-  {
-    _outdir = dir;
-
-    auto now = std::time(nullptr);
-    char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
-    std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
-
-    _folder = _outdir + "_" + timestamp + "/";
-
-    system(("mkdir " + _folder).c_str());
-
-  }
-
-
-
-/*
-  void CrossSectionBootstrapCalculator2D::PrintConfig() {
-
-    std::cout << "--- CrossSectionBootstrapCalculator2D:" << std::endl;
-    std::cout << "---   _scale_factor_mc_bnbcosmic     = " << _scale_factor_mc_bnbcosmic << std::endl;
-    std::cout << "---   _scale_factor_bnbon            = " << _scale_factor_bnbon << std::endl;
-    std::cout << "---   _scale_factor_extbnb           = " << _scale_factor_extbnb << std::endl;
-    std::cout << "---   _scale_factor_mc_intimecosmic  = " << _scale_factor_mc_intimecosmic << std::endl;
-    std::cout << "---   _pot                           = " << _pot << std::endl;
-
-  }
-  */
 
   void CrossSectionBootstrapCalculator2D::SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt, TH2D* intimecosmic) 
   {
@@ -150,15 +122,17 @@ namespace Base {
 
   void CrossSectionBootstrapCalculator2D::SetSavePrefix(std::string s, std::string folder)
   {
+    std::string out_folder_base = std::getenv("MYSW_OUTDIR");
+
+    std::string out_folder = out_folder_base + folder;
+
     std::string timestamp;
-    if (folder != "") {
-      auto now = std::time(nullptr);
-      char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
-      timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
+    auto now = std::time(nullptr);
+    char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
+    timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
       
-      system(("mkdir -p " + folder + "_" + timestamp).c_str());    
-    }
-  	_save_prefix = folder + "_" + timestamp + "/" + s;
+    system(("mkdir -p " + out_folder + "_" + s + "_" + timestamp).c_str());    
+    _save_prefix = out_folder + "_" + s + "_" + timestamp + "/" + s;
   }
 
   void CrossSectionBootstrapCalculator2D::SetFluxHistogramType(bool rwgt_flux, std::string flux_unc_type)
@@ -172,11 +146,24 @@ namespace Base {
     h = _cov_matrix;
   }
 
+  void CrossSectionBootstrapCalculator2D::GetFractionalCovarianceMatrix(TH2D & h)
+  {
+    h = _frac_cov_matrix;
+  }
+
   void CrossSectionBootstrapCalculator2D::SaveCovarianceMatrix(std::string file_name, std::string name)
   {
     TFile* cov_file = TFile::Open(file_name.c_str(), "UPDATE");
     cov_file->cd();
     _cov_matrix.Write(name.c_str());
+    cov_file->Close();
+  }
+
+  void CrossSectionBootstrapCalculator2D::SaveFractionalCovarianceMatrix(std::string file_name, std::string name)
+  {
+    TFile* cov_file = TFile::Open(file_name.c_str(), "UPDATE");
+    cov_file->cd();
+    _frac_cov_matrix.Write(name.c_str());
     cov_file->Close();
   }
 
@@ -398,6 +385,7 @@ namespace Base {
     _cov_calc.CalculateCovarianceMatrix();
     _cov_calc.PlotMatrices();
     _cov_calc.GetCovarianceMatrix(_cov_matrix);
+    _cov_calc.GetFractionalCovarianceMatrix(_frac_cov_matrix);
 
 
 

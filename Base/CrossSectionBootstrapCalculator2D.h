@@ -91,9 +91,6 @@ namespace Base {
     /// Set the plot name for saving and the label for the axis
     void SetNameAndLabel(std::string name, std::string label);
 
-    /// Sets the outputdirectory
-    void SetOutDir(std::string dir);
-
     /// Sets all the histograms
     void SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt = std::map<std::string,TH2D*>(), TH2D* intimecosmic = 0);
 
@@ -118,7 +115,7 @@ namespace Base {
     ///
     void Reset();
  
-    ///
+    /// Sets the output directory
     void SetSavePrefix(std::string s, std::string folder = "output_covariance_plots");
 
     ///
@@ -131,7 +128,13 @@ namespace Base {
     void GetCovarianceMatrix(TH2D &);
 
     ///
+    void GetFractionalCovarianceMatrix(TH2D &);
+
+    ///
     void SaveCovarianceMatrix(std::string file_name, std::string name);
+
+    ///
+    void SaveFractionalCovarianceMatrix(std::string file_name, std::string name);
 
     /// Not squared
     void AddExtraDiagonalUncertainty(double value) {_extra_relative_uncertainty = value;};
@@ -203,6 +206,7 @@ namespace Base {
     std::string _flux_unc_type = "total"; ///< Specifies what flux rewegthing to pick
 
     TH2D _cov_matrix; ///< The 2d histo representing the covariance matrix, available after calling Run()
+    TH2D _frac_cov_matrix; ///< The 2d histo representing the fractional covariance matrix, available after calling Run()
 
     double _extra_relative_uncertainty = 0.; ///< Extra uncertainty to be added to the diagonal
 

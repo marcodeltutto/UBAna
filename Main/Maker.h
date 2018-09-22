@@ -129,7 +129,7 @@ namespace Main {
     void FillBootstrapGenie(bool option) {_fill_bootstrap_genie = option;}
 
     ///
-    void FillBootstrapGenieModels(bool option) {_fill_bootstrap_genie_models = option;}
+    void FillBootstrapExtraSyst(bool option) {_fill_bootstrap_extra_syst = option;}
 
     ///
     void OverrideWithPoissonWeights(bool option) {_override_with_poisson_weights = option;}
@@ -138,7 +138,7 @@ namespace Main {
     void SetTargetFluxSystematic(std::string s) { _target_flux_syst = s; }
 
     ///
-    void SetTargetGenieModelsSystematic(std::string s) { _genie_models_target_syst = s; }
+    void SetTargetExtraSystematic(std::string s) { _extra_syst_target_syst = s; }
 
 
   private:
@@ -204,10 +204,10 @@ namespace Main {
     //const bool _fill_bootstrap = true;
     bool _fill_bootstrap_flux = false;
     bool _fill_bootstrap_genie = false;
-    bool _fill_bootstrap_genie_models = false;
+    bool _fill_bootstrap_extra_syst = false;
 
     std::string _target_flux_syst = "";
-    std::string _genie_models_target_syst = "";
+    std::string _extra_syst_target_syst = "";
 
     const bool _check_duplicate_events = false;
 
@@ -237,17 +237,19 @@ namespace Main {
 
     // int n_bins_double_mumom = 4; ///< Number of momentum bins for double differential
     // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50}; ///< Momentum bins for double differential
-    // int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
-    // double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
-    int n_bins_double_mumom = 4; ///< Number of momentum bins for double differential
-    double bins_double_mumom[7] = {0.00, 0.30, 0.45, 0.77, 2.50}; ///< Momentum bins for double differential
+    int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
+    double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
+    // int n_bins_double_mumom = 4; ///< Number of momentum bins for double differential
+    // double bins_double_mumom[7] = {0.00, 0.30, 0.45, 0.77, 2.50}; ///< Momentum bins for double differential
     // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
     // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
 
     // int n_bins_double_mucostheta = 6; ///< Number of costheta bins for double differential
     // double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00}; ///< costheta bins for double differential
-    int n_bins_double_mucostheta = 8; ///< Number of costheta bins for double differential
-    double bins_double_mucostheta[10] = {-1.00, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+    // int n_bins_double_mucostheta = 8; ///< Number of costheta bins for double differential
+    // double bins_double_mucostheta[10] = {-1.00, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+    int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
+    double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
 
     int _n_poly_bins = 31;
     std::map<int, std::pair<int, int>> _exclusion_map = {{0, std::make_pair(2, 3)}, };
@@ -263,8 +265,8 @@ namespace Main {
     double _event_weight_fortree;
     std::vector<std::string> _wgtsnames_genie_multisim;
     std::vector<double> _wgts_genie_multisim;
-    std::vector<std::string> _wgtsnames_genie_models;
-    std::vector<double> _wgts_genie_models;
+    std::vector<std::string> _wgtsnames_extra_syst;
+    std::vector<double> _wgts_extra_syst;
     std::vector<std::string> _wgtsnames_flux_multisim;
     std::vector<double> _wgts_flux_multisim;
 
