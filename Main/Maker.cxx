@@ -289,14 +289,25 @@ void Main::Maker::FillBootstrap(double fill_value1, // reco value x (costheta)
 
 //___________________________________________________________________________________________________
 void Main::Maker::AddPolyBins(UBTH2Poly * h) {
+
+  // std::map<int, std::pair<int, int>> _exclusion_map;
+  // _exclusion_map[0] = std::make_pair(2, 3);
+
   for (int y = 0; y < n_bins_double_mumom; y++) {
     for (int x = 0; x < n_bins_double_mucostheta; x++) {
-      if (x == 0 && y == 2) continue;
-      if (x == 0 && y == 3) continue; 
+
+      auto it = _exclusion_map.find(x);
+      if (it != _exclusion_map.end()) {
+        if (y == it->second.first) {
+          h->AddBin(bins_double_mucostheta[it->first], bins_double_mumom[it->second.first], bins_double_mucostheta[it->first+1], bins_double_mumom[it->second.second+1]);
+          continue;
+        } else if (y == it->second.second) {
+          continue;
+        }
+      }
       h->AddBin(bins_double_mucostheta[x], bins_double_mumom[y], bins_double_mucostheta[x+1], bins_double_mumom[y+1]);
     }
   }
-  h->AddBin(bins_double_mucostheta[0], bins_double_mumom[2], bins_double_mucostheta[0+1], bins_double_mumom[3+1]);
 }
 
 
@@ -926,32 +937,17 @@ void Main::Maker::MakeFile()
   hmap_trktheta_trkmom_poly["signal_nostopmu"] = new UBTH2Poly("h_trktheta_trkmom_poly_signal_nostopmu", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
 
   for (auto it : hmap_trktheta_trkmom_poly) {
-    for (int y = 0; y < n_bins_double_mumom; y++) {
-      for (int x = 0; x < n_bins_double_mucostheta; x++) {
-        if (x == 0 && y == 2) continue;
-        if (x == 0 && y == 3) continue; 
-        it.second->AddBin(bins_double_mucostheta[x], bins_double_mumom[y], bins_double_mucostheta[x+1], bins_double_mumom[y+1]);
-      }
-    }
-    it.second->AddBin(bins_double_mucostheta[0], bins_double_mumom[2], bins_double_mucostheta[0+1], bins_double_mumom[3+1]);
+    AddPolyBins(it.second);
   }
 
   // Eff - poly
   UBTH2Poly* h_eff_muangle_mumom_poly_num = new UBTH2Poly("h_eff_muangle_mumom_poly_num", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
   UBTH2Poly* h_eff_muangle_mumom_poly_den = new UBTH2Poly("h_eff_muangle_mumom_poly_den", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
 
-  for (int y = 0; y < n_bins_double_mumom; y++) {
-    for (int x = 0; x < n_bins_double_mucostheta; x++) {
-      if (x == 0 && y == 2) continue;
-      if (x == 0 && y == 3) continue; 
-      h_eff_muangle_mumom_poly_num->AddBin(bins_double_mucostheta[x], bins_double_mumom[y], bins_double_mucostheta[x+1], bins_double_mumom[y+1]);
-      h_eff_muangle_mumom_poly_den->AddBin(bins_double_mucostheta[x], bins_double_mumom[y], bins_double_mucostheta[x+1], bins_double_mumom[y+1]);
-    }
-  }
-  h_eff_muangle_mumom_poly_num->AddBin(bins_double_mucostheta[0], bins_double_mumom[2], bins_double_mucostheta[0+1], bins_double_mumom[3+1]);
-  h_eff_muangle_mumom_poly_den->AddBin(bins_double_mucostheta[0], bins_double_mumom[2], bins_double_mucostheta[0+1], bins_double_mumom[3+1]);
+  AddPolyBins(h_eff_muangle_mumom_poly_num);
+  AddPolyBins(h_eff_muangle_mumom_poly_den);
 
-
+ 
 
 
 

@@ -250,6 +250,7 @@ namespace Main {
     double bins_double_mucostheta[10] = {-1.00, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
 
     int _n_poly_bins = 31;
+    std::map<int, std::pair<int, int>> _exclusion_map = {{0, std::make_pair(2, 3)}, };
 
     bool _scale_cosmics = false; ///< If true scales the cosmic background by _scale_factor_cosmic
     double _scale_factor_cosmic = 1.; ///< Factor used to scale the cosmic background (used only if _scale_cosmics is true)
