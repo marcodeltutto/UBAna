@@ -450,6 +450,24 @@ namespace Base {
     // c_eff_reco->SaveAs(name + ".pdf");
     // c_eff_reco->SaveAs(name + ".C");
 
+
+
+    _eff = (UBTH2Poly*) h_eff_num_smear->Clone("_eff");
+
+    double level = 0.683; // 1 sigma
+    double alpha = (1.0 - level)/2;
+
+    for (int bin = 1; bin <= _eff->GetNumberOfBins(); bin++) {
+
+        double average = h_eff_num_smear->GetBinContent(bin) / h_eff_den_smear->GetBinContent(bin);
+        double sigma = std::sqrt(average * (1 - average) / h_eff_den_smear->GetBinContent(bin));
+        double delta = ROOT::Math::normal_quantile(1 - alpha, sigma);
+
+        _eff->SetBinContent(bin, average);
+        _eff->SetBinError(bin, delta);
+        LOG_DEBUG() << "bin = " << bin << ", average = " << average << ", sigma = " << sigma << ", delta = " << delta << std::endl;
+
+    }
     
 
     _eff = h_eff_num_smear;
@@ -951,19 +969,8 @@ namespace Base {
     //                                               "0.50 #leq cos(#theta_{#mu}^{reco}) < 0.75",
     //                                               "1.75 #leq cos(#theta_{#mu}^{reco}) < 1.00"};
 
-    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
-    //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
-    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
-    //                                               "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
-    //                                               "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
-    //                                               "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
-    //                                               "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
-    //                                               "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
-    //                                               "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
-    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
-    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
-
-    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
+    std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
+                                                  "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
                                                   "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
                                                   "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
                                                   "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
@@ -974,10 +981,21 @@ namespace Base {
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
+    // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.00",
+    //                                               "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",
+    //                                               "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45",
+    //                                               "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62",
+    //                                               "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76",
+    //                                               "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86",
+    //                                               "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94",
+    //                                               "0.94 #leq cos(#theta_{#mu}^{reco}) < 1.00",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",
+    //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
-    int x_bins = 8;
-    LOG_INFO() << "n bins x " << h_data->GetNbinsX() << std::endl;
-    LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
+
+    int x_bins = h_data->GetNBinsX();
+    LOG_INFO() << "n bins x " << x_bins << std::endl;
+    // LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
 
     int horizontal_division = 2;
     int vertical_division = floor(x_bins / 2.);
@@ -1001,11 +1019,9 @@ namespace Base {
       xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1));
     }
 
-    LOG_CRITICAL() << "After projection" << std::endl;
 
 
     for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
-    LOG_CRITICAL() << "i = " << i  << std::endl;
 
       c_test->cd(i+1);
 

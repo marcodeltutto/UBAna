@@ -51,6 +51,7 @@
 #include "TMatrix.h"
 #include "TGraphAsymmErrors.h"
 #include "TLine.h"
+#include "Math/DistFunc.h" // for quantile
 
 #include "Types.h"
 #include "ubana/DataTypes/UBTH2Poly.h"

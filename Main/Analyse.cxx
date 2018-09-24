@@ -2029,6 +2029,7 @@ std::cout << ">> here11" << std::endl;
 
 
 
+      gStyle->SetPaintTextFormat("4.0f");
 
   TCanvas* canvas_trktheta_trkmom_poly = new TCanvas("canvas_trktheta_trkmom_poly", "canvas", 800, 700);
 
@@ -2038,13 +2039,15 @@ std::cout << ">> here11" << std::endl;
   canvas_trktheta_trkmom_poly->SaveAs(name + ".pdf");
   canvas_trktheta_trkmom_poly->SaveAs(name + ".C","C");
 
+
 TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 800, 700);
 
-  h_poly_binnumber->Draw("colz text");
+  h_poly_binnumber->Draw("text");
 
   name = outdir + "binnumber_poly_signal";
   canvas_binnumber_poly->SaveAs(name + ".pdf");
   canvas_binnumber_poly->SaveAs(name + ".C","C");
+      gStyle->SetPaintTextFormat("4.2f");
 
 
 

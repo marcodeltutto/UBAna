@@ -57,11 +57,11 @@ analyser.ImportCosmicSystematics(False)
 
 analyser.ImportDirtSystematics(False)
 
-analyser.DoGenieSystematics(True)
+analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)
 
-analyser.DoGenieModelsSystematics(False)
-analyser.ImportGenieModelsSystematics(False)
+analyser.DoExtraSystematics(False)
+analyser.ImportExtraSystematics(False)
 
 analyser.DoFluxSystematics(False)
 analyser.ImportFluxSystematics(False)

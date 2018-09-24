@@ -293,6 +293,8 @@ void Main::Maker::AddPolyBins(UBTH2Poly * h) {
   // std::map<int, std::pair<int, int>> _exclusion_map;
   // _exclusion_map[0] = std::make_pair(2, 3);
 
+  h->SetNBinsX(n_bins_double_mucostheta);
+
   for (int y = 0; y < n_bins_double_mumom; y++) {
     for (int x = 0; x < n_bins_double_mucostheta; x++) {
 
