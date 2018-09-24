@@ -14,6 +14,19 @@ namespace DataTypes {
     return *this;
   }
 
+  void UBTH2Poly::SetNBinsX(Int_t n) {
+
+    _n_bins_x = n;
+
+  }
+
+  Int_t UBTH2Poly::GetNBinsX() {
+
+    return _n_bins_x;
+
+  }
+
+
 
   UBTH2Poly* UBTH2Poly::GetCopyWithBinNumbers(const char *name) const {
 
@@ -295,13 +308,24 @@ namespace DataTypes {
       loweredge_to_bin[thisBin->GetYMin()] = thisBin;
     }
 
+    std::vector<double> bins_v;
+    bins_v.reserve(loweredge_to_bin.size() + 1);
+    for (auto it : loweredge_to_bin) {
+      bins_v.push_back(it.first);
+    }
+    bins_v.push_back(loweredge_to_bin.rbegin()->second->GetYMax());
+
+    // for (auto b : bins_v) {
+    //   std::cout << "bins_v: " << b << std::endl;
+    // }
+
 
     TH1D *h1 = 0;
     // if (opt.Contains("e") || GetSumw2N() ) h1->Sumw2();
 
     int bin_counter = 1;
 
-    h1 = new TH1D(name, GetTitle(), loweredge_to_bin.size(), fYaxis.GetXmin(), fYaxis.GetXmax());
+    h1 = new TH1D(name, GetTitle(), bins_v.size()-1, &bins_v[0]);
 
     if (GetSumw2N()) h1->Sumw2();
 

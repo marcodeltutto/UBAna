@@ -72,12 +72,22 @@ namespace DataTypes {
     /// Calculates sum of bin content (multiplied by bin width is "width" or "area" is passed as option)
     Double_t Integral(Option_t* option = "") const;
 
-
     /// Operator =
     UBTH2Poly & operator= (const UBTH2Poly &h1);
 
+    /// Sets the number of bins along x
+    void SetNBinsX(Int_t n);
+
+    /// Returns the number of bins along x
+    Int_t GetNBinsX();
+
+
 
     ClassDef(DataTypes::UBTH2Poly, 1) // TH2 with polygonal bins (extended for MicroBooNE)
+
+  protected:
+
+    Int_t _n_bins_x = 100;
     
   };
 }
