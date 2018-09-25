@@ -47,24 +47,28 @@
 #include <TCanvas.h>
 #include "TMath.h"
 #include "TH2Poly.h"
-#include "ubana/DataTypes/UBTH2Poly.h"
 
+#include "ubana/DataTypes/UBTH2Poly.h"
+#include "ubana/DataTypes/BootstrapTH2DPoly.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
 #include "ubana/Base/BootstrapTH2D.h"
 #include "ubana/Base/PlottingTools.h"
 
-using namespace DataTypes;
+#include "ubana/Base/LoggerFeature.h"
 
-namespace Main {
+using namespace DataTypes;
+using namespace Base;
+
+namespace Main{
 
   /**
      \class Maker
      User defined class Maker ... these comments are used to generate
      doxygen documentation!
   */
-  class Maker{
+  class Maker : public LoggerFeature {
     
   public:
     
@@ -193,7 +197,18 @@ namespace Main {
                        std::vector<std::string> fname, 
                        std::vector<double> wgts);
 
+    void FillBootstrap(double fill_value1,
+                       double fill_value2,
+                       double evt_wgt,
+                       std::map<std::string,std::map<std::string,UBTH2Poly*>> hmap, 
+                       std::string channel_namel, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts_genie);
+
     void AddPolyBins(UBTH2Poly * h);
+
+    void AddPolyBins(BootstrapTH2DPoly h);
+
 
 
     bool _maup_mecoff = false;

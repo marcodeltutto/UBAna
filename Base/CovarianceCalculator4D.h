@@ -41,8 +41,11 @@
 #include <TLine.h>
 
 #include "BootstrapTH2D.h"
+#include "ubana/DataTypes/BootstrapTH2DPoly.h"
 #include "Types.h"
 #include "PlottingTools.h"
+
+using namespace DataTypes;
 
 namespace Base {
 
@@ -61,10 +64,13 @@ namespace Base {
     /// Default destructor
     ~CovarianceCalculator4D(){}
 
-     ///
+    ///
     void SetBootstrap(BootstrapTH2D);
 
     ///
+    void SetBootstrap(BootstrapTH2DPoly);
+
+    /// Runs the covariance matrix calculator
     void CalculateCovarianceMatrix();
 
     /// Not squared
@@ -84,15 +90,24 @@ namespace Base {
 
   private:
 
+    void CalculateCovarianceMatrixNormal();
+    void CalculateCovarianceMatrixPoly();
+
+
     std::string _name = "[CovarianceCalculator4D] ";
 
-    BootstrapTH2D _bs;
+    BootstrapTH2D _bs; ///< The Bootstrap containing the cross sections for every universe
+    BootstrapTH2DPoly _bs_poly; ///< The Bootstrap containing the cross sections for every universe (polybin)
 
     std::string _prefix;
 
     Mat4D _M;      ///< The covariance matrix
     Mat4D _M_frac; ///< The fractional covariance matrix
     Mat4D _RHO;    ///< The correlation matrix
+
+    TMatrix _M_p;      ///< The covariance matrix (polybin)
+    TMatrix _M_frac_p; ///< The fractional covariance matrix (polybin)
+    TMatrix _RHO_p;    ///< The correlation matrix (polybin)
  
     TH2D _M_h;       ///< The covariance matrix in histogram form
     TH2D _M_frac_h;  ///< The fractional covariance matrix in histogram form
@@ -101,6 +116,8 @@ namespace Base {
     // bool _verbose = true;
 
     double _extra_relative_uncertainty = 0.; ///< Extra uncertainty to be added to the diagonal
+
+    bool _polybin_mode = false;
     
   };
 }

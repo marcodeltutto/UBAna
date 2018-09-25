@@ -45,7 +45,10 @@
 #include <TLatex.h>
 #include <TCanvas.h>
 #include <TH2Poly.h>
+
 #include "ubana/DataTypes/UBTH2Poly.h"
+#include "ubana/DataTypes/BootstrapTH2DPoly.h"
+
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
@@ -60,6 +63,7 @@
 #include "ubana/Base/CovarianceCalculator2D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator1D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator2D.h"
+#include "ubana/Base/CrossSectionBootstrapCalculator2DPoly.h"
 #include "ubana/Base/CrossSectionCalculator2DPoly.h"
 
 #include "ubana/Base/LoggerFeature.h"

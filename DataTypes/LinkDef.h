@@ -11,6 +11,7 @@
 
 #pragma link C++ class DataTypes::sample+;
 #pragma link C++ class DataTypes::UBTH2Poly+;
+#pragma link C++ class DataTypes::BootstrapTH2DPoly+;
 //ADD_NEW_CLASS ... do not change this line
 #endif
 

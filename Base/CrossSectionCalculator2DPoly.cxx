@@ -553,16 +553,16 @@ namespace Base {
       LOG_WARNING() << "MC cross section histogram does not have Sum2w active." << std::endl;
     }
 
-    LOG_INFO() << "Subtracting backgrouds: ";
+    // LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_names) 
     {
-      std::cout << name << ", ";
+      // std::cout << name << ", ";
       h_data->Add(_hmap_bnbcosmic[name], -1.);
       if (_hmap_bnbcosmic[name]->GetSumw2N() == 0) {
         LOG_WARNING() << "Bkg " << name << " does not have Sum2w active." << std::endl;
       }
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
 
     LOG_DEBUG() << "sub h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
 
@@ -1012,7 +1012,6 @@ namespace Base {
     c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
 
     for (int i = 0; i < x_bins; i++) {
-    LOG_CRITICAL() << "i = "<< i << std::endl;
 
       xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1));
       xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1));

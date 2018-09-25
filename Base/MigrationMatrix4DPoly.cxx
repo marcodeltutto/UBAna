@@ -71,31 +71,6 @@ namespace Base {
     // Resize the smearing matrix
     _S.Clear(); _S.ResizeTo(_n_bins, _n_bins);
 
-    // _S.resize( _var1_bins.size(), 
-    //           std::vector<std::vector<std::vector<double>>> (_var2_bins.size(),
-    //                                                          std::vector<std::vector<double>>(_var1_bins.size(),
-    //                                                                                          std::vector<double> (_var2_bins.size(), 0.
-    //                                                                                                              )
-    //                                                                                         )
-    //                                                         )
-    //           );
-
-    // int counter = 0;
-
-    // for (size_t i = 0; i < _var1_bins.size(); i++) {
-    //   for (size_t j = 0; j < _var2_bins.size(); j++) {
-    //     for (size_t m = 0; m < _var1_bins.size(); m++) {
-    //       for (size_t n = 0; n < _var2_bins.size(); n++) { 
-    //         if(_verbose) std::cout << "(" << i << ", " << j << ", " << m << ", " << n << ") => " << _S[i][j][m][n] << std::endl;
-    //         counter++;
-    //       }
-    //     }
-    //   }
-    // }
-
-    // std::cout << _prefix << "Total migration matrix entries: " << counter << std::endl;
-
-
     // True bin m, n
     //int m = 0, n = 0;
 
@@ -144,9 +119,6 @@ namespace Base {
     }
 
 
-
-
-
     if(_verbose) {
       for (int i = 0; i < _n_bins; i++) {
         for (int m = 0; m < _n_bins; m++) {
@@ -154,6 +126,7 @@ namespace Base {
         }
       }
     }
+
 
     return _S;
 

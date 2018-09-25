@@ -87,7 +87,7 @@ maker.SetExtraWeight(1.028); # Flux correction
 maker.SetMaUpMECOff(False)
 # maker.ScaleCosmics(0.54548) # For overlay systematics
 
-maker.FillBootstrapGenie(False)
+maker.FillBootstrapGenie(True)
 
 maker.FillBootstrapExtraSyst(False)
 maker.SetTargetExtraSystematic("model_q0q3_ccmec_HistogramWeight")
