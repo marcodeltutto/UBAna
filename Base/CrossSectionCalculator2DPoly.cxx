@@ -17,7 +17,7 @@ namespace Base {
 
     //_pot = -1;
 
-    _name = "Not configured!";
+    _prefix = "Not configured!";
     _label = "Not configured!";
 
     //_outdir = "NotConfigured";
@@ -51,7 +51,7 @@ namespace Base {
 
   void CrossSectionCalculator2DPoly::SetNameAndLabel(std::string name, std::string label)
   {
-    _name = name;
+    _prefix = name;
     _label = label;
   }
 
@@ -99,13 +99,13 @@ namespace Base {
 
 
     for (auto it : bnbcosmic) {
-      std::string this_name = it.second->GetName();
-      _hmap_bnbcosmic[it.first] = (UBTH2Poly*)it.second->Clone((this_name + it.first + "_xsec_int_bnbcosmic").c_str());
+      std::string this_prefix = it.second->GetName();
+      _hmap_bnbcosmic[it.first] = (UBTH2Poly*)it.second->Clone((this_prefix + it.first + "_xsec_int_bnbcosmic").c_str());
     }
 
     for (auto it : dirt) {
-      std::string this_name = it.second->GetName();
-      _hmap_dirt[it.first] = (UBTH2Poly*)it.second->Clone((this_name + it.first + "_xsec_int_dirt").c_str());
+      std::string this_prefix = it.second->GetName();
+      _hmap_dirt[it.first] = (UBTH2Poly*)it.second->Clone((this_prefix + it.first + "_xsec_int_dirt").c_str());
     }
 
     _dirt_is_set = false;
@@ -137,19 +137,19 @@ namespace Base {
     _truth_xsec = xsec;
   }
 
-  double CrossSectionCalculator2DPoly::EstimateFlux(std::string flux_file_name, std::string histogram_file_name) 
+  double CrossSectionCalculator2DPoly::EstimateFlux(std::string flux_file_prefix, std::string histogram_file_prefix) 
   {
     std::string flux_file = std::getenv("MYSW_DIR");
     //flux_file += "/Flux/numode_bnb_470m_r200.root";
     flux_file += "/Flux/";
-    flux_file += flux_file_name;
+    flux_file += flux_file_prefix;
     LOG_DEBUG() << "Using flux file: " << flux_file << std::endl;
 
     LOG_DEBUG() << "Flux correction weight: " << _flux_correction_weight << std::endl;
 
     TFile * f = TFile::Open(flux_file.c_str());
     f->cd();
-    TH1D * h_flux_numu = (TH1D*) f->Get(histogram_file_name.c_str());//f->Get("numu");    //h_flux_numu->Scale(_pot/1.e20);
+    TH1D * h_flux_numu = (TH1D*) f->Get(histogram_file_prefix.c_str());//f->Get("numu");    //h_flux_numu->Scale(_pot/1.e20);
     double scale_factor = _pot;
     scale_factor /= 2.43e11 * 256.35 * 233.;
     scale_factor *= _flux_correction_weight;
@@ -249,6 +249,8 @@ namespace Base {
 
     f->Close();
 
+    LOG_NORMAL() << "Flux estimated to be " << _flux << std::endl;
+
     return _flux;
   }
 
@@ -299,7 +301,7 @@ namespace Base {
     _h_eff_mumom_den->GetYaxis()->SetTitle("p_{#mu}^{truth}");
     _h_eff_mumom_den->Draw("colz text");
 
-    TString name = _folder +_name + "all_truth";
+    TString name = _folder +_prefix + "all_truth";
     c_truth_den->SaveAs(name + ".pdf");
 
     TCanvas * c_truth_num = new TCanvas;
@@ -310,7 +312,7 @@ namespace Base {
     _h_eff_mumom_num->GetYaxis()->SetTitle("p_{#mu}^{truth}");
     _h_eff_mumom_num->Draw("colz text");
 
-    name = _folder +_name + "selected_truth";
+    name = _folder +_prefix + "selected_truth";
     c_truth_num->SaveAs(name + ".pdf");
 
 
@@ -392,7 +394,7 @@ namespace Base {
     h_eff_den_smear->GetYaxis()->SetTitle("p_{#mu}^{reco}");
     h_eff_den_smear->Draw("colz text");
 
-    name = _folder +_name + "all_smeared";
+    name = _folder +_prefix + "all_smeared";
     c_smear_den->SaveAs(name + ".pdf");
 
     TCanvas * c_smear_num = new TCanvas;
@@ -403,7 +405,7 @@ namespace Base {
     h_eff_num_smear->GetYaxis()->SetTitle("p_{#mu}^{reco}");
     h_eff_num_smear->Draw("colz text");
 
-    name = _folder +_name + "selected_smeared";
+    name = _folder +_prefix + "selected_smeared";
     c_smear_num->SaveAs(name + ".pdf");
 
 
@@ -424,7 +426,7 @@ namespace Base {
     // graph_t->SetMaximum(1); 
     // gPad->Update();
 
-    // name = _folder +_name + "efficiency_true";
+    // name = _folder +_prefix + "efficiency_true";
     // c_eff_true->SaveAs(name + ".pdf");
     // c_eff_true->SaveAs(name + ".C");
 
@@ -446,7 +448,7 @@ namespace Base {
     // graph->SetMaximum(1); 
     // gPad->Update();
 
-    // name = _folder +_name + "_efficiency_reco";
+    // name = _folder +_prefix + "_efficiency_reco";
     // c_eff_reco->SaveAs(name + ".pdf");
     // c_eff_reco->SaveAs(name + ".C");
 
@@ -535,7 +537,7 @@ namespace Base {
   }
 
 
-  UBTH2Poly* CrossSectionCalculator2DPoly::ExtractCrossSection(std::vector<std::string> bkg_names, std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
+  UBTH2Poly* CrossSectionCalculator2DPoly::ExtractCrossSection(std::vector<std::string> bkg_prefixs, std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
   {
 
     //
@@ -554,7 +556,7 @@ namespace Base {
     }
 
     // LOG_INFO() << "Subtracting backgrouds: ";
-    for (auto name : bkg_names) 
+    for (auto name : bkg_prefixs) 
     {
       // std::cout << name << ", ";
       h_data->Add(_hmap_bnbcosmic[name], -1.);
@@ -767,7 +769,7 @@ namespace Base {
 
     xsec_label->Draw();
 
-    TString name = _folder +_name + "_xsec_mc";
+    TString name = _folder +_prefix + "_xsec_mc";
     c_xsec_mc->SaveAs(name + ".pdf");
     c_xsec_mc->SaveAs(name + ".C","C");
 
@@ -840,7 +842,7 @@ namespace Base {
     ll->AddEntry(h_mc_error_low, "Stat. Uncertainty", "f");
     ll->Draw();
 
-    name = _folder +_name + "_xsec_mc2";
+    name = _folder +_prefix + "_xsec_mc2";
     c_xsec_mc2->SaveAs(name + ".pdf");
     c_xsec_mc2->SaveAs(name + ".C","C");
 
@@ -915,7 +917,7 @@ namespace Base {
     h_data->Draw("e2");
     
 
-    name = _folder +_name + "_xsec_data";
+    name = _folder +_prefix + "_xsec_data";
     c_xsec_data->SaveAs(name + ".pdf");
     c_xsec_data->SaveAs(name + ".C","C");
 
@@ -940,7 +942,7 @@ namespace Base {
     l->AddEntry(h_data_error_low, "Stat. Uncertainty", "f");
     l->Draw();
 
-    name = _folder +_name + "_xsec_dat2";
+    name = _folder +_prefix + "_xsec_dat2";
     c_xsec_data2->SaveAs(name + ".pdf");
     c_xsec_data2->SaveAs(name + ".C","C");
 
@@ -1081,7 +1083,7 @@ namespace Base {
     // PlottingTools::DrawPreliminaryXSec();
 
 
-    name = _folder +_name + "_xsec_anglesplit";
+    name = _folder +_prefix + "_xsec_anglesplit";
     c_test->SaveAs(name + ".pdf");
     c_test->SaveAs(name + ".C","C");
 
@@ -1209,7 +1211,7 @@ namespace Base {
     //   tl2->Draw();
 
     //   PlottingTools::DrawSimulationXSec();
-    //   name = _folder +_name + "_tot_covariance";
+    //   name = _folder +_prefix + "_tot_covariance";
     //   cov_c->SaveAs(name + ".pdf");
     //   cov_c->SaveAs(name + ".C","C");
 
@@ -1236,7 +1238,7 @@ namespace Base {
     //   tl2->Draw();
 
     //   PlottingTools::DrawSimulationXSec();
-    //   name = _folder +_name + "_tot_fractional_covariance";
+    //   name = _folder +_prefix + "_tot_fractional_covariance";
     //   cov_frac_c->SaveAs(name + ".pdf");
     //   cov_frac_c->SaveAs(name + ".C","C");
 
@@ -1262,7 +1264,7 @@ namespace Base {
     //   tl2->Draw();
 
     //   PlottingTools::DrawSimulationXSec();
-    //   name = _folder +_name + "_tot_correlation";
+    //   name = _folder +_prefix + "_tot_correlation";
     //   corr_c->SaveAs(name + ".pdf");
     //   corr_c->SaveAs(name + ".C","C");
 
@@ -1303,7 +1305,7 @@ namespace Base {
     h.SetLineColor(kGreen+2);
     h.SetFillColor(29);
 
-    // if (_name.find("mom") != std::string::npos) {
+    // if (_prefix.find("mom") != std::string::npos) {
     //   h.SetMinimum(0.);
     //   h.SetMaximum(1.6);
     // } else {
@@ -1355,7 +1357,7 @@ namespace Base {
     TLatex* l = this->GetPOTLatex(_pot);
     l->Draw();
 
-    TString name = _folder +_name + "_test";
+    TString name = _folder +_prefix + "_test";
     canvas->SaveAs(name + ".pdf");
     canvas->SaveAs(name + ".C","C");
 
@@ -1367,10 +1369,10 @@ namespace Base {
   void CrossSectionCalculator2DPoly::Draw() 
   {
 
-    TString name = _folder +_name + "_selected_events";
+    TString name = _folder +_prefix + "_selected_events";
     DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, false);
 
-    name = _folder +_name + "_selected_events_scalebinwidth";
+    name = _folder +_prefix + "_selected_events_scalebinwidth";
     DrawInProjections(_h_bnbon, _hmap_bnbcosmic, name, true);
 
   }

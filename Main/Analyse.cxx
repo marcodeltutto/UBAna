@@ -1707,30 +1707,20 @@ std::cout << ">> here11" << std::endl;
 
     CrossSectionBootstrapCalculator2DPoly _xsec_bs_poly_calc;
     _xsec_bs_poly_calc.SetFluxCorrectionWeight(_flux_correction_weight);
+    _xsec_bs_poly_calc.set_verbosity(Base::msg::kNORMAL);
 
-    LOG_CRITICAL() << "here 1" << std::endl;
 
-    // if (_do_genie_systs) {
+    if (_do_genie_systs) {
       _xsec_bs_poly_calc.Reset();
-    LOG_CRITICAL() << "here 2" << std::endl;
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-    LOG_CRITICAL() << "here 3" << std::endl;
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
-    LOG_CRITICAL() << "here 4" << std::endl;
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-    LOG_CRITICAL() << "here 5" << std::endl;
       _xsec_bs_poly_calc.SetHistograms(hmap_trktheta_trkmom_poly_genie_multisim_bs_mc, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
-    LOG_CRITICAL() << "here 6" << std::endl;
       _xsec_bs_poly_calc.SetTruthHistograms(bs_genie_multisim_eff_poly_muangle_mumom_num, bs_genie_multisim_eff_poly_muangle_mumom_den, bs_genie_multisim_poly_reco_per_true_mc);
-    LOG_CRITICAL() << "here 7" << std::endl;
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
-    LOG_CRITICAL() << "here 8" << std::endl;
       _xsec_bs_poly_calc.SetSavePrefix("genie_multisim_muangle_mumom");
-    LOG_CRITICAL() << "here 9" << std::endl;
       _xsec_bs_poly_calc.SetUpperLabel("GENIE Re-Weighting Only");
-    LOG_CRITICAL() << "here 10" << std::endl;
       _xsec_bs_poly_calc.Run();
-    LOG_CRITICAL() << "here 11" << std::endl;
 
       _xsec_bs_poly_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle_mumom");
       _xsec_bs_poly_calc.SaveFractionalCovarianceMatrix("covariance_genie.root", "frac_covariance_matrix_genie_muangle_mumom");
@@ -1738,9 +1728,9 @@ std::cout << ">> here11" << std::endl;
       _xsec_bs_poly_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_genie);
 
       for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
-        std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+        LOG_NORMAL() << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       }
-    // }
+    }
 
     if (_import_genie_systs) {
 
@@ -1752,7 +1742,9 @@ std::cout << ">> here11" << std::endl;
 
 
 
-
+    //
+    // Double diff cross section (polybin)
+    //
 
     MigrationMatrix4DPoly migrationmatrix4dpoly;
     migrationmatrix4dpoly.SetRecoPerTrueHistos(h_poly_reco_per_true_mc);
@@ -1778,12 +1770,13 @@ std::cout << ">> here11" << std::endl;
     // }
 
     CrossSectionCalculator2DPoly xsec_calc_poly;
+    std::cout << " logger name: " << xsec_calc_poly.logger().name() << std::endl;
     xsec_calc_poly.set_verbosity(Base::msg::kDEBUG);
     xsec_calc_poly.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
     xsec_calc_poly.SetPOT(bnbon_pot_meas);
     xsec_calc_poly.SetOutDir("output_data_mc_xsec2d_POLY");
     xsec_calc_poly.SetFluxCorrectionWeight(_flux_correction_weight);
-    std::cout << "FLUX: " << xsec_calc_poly.EstimateFlux() << std::endl;
+    xsec_calc_poly.EstimateFlux();
 
     xsec_calc_poly.SetHistograms(hmap_trktheta_trkmom_poly_mc, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
     xsec_calc_poly.SetTruthHistograms(h_eff_muangle_mumom_poly_num, h_eff_muangle_mumom_poly_den);
@@ -2630,16 +2623,15 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   leg2->Draw();
   PlottingTools::DrawPOT(bnbon_pot_meas);
 
-  std::cout << "Flash Plot - MC Integral: " << h_flsTime_mc->Integral() << std::endl;
-  std::cout << "Flash Plot - Data (on-off) Integral: " << h_flsTime_data->Integral() << std::endl;
-  std::cout << "Flash Plot - DATA/MC: " << h_flsTime_data->Integral() / h_flsTime_mc->Integral() << std::endl;
-  std::cout << "Flash Plot - On/(Off+MC): " << h_flsTime_bnbon->Integral() / (h_flsTime_extbnb->Integral() + h_flsTime_mc->Integral())<< std::endl;
-
-  std::cout << std::endl;
-  std::cout << "Flash lost in 3.2 to 3.3 us in data: " << h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(3.29999)) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
-  std::cout << "Flash lost in 4.9 to 5.0 us in data: " << h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(4.9001), h_flsTime_data->GetXaxis()->FindBin(5.0)) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
-  std::cout << "Flash lost in 4.9 to 5.0 us and in 3.2 to 3.3 us in data: " << (h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(4.9001), h_flsTime_data->GetXaxis()->FindBin(5.0)) + h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(3.29999))) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
-  std::cout << "In MC, in 4.8 to 4.85 us, we loose: " << h_flsTime_mc->Integral(h_flsTime_data->GetXaxis()->FindBin(4.8001), h_flsTime_data->GetXaxis()->FindBin(4.85)) /h_flsTime_mc->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(4.8)) << std::endl;
+  // std::cout << "Flash Plot - MC Integral: " << h_flsTime_mc->Integral() << std::endl;
+  // std::cout << "Flash Plot - Data (on-off) Integral: " << h_flsTime_data->Integral() << std::endl;
+  // std::cout << "Flash Plot - DATA/MC: " << h_flsTime_data->Integral() / h_flsTime_mc->Integral() << std::endl;
+  // std::cout << "Flash Plot - On/(Off+MC): " << h_flsTime_bnbon->Integral() / (h_flsTime_extbnb->Integral() + h_flsTime_mc->Integral())<< std::endl;
+  // std::cout << std::endl;
+  // std::cout << "Flash lost in 3.2 to 3.3 us in data: " << h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(3.29999)) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
+  // std::cout << "Flash lost in 4.9 to 5.0 us in data: " << h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(4.9001), h_flsTime_data->GetXaxis()->FindBin(5.0)) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
+  // std::cout << "Flash lost in 4.9 to 5.0 us and in 3.2 to 3.3 us in data: " << (h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(4.9001), h_flsTime_data->GetXaxis()->FindBin(5.0)) + h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(3.29999))) / h_flsTime_data->Integral(h_flsTime_data->GetXaxis()->FindBin(3.3), h_flsTime_data->GetXaxis()->FindBin(4.9))  << std::endl;
+  // std::cout << "In MC, in 4.8 to 4.85 us, we loose: " << h_flsTime_mc->Integral(h_flsTime_data->GetXaxis()->FindBin(4.8001), h_flsTime_data->GetXaxis()->FindBin(4.85)) /h_flsTime_mc->Integral(h_flsTime_data->GetXaxis()->FindBin(3.2), h_flsTime_data->GetXaxis()->FindBin(4.8)) << std::endl;
 
   new TCanvas();
   h_flsTime_mc->SetLineColor(kBlack);

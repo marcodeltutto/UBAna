@@ -183,8 +183,8 @@ namespace Base {
 
 		std::map<std::string, UBTH2Poly*> xsec_mumom_per_universe;
 
-
-		CrossSectionCalculator2DPoly _xsec_calc;
+		
+    _xsec_calc.set_verbosity(this->logger().level());
     _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb, _scale_factor_mc_dirt);
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
@@ -192,7 +192,6 @@ namespace Base {
     std::cout << _prefix << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
     std::cout << _prefix << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
     _xsec_calc.SetVerbosity(false);
-    _xsec_calc.set_verbosity(Base::msg::kNORMAL);
 
 
     size_t n_universe = _h_eff_mumom_num.GetNWeights();
@@ -212,7 +211,7 @@ namespace Base {
     std::vector<UBTH2Poly*> this_reco_per_true;
     TMatrix S;
 
-    // n_universe = 30;
+    n_universe = 2;
 
     for (size_t s = 0; s < n_universe; s++) { 
 
@@ -305,9 +304,9 @@ namespace Base {
       if (_true_to_reco_is_set) {
 
         MigrationMatrix4DPoly migrationmatrix4d;
-        // migrationmatrix4d.SetTTree(_t_true_reco);
+        migrationmatrix4d.set_verbosity(this->logger().level());
+
         migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
-        // migrationmatrix4d.UseWeights(universe_names.at(s), weight_type);
         migrationmatrix4d.SetBins(input_map_mc["total"]->GetNumberOfBins());
 
         S.ResizeTo(input_map_mc["total"]->GetNumberOfBins(), input_map_mc["total"]->GetNumberOfBins());
@@ -319,13 +318,14 @@ namespace Base {
 
       }
 
-      LOG_DEBUG() << "Migration matrix calculated." << std::endl;
+      LOG_DEBUG() << "Migration matrix calculated for universe " << s << "." << std::endl;
 
 
       //
       // Calculate the cross section with these new objects in this universe
       //
       _xsec_calc.Reset();
+
       //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
       _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb, _hmap_dirt);  
       if (_true_to_reco_is_set) {
@@ -339,28 +339,34 @@ namespace Base {
       _xsec_calc.SetSmearingMatrix(S);
       _xsec_calc.Smear();
 
+      LOG_DEBUG() << "Smearing done for universe " << s << "." << std::endl;
+
       UBTH2Poly* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
 
+      LOG_DEBUG() << "Cross section calculated for universe " << s << "." << std::endl;
+      
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
 
     } // endl loop over universes
     std::cout << std::endl;
 
+    LOG_NORMAL() << "Finished loop over universes." << std::endl;
+
+    
+
 
     
     
 
     //
-    // Make the cross section plot with all the variations
+    // Calculate the covariance matrix
     //
 
     BootstrapTH2DPoly xsec_mumom_bs;
     xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
 
-
-    
-    // Covariance Matrix
     CovarianceCalculator4D _cov_calc;
+    _cov_calc.set_verbosity(this->logger().level());
     _cov_calc.SetPrefix(_save_prefix);
     _cov_calc.SetBootstrap(xsec_mumom_bs);
     _cov_calc.AddExtraDiagonalUncertainty(_extra_relative_uncertainty);
@@ -368,6 +374,9 @@ namespace Base {
     _cov_calc.PlotMatrices();
     _cov_calc.GetCovarianceMatrix(_cov_matrix);
     _cov_calc.GetFractionalCovarianceMatrix(_frac_cov_matrix);
+
+    LOG_NORMAL() << "Covariance matrix calculated." << std::endl;
+
 
 
 
@@ -377,10 +386,8 @@ namespace Base {
     
     DrawXSec(xsec_mumom_per_universe);
 
-   
+    LOG_NORMAL() << "All done here." << std::endl;
 
-
-    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 
 	}
 

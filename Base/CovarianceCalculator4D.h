@@ -45,6 +45,9 @@
 #include "Types.h"
 #include "PlottingTools.h"
 
+#include "LoggerFeature.h"
+
+
 using namespace DataTypes;
 
 namespace Base {
@@ -54,12 +57,13 @@ namespace Base {
      User defined class CovarianceCalculator4D ... these comments are used to generate
      doxygen documentation!
   */
-  class CovarianceCalculator4D{
+  class CovarianceCalculator4D : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    CovarianceCalculator4D(){}
+    CovarianceCalculator4D(std::string name = "CovarianceCalculator4D") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~CovarianceCalculator4D(){}
@@ -92,6 +96,12 @@ namespace Base {
 
     void CalculateCovarianceMatrixNormal();
     void CalculateCovarianceMatrixPoly();
+
+    void PlotMatricesBase(TH2D *, TH2D *, TH2D *);
+    void PlotMatricesNormal();
+    void PlotMatricesPoly();
+
+
 
 
     std::string _name = "[CovarianceCalculator4D] ";

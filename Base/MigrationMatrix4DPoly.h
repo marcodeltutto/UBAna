@@ -73,7 +73,8 @@ namespace Base {
   public:
     
     /// Default constructor
-    MigrationMatrix4DPoly(){}
+    MigrationMatrix4DPoly(std::string name = "MigrationMatrix4DPoly") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~MigrationMatrix4DPoly(){}

@@ -79,7 +79,7 @@ namespace Main {
      User defined class Analyse ... these comments are used to generate
      doxygen documentation!
   */
-  class Analyse : public LoggerFeature{
+  class Analyse : public LoggerFeature {
     
   public:
     

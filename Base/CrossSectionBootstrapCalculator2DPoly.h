@@ -76,7 +76,8 @@ namespace Base{
   public:
     
     /// Default constructor
-    CrossSectionBootstrapCalculator2DPoly(){}
+    CrossSectionBootstrapCalculator2DPoly(std::string name = "CrossSectionBootstrapCalculator2DPoly") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~CrossSectionBootstrapCalculator2DPoly(){}
@@ -173,6 +174,8 @@ namespace Base{
 
     std::string _outdir;
     std::string _folder;
+
+    CrossSectionCalculator2DPoly _xsec_calc; ///< The cross section calculator
 
     //std::map<std::string,BootstrapTH2D> _hmap_bnbcosmic;
     std::map<std::string,std::map<std::string,UBTH2Poly*>> _hmap_bnbcosmic;

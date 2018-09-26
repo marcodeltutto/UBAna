@@ -54,6 +54,8 @@
 #include "TGaxis.h"
 
 #include "Types.h"
+#include "LoggerFeature.h"
+
 
 namespace Base {
 
@@ -62,12 +64,13 @@ namespace Base {
      User defined class MigrationMatrix4D ... these comments are used to generate
      doxygen documentation!
   */
-  class MigrationMatrix4D{
+  class MigrationMatrix4D : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    MigrationMatrix4D(){}
+    MigrationMatrix4D(std::string name = "MigrationMatrix4D") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~MigrationMatrix4D(){}

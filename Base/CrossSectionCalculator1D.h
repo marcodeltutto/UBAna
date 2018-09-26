@@ -69,7 +69,8 @@ namespace Base {
   public:
     
     /// Default constructor
-    CrossSectionCalculator1D(){}
+    CrossSectionCalculator1D(std::string name = "CrossSectionCalculator1D") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~CrossSectionCalculator1D(){}

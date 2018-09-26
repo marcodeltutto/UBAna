@@ -73,7 +73,8 @@ namespace Base {
   public:
     
     /// Default constructor
-    CrossSectionCalculator2DPoly(){}
+    CrossSectionCalculator2DPoly(std::string name = "CrossSectionCalculator2DPoly") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~CrossSectionCalculator2DPoly(){}
@@ -115,7 +116,7 @@ namespace Base {
     void DrawInProjections(UBTH2Poly* h_data, std::map<std::string,UBTH2Poly*> mc, TString save_path, bool scale_bin_width = false); 
 
     /// 
-    double EstimateFlux(std::string flux_file_name = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_name = "numu/numu_CV_AV_TPC");
+    double EstimateFlux(std::string flux_file_prefix = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_prefix = "numu/numu_CV_AV_TPC");
 
     ///
     THStack * ProcessTHStack(std::map<std::string,UBTH2Poly*> themap, TLegend*, std::vector<std::string>);
@@ -124,7 +125,7 @@ namespace Base {
     UBTH2Poly* ProcessDataHisto(UBTH2Poly* histo);
 
     /// Extracts the cross section, provide a vector of background names to be subtracted in the first argument
-    UBTH2Poly* ExtractCrossSection(std::vector<std::string> bkg_names, std::string, std::string, std::string);
+    UBTH2Poly* ExtractCrossSection(std::vector<std::string> bkg_prefixs, std::string, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
     UBTH2Poly* GetMCCrossSection() {return _h_mc;}
@@ -158,7 +159,7 @@ namespace Base {
 
   private:
 
-    std::string _namebase = "[CrossSectionCalculator2DPoly] ";
+    std::string _prefixbase = "[CrossSectionCalculator2DPoly] ";
     
     bool _configured = false;
 
@@ -175,7 +176,7 @@ namespace Base {
 
     double _n_target = 2.64218e31;
 
-    std::string _name = "trklen"; 
+    std::string _prefix = "trklen"; 
     std::string _label = ";Test [cm]; Selected Events";
 
     std::string _outdir;

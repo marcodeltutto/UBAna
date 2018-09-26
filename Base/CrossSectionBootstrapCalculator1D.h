@@ -72,7 +72,8 @@ namespace Base {
   public:
     
     /// Default constructor
-    CrossSectionBootstrapCalculator1D(){}
+    CrossSectionBootstrapCalculator1D(std::string name = "CrossSectionBootstrapCalculator1D") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~CrossSectionBootstrapCalculator1D(){}
