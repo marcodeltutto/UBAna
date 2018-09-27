@@ -2748,17 +2748,20 @@ void Main::Maker::MakeFile()
       _true_reco_tree->Fill();
 
       // *** Migr mat addition
+    std::cout << "here 5" << std::endl;
+
       int m = _h_reco_per_true[0][0]->GetXaxis()->FindBin(_angle_true) - 1;
       int n = _h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1;
       if (m >= 0 && n >= 0 
           && m < _h_reco_per_true[0][0]->GetNbinsX()    // Avoid overflows
           && n < _h_reco_per_true[0][0]->GetNbinsY()) { // Avoid overflows
-        // std::cout << "_angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << ", n " << n << std::endl;
+        std::cout << "_angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << ", n " << n << std::endl;
         _h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_genie_multisim_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_extra_syst_multisim_reco_per_true, fname_extra_syst, wgts_extra_syst);
         if(!isdata && _fill_bootstrap_flux) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_flux_multisim_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
         if(!isdata && _fill_bootstrap_mc_stat) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_mc_stat_multisim_reco_per_true, fname_mc_stat_multisim, wgts_mc_stat_multisim);
+    std::cout << "here 6" << std::endl;
       }
       // *** addition ends
 
