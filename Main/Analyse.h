@@ -49,6 +49,7 @@
 #include "ubana/DataTypes/UBTH2Poly.h"
 #include "ubana/DataTypes/BootstrapTH2DPoly.h"
 
+#include "ubana/DataTypes/UBXSecEventHisto.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
@@ -84,7 +85,8 @@ namespace Main {
   public:
     
     /// Default constructor
-    Analyse(){}
+    Analyse(std::string name = "Analyse") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~Analyse(){}
@@ -183,6 +185,8 @@ namespace Main {
     void DoAnalise();
 
   private:
+
+    
 
     bool _calculate_xsec = true;
     bool _do_pm1sigma_plots = false;

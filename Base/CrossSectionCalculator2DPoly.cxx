@@ -249,7 +249,7 @@ namespace Base {
 
     f->Close();
 
-    LOG_NORMAL() << "Flux estimated to be " << _flux << std::endl;
+    LOG_INFO() << "Flux estimated to be " << _flux << std::endl;
 
     return _flux;
   }
@@ -1013,11 +1013,14 @@ namespace Base {
     // gStyle->SetOptStat(0);
     c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
 
+    std::vector<int> bin_numbers;
+
+
     for (int i = 0; i < x_bins; i++) {
 
-      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1));
-      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1));
-      xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1));
+      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, bin_numbers));
+      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, bin_numbers));
+      xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1, bin_numbers));
     }
 
 

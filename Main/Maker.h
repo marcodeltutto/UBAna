@@ -50,6 +50,7 @@
 
 #include "ubana/DataTypes/UBTH2Poly.h"
 #include "ubana/DataTypes/BootstrapTH2DPoly.h"
+#include "ubana/DataTypes/UBXSecEventHisto.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
@@ -73,7 +74,8 @@ namespace Main{
   public:
     
     /// Default constructor
-    Maker(){}
+    Maker(std::string name = "Maker") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~Maker(){}
@@ -208,6 +210,8 @@ namespace Main{
     void AddPolyBins(UBTH2Poly * h);
 
     void AddPolyBins(BootstrapTH2DPoly h);
+
+    UBXSecEventHisto * _event_histo;
 
 
 

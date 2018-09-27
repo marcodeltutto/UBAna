@@ -158,7 +158,7 @@ namespace Base {
 /// Compiler macro for INFO message
 #define LOG_INFO()     if( logger().info    () ) logger().send(::Base::msg::kINFO,     __FUNCTION__, __LINE__          )
 /// Compiler macro for NORMAL message
-#define LOG_NORMAL()   if( logger().normal  () ) logger().send(::Base::msg::kNORMAL,   __FUNCTION__                    )
+#define LOG_NORMAL()   if( logger().normal  () ) logger().send(::Base::msg::kNORMAL/*,   __FUNCTION__*/                    )
 /// Compiler macro for WARNING message
 #define LOG_WARNING()  if( logger().warning () ) logger().send(::Base::msg::kWARNING,  __FUNCTION__                    )
 /// Compiler macro for ERROR message

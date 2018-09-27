@@ -97,7 +97,7 @@ maker.SetTargetExtraSystematic("model_q0q3_ccmec_HistogramWeight")
 # maker.SetTargetExtraSystematic("reinteractions_piminus")
 # maker.SetTargetExtraSystematic("total")
 
-maker.FillBootstrapFlux(False)
+maker.FillBootstrapFlux(True)
 #maker.SetTargetFluxSystematic("FluxUnisim");
 #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
 #maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");

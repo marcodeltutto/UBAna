@@ -467,20 +467,30 @@ namespace Base {
 
     // h->SetMaximum(1);
 
-    int i_label_number = 0;
-    int j_label_number = 0;
-    for (int i = 0; i <  cov_matrix_histo->GetNbinsX()+1; i++) {
-      std::ostringstream oss;
-      oss << i_label_number << "," << j_label_number;
-      if (j_label_number % _bs.GetNbinsY() == 0) {
-        i_label_number ++;
-        j_label_number = 0;
+    if (!_polybin_mode) {
+      int i_label_number = 0;
+      int j_label_number = 0;
+      for (int i = 0; i <  cov_matrix_histo->GetNbinsX()+1; i++) {
+        std::ostringstream oss;
+        oss << i_label_number << "," << j_label_number;
+        if (j_label_number % _bs.GetNbinsY() == 0) {
+          i_label_number ++;
+          j_label_number = 0;
+        }
+        j_label_number++;
+        std::string label = oss.str();
+        if (i == 0) continue;
+        h->GetXaxis()->SetBinLabel(i,label.c_str());
+        h->GetYaxis()->SetBinLabel(i,label.c_str());
       }
-      j_label_number++;
-      std::string label = oss.str();
-      if (i == 0) continue;
-      h->GetXaxis()->SetBinLabel(i,label.c_str());
-      h->GetYaxis()->SetBinLabel(i,label.c_str());
+    } else {
+      for (int i = 0; i < cov_matrix_histo->GetNbinsX(); i++) {
+        std::ostringstream oss;
+        oss << i + 1;
+        std::string label = oss.str();
+        h->GetXaxis()->SetBinLabel(i+1,label.c_str());
+        h->GetYaxis()->SetBinLabel(i+1,label.c_str());
+      }
     }
 
     h->GetXaxis()->SetLabelOffset(0.004);

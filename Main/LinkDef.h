@@ -28,9 +28,7 @@
 #pragma link C++ class std::vector<UBTH2Poly*>+;
 #pragma link C++ class std::map<std::string,std::vector<UBTH2Poly*>>+;
 
-#pragma link C++ class Main::sample+;
 #pragma link C++ class Main::Maker+;
-#pragma link C++ class Main::test+;
 #pragma link C++ class Main::Analyse+;
 //ADD_NEW_CLASS ... do not change this line
 #endif

@@ -211,11 +211,13 @@ namespace Base {
     std::vector<UBTH2Poly*> this_reco_per_true;
     TMatrix S;
 
-    n_universe = 2;
+    // n_universe = 4;
 
     for (size_t s = 0; s < n_universe; s++) { 
 
       DrawProgressBar((double)s/(double)n_universe, 70);
+
+      LOG_DEBUG() << "This is universe: " << universe_names.at(s) << std::endl;
 
       //
     	// Construct the hmap for the MC histograms (bnbcosmic)
@@ -303,9 +305,11 @@ namespace Base {
       //
       if (_true_to_reco_is_set) {
 
+        LOG_DEBUG() << "Calculating migration matrix. Will have " << input_map_mc["total"]->GetNumberOfBins() << " bins." << std::endl;
+
         MigrationMatrix4DPoly migrationmatrix4d;
         migrationmatrix4d.set_verbosity(this->logger().level());
-
+        migrationmatrix4d.SetOutDir("migration_matrix_poly_multisim_4D_plots");
         migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
         migrationmatrix4d.SetBins(input_map_mc["total"]->GetNumberOfBins());
 
@@ -347,7 +351,7 @@ namespace Base {
       
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
 
-    } // endl loop over universes
+    } // end loop over universes
     std::cout << std::endl;
 
     LOG_NORMAL() << "Finished loop over universes." << std::endl;
@@ -376,6 +380,7 @@ namespace Base {
     _cov_calc.GetFractionalCovarianceMatrix(_frac_cov_matrix);
 
     LOG_NORMAL() << "Covariance matrix calculated." << std::endl;
+    LOG_CRITICAL() << "Cov matrix at bin 3 is " << _cov_matrix.GetBinContent(3, 3) << std::endl;
 
 
 
@@ -397,8 +402,15 @@ namespace Base {
   void CrossSectionBootstrapCalculator2DPoly::DrawXSec(std::map<std::string, UBTH2Poly*> xsec_mumom_per_universe) 
   {
 
+    int x_bins = xsec_mumom_per_universe["nominal"]->GetNBinsX();
+
     int horizontal_division = 2;
-    int vertical_division = floor(xsec_mumom_per_universe["nominal"]->GetNbinsX() / 2.) + 1;
+    int vertical_division = floor(x_bins / 2.);
+
+    if (x_bins / 2. != floor(x_bins / 2.)) vertical_division++;
+
+    LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
+    LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
 
     TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
     c_test->SetBottomMargin(0.15);
@@ -408,8 +420,12 @@ namespace Base {
     // reverse_iterator because we want to have the nominal at the end
     std::map<std::string, UBTH2Poly*>::reverse_iterator it = xsec_mumom_per_universe.rbegin();
 
+    std::vector<double> maxima;
+    maxima.resize(xsec_mumom_per_universe["nominal"]->GetNBinsX(), 0);
+
+    std::vector<std::vector<int>> bin_numbers;
+
     while (it != xsec_mumom_per_universe.rend()) {    
-    // for (auto it : xsec_mumom_per_universe) {
 
       UBTH2Poly * h_xsec_2d = it->second;
 
@@ -429,14 +445,15 @@ namespace Base {
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
      
-
+      bin_numbers.resize(h_xsec_2d->GetNBinsX());
       for (int i = 0; i < h_xsec_2d->GetNBinsX(); i++) {
         // xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));
-        xsec_mc_histos.emplace_back(*h_xsec_2d->ProjectionY("fuck", i+1));
+        xsec_mc_histos.emplace_back(*h_xsec_2d->ProjectionY("fuck", i+1, bin_numbers.at(i)));
       }
 
 
       for (size_t i = 0; i < xsec_mc_histos.size(); i++) {
+
         c_test->cd(i+1);
         gPad->SetBottomMargin(0.15);
         gPad->SetLeftMargin(0.15);
@@ -459,9 +476,24 @@ namespace Base {
         if (it->first == "nominal") {
           h_main->SetLineColor(kGreen+3);
           h_main->SetLineWidth(3);
+
+          // Add uncertainties if nominal histo
+          for (int bin = 1; bin <= h_main->GetNbinsX(); bin++) {
+            int original_bin_number = bin_numbers.at(i).at(bin-1);
+            h_main->SetBinError(bin, std::sqrt(_cov_matrix.GetBinContent(original_bin_number, original_bin_number)));
+            LOG_CRITICAL() << "Setting bin " << bin << " with error " << std::sqrt(_cov_matrix.GetBinContent(original_bin_number, original_bin_number)) << " (coming from original bin " << original_bin_number << ")" << std::endl;
+          }
+          h_main->SetFillColor(0); // fully transparent
+          h_main->Draw("E1 same"); // also error bars for nominal
         }
-        h_main->SetFillColor(0); // fully transparent
-        h_main->Draw("histo same");
+        else {
+          h_main->SetFillColor(0); // fully transparent
+          h_main->Draw("histo same");
+        }
+
+        // if (h_main->GetMaximum() > maxima.at(i)) maxima.at(i) = h_main->GetMaximum();
+        // h_main->SetMaximum(maxima.at(i));
+        h_main->SetMaximum(h_main->GetMaximum() * 1.5);
 
         xsec_mc_histos.at(i).SetMinimum(0.);
         if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.40);
