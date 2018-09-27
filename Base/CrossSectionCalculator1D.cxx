@@ -287,7 +287,7 @@ namespace Base {
     TMatrix xsec_truth; xsec_truth.Clear(); xsec_truth.ResizeTo(m, 1);
 
     for (int bin = 1; bin < m+1; bin++) {
-      xsec_truth[bin-1] = _truth_xsec->GetBinContent(bin);
+      xsec_truth[bin-1][0] = _truth_xsec->GetBinContent(bin);
       std::cout << "xsec_truth[bin-1] " << _truth_xsec->GetBinContent(bin) << std::endl;
     }
 
@@ -351,8 +351,8 @@ namespace Base {
     TMatrix eff_den_true; eff_den_true.Clear(); eff_den_true.ResizeTo(m, 1);
 
     for (int bin = 1; bin < m+1; bin++) {
-      eff_num_true[bin-1] = _h_eff_mumom_num->GetBinContent(bin);
-      eff_den_true[bin-1] = _h_eff_mumom_den->GetBinContent(bin);
+      eff_num_true[bin-1][0] = _h_eff_mumom_num->GetBinContent(bin);
+      eff_den_true[bin-1][0] = _h_eff_mumom_den->GetBinContent(bin);
     }
 
     TMatrix eff_num_smear = _S * eff_num_true;
