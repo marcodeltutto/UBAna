@@ -51,8 +51,8 @@ namespace DataTypes {
     /// Default destructor
     ~UBTH2Poly(){}
 
-    /// Projects in Y slices
-    TH1D* ProjectionY(const char *name, Int_t firstxbin/*, Int_t lastxbin, Option_t *option*/) const;
+    /// Projects in Y slices, firstxbin is the X bin you want to select, bin_numbersis a returned vectors with the corresponding bin numbers
+    TH1D* ProjectionY(const char *name, Int_t firstxbin, std::vector<int> & bin_numbers) const;
 
     /// Creates a UBTH2Poly with bin numbers in place of bin content
     UBTH2Poly* GetCopyWithBinNumbers(const char *name) const;

@@ -116,7 +116,16 @@ namespace DataTypes {
      // update statistics (do here to avoid changes by SetBinContent)
      if (resetStats)  {
         // statistics need to be reset in case coefficient are negative
-        ResetStats();
+        // ResetStats();
+        Double_t stats[kNstat] = {0};
+   fTsumw = 0;
+   fEntries = 1; // to force re-calculation of the statistics in TH1::GetStats
+   GetStats(stats);
+   PutStats(stats);
+   fEntries = TMath::Abs(fTsumw);
+   // use effective entries for weighted histograms:  (sum_w) ^2 / sum_w2
+   if (fSumw2.fN > 0 && fTsumw > 0 && stats[1] > 0 ) fEntries = stats[0]*stats[0]/ stats[1];
+
      } else {
         for (Int_t i = 0; i < kNstat; i++) {
            if (i == 1) s1[i] += c1 * c1 * s2[i];
@@ -273,12 +282,10 @@ namespace DataTypes {
 
 
 
-
-
-  TH1D* UBTH2Poly::ProjectionY(const char *name, Int_t firstxbin/*, Int_t lastxbin, Option_t *option*/) const
+  TH1D* UBTH2Poly::ProjectionY(const char *name, Int_t firstxbin, std::vector<int> & bin_numbers) const
   {
 
-    // fXaxis.GetXmin()
+    bin_numbers.clear();
 
     std::vector<double> boundaries;
     boundaries.reserve(GetNumberOfBins() * 2);
@@ -288,6 +295,7 @@ namespace DataTypes {
       thisBin = (TH2PolyBin *)fBins->At(bin - 1);
       if (thisBin->GetYMin() != fYaxis.GetXmin()) continue;
       boundaries.push_back(thisBin->GetXMin());
+      bin_numbers.push_back(thisBin->GetBinNumber());
     }
     boundaries.push_back(fXaxis.GetXmax());
 

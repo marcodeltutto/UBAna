@@ -9,9 +9,10 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class DataTypes::sample+;
 #pragma link C++ class DataTypes::UBTH2Poly+;
 #pragma link C++ class DataTypes::BootstrapTH2DPoly+;
+#pragma link C++ class DataTypes::UBXSecEventHisto+;
 //ADD_NEW_CLASS ... do not change this line
 #endif
+
 
