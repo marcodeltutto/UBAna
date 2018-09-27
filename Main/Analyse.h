@@ -118,17 +118,23 @@ namespace Main {
     /// Imports all the detector systs from files (previously calculated via external macro, and adds them togheter)
     void ImportDetectorSystematics(bool option, std::string file = "file.root") {_import_detector_systs = option; _detector_syst_file = file;}
 
-    /// Calculates the genie multisim covariance matrix and saves it to a file for a particular flux syst
+    /// Calculates the genie multisim covariance matrix and saves it to a file
     void DoGenieSystematics(bool option) {_do_genie_systs = option;}
 
-    /// Calculates the genie models covariance matrix and saves it to a file for a particular flux syst
+    /// Calculates the genie models covariance matrix and saves it to a file
     void DoExtraSystematics(bool option) {_do_extra_syst_systs = option;}
 
-    /// Imports all the genie multisim systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
+    /// Calculates the mc stat multisim covariance matrix and saves it to a file
+    void DoMCStatSystematics(bool option) {_do_mc_stat_systs = option;}
+
+    /// Imports all the genie multisim systs from files (previously calculated via DoGenieSystematics, and adds them togheter)
     void ImportGenieSystematics(bool option, std::string file = "file.root") {_import_genie_systs = option; _genie_syst_file = file;}
 
-    /// Imports all the genie models systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
+    /// Imports all the genie models systs from files (previously calculated via DoExtraSystematics, and adds them togheter)
     void ImportExtraSystematics(bool option, std::string file = "file.root") {_import_extra_syst_systs = option; _extra_syst_syst_file = file;}
+
+    /// Imports all the mc stats multisim systs from files (previously calculated via DoMCStatSystematics, and adds them togheter)
+    void ImportMCStatSystematics(bool option, std::string file = "file.root") {_import_mc_stat_systs = option; _mc_stat_syst_file = file;}
 
     /// Imports the cosmic systs from files (previously calculated via external macro, and adds them togheter)
     void ImportCosmicSystematics(bool option, std::string file = "file.root") {_import_cosmic_systs = option; _cosmic_syst_file = file;}
@@ -208,6 +214,10 @@ namespace Main {
     bool _do_extra_syst_systs = false;
     bool _import_extra_syst_systs = false;
     std::string _extra_syst_syst_file;
+
+    bool _do_mc_stat_systs = false;
+    bool _import_mc_stat_systs = false;
+    std::string _mc_stat_syst_file;
 
     bool _fake_data_mode = false;
     bool _overlay_mode = false;

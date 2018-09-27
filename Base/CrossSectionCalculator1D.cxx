@@ -322,7 +322,7 @@ namespace Base {
     TMatrix xsec_truth; xsec_truth.Clear(); xsec_truth.ResizeTo(m, 1);
 
     for (int bin = 1; bin < m+1; bin++) {
-      xsec_truth[bin-1] = _truth_xsec->GetBinContent(bin);
+      xsec_truth[bin-1][0] = _truth_xsec->GetBinContent(bin);
       std::cout << "xsec_truth[bin-1] " << _truth_xsec->GetBinContent(bin) << std::endl;
     }
 
@@ -386,8 +386,8 @@ namespace Base {
     TMatrix eff_den_true; eff_den_true.Clear(); eff_den_true.ResizeTo(m, 1);
 
     for (int bin = 1; bin < m+1; bin++) {
-      eff_num_true[bin-1] = _h_eff_mumom_num->GetBinContent(bin);
-      eff_den_true[bin-1] = _h_eff_mumom_den->GetBinContent(bin);
+      eff_num_true[bin-1][0] = _h_eff_mumom_num->GetBinContent(bin);
+      eff_den_true[bin-1][0] = _h_eff_mumom_den->GetBinContent(bin);
     }
 
     TMatrix eff_num_smear = _S * eff_num_true;
@@ -677,7 +677,9 @@ namespace Base {
     _h_data->Sumw2();
 
 
-
+    // if(_h_data->GetNbinsX() == 1) {
+    //   _h_data->SetBinError(1, 0.);
+    // }
 
     // Print the statistical uncertainties on the screen
     LOG_INFO() << "Statistical uncertainty for beam-on: " << _h_data->GetBinError(1) << std::endl;
@@ -740,6 +742,10 @@ namespace Base {
 
     LOG_INFO() << "Data Integral: " << _h_data->Integral() << std::endl;
     LOG_INFO() << "MC Integral: " << _h_mc->Integral() << std::endl;
+
+    // if(_h_data->GetNbinsX() == 1) {
+    //   LOG_CRITICAL() << "_h_data->GetBinError(1) = " << _h_data->GetBinError(1) << std::endl;
+    // }
 
 
     // Plot the cross section
