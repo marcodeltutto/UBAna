@@ -2089,7 +2089,6 @@ void Main::Maker::MakeFile()
     }
     //********************************************
 
-    std::cout << "here 1" << std::endl;
 
     // ************************
     //
@@ -2246,7 +2245,6 @@ void Main::Maker::MakeFile()
 
     
     
-    std::cout << "here 2" << std::endl;
 
       
     
@@ -2470,7 +2468,6 @@ void Main::Maker::MakeFile()
       
     } // slice loop
     
-    std::cout << "here 3" << std::endl;
 
       
     int n_slc_flsmatch = 0;
@@ -2677,7 +2674,6 @@ void Main::Maker::MakeFile()
     //
     // EVENT IS SELECTED
     //
-    std::cout << "here 4" << std::endl;
     
     // if (isSignal && nu_origin)std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
     
@@ -2748,8 +2744,6 @@ void Main::Maker::MakeFile()
       _true_reco_tree->Fill();
 
       // *** Migr mat addition
-    std::cout << "here 5" << std::endl;
-
       int m = _h_reco_per_true[0][0]->GetXaxis()->FindBin(_angle_true) - 1;
       int n = _h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1;
       if (m >= 0 && n >= 0 
@@ -2761,7 +2755,6 @@ void Main::Maker::MakeFile()
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_extra_syst_multisim_reco_per_true, fname_extra_syst, wgts_extra_syst);
         if(!isdata && _fill_bootstrap_flux) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_flux_multisim_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
         if(!isdata && _fill_bootstrap_mc_stat) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, bs_mc_stat_multisim_reco_per_true, fname_mc_stat_multisim, wgts_mc_stat_multisim);
-    std::cout << "here 6" << std::endl;
       }
       // *** addition ends
 
@@ -3026,7 +3019,7 @@ void Main::Maker::MakeFile()
  
       if (!isdata && _fill_bootstrap_mc_stat) FillBootstrap(t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trkmom_mc_stat_multisim_bs, "signal", fname_mc_stat_multisim, wgts_mc_stat_multisim);
       if (!isdata && _fill_bootstrap_mc_stat) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), event_weight, hmap_trkangle_mc_stat_multisim_bs, "signal", fname_mc_stat_multisim, wgts_mc_stat_multisim);
-      if (!isdata && _fill_bootstrap_mc_stat) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_mc_stat_multisim_bs, "signal", fname_mc_stat_multisim, wgts_genie_multisim);      
+      if (!isdata && _fill_bootstrap_mc_stat) FillBootstrap(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight, hmap_trktheta_trkmom_mc_stat_multisim_bs, "signal", fname_mc_stat_multisim, wgts_mc_stat_multisim);      
       if (!isdata && _fill_bootstrap_mc_stat) FillBootstrap(0.5, event_weight, hmap_onebin_mc_stat_multisim_bs, "signal", fname_mc_stat_multisim, wgts_mc_stat_multisim);
 
       hmap_trkphi["signal"]->Fill(t->slc_longesttrack_phi.at(scl_ll_max), event_weight);
