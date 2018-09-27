@@ -2083,7 +2083,7 @@ void Main::Maker::MakeFile()
     std::vector<double> wgts_mc_stat_multisim;
     if (!isdata && _fill_bootstrap_mc_stat) {
       for (size_t i = 0; i < fname_mc_stat_multisim.size(); i++) {
-        wgts_genie_multisim.push_back(_random_engine.PoissonD(1));
+        wgts_mc_stat_multisim.push_back(_random_engine.PoissonD(1));
       }
     }
     //********************************************
