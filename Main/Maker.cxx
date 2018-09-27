@@ -2081,14 +2081,15 @@ void Main::Maker::MakeFile()
 
     // Prepare the vector of weights to be used for bootstraps
     std::vector<double> wgts_mc_stat_multisim;
+    wgts_mc_stat_multisim.resize(fname_mc_stat_multisim.size());
     if (!isdata && _fill_bootstrap_mc_stat) {
       for (size_t i = 0; i < fname_mc_stat_multisim.size(); i++) {
-        wgts_mc_stat_multisim.push_back(_random_engine.PoissonD(1));
+        wgts_mc_stat_multisim.at(i) = _random_engine.PoissonD(1);
       }
     }
     //********************************************
 
-
+    std::cout << "here 1" << std::endl;
 
     // ************************
     //
@@ -2245,6 +2246,7 @@ void Main::Maker::MakeFile()
 
     
     
+    std::cout << "here 2" << std::endl;
 
       
     
@@ -2468,6 +2470,7 @@ void Main::Maker::MakeFile()
       
     } // slice loop
     
+    std::cout << "here 3" << std::endl;
 
       
     int n_slc_flsmatch = 0;
@@ -2674,6 +2677,7 @@ void Main::Maker::MakeFile()
     //
     // EVENT IS SELECTED
     //
+    std::cout << "here 4" << std::endl;
     
     // if (isSignal && nu_origin)std::cout << ">>>>>>>>>>>>>>>>> Event is selected, " << t->run << ", " << t->subrun << ", " << t->event << ", slice " << scl_ll_max << std::endl;
     
