@@ -192,7 +192,7 @@ namespace Base {
     std::cout << _prefix << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
     std::cout << _prefix << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
     _xsec_calc.SetVerbosity(false);
-    _xsec_calc.set_verbosity(Base::msg::kNORMAL);
+    _xsec_calc.set_verbosity(this->logger().level());
 
 
     size_t n_universe = _h_eff_mumom_num.GetNWeights();
@@ -235,22 +235,8 @@ namespace Base {
         }      
       }
 
-      //
-      // Construct the hmap for the MC histograms (dirt)
-      //
-      // std::map<std::string, TH2D*> input_map_mc_dirt;
-      // for (auto iter : _hmap_dirt) {
+      LOG_DEBUG() << "Number of events histograms construncted for universe " << s << "." << std::endl;
 
-      //   std::map<std::string, TH2D*> temp_map = iter.second;
-
-      //   for (auto i2 : temp_map) {
-
-      //     if (i2.first == universe_names.at(s)) {
-      //       input_map_mc_dirt[iter.first] = i2.second;
-      //       break;
-      //     }
-      //   }      
-      // }
 
 
       std::string hname; 
@@ -263,16 +249,22 @@ namespace Base {
       hname = "this_eff_den" + universe_names.at(s);
       _h_eff_mumom_den.GetUniverseHisto(universe_names.at(s), this_eff_den);
 
+      LOG_DEBUG() << "Efficiency histograms construncted for this universe " << s << "." << std::endl;
+
+
 
       //
       // Costruct the reco_per_true histos for this universe
       //
       auto iter = _bs_reco_per_true.find(universe_names.at(s));
       if (iter == _bs_reco_per_true.end()) {
-        std::cout << __PRETTY_FUNCTION__ << "Can't find bs_reco_per_true for universe " << universe_names.at(s) << std::endl;
+        LOG_CRITICAL() << "Can't find bs_reco_per_true for universe " << universe_names.at(s) << std::endl;
         throw std::exception();
       }
       this_reco_per_true = iter->second;
+
+      LOG_DEBUG() << "Reco per true histogram construncted for universe " << s << "." << std::endl;
+
 
     
       //
@@ -296,7 +288,7 @@ namespace Base {
         if (universe_names.at(s).npos != pos) {
           universe_number = universe_names.at(s).substr(pos+8);
         } else {
-          std::cout << _prefix << "Universe name is not nominal nor universeXXX." << std::endl;
+          LOG_CRITICAL() << "Universe name is not nominal nor universeXXX." << std::endl;
           throw std::exception();
         }
 
@@ -304,15 +296,18 @@ namespace Base {
         sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << universe_number << "_AV_TPC";
         std::string flux_name = sstm.str();
 
-        // std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
+        LOG_DEBUG() << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
         _xsec_calc.EstimateFlux(flux_file, flux_name);
       }
       if (universe_names.at(s) == "nominal") {
         std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
-        // std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
+        LOG_DEBUG() << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
         _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
+
+      LOG_DEBUG() << "Flux estimated for universe " << s << "." << std::endl;
+
 
 
       //
@@ -327,6 +322,7 @@ namespace Base {
         const double *bins_mumom_temp = input_map_mc["total"]->GetYaxis()->GetXbins()->GetArray();
 
         MigrationMatrix4D migrationmatrix4d;
+        migrationmatrix4d.set_verbosity(this->logger().level());
         // migrationmatrix4d.SetTTree(_t_true_reco);
         migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
         // migrationmatrix4d.UseWeights(universe_names.at(s), weight_type);
@@ -338,6 +334,9 @@ namespace Base {
         migrationmatrix4d.PrintSmearingMatrixLatex();
 
       }
+
+      LOG_DEBUG() << "Migration matrix estimated for universe " << s << "." << std::endl;
+
 
 
       //
@@ -396,10 +395,6 @@ namespace Base {
     DrawXSec(xsec_mumom_per_universe);
 
    
-
-
-    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
-
 	}
 
 

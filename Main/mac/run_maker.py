@@ -81,7 +81,6 @@ maker.SetCalculatePOT(True)
 maker.SetIsData(False)
 maker.SetExtraWeight(1.028); # Flux correction
 
-# maker.OverrideWithPoissonWeights(True)
 
 maker.SetMaUpMECOff(False)
 # maker.ScaleCosmics(0.54548) # For overlay systematics
@@ -105,6 +104,7 @@ maker.FillBootstrapFlux(True)
 #maker.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
 maker.SetTargetFluxSystematic("total")
 
+# maker.FillBootstrapMCStat(True)
 
 
 maker.PrintConfig()

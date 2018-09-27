@@ -274,6 +274,9 @@ namespace Base {
   void CrossSectionCalculator2D::SetSmearingMatrix(Mat4D s)
   {
     _S = s;
+
+    LOG_DEBUG() << "Smearing matrix has been set." << std::endl;
+
   }
 
 
@@ -431,12 +434,18 @@ namespace Base {
 
     _eff = teff_reco;
 
+    LOG_DEBUG() << "Smearing done." << std::endl;
+
+
   }
 
 
 
   void CrossSectionCalculator2D::ProcessPlots() 
   {
+
+    LOG_DEBUG() << "Start plot processing." << std::endl;
+
 
     // Scale mc histograms (bnbcosmic)
     for (auto iter : _hmap_bnbcosmic) {
@@ -490,6 +499,8 @@ namespace Base {
       _hmap_bnbcosmic["cosmic_dirt"] = h_empty;
     }
 
+
+    LOG_DEBUG() << "Plot processing ends." << std::endl;
   }
 
 

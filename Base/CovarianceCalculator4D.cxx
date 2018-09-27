@@ -306,9 +306,9 @@ namespace Base {
     }
 
     h->GetXaxis()->SetLabelOffset(0.004);
-    h->GetXaxis()->SetLabelSize(0.04);
+    h->GetXaxis()->SetLabelSize(0.03);
     h->GetYaxis()->SetLabelOffset(0.004);
-    h->GetYaxis()->SetLabelSize(0.04);
+    h->GetYaxis()->SetLabelSize(0.03);
     h->GetXaxis()->SetTitle("Bin i,j");
     h->GetYaxis()->SetTitle("Bin m,n");
     h->GetXaxis()->CenterTitle();

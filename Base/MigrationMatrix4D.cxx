@@ -66,6 +66,8 @@ namespace Base {
 
   Mat4D MigrationMatrix4D::CalculateMigrationMatrix() 
   {
+
+    LOG_DEBUG() << "Starting migration matrix calculation." << std::endl;
     
     // Resize the smearing matrix
     _S.resize( _var1_bins.size(), 
@@ -99,6 +101,8 @@ namespace Base {
     for (size_t m = 0; m < _var1_bins.size(); m++) {
       for (size_t n = 0; n < _var2_bins.size(); n++) {
 
+        LOG_DEBUG() << "Evaluating Migration Matrix at m = " << m << ", n = " << n << std::endl;
+ 
         // std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
 
         // auto v1_bin = _var1_bins.at(m);
@@ -112,6 +116,11 @@ namespace Base {
 
         _reco_per_true = (TH2D*) _h_reco_per_true[m][n]->Clone("_reco_per_true");
 
+        LOG_DEBUG() << "\tIntegral is " << _reco_per_true->Integral() << std::endl;
+
+        bool make_plot = false;
+        if (_reco_per_true->Integral() != 0) make_plot = true;
+
 
         // Normalize to get a probability
         _reco_per_true->Scale(1./_reco_per_true->Integral());
@@ -121,47 +130,53 @@ namespace Base {
         _reco_per_true->Draw("colz text");
         for (size_t i = 0; i < _var1_bins.size(); i++) {
           for (size_t j = 0; j < _var2_bins.size(); j++) {
-            if(_verbose) std::cout << "(" << i << ", " << j << ")" << _reco_per_true->GetBinContent(i+1, j+1) << std::endl;
+            LOG_DEBUG() << "\t(" << i << ", " << j << ") = " << _reco_per_true->GetBinContent(i+1, j+1) << std::endl;
 
             double value = _reco_per_true->GetBinContent(i+1, j+1);
-            if (std::isnan(value))
+            if (std::isnan(value)) {
               value = 0.;
+            }
   
             _S[i][j][m][n] = value;
           }
         }
 
         // Saving the plot
-        std::stringstream sstm;
-        sstm << "True Bin (" << m << ", " << n << ")";
-        std::string str = sstm.str();
-        _reco_per_true->SetTitle(str.c_str());
-        _reco_per_true->GetXaxis()->SetTitle("cos(#theta_{#mu}) [Reco Bin i]");
-        _reco_per_true->GetYaxis()->SetTitle("p_{#mu} (GeV) [Reco Bin j]");
-        _reco_per_true->GetYaxis()->SetTitleOffset(0.8);
+        if (make_plot) {  
+          LOG_DEBUG() << "Creating plot." << std::endl;
+          std::stringstream sstm;
+          sstm << "True Bin (" << m << ", " << n << ")";
+          std::string str = sstm.str();
+          _reco_per_true->SetTitle(str.c_str());
+          _reco_per_true->GetXaxis()->SetTitle("cos(#theta_{#mu}) [Reco Bin i]");
+          _reco_per_true->GetYaxis()->SetTitle("p_{#mu} (GeV) [Reco Bin j]");
+          _reco_per_true->GetYaxis()->SetTitleOffset(0.8);
 
-        sstm.str("");
-        sstm << "smearing_matrix_true_" << m << "_" << n;
+          sstm.str("");
+          sstm << "smearing_matrix_true_" << m << "_" << n;
 
-        TString name = _folder + sstm.str();
-        c->SaveAs(name + ".pdf");
-        c->SaveAs(name + ".C","C");
+          TString name = _folder + sstm.str();
+          c->SaveAs(name + ".pdf");
+          c->SaveAs(name + ".C","C");
+        }
 
       }
     }
 
 
-    if(_verbose) {
-      for (size_t i = 0; i < _var1_bins.size(); i++) {
-        for (size_t j = 0; j < _var2_bins.size(); j++) {
-          for (size_t m = 0; m < _var1_bins.size(); m++) {
-            for (size_t n = 0; n < _var2_bins.size(); n++) { 
-              std::cout << "(" << i << ", " << j << ", " << m << ", " << n << ") => " << _S[i][j][m][n] << std::endl;
-            }
+    
+    for (size_t i = 0; i < _var1_bins.size(); i++) {
+      for (size_t j = 0; j < _var2_bins.size(); j++) {
+        for (size_t m = 0; m < _var1_bins.size(); m++) {
+          for (size_t n = 0; n < _var2_bins.size(); n++) { 
+            LOG_DEBUG() << "\t\t(" << i << ", " << j << ", " << m << ", " << n << ") => " << _S[i][j][m][n] << std::endl;
           }
         }
       }
     }
+    
+
+    LOG_DEBUG() << "Migration matrix calculated." << std::endl;
 
     return _S;
 

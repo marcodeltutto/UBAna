@@ -945,7 +945,7 @@ namespace Base {
     if (_covariance_matrix_is_set) {
 
       gStyle->SetPalette(kDeepSea);
-      gStyle->SetPaintTextFormat("4.5f");
+      gStyle->SetPaintTextFormat("4.4f");
 
       // const Int_t NCont = 100;
       // const Int_t NRGBs = 5;

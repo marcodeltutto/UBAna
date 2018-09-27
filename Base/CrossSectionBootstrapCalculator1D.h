@@ -67,7 +67,7 @@ namespace Base {
      User defined class CrossSectionBootstrapCalculator1D ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionBootstrapCalculator1D : public LoggerFeature{
+  class CrossSectionBootstrapCalculator1D : public LoggerFeature {
     
   public:
     

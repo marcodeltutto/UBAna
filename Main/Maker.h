@@ -127,7 +127,7 @@ namespace Main {
     void FillBootstrapExtraSyst(bool option) {_fill_bootstrap_extra_syst = option;}
 
     ///
-    void OverrideWithPoissonWeights(bool option) {_override_with_poisson_weights = option;}
+    void FillBootstrapMCStat(bool option) {_fill_bootstrap_mc_stat = option;}
 
     ///
     void SetTargetFluxSystematic(std::string s) { _target_flux_syst = s; }
@@ -252,7 +252,8 @@ namespace Main {
     std::vector<double> _wgts_flux_multisim;
 
 
-    bool _override_with_poisson_weights = false; ///< If true, changes the GENIE multisim weights to be uncorrelated Poisson weights with mean 1
+    bool _fill_bootstrap_mc_stat = false; ///< If true, fills bootstrap with poisson weights
+    int _mc_stat_n_events = 100;
 
     TRandom _random_engine; ///< The engine to generate random numbers
     

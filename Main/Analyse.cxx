@@ -1399,6 +1399,7 @@ std::cout << ">> here11" << std::endl;
 
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
+    _xsec_bs_calc.set_verbosity(Base::msg::kWARNING);
 
     if (_do_genie_systs) {
       _xsec_bs_calc.Reset();
