@@ -443,8 +443,8 @@ namespace Base {
 
 
     // Make the fancy plot
-    int n_bins_y = 120; // was 60, 120
-    double bins_y[121];
+    int n_bins_y = 240; // was 60, 120, 240
+    double bins_y[241];
     for (int i = 0; i < n_bins_y+1; i++) { 
       if(_save_prefix.find("mumom") != std::string::npos) {
         bins_y[i] = (double)i/(double)n_bins_y * 1.6; 
@@ -481,7 +481,7 @@ namespace Base {
       h_2d_all_xsec->GetXaxis()->SetTitle("p_{#mu} [GeV]");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-      h_2d_all_xsec->SetMaximum(50); // was 200
+      h_2d_all_xsec->SetMaximum(200); // should be 50 or 20
     } else if (_save_prefix.find("onebin") != std::string::npos) {
       h_2d_all_xsec->GetXaxis()->SetTitle("");
       h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}]");
@@ -492,7 +492,7 @@ namespace Base {
       h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu})");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-      h_2d_all_xsec->SetMaximum(50);
+      h_2d_all_xsec->SetMaximum(200);
     }
 
     h_2d_all_xsec->Draw("colz");
