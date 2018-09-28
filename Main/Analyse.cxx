@@ -1720,7 +1720,7 @@ std::cout << "here 1 " << std::endl;
 
     CrossSectionBootstrapCalculator2DPoly _xsec_bs_poly_calc;
     _xsec_bs_poly_calc.SetFluxCorrectionWeight(_flux_correction_weight);
-    _xsec_bs_poly_calc.set_verbosity(Base::msg::kWARNING);
+    _xsec_bs_poly_calc.set_verbosity(Base::msg::kNORMAL);
 
 
     if (_do_genie_systs) {

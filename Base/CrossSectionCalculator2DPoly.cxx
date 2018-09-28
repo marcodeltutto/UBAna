@@ -273,8 +273,8 @@ namespace Base {
 
     for (int i = 0; i < n_bins; i++) {
 
-      matrix_angle_mom_den_truth[i] = _h_eff_mumom_den->GetBinContent(i+1);
-      matrix_angle_mom_num_truth[i] = _h_eff_mumom_num->GetBinContent(i+1);
+      matrix_angle_mom_den_truth[i][0] = _h_eff_mumom_den->GetBinContent(i+1);
+      matrix_angle_mom_num_truth[i][0] = _h_eff_mumom_num->GetBinContent(i+1);
 
     }
 

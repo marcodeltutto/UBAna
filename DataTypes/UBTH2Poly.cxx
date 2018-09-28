@@ -295,7 +295,6 @@ namespace DataTypes {
       thisBin = (TH2PolyBin *)fBins->At(bin - 1);
       if (thisBin->GetYMin() != fYaxis.GetXmin()) continue;
       boundaries.push_back(thisBin->GetXMin());
-      bin_numbers.push_back(thisBin->GetBinNumber());
     }
     boundaries.push_back(fXaxis.GetXmax());
 
@@ -314,6 +313,7 @@ namespace DataTypes {
       if (thisBin->GetXMin() != boundary_low) continue;
       if (thisBin->GetXMax() != boundary_up) continue;
       loweredge_to_bin[thisBin->GetYMin()] = thisBin;
+      bin_numbers.push_back(thisBin->GetBinNumber());
     }
 
     std::vector<double> bins_v;

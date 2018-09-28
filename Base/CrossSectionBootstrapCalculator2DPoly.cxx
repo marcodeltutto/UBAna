@@ -211,7 +211,7 @@ namespace Base {
     std::vector<UBTH2Poly*> this_reco_per_true;
     TMatrix S;
 
-    // n_universe = 4;
+    // n_universe = 10;
 
     for (size_t s = 0; s < n_universe; s++) { 
 
@@ -429,6 +429,7 @@ namespace Base {
 
       UBTH2Poly * h_xsec_2d = it->second;
 
+      LOG_INFO() << "Drawing universe " << it->first << std::endl;
 
       // std::vector<TH1D> xsec_data_histos;
       std::vector<TH1D> xsec_mc_histos;
@@ -481,7 +482,7 @@ namespace Base {
           for (int bin = 1; bin <= h_main->GetNbinsX(); bin++) {
             int original_bin_number = bin_numbers.at(i).at(bin-1);
             h_main->SetBinError(bin, std::sqrt(_cov_matrix.GetBinContent(original_bin_number, original_bin_number)));
-            LOG_CRITICAL() << "Setting bin " << bin << " with error " << std::sqrt(_cov_matrix.GetBinContent(original_bin_number, original_bin_number)) << " (coming from original bin " << original_bin_number << ")" << std::endl;
+            // if (bin == 2) LOG_CRITICAL() << "Setting bin " << bin << " with error " << std::sqrt(_cov_matrix.GetBinContent(original_bin_number, original_bin_number)) << " (coming from original bin " << original_bin_number << ")" << std::endl;
           }
           h_main->SetFillColor(0); // fully transparent
           h_main->Draw("E1 same"); // also error bars for nominal
