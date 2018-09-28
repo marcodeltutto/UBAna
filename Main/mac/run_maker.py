@@ -15,8 +15,9 @@ maker = Main.Maker()
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.9_500k.root"); # tune 1
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_tune3_mcc8.9_test5.root") # tune 3
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_tune3_mcc8.9_test5.root"); # tune 3
-# maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux (not high stat)
-# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux (not high stat)
+
+maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux (not high stat)
+maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_POLY.root"); # tune 1 - genie flux (not high stat)
 
 # maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsec_output_mc_bnbcosmic_mcc8.9_test6.root") # tune 1 high stat weights (genie syst DIS bugged)
 # maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled_new4.root"); # tune 1 high stat weights (genie syst DIS bugged)
@@ -47,8 +48,8 @@ maker = Main.Maker()
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_18__v11.root"); # After Neutrino
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v11.root"); # After Neutrino
 
-maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v1.root"); # After Neutrino
-maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v1.root"); # After Neutrino
+# maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v1.root"); # After Neutrino
+# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v1.root"); # After Neutrino
 
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbnuecosmic_ubcodev06_26_01_18__v10.root"); # After Neutrino (nue)
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbnuecosmic_ubcodev06_26_01_18__v10.root"); # After Neutrino (nue)
@@ -67,7 +68,7 @@ maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_18__v12.root") # Adam test file truthfiltered
 
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_dirt_ubcodev06_26_01_20__v15.root") # Dirt v15
-# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15.root") # Dirt v15
+# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15_POLY.root") # Dirt v15
 
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)
@@ -117,8 +118,8 @@ maker.MakeFile()
 
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_mcc8.7_test6.root") # 5e19
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_mcc8.7_test6.root") # 5e19
-# maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_a_mcc8.9_test4.root") # 1.6e20
-# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_a_mcc8.9_test4.root") # 1.6e20
+maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_a_mcc8.9_test4.root") # 1.6e20
+maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_a_mcc8.9_test4_POLY.root") # 1.6e20
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbon_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_mcc8.9_test7.root")
@@ -137,8 +138,8 @@ maker.MakeFile()
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_ubcodev06_26_01_18__v11.root") # 5e19 After Neutrino
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_ubcodev06_26_01_18__v11.root") # 5e19 After Neutrino
 
-maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_run1_ubcodev06_26_01_22__v1.root") # Run1 After Neutrino
-maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_run1_ubcodev06_26_01_22__v1.root") # Run1 After Neutrino
+# maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_bnbon_run1_ubcodev06_26_01_22__v1.root") # Run1 After Neutrino
+# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_run1_ubcodev06_26_01_22__v1_POLY.root") # Run1 After Neutrino
 
 maker.SetEntries(-1)
 maker.SetBeamSpillStart(3.2)    
@@ -160,8 +161,8 @@ maker.MakeFile()
 
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_mcc8.7_test6.root") # 5e19
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_extbnb_mcc8.7_test6.root") # 5e19
-# maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_a_mcc8.9_test4.root") # 1.6e20
-# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root") # 1.6e20
+maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_a_mcc8.9_test4.root") # 1.6e20
+maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_extbnb_a_mcc8.9_test4_POLY.root") # 1.6e20
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_extbnb_mcc8.9_test8.root") # 1.6e20, 2
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_mcc8.9_test7.root")
@@ -180,8 +181,8 @@ maker.MakeFile()
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_ubcodev06_26_01_18__v11.root") # 5e19 After Neutrino
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_ubcodev06_26_01_18__v11.root") # 5e19 After Neutrino
 
-maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_run1_ubcodev06_26_01_22__v1.root") # Run1 After Neutrino
-maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v1.root") # Run1 After Neutrino
+# maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_run1_ubcodev06_26_01_22__v1.root") # Run1 After Neutrino
+# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v1_POLY.root") # Run1 After Neutrino
 
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_extbnb_ubcodev06_26_01_18__v12.root") 
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_ubcodev06_26_01_18__v12.root") 

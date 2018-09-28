@@ -516,13 +516,28 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
+    LOG_INFO() << "Initial - Cross section in bin (5, 2) is " << h_data->GetBinContent(5, 2) << std::endl;
+
+    if (h_mc->GetSumw2N() == 0) { 
+      LOG_WARNING() << "MC cross section histogram does not have Sum2w active." << std::endl;
+    }
+
+
     // LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_names) 
     {
       // std::cout << name << ", ";
+
       h_data->Add(_hmap_bnbcosmic[name], -1.);
+
+      if (_hmap_bnbcosmic[name]->GetSumw2N() == 0) {
+        LOG_WARNING() << "Bkg " << name << " does not have Sum2w active." << std::endl;
+      }
     }
     // std::cout << std::endl;
+
+
+    LOG_INFO() << "Subtraction - Cross section in bin (5, 2) is " << h_data->GetBinContent(5, 2) << std::endl;
 
 
 
@@ -555,6 +570,8 @@ namespace Base {
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
+    LOG_INFO() << "Efficiency in bin (5, 2) is " << h_eff->GetBinContent(5, 2) << std::endl;
+    LOG_INFO() << "Efficiency - Cross section in bin (5, 2) is " << h_data->GetBinContent(5, 2) << std::endl;
 
 
 
@@ -567,6 +584,8 @@ namespace Base {
 
     h_mc->Scale(1. / den, "width");
     h_data->Scale(1. / den, "width");
+
+    LOG_INFO() << "Cross section in bin (5, 2) is " << h_data->GetBinContent(5, 2) << std::endl;
 
 
 
@@ -1487,7 +1506,7 @@ namespace Base {
                                 xsec_mc_histos["anumu"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic + 
                                 xsec_mc_histos["nue"].at(i)->Integral() / _scale_factor_mc_bnbcosmic; 
 
-      LOG_CRITICAL() << "In cos(theta) bin " << i << ", total signal " << xsec_mc_histos["signal"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic << ", total background " << total_background  << std::endl;
+      // LOG_CRITICAL() << "In cos(theta) bin " << i << ", total signal " << xsec_mc_histos["signal"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic << ", total background " << total_background  << std::endl;
 
       
       fs << xsec_mc_histos["signal"].at(i)->Integral()  / _scale_factor_mc_bnbcosmic << " & " << total_background << " & ";

@@ -1,9 +1,9 @@
 /**
- * \file CrossSectionCalculator2D.h
+ * \file CrossSectionCalculator2DPoly.h
  *
  * \ingroup Base
  * 
- * \brief Class def header for a class CrossSectionCalculator2D
+ * \brief Class def header for a class CrossSectionCalculator2DPoly
  *
  * @author deltutto
  */
@@ -11,8 +11,8 @@
 /** \addtogroup Base
 
     @{*/
-#ifndef __BASE_CROSSSECTIONCALCULATOR2D_H__
-#define __BASE_CROSSSECTIONCALCULATOR2D_H__
+#ifndef __BASE_CROSSSECTIONCALCULATOR2DPOLY_H__
+#define __BASE_CROSSSECTIONCALCULATOR2DPOLY_H__
 
 #include <iostream>
 #include <sstream>
@@ -51,28 +51,33 @@
 #include "TMatrix.h"
 #include "TGraphAsymmErrors.h"
 #include "TLine.h"
+#include "Math/DistFunc.h" // for quantile
 
 #include "Types.h"
+#include "ubana/DataTypes/UBTH2Poly.h"
 #include "PlottingTools.h"
 #include "LoggerFeature.h"
+
+using namespace DataTypes;
+
 
 namespace Base {
 
   /**
-     \class CrossSectionCalculator2D
-     User defined class CrossSectionCalculator2D ... these comments are used to generate
+     \class CrossSectionCalculator2DPoly
+     User defined class CrossSectionCalculator2DPoly ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionCalculator2D : public LoggerFeature {
+  class CrossSectionCalculator2DPoly : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    CrossSectionCalculator2D(std::string name = "CrossSectionCalculator2D") 
+    CrossSectionCalculator2DPoly(std::string name = "CrossSectionCalculator2DPoly") 
     : LoggerFeature(name) {}
     
     /// Default destructor
-    ~CrossSectionCalculator2D(){}
+    ~CrossSectionCalculator2DPoly(){}
 
     /// Configure function parameters
     void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt = 0, double intimecosmic = 0);
@@ -83,17 +88,17 @@ namespace Base {
     /// Set the plot name for saving and the label for the axis
     void SetNameAndLabel(std::string name, std::string label);
 
-    /// Sets the output directory
+    /// Sets the outputdirectory
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms
-    void SetHistograms(std::map<std::string,TH2D*> bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt = std::map<std::string, TH2D*>(), TH2D* intimecosmic = 0);
+    void SetHistograms(std::map<std::string,UBTH2Poly*> bnbcosmic, UBTH2Poly* bnbon, UBTH2Poly* extbnb, std::map<std::string,UBTH2Poly*> dirt = std::map<std::string, UBTH2Poly*>(), UBTH2Poly* intimecosmic = 0);
 
     /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
-    void SetTruthHistograms(TH2D*, TH2D*/*, TH2D**/);
+    void SetTruthHistograms(UBTH2Poly*, UBTH2Poly*);
 
     /// Sets truth XSec
-    void SetTruthXSec(TH1D* xsec);
+    void SetTruthXSec(UBTH2Poly* xsec);
 
     /// Printd the current configuration
     void PrintConfig();
@@ -108,34 +113,28 @@ namespace Base {
     void Draw(std::vector<std::string> histos_to_subtract);
 
     ///   
-    void DrawInProjections(TH2D* h_data, std::map<std::string,TH2D*> mc, TString save_path, bool scale_bin_width = false); 
+    void DrawInProjections(UBTH2Poly* h_data, std::map<std::string,UBTH2Poly*> mc, TString save_path, bool scale_bin_width = false); 
 
     /// 
-    double EstimateFlux(std::string flux_file_name = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_name = "numu/numu_CV_AV_TPC");
+    double EstimateFlux(std::string flux_file_prefix = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_prefix = "numu/numu_CV_AV_TPC");
 
     ///
-    THStack * ProcessTHStack(std::map<std::string,TH2D*> themap, TLegend*, std::vector<std::string>);
+    THStack * ProcessTHStack(std::map<std::string,UBTH2Poly*> themap, TLegend*, std::vector<std::string>);
 
     ///
-    TH2D* ProcessDataHisto(TH2D* histo);
+    UBTH2Poly* ProcessDataHisto(UBTH2Poly* histo);
 
     /// Extracts the cross section, provide a vector of background names to be subtracted in the first argument
-    TH2D* ExtractCrossSection(std::vector<std::string> bkg_names, std::string, std::string, std::string, bool make_plots = true);
-
-    /// Makes all the cross section plots (must be called after ExtractCrossSection)
-    void MakeAllCrossSectionPlots(std::string, std::string, std::string);
+    UBTH2Poly* ExtractCrossSection(std::vector<std::string> bkg_prefixs, std::string, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
-    TH2D* GetMCCrossSection() {return _h_mc;}
+    UBTH2Poly* GetMCCrossSection() {return _h_mc;}
 
     ///
-    void SetSmearingMatrix(std::vector<std::vector<std::vector<std::vector<double>>>>);
+    void SetSmearingMatrix(TMatrix);
 
     ///
-    void SetCovarianceMatrix(TH2D);
-
-    ///
-    void SetFractionalCovarianceMatrix(TH2D);
+    void SetCovarianceMatrix(UBTH2Poly);
 
     ///
     void Smear();
@@ -160,7 +159,7 @@ namespace Base {
 
   private:
 
-    std::string _namebase = "[CrossSectionCalculator2D] ";
+    std::string _prefixbase = "[CrossSectionCalculator2DPoly] ";
     
     bool _configured = false;
 
@@ -177,34 +176,31 @@ namespace Base {
 
     double _n_target = 2.64218e31;
 
-    std::string _name = "trklen"; 
+    std::string _prefix = "trklen"; 
     std::string _label = ";Test [cm]; Selected Events";
 
     std::string _outdir;
     std::string _folder;
 
-    std::map<std::string,TH2D*> _hmap_bnbcosmic;
-    std::map<std::string,TH2D*> _hmap_dirt;
-    TH2D* _h_bnbon;
-    TH2D* _h_extbnb;
-    TH2D* _h_intimecosmic;
+    std::map<std::string,UBTH2Poly*> _hmap_bnbcosmic;
+    std::map<std::string,UBTH2Poly*> _hmap_dirt;
+    UBTH2Poly* _h_bnbon;
+    UBTH2Poly* _h_extbnb;
+    UBTH2Poly* _h_intimecosmic;
 
-    TH2D* _h_eff_mumom_num;
-    TH2D* _h_eff_mumom_den;
-    //TH2D* _h_true_reco_mom;
+    UBTH2Poly* _h_eff_mumom_num;
+    UBTH2Poly* _h_eff_mumom_den;
 
-    TH1D* _truth_xsec;
+    UBTH2Poly* _truth_xsec;
 
-    TH2D* _h_data_sub;
+    UBTH2Poly* _h_data_sub;
 
-    TEfficiency* _eff;
+    UBTH2Poly* _eff;
 
-    TH2D* _h_mc = NULL; ///< The to-be extracted MC cross section
-    TH2D* _h_data = NULL; ///< The to-be extracted data cross section
-    TH2D* _h_syst_unc = NULL; ///< The to-be calculated syst uncertainties on data cross section
+    UBTH2Poly* _h_mc = NULL; ///< The to-be extracted MC cross section
+    UBTH2Poly* _h_data = NULL; ///< The to-be extracted data cross section
 
-
-    std::vector<std::vector<std::vector<std::vector<double>>>> _S;
+    TMatrix _S; ///< The migration matrix (to be set externally)
 
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
@@ -212,15 +208,12 @@ namespace Base {
 
     double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
 
-    TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
+    UBTH2Poly _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
 
-    TH2D _frac_covariance_matrix; ///< 2D Histogram representing the fractionalcovariance matrix (to be set externally)
-    bool _frac_covariance_matrix_is_set = false; ///< Flag that remembers if the fractionalcovariance matrix was set for this cross section calculation (if not, no syst will be added)
-
-    TH2D *_frac_cov_matrix_total = NULL; ///< Total final fractional covariance matrix
-    TH2D *_cov_matrix_total = NULL; ///< Total final covariance matrix
-    TH2D *_corr_matrix_total = NULL; ///< Total final correlation matrix
+    UBTH2Poly *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    UBTH2Poly *_cov_matrix_total = NULL; ///< Total  covariance matrix
+    UBTH2Poly *_corr_matrix_total = NULL; ///< Total correlation matrix
 
   };
 }

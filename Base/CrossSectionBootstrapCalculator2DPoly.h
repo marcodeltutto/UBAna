@@ -1,9 +1,9 @@
 /**
- * \file CrossSectionBootstrapCalculator1D.h
+ * \file CrossSectionBootstrapCalculator2DPoly.h
  *
  * \ingroup Base
  * 
- * \brief Class def header for a class CrossSectionBootstrapCalculator1D
+ * \brief Class def header for a class CrossSectionBootstrapCalculator2DPoly
  *
  * @author deltutto
  */
@@ -11,8 +11,8 @@
 /** \addtogroup Base
 
     @{*/
-#ifndef __BASE_CROSSSECTIONBOOTSTRAPCALCULATOR1D_H__
-#define __BASE_CROSSSECTIONBOOTSTRAPCALCULATOR1D_H__
+#ifndef __BASE_CROSSSECTIONBOOTSTRAPCALCULATOR2DPOLY_H__
+#define __BASE_CROSSSECTIONBOOTSTRAPCALCULATOR2DPOLY_H__
 
 #include <iostream>
 #include <sstream>
@@ -51,32 +51,36 @@
 #include "TMatrix.h"
 #include "TGraphAsymmErrors.h"
 
+#include "CrossSectionCalculator2DPoly.h"
+#include "MigrationMatrix4DPoly.h"
+#include "CovarianceCalculator4D.h"
 
-#include "BootstrapTH1D.h"
-#include "BootstrapTH2D.h"
-#include "CrossSectionCalculator1D.h"
-#include "MigrationMatrix2D.h"
-#include "CovarianceCalculator2D.h"
+#include "ubana/DataTypes/UBTH2Poly.h"
+#include "ubana/DataTypes/BootstrapTH2DPoly.h"
+
 #include "LoggerFeature.h"
 
 
-namespace Base {
+using namespace DataTypes;
+
+
+namespace Base{
 
   /**
-     \class CrossSectionBootstrapCalculator1D
-     User defined class CrossSectionBootstrapCalculator1D ... these comments are used to generate
+     \class CrossSectionBootstrapCalculator2DPoly
+     User defined class CrossSectionBootstrapCalculator2DPoly ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionBootstrapCalculator1D : public LoggerFeature {
+  class CrossSectionBootstrapCalculator2DPoly : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    CrossSectionBootstrapCalculator1D(std::string name = "CrossSectionBootstrapCalculator1D") 
+    CrossSectionBootstrapCalculator2DPoly(std::string name = "CrossSectionBootstrapCalculator2DPoly") 
     : LoggerFeature(name) {}
     
     /// Default destructor
-    ~CrossSectionBootstrapCalculator1D(){}
+    ~CrossSectionBootstrapCalculator2DPoly(){}
 
     ///
     void Run();
@@ -94,16 +98,16 @@ namespace Base {
     void SetNameAndLabel(std::string name, std::string label);
 
     /// Sets all the histograms
-    void SetHistograms(std::map<std::string,std::map<std::string,TH1D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH1D* bnbon, TH1D* extbnb, std::map<std::string,TH1D*> dirt = std::map<std::string,TH1D*>(), TH1D* intimecosmic = 0);
+    void SetHistograms(std::map<std::string,std::map<std::string,UBTH2Poly*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, UBTH2Poly* bnbon, UBTH2Poly* extbnb, std::map<std::string,UBTH2Poly*> dirt = std::map<std::string,UBTH2Poly*>(), UBTH2Poly* intimecosmic = 0);
 
-    /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
-    void SetTruthHistograms(BootstrapTH1D, BootstrapTH1D, BootstrapTH2D);
+    /// Sets num and dem histograms for the efficiency and the reco per true 2D histos
+    void SetTruthHistograms(BootstrapTH2DPoly, BootstrapTH2DPoly, std::map<std::string,std::vector<UBTH2Poly*>>);
 
     /// Sets num and dem histograms for the efficiency
-    void SetTruthHistograms(BootstrapTH1D, BootstrapTH1D);
+    void SetTruthHistograms(BootstrapTH2DPoly, BootstrapTH2DPoly);
 
     /// Sets truth XSec
-    void SetTruthXSec(TH1D* xsec);
+    void SetTruthXSec(UBTH2Poly* xsec);
 
     ///
     void SetMigrationMatrixDimensions(int n, int m);
@@ -119,6 +123,9 @@ namespace Base {
  
     /// Sets the output directory
     void SetSavePrefix(std::string s, std::string folder = "output_covariance_plots");
+
+    ///
+    void DrawProgressBar(double progress, double barWidth);
 
     ///
     void SetUpperLabel(std::string s) {_upper_label = s;}
@@ -141,7 +148,13 @@ namespace Base {
     ///
     void SetFluxCorrectionWeight(double w) {_flux_correction_weight = w;};
 
+    ///
+    void DrawXSec(std::map<std::string, UBTH2Poly*> xsec_mumom_per_universe);
+  
+
   private:
+
+    std::string _prefix = "[CrossSectionBootstrapCalculator2DPoly] ";
 
     bool _configured = false;
 
@@ -162,16 +175,22 @@ namespace Base {
     std::string _outdir;
     std::string _folder;
 
-    //std::map<std::string,BootstrapTH1D> _hmap_bnbcosmic;
-    std::map<std::string,std::map<std::string,TH1D*>> _hmap_bnbcosmic;
-    std::map<std::string,TH1D*> _hmap_dirt;
-    TH1D* _h_bnbon = nullptr;
-    TH1D* _h_extbnb = nullptr;
-    TH1D* _h_intimecosmic = nullptr;
+    CrossSectionCalculator2DPoly _xsec_calc; ///< The cross section calculator
 
-    BootstrapTH1D _h_eff_mumom_num;
-    BootstrapTH1D _h_eff_mumom_den;
-    BootstrapTH2D _h_true_reco_mom;
+    //std::map<std::string,BootstrapTH2D> _hmap_bnbcosmic;
+    std::map<std::string,std::map<std::string,UBTH2Poly*>> _hmap_bnbcosmic;
+    std::map<std::string,UBTH2Poly*> _hmap_dirt;
+    UBTH2Poly* _h_bnbon = nullptr;
+    UBTH2Poly* _h_extbnb = nullptr;
+    UBTH2Poly* _h_intimecosmic = nullptr;
+
+    BootstrapTH2DPoly _h_eff_mumom_num; ///< The efficiency numerator
+    BootstrapTH2DPoly _h_eff_mumom_den; ///< The efficiency denominator
+
+    TTree * _t_true_reco; ///< The TTree containing the mapping true to reco (no longer used)
+    std::map<std::string,std::vector<UBTH2Poly*>> _bs_reco_per_true; ///< The Bootstrap containing the reco per true histos for every universe
+
+    TTree* true_reco_tree = nullptr; ///< The tree that containes the true to reco mapping
 
     bool _true_to_reco_is_set = false; ///< Is set to true when SetTruthHistograms() is called with three arguments
 

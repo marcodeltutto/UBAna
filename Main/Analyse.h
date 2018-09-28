@@ -44,6 +44,12 @@
 #include <TH2D.h>
 #include <TLatex.h>
 #include <TCanvas.h>
+#include <TH2Poly.h>
+
+#include "ubana/DataTypes/UBTH2Poly.h"
+#include "ubana/DataTypes/BootstrapTH2DPoly.h"
+
+#include "ubana/DataTypes/UBXSecEventHisto.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
@@ -52,15 +58,20 @@
 #include "ubana/Base/CrossSectionCalculator1D.h"
 #include "ubana/Base/MigrationMatrix2D.h"
 #include "ubana/Base/MigrationMatrix4D.h"
+#include "ubana/Base/MigrationMatrix4DPoly.h"
 #include "ubana/Base/CrossSectionCalculator2D.h"
 #include "ubana/Base/ReweightingPlotter.h"
 #include "ubana/Base/CovarianceCalculator2D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator1D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator2D.h"
+#include "ubana/Base/CrossSectionBootstrapCalculator2DPoly.h"
+#include "ubana/Base/CrossSectionCalculator2DPoly.h"
 
 #include "ubana/Base/LoggerFeature.h"
 
 using namespace Base;
+using namespace DataTypes;
+
 
 namespace Main {
 
@@ -69,12 +80,13 @@ namespace Main {
      User defined class Analyse ... these comments are used to generate
      doxygen documentation!
   */
-  class Analyse : public LoggerFeature{
+  class Analyse : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    Analyse(){}
+    Analyse(std::string name = "Analyse") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~Analyse(){}
@@ -179,6 +191,8 @@ namespace Main {
     void DoAnalise();
 
   private:
+
+    
 
     bool _calculate_xsec = true;
     bool _do_pm1sigma_plots = false;

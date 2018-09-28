@@ -676,6 +676,10 @@ namespace Base {
     _h_mc->SetTitle(_label.c_str());
     _h_data->Sumw2();
 
+    if (_h_mc->GetSumw2N() == 0) { 
+      LOG_WARNING() << "MC cross section histogram does not have Sum2w active." << std::endl;
+    }
+
 
     // if(_h_data->GetNbinsX() == 1) {
     //   _h_data->SetBinError(1, 0.);
@@ -694,6 +698,9 @@ namespace Base {
     for (auto name : bkg_names) 
     {
       _h_data->Add(_hmap_bnbcosmic[name], -1.);
+      if (_hmap_bnbcosmic[name]->GetSumw2N() == 0) {
+        LOG_WARNING() << "Bkg " << name << " does not have Sum2w active." << std::endl;
+      }
     }
 
     

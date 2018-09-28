@@ -46,25 +46,36 @@
 #include <TLatex.h>
 #include <TCanvas.h>
 #include "TMath.h"
+#include "TH2Poly.h"
+
+#include "ubana/DataTypes/UBTH2Poly.h"
+#include "ubana/DataTypes/BootstrapTH2DPoly.h"
+#include "ubana/DataTypes/UBXSecEventHisto.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/Base/BootstrapTH1D.h"
 #include "ubana/Base/BootstrapTH2D.h"
 #include "ubana/Base/PlottingTools.h"
 
-namespace Main {
+#include "ubana/Base/LoggerFeature.h"
+
+using namespace DataTypes;
+using namespace Base;
+
+namespace Main{
 
   /**
      \class Maker
      User defined class Maker ... these comments are used to generate
      doxygen documentation!
   */
-  class Maker{
+  class Maker : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    Maker(){}
+    Maker(std::string name = "Maker") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~Maker(){}
@@ -180,6 +191,30 @@ namespace Main {
                        std::vector<std::string> fname, 
                        std::vector<double> wgts);
 
+    void FillBootstrap(double fill_value1, // reco value x (costheta)
+                       double fill_value2, // reco value y (momentum)
+                       int n, // true bin n (1 number, unrolled)
+                       double evt_wgt,
+                       std::map<std::string,std::vector<UBTH2Poly*>> bs_poly_reco_per_true, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts);
+
+    void FillBootstrap(double fill_value1,
+                       double fill_value2,
+                       double evt_wgt,
+                       std::map<std::string,std::map<std::string,UBTH2Poly*>> hmap, 
+                       std::string channel_namel, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts_genie);
+
+    void AddPolyBins(UBTH2Poly * h);
+
+    void AddPolyBins(BootstrapTH2DPoly h);
+
+    UBXSecEventHisto * _event_histo;
+
+
+
     bool _maup_mecoff = false;
 
     const bool _breakdownPlots = true;
@@ -234,6 +269,10 @@ namespace Main {
     // double bins_double_mucostheta[10] = {-1.00, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
     int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
     double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
+
+    int _n_poly_bins = 53;
+    std::map<int, std::pair<int, int>> _exclusion_map = { {0, std::make_pair(4, 5)},
+                                                          {1, std::make_pair(4, 5)}, };
 
     bool _scale_cosmics = false; ///< If true scales the cosmic background by _scale_factor_cosmic
     double _scale_factor_cosmic = 1.; ///< Factor used to scale the cosmic background (used only if _scale_cosmics is true)

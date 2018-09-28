@@ -5,8 +5,6 @@ build
 covariance*
 output*
 xsec*
-migration*
-Migration*
 *.pdf
 ./*.C
 *.txt
