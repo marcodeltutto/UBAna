@@ -119,7 +119,10 @@ namespace Base {
     TH2D* ProcessDataHisto(TH2D* histo);
 
     /// Extracts the cross section, provide a vector of background names to be subtracted in the first argument
-    TH2D* ExtractCrossSection(std::vector<std::string> bkg_names, std::string, std::string, std::string);
+    TH2D* ExtractCrossSection(std::vector<std::string> bkg_names, std::string, std::string, std::string, bool make_plots = true);
+
+    /// Makes all the cross section plots (must be called after ExtractCrossSection)
+    void MakeAllCrossSectionPlots(std::string, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
     TH2D* GetMCCrossSection() {return _h_mc;}
@@ -197,6 +200,8 @@ namespace Base {
 
     TH2D* _h_mc = NULL; ///< The to-be extracted MC cross section
     TH2D* _h_data = NULL; ///< The to-be extracted data cross section
+    TH2D* _h_syst_unc = NULL; ///< The to-be calculated syst uncertainties on data cross section
+
 
     std::vector<std::vector<std::vector<std::vector<double>>>> _S;
 

@@ -504,7 +504,7 @@ namespace Base {
   }
 
 
-  TH2D* CrossSectionCalculator2D::ExtractCrossSection(std::vector<std::string> bkg_names, std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
+  TH2D* CrossSectionCalculator2D::ExtractCrossSection(std::vector<std::string> bkg_names, std::string xaxis_label, std::string yaxis_label, std::string zaxis_label, bool make_plots) 
   {
 
     //
@@ -589,6 +589,11 @@ namespace Base {
 
     LOG_INFO() << "MC Integral: " << h_mc->Integral() << std::endl;
     LOG_INFO() << "Data Integral: " << h_data->Integral() << std::endl;
+
+
+    if (h_data->GetBinContent(9, 5) < 0.5) {
+      LOG_CRITICAL() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> cross section in bin 9, 5 is " << h_data->GetBinContent(9, 5) << std::endl;
+    }
 
 
     //
@@ -702,6 +707,19 @@ namespace Base {
       }
     }
 
+    _h_data = h_data;
+    _h_mc = h_mc;
+    _h_syst_unc = h_syst_unc;
+
+    if (make_plots) MakeAllCrossSectionPlots(xaxis_label, yaxis_label, zaxis_label);
+
+    return _h_data;
+
+  }
+
+  void CrossSectionCalculator2D::MakeAllCrossSectionPlots(std::string xaxis_label, std::string yaxis_label, std::string zaxis_label)
+  {
+
 
 
     //
@@ -740,10 +758,10 @@ namespace Base {
     //
 
     TCanvas * c_xsec_mc = new TCanvas();
-    h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
-    h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
-    h_mc->GetYaxis()->SetTitleOffset(0.77);
-    h_mc->Draw("lego1");
+    _h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
+    _h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    _h_mc->GetYaxis()->SetTitleOffset(0.77);
+    _h_mc->Draw("lego1");
 
     sim->Draw();
 
@@ -757,16 +775,16 @@ namespace Base {
 
 
     double central_size = 0.02;
-    TH2D* h_mc_empty_bottom = (TH2D*)h_mc->Clone("h_mc_empty_bottom");
-    TH2D* h_mc_error_low = (TH2D*)h_mc->Clone("h_mc_error_low");
-    TH2D* h_mc_error_up = (TH2D*)h_mc->Clone("h_mc_error_up");
-    TH2D* h_mc_central = (TH2D*)h_mc->Clone("h_mc_central");
+    TH2D* h_mc_empty_bottom = (TH2D*)_h_mc->Clone("h_mc_empty_bottom");
+    TH2D* h_mc_error_low = (TH2D*)_h_mc->Clone("h_mc_error_low");
+    TH2D* h_mc_error_up = (TH2D*)_h_mc->Clone("h_mc_error_up");
+    TH2D* h_mc_central = (TH2D*)_h_mc->Clone("h_mc_central");
 
-    for (int i = 1; i < h_mc->GetNbinsX()+1; i++) {
-      for (int j = 1; j < h_mc->GetNbinsY()+1; j++) {
+    for (int i = 1; i < _h_mc->GetNbinsX()+1; i++) {
+      for (int j = 1; j < _h_mc->GetNbinsY()+1; j++) {
 
-        double content = h_mc->GetBinContent(i, j);
-        double unc = h_mc->GetBinError(i, j);
+        double content = _h_mc->GetBinContent(i, j);
+        double unc = _h_mc->GetBinError(i, j);
 
         //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
 
@@ -839,16 +857,16 @@ namespace Base {
     //
 
     // Prepare 2d hist with error bars
-    TH2D* h_data_empty_bottom = (TH2D*)h_data->Clone("h_data_empty_bottom");
-    TH2D* h_data_error_low = (TH2D*)h_data->Clone("h_data_error_low");
-    TH2D* h_data_error_up = (TH2D*)h_data->Clone("h_data_error_up");
-    TH2D* h_data_central = (TH2D*)h_data->Clone("h_data_central");
+    TH2D* h_data_empty_bottom = (TH2D*)_h_data->Clone("h_data_empty_bottom");
+    TH2D* h_data_error_low = (TH2D*)_h_data->Clone("h_data_error_low");
+    TH2D* h_data_error_up = (TH2D*)_h_data->Clone("h_data_error_up");
+    TH2D* h_data_central = (TH2D*)_h_data->Clone("h_data_central");
 
-    for (int i = 1; i < h_data->GetNbinsX()+1; i++) {
-      for (int j = 1; j < h_data->GetNbinsY()+1; j++) {
+    for (int i = 1; i < _h_data->GetNbinsX()+1; i++) {
+      for (int j = 1; j < _h_data->GetNbinsY()+1; j++) {
 
-        double content = h_data->GetBinContent(i, j);
-        double unc = h_data->GetBinError(i, j);
+        double content = _h_data->GetBinContent(i, j);
+        double unc = _h_data->GetBinError(i, j);
 
         //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
 
@@ -890,17 +908,17 @@ namespace Base {
     TCanvas * c_xsec_data = new TCanvas();
     //h_data->SetMarkerStyle(kFullCircle);
     //h_data->SetMarkerSize(0.6);
-    h_data->SetFillColor(kGreen+2);
-    h_data->SetLineColor(kBlack);
-    h_data->GetXaxis()->SetTitle(xaxis_label.c_str());
-    h_data->GetYaxis()->SetTitle(yaxis_label.c_str());
-    h_data->GetZaxis()->SetTitle(zaxis_label.c_str());
-    h_data->GetYaxis()->SetTitleOffset(0.77);
+    _h_data->SetFillColor(kGreen+2);
+    _h_data->SetLineColor(kBlack);
+    _h_data->GetXaxis()->SetTitle(xaxis_label.c_str());
+    _h_data->GetYaxis()->SetTitle(yaxis_label.c_str());
+    _h_data->GetZaxis()->SetTitle(zaxis_label.c_str());
+    _h_data->GetYaxis()->SetTitleOffset(0.77);
 
     xsec_label->Draw();
     prelim->Draw();
 
-    h_data->Draw("e2");
+    _h_data->Draw("e2");
     
 
     
@@ -996,13 +1014,13 @@ namespace Base {
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
 
-    LOG_INFO() << "n bins x " << h_data->GetNbinsX() << std::endl;
-    LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
+    LOG_INFO() << "n bins x " << _h_data->GetNbinsX() << std::endl;
+    LOG_INFO() << "n bins y " << _h_data->GetNbinsY() << std::endl;
 
     int horizontal_division = 2;
-    int vertical_division = floor(h_data->GetNbinsX() / 2.);
+    int vertical_division = floor(_h_data->GetNbinsX() / 2.);
     
-    if ( h_data->GetNbinsX() / 2. != floor(h_data->GetNbinsX() / 2.) ) vertical_division++;
+    if ( _h_data->GetNbinsX() / 2. != floor(_h_data->GetNbinsX() / 2.) ) vertical_division++;
 
     LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
     LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
@@ -1013,10 +1031,10 @@ namespace Base {
     // gStyle->SetOptStat(0);
     c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
 
-    for (int i = 0; i < h_data->GetNbinsX(); i++) {
-      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+1));
-      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, i+1));
-      xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1, i+1));
+    for (int i = 0; i < _h_data->GetNbinsX(); i++) {
+      xsec_data_histos.emplace_back(*_h_data->ProjectionY("fuck", i+1, i+1));
+      xsec_mc_histos.emplace_back(*_h_mc->ProjectionY("fuck", i+1, i+1));
+      xsec_data_unc_histos.emplace_back(*_h_syst_unc->ProjectionY("fuck", i+1, i+1));
     }
 
 
@@ -1146,7 +1164,7 @@ namespace Base {
       for (int i = 0; i <  _covariance_matrix.GetNbinsX()+1; i++) {
         std::ostringstream oss;
         oss << i_label_number << "," << j_label_number;
-        if (j_label_number % h_data->GetNbinsY() == 0) {
+        if (j_label_number % _h_data->GetNbinsY() == 0) {
           i_label_number ++;
           j_label_number = 0;
         }
@@ -1172,15 +1190,15 @@ namespace Base {
 
       std::vector<TLine*> lines;
 
-      for (int i = 1; i < h_data->GetNbinsX(); i++) {
-        TLine *line = new TLine(h_data->GetNbinsY()  * i, 0, h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX());
+      for (int i = 1; i < _h_data->GetNbinsX(); i++) {
+        TLine *line = new TLine(_h_data->GetNbinsY()  * i, 0, _h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX());
         line->SetLineColor(kGreen+2);
         line->SetLineWidth(2);
         lines.emplace_back(line);
       }
 
-      for (int i = 1; i < h_data->GetNbinsX(); i++) {
-        TLine *line = new TLine(0, h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX(), h_data->GetNbinsY() * i);
+      for (int i = 1; i < _h_data->GetNbinsX(); i++) {
+        TLine *line = new TLine(0, _h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX(), _h_data->GetNbinsY() * i);
         line->SetLineColor(kGreen+2);
         line->SetLineWidth(2);
         lines.emplace_back(line);
@@ -1294,27 +1312,11 @@ namespace Base {
       gStyle->SetPalette(kRainBow);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    _h_data = h_data;
-    _h_mc = h_mc;
-
-    return h_data;
-
   }
+
+
+
+
 
 
   void CrossSectionCalculator2D::DrawMC(TCanvas * c, int c_number, TH1D h)

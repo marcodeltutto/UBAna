@@ -192,7 +192,8 @@ namespace Base {
     std::cout << _prefix << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
     std::cout << _prefix << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
     _xsec_calc.SetVerbosity(false);
-    _xsec_calc.set_verbosity(this->logger().level());
+    // _xsec_calc.set_verbosity(this->logger().level());
+    // _xsec_calc.set_verbosity(Base::msg::kWARNING);
 
 
     size_t n_universe = _h_eff_mumom_num.GetNWeights();
@@ -235,7 +236,7 @@ namespace Base {
         }      
       }
 
-      LOG_DEBUG() << "Number of events histograms construncted for universe " << s << "." << std::endl;
+      LOG_INFO() << "Number of events histograms constructed for universe " << s << "." << std::endl;
 
 
 
@@ -249,7 +250,7 @@ namespace Base {
       hname = "this_eff_den" + universe_names.at(s);
       _h_eff_mumom_den.GetUniverseHisto(universe_names.at(s), this_eff_den);
 
-      LOG_DEBUG() << "Efficiency histograms construncted for this universe " << s << "." << std::endl;
+      LOG_INFO() << "Efficiency histograms constructed for this universe " << s << "." << std::endl;
 
 
 
@@ -263,7 +264,7 @@ namespace Base {
       }
       this_reco_per_true = iter->second;
 
-      LOG_DEBUG() << "Reco per true histogram construncted for universe " << s << "." << std::endl;
+      LOG_INFO() << "Reco per true histogram construncted for universe " << s << "." << std::endl;
 
 
     
@@ -296,17 +297,17 @@ namespace Base {
         sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << universe_number << "_AV_TPC";
         std::string flux_name = sstm.str();
 
-        LOG_DEBUG() << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
+        LOG_INFO() << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
         _xsec_calc.EstimateFlux(flux_file, flux_name);
       }
       if (universe_names.at(s) == "nominal") {
         std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
-        LOG_DEBUG() << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
+        LOG_INFO() << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
         _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
 
-      LOG_DEBUG() << "Flux estimated for universe " << s << "." << std::endl;
+      LOG_INFO() << "Flux estimated for universe " << s << "." << std::endl;
 
 
 
@@ -322,7 +323,9 @@ namespace Base {
         const double *bins_mumom_temp = input_map_mc["total"]->GetYaxis()->GetXbins()->GetArray();
 
         MigrationMatrix4D migrationmatrix4d;
-        migrationmatrix4d.set_verbosity(this->logger().level());
+        migrationmatrix4d.DoMakePlots(false);
+        // migrationmatrix4d.set_verbosity(this->logger().level());
+        // migrationmatrix4d.set_verbosity(Base::msg::kWARNING);
         // migrationmatrix4d.SetTTree(_t_true_reco);
         migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
         // migrationmatrix4d.UseWeights(universe_names.at(s), weight_type);
@@ -335,7 +338,7 @@ namespace Base {
 
       }
 
-      LOG_DEBUG() << "Migration matrix estimated for universe " << s << "." << std::endl;
+      LOG_INFO() << "Migration matrix estimated for universe " << s << "." << std::endl;
 
 
 
@@ -356,7 +359,11 @@ namespace Base {
       _xsec_calc.SetSmearingMatrix(S_4d);
       _xsec_calc.Smear();
 
-      TH2D* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+      LOG_INFO() << "Starting to calculate cross section for universe " << s << "." << std::endl;
+
+      TH2D* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]", false);
+
+      LOG_INFO() << "Cross section calculated for universe " << s << "." << std::endl;
 
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
 

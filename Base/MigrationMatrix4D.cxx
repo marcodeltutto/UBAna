@@ -79,18 +79,16 @@ namespace Base {
                                                             )
               );
 
-    int counter = 0;
-
-    for (size_t i = 0; i < _var1_bins.size(); i++) {
-      for (size_t j = 0; j < _var2_bins.size(); j++) {
-        for (size_t m = 0; m < _var1_bins.size(); m++) {
-          for (size_t n = 0; n < _var2_bins.size(); n++) { 
-            if(_verbose) std::cout << "(" << i << ", " << j << ", " << m << ", " << n << ") => " << _S[i][j][m][n] << std::endl;
-            counter++;
-          }
-        }
-      }
-    }
+    // for (size_t i = 0; i < _var1_bins.size(); i++) {
+    //   for (size_t j = 0; j < _var2_bins.size(); j++) {
+    //     for (size_t m = 0; m < _var1_bins.size(); m++) {
+    //       for (size_t n = 0; n < _var2_bins.size(); n++) { 
+    //         if(_verbose) std::cout << "(" << i << ", " << j << ", " << m << ", " << n << ") => " << _S[i][j][m][n] << std::endl;
+    //         counter++;
+    //       }
+    //     }
+    //   }
+    // }
 
     // std::cout << _prefix << "Total migration matrix entries: " << counter << std::endl;
 
@@ -126,8 +124,6 @@ namespace Base {
         _reco_per_true->Scale(1./_reco_per_true->Integral());
 
         // Set values to matrix
-        TCanvas *c = new TCanvas();
-        _reco_per_true->Draw("colz text");
         for (size_t i = 0; i < _var1_bins.size(); i++) {
           for (size_t j = 0; j < _var2_bins.size(); j++) {
             LOG_DEBUG() << "\t(" << i << ", " << j << ") = " << _reco_per_true->GetBinContent(i+1, j+1) << std::endl;
@@ -142,7 +138,9 @@ namespace Base {
         }
 
         // Saving the plot
-        if (make_plot) {  
+        if (make_plot && _do_make_plots) {  
+          TCanvas *c = new TCanvas();
+          _reco_per_true->Draw("colz text");
           LOG_DEBUG() << "Creating plot." << std::endl;
           std::stringstream sstm;
           sstm << "True Bin (" << m << ", " << n << ")";

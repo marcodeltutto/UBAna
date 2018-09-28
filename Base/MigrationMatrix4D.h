@@ -100,6 +100,9 @@ namespace Base {
     ///
     void PlotMatrix();
 
+    ///
+    void DoMakePlots(bool option = true) { _do_make_plots = option; }
+
     /// If called uses the weights with name specified
     void UseWeights(std::string weight_name = "universe0", std::string weight_type = "genie_multisim");
 
@@ -121,6 +124,7 @@ namespace Base {
     std::ofstream _f_out; ///< The output file
 
     bool _verbose = false;
+    bool _do_make_plots = false;
 
     std::string _outdir;
     std::string _folder = "MigrationMatrix4DPlots/";
