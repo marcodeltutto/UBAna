@@ -1942,14 +1942,14 @@ void Main::Maker::MakeFile()
 
 
             // Poly bins
-            histo_name = "bs_extra_syst_multisim_poly_reco_per_true_" + fname_genie_multisim.at(i);
-            _event_histo->bs_extra_syst_multisim_poly_reco_per_true[fname_genie_multisim.at(i)].resize(_n_poly_bins);
+            histo_name = "bs_extra_syst_multisim_poly_reco_per_true_" + fname_extra_syst.at(i);
+            _event_histo->bs_extra_syst_multisim_poly_reco_per_true[fname_extra_syst.at(i)].resize(_n_poly_bins);
           
             for (int m = 0; m < _n_poly_bins; m++) {
               std::stringstream sstm;
               sstm << histo_name << "_" << m;
-              _event_histo->bs_extra_syst_multisim_poly_reco_per_true[fname_genie_multisim.at(i)][m] = new UBTH2Poly(sstm.str().c_str(), "reco_per_true", -1, 1, 0, 2.5);
-              // AddPolyBins(bs_extra_syst_multisim_poly_reco_per_true[fname_genie_multisim.at(i)][m]);
+              _event_histo->bs_extra_syst_multisim_poly_reco_per_true[fname_extra_syst.at(i)][m] = new UBTH2Poly(sstm.str().c_str(), "reco_per_true", -1, 1, 0, 2.5);
+              // AddPolyBins(bs_extra_syst_multisim_poly_reco_per_true[fname_extra_syst.at(i)][m]);
             }
 
           }
