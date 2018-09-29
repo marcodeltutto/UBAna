@@ -2035,7 +2035,7 @@ void Main::Maker::MakeFile()
           continue;
         }
 
-        LOG_NORMAL() << "Filling bootstraps for extra systematic " << func_name << std::endl;
+        if (i == _initial_entry) LOG_NORMAL() << "Filling bootstraps for extra systematic " << func_name << std::endl;
 
         // Always exclude the bnbcorrection weight, this is not a systematic, though should be applied to every event
         if (func_name == "bnbcorrection_FluxHist") {
