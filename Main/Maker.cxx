@@ -60,28 +60,28 @@ void Main::Maker::SetIsData(bool v)
 
 void Main::Maker::PrintConfig()
 {
-  std::cout << "--- Main::Maker::PrintConfig" << std::endl;
+  LOG_INFO() << "--- Main::Maker::PrintConfig" << std::endl;
 
-  std::cout << "--- _breakdownPlots: " << _breakdownPlots << std::endl;
-  std::cout << "--- _makePlots " << _makePlots << std::endl;
-  std::cout << "--- _fill_bootstrap_flux " << _fill_bootstrap_flux << std::endl;
-  std::cout << "--- _fill_bootstrap_genie " << _fill_bootstrap_genie << std::endl;
-  std::cout << "--- _target_flux_syst " << _target_flux_syst << std::endl;
-  std::cout << "--- _check_duplicate_events " << _check_duplicate_events << std::endl;
+  LOG_INFO() << "--- _breakdownPlots: " << _breakdownPlots << std::endl;
+  LOG_INFO() << "--- _makePlots " << _makePlots << std::endl;
+  LOG_INFO() << "--- _fill_bootstrap_flux " << _fill_bootstrap_flux << std::endl;
+  LOG_INFO() << "--- _fill_bootstrap_genie " << _fill_bootstrap_genie << std::endl;
+  LOG_INFO() << "--- _target_flux_syst " << _target_flux_syst << std::endl;
+  LOG_INFO() << "--- _check_duplicate_events " << _check_duplicate_events << std::endl;
 
-  std::cout << "--- _beamSpillStarts " << _beamSpillStarts << std::endl;
-  std::cout << "--- _beamSpillEnds " << _beamSpillEnds << std::endl;
-  std::cout << "--- _flashShift " << _flashShift << std::endl;
-  std::cout << "--- _gainCalib " << _gainCalib << std::endl;
+  LOG_INFO() << "--- _beamSpillStarts " << _beamSpillStarts << std::endl;
+  LOG_INFO() << "--- _beamSpillEnds " << _beamSpillEnds << std::endl;
+  LOG_INFO() << "--- _flashShift " << _flashShift << std::endl;
+  LOG_INFO() << "--- _gainCalib " << _gainCalib << std::endl;
 
-  std::cout << "--- filen " << filen << std::endl;
-  std::cout << "--- evalPOT " << evalPOT << std::endl;
-  std::cout << "--- maxEntries " << maxEntries << std::endl;
-  std::cout << "--- isdata " << isdata << std::endl;
+  LOG_INFO() << "--- filen " << filen << std::endl;
+  LOG_INFO() << "--- evalPOT " << evalPOT << std::endl;
+  LOG_INFO() << "--- maxEntries " << maxEntries << std::endl;
+  LOG_INFO() << "--- isdata " << isdata << std::endl;
 
-  std::cout << "--- _pe_cut " << _pe_cut << std::endl;
+  LOG_INFO() << "--- _pe_cut " << _pe_cut << std::endl;
 
-  std::cout << "--- targetPOT " << targetPOT << std::endl;
+  LOG_INFO() << "--- targetPOT " << targetPOT << std::endl;
 }
 
 void Main::Maker::PrintMaUpMECOff()
@@ -386,7 +386,6 @@ void Main::Maker::AddPolyBins(BootstrapTH2DPoly h) {
 
 void Main::Maker::MakeFile() 
 {
-	std::cout << "Main::Maker::MakeFile()  called" << std::endl;
 
 	clock_t begin = clock();
 
@@ -402,9 +401,9 @@ void Main::Maker::MakeFile()
 
    
   if (isdata)
-    std::cout << "Is data." << std::endl;
+    LOG_NORMAL() << "Running on a data file." << std::endl;
   else
-    std::cout << "Is mc." << std::endl;
+    LOG_NORMAL() << "Running on a MC file." << std::endl;
 
   
 
@@ -431,10 +430,10 @@ void Main::Maker::MakeFile()
 
 
 
-  std::cout << "Opening output file with name " << fileoutn << std::endl;
+  LOG_NORMAL() << "Opening output file with name " << fileoutn << std::endl;
   TFile *file_out = new TFile(fileoutn.c_str(),"RECREATE");
   if ( file_out->IsOpen() )
-    std::cout << "File opened successfully" << std::endl;
+    LOG_NORMAL() << "File opened successfully." << std::endl;
   
   string pattern = filen;
   
@@ -478,13 +477,13 @@ void Main::Maker::MakeFile()
   chain_ubxsec = new TChain("UBXSec/tree");
   chain_ubxsec->Add(pattern.c_str());
   
-  cout << "Using file: " << pattern << endl;
+  LOG_NORMAL() << "Using file: " << pattern << endl;
   
   int Nfiles = chain_ubxsec->GetNtrees();
-  cout << "Number of files: " << Nfiles << endl;
+  LOG_NORMAL() << "Number of files: " << Nfiles << endl;
   
   int evts = chain_ubxsec -> GetEntries();
-  cout << "Number of events used is: " << evts << endl;
+  LOG_NORMAL() << "Number of events used is: " << evts << endl;
   
   UBXSecEvent * t = new UBXSecEvent(chain_ubxsec);
   //ActivateBranches(t);
@@ -533,9 +532,6 @@ void Main::Maker::MakeFile()
   
   int n_slc_nu_origin = 0;
   int n_slc_acpt_tag_nu = 0;
-
-  int semisel_tpcobj = 0;
-  int semisel_tpcobj_with_atleast_one_track = 0;
 
   std::map<std::string, double> selected_events_percut;
   selected_events_percut["initial"] = 0.;
@@ -2822,14 +2818,9 @@ void Main::Maker::MakeFile()
     //m if(t->slc_vtxcheck_angle.at(scl_ll_max) > 2.9) continue;
     
     //if(t->slc_vtxcheck_angle.at(scl_ll_max) < 0.05 && t->slc_vtxcheck_angle.at(scl_ll_max) !=-9999 ) continue;
-
-    semisel_tpcobj++;
     
     // If zero tracks in this tpcobject, continue
     if(t->slc_ntrack.at(scl_ll_max) == 0) continue;
-
-    semisel_tpcobj_with_atleast_one_track++;
-
 
     // Cut on residuala ans fraction of used hits in cluster
     if (t->slc_muoncandidate_residuals_std.at(scl_ll_max) > 2.5) continue;
@@ -3785,7 +3776,6 @@ void Main::Maker::MakeFile()
 
 
   
-  cout << endl << endl << "********************************" << endl;
 
   
   
@@ -3797,60 +3787,54 @@ void Main::Maker::MakeFile()
   //
   // ************************
   
-  std::cout << "nsignal is " << nsignal << std::endl;
+  LOG_NORMAL() << "Number of simulated signal events is " << nsignal << std::endl;
   int sel_tot = signal_sel + bkg_anumu_sel + bkg_nue_sel + bkg_nc_sel + bkg_outfv_sel + bkg_cosmic_sel;
-  std::cout << "signal_sel is     " << signal_sel     << ", " << (double)signal_sel/(double)sel_tot * 100. << std::endl;
-  std::cout << "bkg_anumu_sel is  " << bkg_anumu_sel  << ", " << (double)bkg_anumu_sel/(double)sel_tot * 100. << std::endl;
-  std::cout << "bkg_nue_sel is    " << bkg_nue_sel    << ", " << (double)bkg_nue_sel/(double)sel_tot * 100. << std::endl;
-  std::cout << "bkg_nc_sel is     " << bkg_nc_sel     << ", " << (double)bkg_nc_sel/(double)sel_tot * 100. << std::endl;
-  std::cout << "bkg_outfv_sel is  " << bkg_outfv_sel  << ", " << (double)bkg_outfv_sel/(double)sel_tot * 100. << std::endl;
-  std::cout << "bkg_cosmic_sel is " << bkg_cosmic_sel << ", " << (double)bkg_cosmic_sel/(double)sel_tot * 100. << std::endl << std::endl;
+  LOG_NORMAL() << "Selected signal is " << signal_sel     << ", " << (double)signal_sel/(double)sel_tot * 100. << std::endl;
+  LOG_NORMAL() << "Selected anumu is  " << bkg_anumu_sel  << ", " << (double)bkg_anumu_sel/(double)sel_tot * 100. << std::endl;
+  LOG_NORMAL() << "Selected nue is    " << bkg_nue_sel    << ", " << (double)bkg_nue_sel/(double)sel_tot * 100. << std::endl;
+  LOG_NORMAL() << "Selected nc is     " << bkg_nc_sel     << ", " << (double)bkg_nc_sel/(double)sel_tot * 100. << std::endl;
+  LOG_NORMAL() << "Selected outfv is  " << bkg_outfv_sel  << ", " << (double)bkg_outfv_sel/(double)sel_tot * 100. << std::endl;
+  LOG_NORMAL() << "Selected cosmic is " << bkg_cosmic_sel << ", " << (double)bkg_cosmic_sel/(double)sel_tot * 100. << std::endl << std::endl;
   
-  std::cout << "Efficiency: " << signal_sel/(double)nsignal << std::endl;
-  std::cout << "Purity: " << signal_sel/(double)(signal_sel+bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl;
-  std::cout << "Cosmic contamination: " << bkg_cosmic_sel/(double)(bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl;
-  std::cout << "  of which crossing top: " << bkg_cosmic_top_sel/(double)bkg_cosmic_sel << std::endl;
-  std::cout << "NC contamination: " << bkg_nc_sel/(double)(bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl;
-  std::cout << "OUTFV contamination: " << bkg_outfv_sel/(double)(bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl << std::endl;
+  LOG_NORMAL() << "Efficiency: " << signal_sel/(double)nsignal << std::endl;
+  LOG_NORMAL() << "Purity (does not include off-beam and dirt): " << signal_sel/(double)(signal_sel+bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl;
+  LOG_NORMAL() << "Cosmic contamination: " << bkg_cosmic_sel/(double)(bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl;
+  LOG_NORMAL() << "  of which crossing top: " << bkg_cosmic_top_sel/(double)bkg_cosmic_sel << std::endl;
+  LOG_NORMAL() << "NC contamination: " << bkg_nc_sel/(double)(bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl;
+  LOG_NORMAL() << "OUTFV contamination: " << bkg_outfv_sel/(double)(bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl << std::endl;
   
-  std::cout << "Efficiency QE: " << signal_sel_qe/(double)nsignal_qe << " +- " << eff_uncertainty(signal_sel_qe, nsignal_qe) << std::endl;
-  std::cout << "Efficiency RES: " << signal_sel_res/(double)nsignal_res << " +- " << eff_uncertainty(signal_sel_res, nsignal_res) << std::endl;
-  std::cout << "Efficiency COH: " << signal_sel_coh/(double)nsignal_coh << " +- " << eff_uncertainty(signal_sel_coh, nsignal_coh) << std::endl;
-  std::cout << "Efficiency DIS: " << signal_sel_dis/(double)nsignal_dis << " +- " << eff_uncertainty(signal_sel_dis, nsignal_dis) << std::endl;
-  std::cout << "Efficiency MEC: " << signal_sel_mec/(double)nsignal_mec << " +- " << eff_uncertainty(signal_sel_mec, nsignal_mec) << std::endl << std::endl;
+  LOG_NORMAL() << "Efficiency QE:  " << signal_sel_qe/(double)nsignal_qe   << " +- " << eff_uncertainty(signal_sel_qe, nsignal_qe) << std::endl;
+  LOG_NORMAL() << "Efficiency RES: " << signal_sel_res/(double)nsignal_res << " +- " << eff_uncertainty(signal_sel_res, nsignal_res) << std::endl;
+  LOG_NORMAL() << "Efficiency COH: " << signal_sel_coh/(double)nsignal_coh << " +- " << eff_uncertainty(signal_sel_coh, nsignal_coh) << std::endl;
+  LOG_NORMAL() << "Efficiency DIS: " << signal_sel_dis/(double)nsignal_dis << " +- " << eff_uncertainty(signal_sel_dis, nsignal_dis) << std::endl;
+  LOG_NORMAL() << "Efficiency MEC: " << signal_sel_mec/(double)nsignal_mec << " +- " << eff_uncertainty(signal_sel_mec, nsignal_mec) << std::endl << std::endl;
 
-  std::cout << "n events with a flash in the beam spill: " << nEvtsWFlashInBeamSpill << std::endl;
-  std::cout << "n events numu CC (all voulumes): " << nNumuCC << std::endl;
-  std::cout << " Signal events that have a recon muon: " << nSignalWMuonReco << std::endl;
-  std::cout << " Signal events that have a recon muon and a recon vertex 10 cm close in YZ plane: " << nSignalMuonRecoVtxOk << std::endl << std::endl;
+  LOG_NORMAL() << "Number of events with a flash in the beam spill: " << nEvtsWFlashInBeamSpill << std::endl;
+  LOG_NORMAL() << "Number of events numu CC (all voulumes): " << nNumuCC << std::endl;
+  LOG_NORMAL() << " Signal events that have a recon muon: " << nSignalWMuonReco << std::endl;
+  LOG_NORMAL() << " Signal events that have a recon muon and a recon vertex 10 cm close in YZ plane: " << nSignalMuonRecoVtxOk << std::endl << std::endl;
   
-  std::cout << "Number of signal events that were correctly flash-matched: " << nSignalFlashMatched << std::endl << std::endl;
+  LOG_NORMAL() << "Number of signal events that were correctly flash-matched: " << nSignalFlashMatched << std::endl << std::endl;
   
-  std::cout << "Number of neutrino origin slices in total: " << n_slc_nu_origin << std::endl;
-  std::cout << "Number of neutrino origin slices tagged as cosmic by the ACPT algo in total: " << n_slc_acpt_tag_nu << std::endl << std::endl;
+  LOG_NORMAL() << "Number of neutrino origin slices in total: " << n_slc_nu_origin << std::endl;
+    
+  LOG_NORMAL() << "Number of simulated nue CC in FV (scaled to 6.6e20):                            " << nue_cc_fv                          * 6.6e20/totalPOT << std::endl;
+  LOG_NORMAL() << "Number of selected nue CC in FV (as such) (scaled to 6.6e20):                   " << nue_cc_selected                    * 6.6e20/totalPOT << std::endl;
+  LOG_NORMAL() << "Number of selected nue CC in FV (total) (scaled to 6.6e20):                     " << nue_cc_selected_total              * 6.6e20/totalPOT << std::endl;
+  LOG_NORMAL() << "Number of selected nue CC in FV in [0.05, 1.5] GeV (total) (scaled to 6.6e20):  " << nue_cc_selected_total_energy_range * 6.6e20/totalPOT << std::endl;
+  LOG_NORMAL() << "Number of selected nue in [0.05, 1.5] GeV (total) (scaled to 6.6e20):           " << nue_selected_total_energy_range    * 6.6e20/totalPOT << std::endl << std::endl << std::endl;
   
-  
-  
-  std::cout << "Number of simulated nue CC in FV (scaled to 6.6e20):                            " << nue_cc_fv                          * 6.6e20/totalPOT << std::endl;
-  std::cout << "Number of selected nue CC in FV (as such) (scaled to 6.6e20):                   " << nue_cc_selected                    * 6.6e20/totalPOT << std::endl;
-  std::cout << "Number of selected nue CC in FV (total) (scaled to 6.6e20):                     " << nue_cc_selected_total              * 6.6e20/totalPOT << std::endl;
-  std::cout << "Number of selected nue CC in FV in [0.05, 1.5] GeV (total) (scaled to 6.6e20):  " << nue_cc_selected_total_energy_range * 6.6e20/totalPOT << std::endl;
-  std::cout << "Number of selected nue in [0.05, 1.5] GeV (total) (scaled to 6.6e20):           " << nue_selected_total_energy_range    * 6.6e20/totalPOT << std::endl << std::endl << std::endl;
-  
-  std::cout << "Number of selected nue where an electron is selected (scaled to 6.6e20):        " << n_nue_electron                     * 6.6e20/totalPOT << std::endl;
-  std::cout << "Number of selected nue where a proton is selected (scaled to 6.6e20):           " << n_nue_proton                       * 6.6e20/totalPOT << std::endl;
-  std::cout << "Number of selected nue where a pion is selected (scaled to 6.6e20):             " << n_nue_pion                         * 6.6e20/totalPOT << std::endl;
+  LOG_NORMAL() << "Number of selected nue where an electron is selected (scaled to 6.6e20):        " << n_nue_electron                     * 6.6e20/totalPOT << std::endl;
+  LOG_NORMAL() << "Number of selected nue where a proton is selected (scaled to 6.6e20):           " << n_nue_proton                       * 6.6e20/totalPOT << std::endl;
+  LOG_NORMAL() << "Number of selected nue where a pion is selected (scaled to 6.6e20):             " << n_nue_pion                         * 6.6e20/totalPOT << std::endl;
 
   std::cout << std::endl;
-  std::cout << "semisel_tpcobj: " << semisel_tpcobj << std::endl;
-  std::cout << "semisel_tpcobj_with_atleast_one_track: " << semisel_tpcobj_with_atleast_one_track << std::endl;
 
   std::cout << std::endl;
   std::sort(run_numbers.begin(), run_numbers.end());
-  std::cout << "first run: " << run_numbers.at(0) << std::endl;
-  std::cout << "last run: " << run_numbers.at(run_numbers.size()-1) << std::endl;
+  LOG_NORMAL() << "First analysed run: " << run_numbers.at(0) << std::endl;
+  LOG_NORMAL() << "Last analysed run: " << run_numbers.at(run_numbers.size()-1) << std::endl;
 
-  std::cout << "n_signal " << n_signal << std::endl;
 
   // ************************
   //
@@ -4477,9 +4461,7 @@ void Main::Maker::MakeFile()
 
 
   TCanvas * canvas_nue_selected = new TCanvas();
-  std::cout << "int: " <<h_nue_selected_energy->Integral() << std::endl;
   h_nue_selected_energy->Scale(6.6e20/totalPOT);
-  std::cout << "int: " <<h_nue_selected_energy->Integral() << std::endl;
   h_nue_selected_energy->Draw("histo");
   DrawPOT2(totalPOT, 6.6e20);
   temp2 = "./output/nue_selected_contamination";
@@ -4622,6 +4604,8 @@ void Main::Maker::MakeFile()
   //
   // Save on file
   //
+
+  LOG_NORMAL() << "Saving to file." << std::endl;
   
   file_out->cd();
   for (auto iter : hmap_trklen) {
@@ -4861,90 +4845,26 @@ void Main::Maker::MakeFile()
 
 
   file_out->Write();
+
+  LOG_NORMAL() << "All saved." << std::endl;
   
   file_out->Close();
 
+  LOG_NORMAL() << "Output file closed." << std::endl;
 
 
 
 
 
 
-
-
-
-
-
-  std::cout << "test called" << std::endl;
-
-	TFile * f = TFile::Open("file.root","RECREATE");
-
-	TH1D * h2 = new TH1D("h", "h", 10, 0, 10);
-	h2->FillRandom("gaus");
-
-	//Aho::Tako mytako; 
-	//mytako.SetHisto(h);
-
-  //double bins[4] = {0, 1, 2, 3};
-	//Base::BootstrapTH1D mytako("helloname", "hellotitle", 3, bins);
-	//std::vector<std::string> str_v = {"uni1", "uni2", "uni3"};
-	//mytako.SetWeightNames(str_v);
-
-  //std::vector<double> wgts = {0.9, 1.1, 1.01};
-
-	//for (int i = 0; i < 10; i++) {
-	//	mytako.Fill(i, 1., wgts);
-	//}
-
-	h2->Write();
-
-  //f->WriteObject(&mytako, "mytako");
-  //f->WriteObject(&h_eff_mumom_num_bs, "h_eff_mumom_num_bs");
-
-	f->Write();
-	f->Close();
-
-
-/*
-
-	TFile * f_in2 = TFile::Open("file.root","READ");
-	Base::BootstrapTH1D * mynewtako;
-  f_in2->GetObject("mytako", mynewtako);
-  std::cout << "just before printing 1 " << std::endl;
-  mynewtako->PrintConfig();
-
-  Base::BootstrapTH1D * mynewtako2;
-  f_in2->GetObject("h_eff_mumom_num_bs", mynewtako2);
-  std::cout << "just before printing 2" << std::endl;
-  mynewtako2->PrintConfig();
-
-
-
-
-
-
-
-
-
-
-
-
-
-  TFile * f_in = TFile::Open("ubxsecana_output.root","READ");
-      Base::BootstrapTH1D * mybs;
-      f_in->GetObject("h_eff_mumom_num_bs", mybs);
-      std::cout << "mmm just before printing" << std::endl;
-      mybs->PrintConfig();
-  
-  
-  */
 
   
   
   // Computing time
   clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-  cout << endl << endl << "Computing time: " << elapsed_secs << " seconds = " << elapsed_secs/60. << " minutes." << endl << endl;
+  std::cout << std::endl << std::endl;
+  LOG_NORMAL() << "Computing time: " << elapsed_secs << " seconds = " << elapsed_secs/60. << " minutes." << endl << endl;
   
   //rootapp->Run();
   //rootapp->Terminate(0);
