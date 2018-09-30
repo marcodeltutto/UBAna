@@ -27,6 +27,7 @@
 #pragma link C++ class std::map<std::string,std::vector<std::vector<TH2D*>>>+;
 #pragma link C++ class std::vector<UBTH2Poly*>+;
 #pragma link C++ class std::map<std::string,std::vector<UBTH2Poly*>>+;
+#pragma link C++ class std::map<std::string,std::vector<std::vector<double>>>+;
 
 #pragma link C++ class Main::Maker+;
 #pragma link C++ class Main::Analyse+;

@@ -80,13 +80,17 @@ namespace DataTypes {
       }
 
       // Reco per true histograms per universe - Double Differential PolyBins - Flux Multisim
-      bs_flux_multisim_poly_reco_per_true.resize(1);
-      bs_flux_multisim_poly_reco_per_true.at(0).resize(_n_poly_bins);
+      bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
       for (int m = 0; m < _n_poly_bins; m++) {
-        std::stringstream sstm;
-        sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
-        bs_flux_multisim_poly_reco_per_true[0][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
+        bs_flux_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
       }
+      // bs_flux_multisim_poly_reco_per_true.resize(1);
+      // bs_flux_multisim_poly_reco_per_true.at(0).resize(_n_poly_bins);
+      // for (int m = 0; m < _n_poly_bins; m++) {
+      //   std::stringstream sstm;
+      //   sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
+      //   bs_flux_multisim_poly_reco_per_true[0][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
+      // }
       // bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
       // for (int m = 0; m < _n_poly_bins; m++) {
       //   std::stringstream sstm;
@@ -119,7 +123,7 @@ namespace DataTypes {
       _AddPolyBins_(hmap_trktheta_trkmom_poly_extra_syst_multisim_bs);
 
       _AddPolyBins_(bs_genie_multisim_poly_reco_per_true);
-      _AddPolyBins_(bs_flux_multisim_poly_reco_per_true);
+      // _AddPolyBins_(bs_flux_multisim_poly_reco_per_true);
       _AddPolyBins_(bs_extra_syst_multisim_poly_reco_per_true);
     }
 
