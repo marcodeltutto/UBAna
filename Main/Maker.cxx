@@ -400,10 +400,12 @@ void Main::Maker::MakeFile()
   _csvfile << "dqdx,trklen,y" << std::endl;
 
    
-  if (isdata)
+  if (isdata) {
     LOG_NORMAL() << "Running on a data file." << std::endl;
-  else
+  }
+  else {
     LOG_NORMAL() << "Running on a MC file." << std::endl;
+  }
 
   
 
@@ -531,7 +533,6 @@ void Main::Maker::MakeFile()
   int nSignalFlashMatched = 0;
   
   int n_slc_nu_origin = 0;
-  int n_slc_acpt_tag_nu = 0;
 
   std::map<std::string, double> selected_events_percut;
   selected_events_percut["initial"] = 0.;

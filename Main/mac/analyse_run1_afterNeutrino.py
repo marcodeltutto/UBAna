@@ -8,7 +8,7 @@ from ROOT import Main
 analyser = Main.Analyse()
 
 
-analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_ccqe_ccmec.root")
+analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2.root")
 
 # analyser.SetDirtFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15.root") # dirt v15 (used for nuint)
 
@@ -38,10 +38,10 @@ analyser.ImportCosmicSystematics(False)
 
 analyser.ImportDirtSystematics(False)
 
-analyser.DoGenieSystematics(False)
+analyser.DoGenieSystematics(True)
 analyser.ImportGenieSystematics(False)
 
-analyser.DoExtraSystematics(True)
+analyser.DoExtraSystematics(False)
 analyser.ImportExtraSystematics(False)
 
 analyser.DoMCStatSystematics(False)
