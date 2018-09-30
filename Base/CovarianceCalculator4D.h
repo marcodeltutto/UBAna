@@ -40,7 +40,7 @@
 #include <TMatrix.h>
 #include <TLine.h>
 
-#include "BootstrapTH2D.h"
+#include "ubana/DataTypes/BootstrapTH2D.h"
 #include "ubana/DataTypes/BootstrapTH2DPoly.h"
 #include "Types.h"
 #include "PlottingTools.h"

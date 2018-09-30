@@ -11,8 +11,8 @@
 /** \addtogroup Base
 
     @{*/
-#ifndef __BASE_BOOTSTRAPTH2DPOLY_H__
-#define __BASE_BOOTSTRAPTH2DPOLY_H__
+#ifndef __DATATYPES_BOOTSTRAPTH2DPOLY_H__
+#define __DATATYPES_BOOTSTRAPTH2DPOLY_H__
 
 #include <iostream>
 #include <sstream>
@@ -120,7 +120,7 @@ namespace DataTypes {
     std::vector<UBTH2Poly*> _h_v; ///< The vector of histograms 
     std::vector<std::string> _name_v; ///< The name of the above histograms ("nominal", "universe1"...)
 
-    size_t _n_weights; ///< Number of weigths to use
+    size_t _n_weights = 0; ///< Number of weigths to use
     std::vector<double> _weights; ///< Weigths to use
     std::vector<std::string> _wnames; ///< Weight names
 

@@ -11,8 +11,8 @@
 /** \addtogroup Base
 
     @{*/
-#ifndef __BASE_BOOTSTRAPTH2D_H__
-#define __BASE_BOOTSTRAPTH2D_H__
+#ifndef __DATATYPES_BOOTSTRAPTH2D_H__
+#define __DATATYPES_BOOTSTRAPTH2D_H__
 
 #include <iostream>
 #include <sstream>
@@ -30,7 +30,7 @@
 
 #include <TH2D.h>
 
-namespace Base {
+namespace DataTypes {
 
   /**
      \class BootstrapTH2D

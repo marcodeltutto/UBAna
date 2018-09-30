@@ -4,8 +4,8 @@
 #include "CovarianceCalculator2D.h"
 #include "PlottingTools.h"
 
+
 namespace Base {
-  
 
   void CovarianceCalculator2D::SetBootstrap(BootstrapTH1D bs)
   {

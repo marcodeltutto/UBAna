@@ -52,8 +52,8 @@
 #include "ubana/DataTypes/UBXSecEventHisto.h"
 
 #include "UBXSecEvent.h"
-#include "ubana/Base/BootstrapTH1D.h"
-#include "ubana/Base/BootstrapTH2D.h"
+#include "ubana/DataTypes/BootstrapTH1D.h"
+#include "ubana/DataTypes/BootstrapTH2D.h"
 #include "ubana/Base/PlottingTools.h"
 #include "ubana/Base/CrossSectionCalculator1D.h"
 #include "ubana/Base/MigrationMatrix2D.h"
@@ -69,8 +69,9 @@
 
 #include "ubana/Base/LoggerFeature.h"
 
-using namespace Base;
+
 using namespace DataTypes;
+using namespace Base;
 
 
 namespace Main {

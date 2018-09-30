@@ -52,12 +52,14 @@
 #include "TGraphAsymmErrors.h"
 
 
-#include "BootstrapTH1D.h"
-#include "BootstrapTH2D.h"
+#include "ubana/DataTypes/BootstrapTH1D.h"
+#include "ubana/DataTypes/BootstrapTH2D.h"
 #include "CrossSectionCalculator1D.h"
 #include "MigrationMatrix2D.h"
 #include "CovarianceCalculator2D.h"
 #include "LoggerFeature.h"
+
+using namespace DataTypes;
 
 
 namespace Base {
