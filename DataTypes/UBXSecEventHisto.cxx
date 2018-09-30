@@ -80,12 +80,19 @@ namespace DataTypes {
       }
 
       // Reco per true histograms per universe - Double Differential PolyBins - Flux Multisim
-      bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
+      bs_flux_multisim_poly_reco_per_true.resize(1);
+      bs_flux_multisim_poly_reco_per_true.at(0).resize(_n_poly_bins);
       for (int m = 0; m < _n_poly_bins; m++) {
         std::stringstream sstm;
         sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
-        bs_flux_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
+        bs_flux_multisim_poly_reco_per_true[0][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
       }
+      // bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
+      // for (int m = 0; m < _n_poly_bins; m++) {
+      //   std::stringstream sstm;
+      //   sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
+      //   bs_flux_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
+      // }
 
       // Reco per true histograms per universe - Double Differential PolyBins - Extra Syst
       bs_extra_syst_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
@@ -121,7 +128,13 @@ namespace DataTypes {
 
 
     
-
+    void UBXSecEventHisto::_AddPolyBins_(std::vector<std::vector<UBTH2Poly*>> h) {
+      for (int i = 0; i < h.size(); i++) {
+        for (int m = 0; m < _n_poly_bins; m++) {
+          _AddPolyBins_(h.at(i).at(m));
+        }
+      }
+    }
 
     void UBXSecEventHisto::_AddPolyBins_(std::map<std::string,std::vector<UBTH2Poly*>> h) {
       for (auto it1 : h) {

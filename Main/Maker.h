@@ -198,6 +198,14 @@ namespace Main{
                        std::map<std::string,std::vector<UBTH2Poly*>> bs_poly_reco_per_true, 
                        std::vector<std::string> fname, 
                        std::vector<double> wgts);
+    
+    void FillBootstrap(double fill_value1, // reco value x (costheta)
+                       double fill_value2, // reco value y (momentum)
+                       int n, // true bin n (1 number, unrolled)
+                       double evt_wgt,
+                       std::vector<std::vector<UBTH2Poly*>> bs_poly_reco_per_true, 
+                       std::vector<std::string> fname, 
+                       std::vector<double> wgts);
 
     void FillBootstrap(double fill_value1,
                        double fill_value2,
