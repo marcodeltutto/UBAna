@@ -14,7 +14,6 @@ namespace DataTypes {
     _name_v.clear();
 
   	TH1D temp((name+"nominal").c_str(), title.c_str(), nbins, bins);
-    _hmap["nominal"] = temp;
     _h_v.emplace_back(temp);
     _name_v.push_back("nominal");
     _hname = name;
@@ -32,7 +31,6 @@ namespace DataTypes {
     _name_v.clear();
 
     TH1D temp((name+"nominal").c_str(), title.c_str(), nbins, bin_start, bin_end);
-    _hmap["nominal"] = temp;
     _h_v.emplace_back(temp);
     _name_v.push_back("nominal");
     _hname = name;
@@ -62,7 +60,6 @@ namespace DataTypes {
     double* bins = &_bins[0];
     for (size_t i = 0; i < _n_weights - 1; i++) {
     	TH1D temp((_hname+names.at(i)).c_str(), _title.c_str(), _nbins, bins);
-      _hmap[names.at(i)] = temp;
       _h_v.emplace_back(temp);
       _name_v.push_back(names.at(i));
     }
@@ -122,7 +119,6 @@ namespace DataTypes {
 
   void BootstrapTH1D::ResetIterator()
   {
-    _current_iterator = _hmap.begin();
     _current_vector_index = -1;
   }
 
@@ -205,7 +201,6 @@ namespace DataTypes {
       throw std::exception();
     }
 
-    _hmap["nominal"].Fill(value, weight);
     _h_v.at(0).Fill(value, weight); // The nominal histogram
 
 
@@ -238,13 +233,7 @@ namespace DataTypes {
     return;
   }
 
-  void BootstrapTH1D::GetUniverseHistoFast(std::string uni_name, TH1D & histo)
-  {
-
-    histo = _hmap[uni_name];
-
-    return;
-  }
+ 
 
 
 

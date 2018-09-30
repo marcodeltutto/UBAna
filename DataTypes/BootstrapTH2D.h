@@ -98,9 +98,7 @@ namespace DataTypes {
 
     /// Returns the histogram for a particular universe
     void GetUniverseHisto(std::string, TH2D &);
-
-    /// Returns the histogram for a particular universe, w/o checking if that universe exists (may crash)
-    void GetUniverseHistoFast(std::string, TH2D &);
+    
 
   protected:
 

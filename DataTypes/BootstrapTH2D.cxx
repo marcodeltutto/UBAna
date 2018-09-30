@@ -14,7 +14,6 @@ namespace DataTypes {
     _name_v.clear();
 
     TH2D temp((name+"nominal").c_str(), title.c_str(), nbinsX, binsX, nbinsY, binsY);
-    _hmap["nominal"] = temp;
     _hname = name;
     _title = title;
 
@@ -47,7 +46,6 @@ namespace DataTypes {
     double* bins_y = &_bins_y[0];
     for (size_t i = 0; i < _n_weights - 1; i++) {
     	TH2D temp((_hname+names.at(i)).c_str(), _title.c_str(), _nbins_x, bins_x, _nbins_y, bins_y);
-      _hmap[names.at(i)] = temp;
       _h_v.emplace_back(temp);
       _name_v.push_back(names.at(i));
     }
@@ -113,7 +111,6 @@ namespace DataTypes {
 
   void BootstrapTH2D::ResetIterator()
   {
-    _current_iterator = _hmap.begin();
     _current_vector_index = -1;
   }
 
@@ -197,7 +194,6 @@ namespace DataTypes {
       throw std::exception();
     }
 
-    _hmap["nominal"].Fill(value1, value2, weight);
     _h_v.at(0).Fill(value1, value2, weight); // The nominal histogram
 
 
@@ -230,13 +226,7 @@ namespace DataTypes {
     return;
   }
 
-  void BootstrapTH2D::GetUniverseHistoFast(std::string uni_name, TH2D & histo)
-  {
-
-    histo = _hmap[uni_name];
-
-    return;
-  }
+  
 
 
 
