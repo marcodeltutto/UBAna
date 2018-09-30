@@ -308,7 +308,7 @@ namespace Base {
         LOG_DEBUG() << "Calculating migration matrix. Will have " << input_map_mc["total"]->GetNumberOfBins() << " bins." << std::endl;
 
         MigrationMatrix4DPoly migrationmatrix4d;
-        migrationmatrix4d.set_verbosity(this->logger().level());
+        migrationmatrix4d.DoMakePlots(false);
         migrationmatrix4d.SetOutDir("migration_matrix_poly_multisim_4D_plots");
         migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
         migrationmatrix4d.SetBins(input_map_mc["total"]->GetNumberOfBins());
@@ -345,7 +345,7 @@ namespace Base {
 
       LOG_DEBUG() << "Smearing done for universe " << s << "." << std::endl;
 
-      UBTH2Poly* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+      UBTH2Poly* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]", false);
 
       LOG_DEBUG() << "Cross section calculated for universe " << s << "." << std::endl;
       

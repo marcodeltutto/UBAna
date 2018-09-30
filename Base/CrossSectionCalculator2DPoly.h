@@ -125,7 +125,10 @@ namespace Base {
     UBTH2Poly* ProcessDataHisto(UBTH2Poly* histo);
 
     /// Extracts the cross section, provide a vector of background names to be subtracted in the first argument
-    UBTH2Poly* ExtractCrossSection(std::vector<std::string> bkg_prefixs, std::string, std::string, std::string);
+    UBTH2Poly* ExtractCrossSection(std::vector<std::string> bkg_prefixs, std::string, std::string, std::string, bool make_plots = true);
+    
+    /// Makes all the cross section plots (must be called after ExtractCrossSection)
+    void MakeAllCrossSectionPlots(std::string, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
     UBTH2Poly* GetMCCrossSection() {return _h_mc;}
@@ -199,6 +202,7 @@ namespace Base {
 
     UBTH2Poly* _h_mc = NULL; ///< The to-be extracted MC cross section
     UBTH2Poly* _h_data = NULL; ///< The to-be extracted data cross section
+    UBTH2Poly* _h_syst_unc = NULL; ///< The to-be calculated syst uncertainties on data cross section
 
     TMatrix _S; ///< The migration matrix (to be set externally)
 

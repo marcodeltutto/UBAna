@@ -537,7 +537,7 @@ namespace Base {
   }
 
 
-  UBTH2Poly* CrossSectionCalculator2DPoly::ExtractCrossSection(std::vector<std::string> bkg_prefixs, std::string xaxis_label, std::string yaxis_label, std::string zaxis_label) 
+  UBTH2Poly* CrossSectionCalculator2DPoly::ExtractCrossSection(std::vector<std::string> bkg_prefixs, std::string xaxis_label, std::string yaxis_label, std::string zaxis_label, bool make_plots) 
   {
 
     //
@@ -723,6 +723,20 @@ namespace Base {
     }
 
 
+ 
+    _h_data = h_data;
+    _h_mc = h_mc;
+
+    if (make_plots) MakeAllCrossSectionPlots(xaxis_label, yaxis_label, zaxis_label);
+
+    return _h_data;
+  }
+
+
+
+  void CrossSectionCalculator2DPoly::MakeAllCrossSectionPlots(std::string xaxis_label, std::string yaxis_label, std::string zaxis_label)
+  {
+
 
     //
     // General for plotting
@@ -760,10 +774,10 @@ namespace Base {
     //
 
     TCanvas * c_xsec_mc = new TCanvas();
-    h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
-    h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
-    h_mc->GetYaxis()->SetTitleOffset(0.77);
-    h_mc->Draw("lego1");
+    _h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
+    _h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    _h_mc->GetYaxis()->SetTitleOffset(0.77);
+    _h_mc->Draw("lego1");
 
     sim->Draw();
 
@@ -777,15 +791,15 @@ namespace Base {
 
 
     double central_size = 0.02;
-    UBTH2Poly* h_mc_empty_bottom = (UBTH2Poly*)h_mc->Clone("h_mc_empty_bottom");
-    UBTH2Poly* h_mc_error_low = (UBTH2Poly*)h_mc->Clone("h_mc_error_low");
-    UBTH2Poly* h_mc_error_up = (UBTH2Poly*)h_mc->Clone("h_mc_error_up");
-    UBTH2Poly* h_mc_central = (UBTH2Poly*)h_mc->Clone("h_mc_central");
+    UBTH2Poly* h_mc_empty_bottom = (UBTH2Poly*)_h_mc->Clone("h_mc_empty_bottom");
+    UBTH2Poly* h_mc_error_low = (UBTH2Poly*)_h_mc->Clone("h_mc_error_low");
+    UBTH2Poly* h_mc_error_up = (UBTH2Poly*)_h_mc->Clone("h_mc_error_up");
+    UBTH2Poly* h_mc_central = (UBTH2Poly*)_h_mc->Clone("h_mc_central");
 
-    for (int i = 1; i < h_mc->GetNumberOfBins()+1; i++) {
+    for (int i = 1; i < _h_mc->GetNumberOfBins()+1; i++) {
 
-      double content = h_mc->GetBinContent(i);
-      double unc = h_mc->GetBinError(i);
+      double content = _h_mc->GetBinContent(i);
+      double unc = _h_mc->GetBinError(i);
 
       //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
 
@@ -856,15 +870,15 @@ namespace Base {
     //
 
     // Prepare 2d hist with error bars
-    UBTH2Poly* h_data_empty_bottom = (UBTH2Poly*)h_data->Clone("h_data_empty_bottom");
-    UBTH2Poly* h_data_error_low = (UBTH2Poly*)h_data->Clone("h_data_error_low");
-    UBTH2Poly* h_data_error_up = (UBTH2Poly*)h_data->Clone("h_data_error_up");
-    UBTH2Poly* h_data_central = (UBTH2Poly*)h_data->Clone("h_data_central");
+    UBTH2Poly* h_data_empty_bottom = (UBTH2Poly*)_h_data->Clone("h_data_empty_bottom");
+    UBTH2Poly* h_data_error_low = (UBTH2Poly*)_h_data->Clone("h_data_error_low");
+    UBTH2Poly* h_data_error_up = (UBTH2Poly*)_h_data->Clone("h_data_error_up");
+    UBTH2Poly* h_data_central = (UBTH2Poly*)_h_data->Clone("h_data_central");
 
-    for (int i = 1; i < h_data->GetNumberOfBins()+1; i++) {
+    for (int i = 1; i < _h_data->GetNumberOfBins()+1; i++) {
 
-      double content = h_data->GetBinContent(i);
-      double unc = h_data->GetBinError(i);
+      double content = _h_data->GetBinContent(i);
+      double unc = _h_data->GetBinError(i);
 
       //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
 
@@ -904,17 +918,17 @@ namespace Base {
     TCanvas * c_xsec_data = new TCanvas();
     //h_data->SetMarkerStyle(kFullCircle);
     //h_data->SetMarkerSize(0.6);
-    h_data->SetFillColor(kGreen+2);
-    h_data->SetLineColor(kBlack);
-    h_data->GetXaxis()->SetTitle(xaxis_label.c_str());
-    h_data->GetYaxis()->SetTitle(yaxis_label.c_str());
-    h_data->GetZaxis()->SetTitle(zaxis_label.c_str());
-    h_data->GetYaxis()->SetTitleOffset(0.77);
+    _h_data->SetFillColor(kGreen+2);
+    _h_data->SetLineColor(kBlack);
+    _h_data->GetXaxis()->SetTitle(xaxis_label.c_str());
+    _h_data->GetYaxis()->SetTitle(yaxis_label.c_str());
+    _h_data->GetZaxis()->SetTitle(zaxis_label.c_str());
+    _h_data->GetYaxis()->SetTitleOffset(0.77);
 
     xsec_label->Draw();
     prelim->Draw();
 
-    h_data->Draw("e2");
+    _h_data->Draw("e2");
     
 
     name = _folder +_prefix + "_xsec_data";
@@ -995,7 +1009,7 @@ namespace Base {
     //                                               "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
 
-    int x_bins = h_data->GetNBinsX();
+    int x_bins = _h_data->GetNBinsX();
     LOG_INFO() << "n bins x " << x_bins << std::endl;
     // LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
 
@@ -1018,9 +1032,9 @@ namespace Base {
 
     for (int i = 0; i < x_bins; i++) {
 
-      xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, bin_numbers));
-      xsec_mc_histos.emplace_back(*h_mc->ProjectionY("fuck", i+1, bin_numbers));
-      xsec_data_unc_histos.emplace_back(*h_syst_unc->ProjectionY("fuck", i+1, bin_numbers));
+      xsec_data_histos.emplace_back(*_h_data->ProjectionY("fuck", i+1, bin_numbers));
+      xsec_mc_histos.emplace_back(*_h_mc->ProjectionY("fuck", i+1, bin_numbers));
+      xsec_data_unc_histos.emplace_back(*_h_syst_unc->ProjectionY("fuck", i+1, bin_numbers));
     }
 
 
@@ -1152,15 +1166,15 @@ namespace Base {
 
     //   std::vector<TLine*> lines;
 
-    //   for (int i = 1; i < h_data->GetNbinsX(); i++) {
-    //     TLine *line = new TLine(h_data->GetNbinsY()  * i, 0, h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX());
+    //   for (int i = 1; i < _h_data->GetNbinsX(); i++) {
+    //     TLine *line = new TLine(_h_data->GetNbinsY()  * i, 0, _h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX());
     //     line->SetLineColor(kGreen+2);
     //     line->SetLineWidth(2);
     //     lines.emplace_back(line);
     //   }
 
-    //   for (int i = 1; i < h_data->GetNbinsX(); i++) {
-    //     TLine *line = new TLine(0, h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX(), h_data->GetNbinsY() * i);
+    //   for (int i = 1; i < _h_data->GetNbinsX(); i++) {
+    //     TLine *line = new TLine(0, _h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX(), _h_data->GetNbinsY() * i);
     //     line->SetLineColor(kGreen+2);
     //     line->SetLineWidth(2);
     //     lines.emplace_back(line);
@@ -1276,23 +1290,6 @@ namespace Base {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    _h_data = h_data;
-    _h_mc = h_mc;
-
-    return h_data;
 
   }
 

@@ -85,6 +85,10 @@ namespace Base {
       // Normalize to get a probability
       _reco_per_true->Scale(1./_reco_per_true->Integral());
 
+      LOG_DEBUG() << "\tIntegral is " << _reco_per_true->Integral() << std::endl;
+
+      bool make_plot = false;
+      if (_reco_per_true->Integral() != 0) make_plot = true;
 
       // Set values to matrix
       TCanvas *c = new TCanvas();
@@ -102,20 +106,24 @@ namespace Base {
        }
 
       // Saving the plot
-      std::stringstream sstm;
-      sstm << "True Bin " << m;
-      std::string str = sstm.str();
-      _reco_per_true->SetTitle(str.c_str());
-      _reco_per_true->GetXaxis()->SetTitle("cos(#theta_{#mu}) [Reco Bin i]");
-      _reco_per_true->GetYaxis()->SetTitle("p_{#mu} (GeV) [Reco Bin j]");
-      _reco_per_true->GetYaxis()->SetTitleOffset(0.8);
+      if (make_plot && _do_make_plots) {  
 
-      sstm.str("");
-      sstm << "smearing_matrix_true_" << m;
+        // Saving the plot
+        std::stringstream sstm;
+        sstm << "True Bin " << m;
+        std::string str = sstm.str();
+        _reco_per_true->SetTitle(str.c_str());
+        _reco_per_true->GetXaxis()->SetTitle("cos(#theta_{#mu}) [Reco Bin i]");
+        _reco_per_true->GetYaxis()->SetTitle("p_{#mu} (GeV) [Reco Bin j]");
+        _reco_per_true->GetYaxis()->SetTitleOffset(0.8);
+  
+        sstm.str("");
+        sstm << "smearing_matrix_true_" << m;
 
-      TString name = _folder + sstm.str();
-      c->SaveAs(name + ".pdf");
-      c->SaveAs(name + ".C","C");
+        TString name = _folder + sstm.str();
+        c->SaveAs(name + ".pdf");
+        c->SaveAs(name + ".C","C");
+      }
     }
 
 

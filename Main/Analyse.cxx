@@ -331,7 +331,7 @@ namespace Main {
   // mc_bnbcosmic_file->GetObject("bs_genie_multisim_eff_poly_muangle_mumom_den", temp2d_poly_bs);
   // BootstrapTH2DPoly  bs_genie_multisim_eff_poly_muangle_mumom_den = *temp2d_poly_bs;
 
-  // Bootstrap efficiency - GENIE Models
+  // Bootstrap efficiency - EXTRA SYST
   mc_bnbcosmic_file->GetObject("bs_extra_syst_eff_onebin_num", temp_bs);
   BootstrapTH1D bs_extra_syst_eff_onebin_num = *temp_bs;
   mc_bnbcosmic_file->GetObject("bs_extra_syst_eff_onebin_den", temp_bs);
@@ -1947,7 +1947,7 @@ std::cout << "here 2 " << std::endl;
     }
 
 
-    // if (_do_flux_systs) {
+    if (_do_flux_systs) {
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
@@ -1970,7 +1970,7 @@ std::cout << "here 3 " << std::endl;
       for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
         std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
       }
-    // }
+    }
 
     if (_import_flux_systs) {
 
