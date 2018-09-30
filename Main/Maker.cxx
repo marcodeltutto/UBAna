@@ -659,14 +659,14 @@ void Main::Maker::MakeFile()
   //   AddPolyBins(bs_genie_multisim_poly_reco_per_true["nominal"][m]);
   // }
 
-  // std::map<std::string,std::vector<UBTH2Poly*>> bs_flux_multisim_poly_reco_per_true;
-  // bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
-  // for (int m = 0; m < _n_poly_bins; m++) {
-  //   std::stringstream sstm;
-  //   sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
-  //   bs_flux_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
-  //   AddPolyBins(bs_flux_multisim_poly_reco_per_true["nominal"][m]);
-  // }
+  std::map<std::string,std::vector<UBTH2Poly*>> bs_flux_multisim_poly_reco_per_true;
+  bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
+  for (int m = 0; m < _n_poly_bins; m++) {
+    std::stringstream sstm;
+    sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
+    bs_flux_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
+    AddPolyBins(bs_flux_multisim_poly_reco_per_true["nominal"][m]);
+  }
 
   // std::map<std::string,TTree*> tmap_mom_tree_gene_multisim_bs;
   // tmap_mom_tree_gene_multisim_bs["nominal"] = new TTree("mom_tree_genie_multisim_nominal", "mom_tree");
@@ -2130,13 +2130,13 @@ void Main::Maker::MakeFile()
 
         // Poly bins
         histo_name = "bs_flux_multisim_poly_reco_per_true_" + fname_flux_multisim.at(i);
-        _event_histo->bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)].resize(_n_poly_bins);
+        bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)].resize(_n_poly_bins);
 
         for (int m = 0; m < _n_poly_bins; m++) {
           std::stringstream sstm;
           sstm << histo_name << "_" << m;
-          _event_histo->bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)][m] = new UBTH2Poly(sstm.str().c_str(), "reco_per_true", -1, 1, 0, 2.5);
-          // _event_histo->AddPolyBinsToHisto(_event_histo->bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)][m]);
+          bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)][m] = new UBTH2Poly(sstm.str().c_str(), "reco_per_true", -1, 1, 0, 2.5);
+          AddPolyBins(bs_flux_multisim_poly_reco_per_true[fname_flux_multisim.at(i)][m]);
         }
 
       }
@@ -3013,7 +3013,7 @@ void Main::Maker::MakeFile()
       if (m >= 0 && m < _h_poly_reco_per_true[0]->GetNumberOfBins()+1) {
         _h_poly_reco_per_true[m]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(_angle_reco, _mom_mcs, m, event_weight, _event_histo->bs_genie_multisim_poly_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
-        if(!isdata && _fill_bootstrap_flux) FillBootstrap(_angle_reco, _mom_mcs, m, event_weight, _event_histo->bs_flux_multisim_poly_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
+        if(!isdata && _fill_bootstrap_flux) FillBootstrap(_angle_reco, _mom_mcs, m, event_weight, bs_flux_multisim_poly_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(_angle_reco, _mom_mcs, m, event_weight, _event_histo->bs_extra_syst_multisim_poly_reco_per_true, fname_extra_syst, wgts_extra_syst);
       }
       // *** addition ends
@@ -4837,10 +4837,11 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&bs_genie_multisim_reco_per_true, "bs_genie_multisim_reco_per_true");
   file_out->WriteObject(&bs_extra_syst_multisim_reco_per_true, "bs_extra_syst_multisim_reco_per_true");
   file_out->WriteObject(&bs_flux_multisim_reco_per_true, "bs_flux_multisim_reco_per_true");
+  file_out->WriteObject(&bs_flux_multisim_poly_reco_per_true, "bs_flux_multisim_poly_reco_per_true");
   file_out->WriteObject(&bs_mc_stat_multisim_reco_per_true, "bs_mc_stat_multisim_reco_per_true");
 
   file_out->WriteObject(&_h_poly_reco_per_true, "h_poly_reco_per_true");
-  
+
   LOG_NORMAL() << "Checkpoint 1." << std::endl;
   
   // file_out->WriteObject(_event_histo, "UBXSecEventHisto");
