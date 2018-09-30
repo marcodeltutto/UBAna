@@ -5,6 +5,25 @@
 
 
 namespace DataTypes {
+  
+  void UBXSecEventHisto::OpenFile(std::string name)
+  {
+    _file = new TFile(name.c_str(),"RECREATE");
+  }
+
+  void UBXSecEventHisto::SaveToFile()
+  {
+    if( !_file->IsOpen() ) {
+      std::cout << "File is not opened!" << std::endl;
+      throw std::exception();
+    }
+
+    _file->WriteObject(bs_flux_multisim_eff_poly_muangle_mumom_num, "bs_flux_multisim_eff_poly_muangle_mumom_num");
+    _file->WriteObject(bs_flux_multisim_eff_poly_muangle_mumom_den, "bs_flux_multisim_eff_poly_muangle_mumom_den");
+
+    _file->WriteObject(&hmap_trktheta_trkmom_poly_flux_multisim_bs, "hmap_trktheta_trkmom_poly_flux_multisim_bs");
+    _file->WriteObject(&bs_flux_multisim_poly_reco_per_true, "bs_flux_multisim_poly_reco_per_true");
+  }
 
 
     void UBXSecEventHisto::InitializeBootstraps()

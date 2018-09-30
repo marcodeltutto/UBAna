@@ -492,6 +492,7 @@ void Main::Maker::MakeFile()
 
   _event_histo = new UBXSecEventHisto();
   _event_histo->InitializeBootstraps();
+  _event_histo->OpenFile(fileoutn + "mytest");
 
   double nsignal = 0;
 
@@ -4840,10 +4841,13 @@ void Main::Maker::MakeFile()
 
   file_out->WriteObject(&_h_poly_reco_per_true, "h_poly_reco_per_true");
   
-  file_out->WriteObject(_event_histo, "UBXSecEventHisto");
-
+  LOG_NORMAL() << "Checkpoint 1." << std::endl;
+  
+  // file_out->WriteObject(_event_histo, "UBXSecEventHisto");
+  _event_histo->SaveToFile();
   
 
+  LOG_NORMAL() << "Checkpoint 2." << std::endl;
 
   file_out->Write();
 

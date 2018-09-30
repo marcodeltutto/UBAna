@@ -38,6 +38,7 @@
 #include <TH2D.h>
 #include <TLatex.h>
 #include <TCanvas.h>
+#include <TFile.h>
 #include "TH2Poly.h"
 
 #include "UBTH2Poly.h"
@@ -62,6 +63,12 @@ namespace DataTypes {
 
     ///
     void InitializeBootstraps();
+
+    ///
+    void OpenFile(std::string name);
+
+    ///
+    void SaveToFile();
 
     ///
     void AddPolyBins();
@@ -102,6 +109,8 @@ namespace DataTypes {
 
 
   protected:
+
+    TFile *_file;
 
     ///
     void _AddPolyBins_(UBTH2Poly * h);

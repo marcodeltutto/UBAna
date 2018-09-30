@@ -212,7 +212,7 @@ namespace Base {
 
       PlottingTools::DrawProgressBar((double)s/(double)n_universe, 70);
 
-    	LOG_INFO() << ">>>>>>>>>>>>>>>>>>>>>>>>>> This is universe " << s << ", with name " << universe_names.at(s) << std::endl;
+    	LOG_DEBUG() << ">>>>>>>>>>>>>>>>>>>>>>>>>> This is universe " << s << ", with name " << universe_names.at(s) << std::endl;
 
       //
     	// Construnct the hmap for the MC histograms (bnbcosmic)
@@ -302,13 +302,13 @@ namespace Base {
         sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << universe_number << "_AV_TPC";
         std::string flux_name = sstm.str();
 
-        LOG_INFO() << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
+        LOG_DEBUG() << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
         _xsec_calc.EstimateFlux(flux_file, flux_name);
       }
       if (universe_names.at(s) == "nominal") {
         std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
-        LOG_INFO() << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
+        LOG_DEBUG() << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
         _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
 
@@ -320,7 +320,7 @@ namespace Base {
         migrationmatrix2d.SetNBins(_n, _m);
         migrationmatrix2d.SetTrueRecoHistogram(&this_reco_true);
         S_2d = migrationmatrix2d.CalculateMigrationMatrix();
-        LOG_INFO() << "S_2d calculated" << std::endl;
+        LOG_DEBUG() << "S_2d calculated" << std::endl;
       }
 
 

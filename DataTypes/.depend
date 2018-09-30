@@ -1047,6 +1047,14 @@ UBXSecEventHisto.o: UBXSecEventHisto.cxx UBXSecEventHisto.h \
   /Users/deltutto/root-build/include/TVirtualMutex.h \
   /Users/deltutto/root-build/include/TAttCanvas.h \
   /Users/deltutto/root-build/include/TCanvasImp.h \
+  /Users/deltutto/root-build/include/TFile.h \
+  /Users/deltutto/root-build/include/TDirectoryFile.h \
+  /Users/deltutto/root-build/include/TDirectory.h \
+  /Users/deltutto/root-build/include/TDatime.h \
+  /Users/deltutto/root-build/include/TUUID.h \
+  /Users/deltutto/root-build/include/TMap.h \
+  /Users/deltutto/root-build/include/THashTable.h \
+  /Users/deltutto/root-build/include/TUrl.h \
   /Users/deltutto/root-build/include/TH2Poly.h UBTH2Poly.h \
   /Users/deltutto/root-build/include/TSystem.h /usr/include/fcntl.h \
   /usr/include/sys/fcntl.h /usr/include/sys/_types/_o_sync.h \
@@ -1056,7 +1064,4 @@ UBXSecEventHisto.o: UBXSecEventHisto.cxx UBXSecEventHisto.h \
   /Users/deltutto/root-build/include/TTimer.h \
   /Users/deltutto/root-build/include/TSysEvtHandler.h \
   /Users/deltutto/root-build/include/TTime.h \
-  /Users/deltutto/root-build/include/TROOT.h \
-  /Users/deltutto/root-build/include/TDirectory.h \
-  /Users/deltutto/root-build/include/TDatime.h \
-  /Users/deltutto/root-build/include/TUUID.h BootstrapTH2DPoly.h
+  /Users/deltutto/root-build/include/TROOT.h BootstrapTH2DPoly.h
