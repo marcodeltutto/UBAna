@@ -210,7 +210,7 @@ namespace Main{
     void FillBootstrap(int m, // true bin m (1 number, unrolled)
                                 int j, // reco bin i (1 number, unrolled)
                                 double evt_wgt,
-                                std::map<std::string,std::vector<std::vector<double>>> bs_poly_reco_per_true, 
+                                std::map<std::string,std::vector<std::vector<double>>> &bs_poly_reco_per_true, 
                                 std::vector<std::string> fname, 
                                 std::vector<double> wgts);
 
