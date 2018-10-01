@@ -64,11 +64,11 @@ namespace DataTypes {
     ///
     void InitializeBootstraps();
 
-    ///
-    void OpenFile(std::string name);
+    // ///
+    // void OpenFile(std::string name);
 
-    ///
-    void SaveToFile();
+    // ///
+    // void SaveToFile();
 
     ///
     void AddPolyBins();
@@ -110,7 +110,7 @@ namespace DataTypes {
 
   protected:
 
-    TFile *_file;
+    // TFile *_file = 0;
 
     ///
     void _AddPolyBins_(UBTH2Poly * h);

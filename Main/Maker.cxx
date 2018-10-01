@@ -535,7 +535,7 @@ void Main::Maker::MakeFile()
 
   _event_histo = new UBXSecEventHisto();
   _event_histo->InitializeBootstraps();
-  _event_histo->OpenFile(fileoutn + "mytest");
+  // _event_histo->OpenFile(fileoutn + "mytest");
 
   double nsignal = 0;
 
@@ -3839,7 +3839,7 @@ void Main::Maker::MakeFile()
   //  Printing
   //
   // ************************
-  
+  std::cout << std::endl << std::endl;
   LOG_NORMAL() << "Number of simulated signal events is " << nsignal << std::endl;
   int sel_tot = signal_sel + bkg_anumu_sel + bkg_nue_sel + bkg_nc_sel + bkg_outfv_sel + bkg_cosmic_sel;
   LOG_NORMAL() << "Selected signal is " << signal_sel     << ", " << (double)signal_sel/(double)sel_tot * 100. << std::endl;

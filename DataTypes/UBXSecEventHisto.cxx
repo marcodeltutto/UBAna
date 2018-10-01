@@ -6,30 +6,30 @@
 
 namespace DataTypes {
 
-  void UBXSecEventHisto::OpenFile(std::string name)
-  {
-    _file = new TFile(name.c_str(),"RECREATE");
-  }
+  // void UBXSecEventHisto::OpenFile(std::string name)
+  // {
+  //   _file = new TFile(name.c_str(),"RECREATE");
+  // }
 
-  void UBXSecEventHisto::SaveToFile()
-  {
-    if( !_file->IsOpen() ) {
-      std::cout << "File is not opened!" << std::endl;
-      throw std::exception();
-    }
+  // void UBXSecEventHisto::SaveToFile()
+  // {
+  //   if( !_file->IsOpen() ) {
+  //     std::cout << "File is not opened!" << std::endl;
+  //     throw std::exception();
+  //   }
 
-    std::cout << "UBXSecEventHisto checkpoint 1" << std::endl;
+  //   std::cout << "UBXSecEventHisto checkpoint 1" << std::endl;
 
-    _file->WriteObject(bs_flux_multisim_eff_poly_muangle_mumom_num, "bs_flux_multisim_eff_poly_muangle_mumom_num");
-    std::cout << "UBXSecEventHisto checkpoint 2" << std::endl;
-    _file->WriteObject(bs_flux_multisim_eff_poly_muangle_mumom_den, "bs_flux_multisim_eff_poly_muangle_mumom_den");
+  //   _file->WriteObject(bs_flux_multisim_eff_poly_muangle_mumom_num, "bs_flux_multisim_eff_poly_muangle_mumom_num");
+  //   std::cout << "UBXSecEventHisto checkpoint 2" << std::endl;
+  //   _file->WriteObject(bs_flux_multisim_eff_poly_muangle_mumom_den, "bs_flux_multisim_eff_poly_muangle_mumom_den");
 
-    std::cout << "UBXSecEventHisto checkpoint 3" << std::endl;
-    _file->WriteObject(&hmap_trktheta_trkmom_poly_flux_multisim_bs, "hmap_trktheta_trkmom_poly_flux_multisim_bs");
-    std::cout << "UBXSecEventHisto checkpoint 4" << std::endl;
-    _file->WriteObject(&bs_flux_multisim_poly_reco_per_true, "bs_flux_multisim_poly_reco_per_true");
-    std::cout << "UBXSecEventHisto checkpoint 5" << std::endl;
-  }
+  //   std::cout << "UBXSecEventHisto checkpoint 3" << std::endl;
+  //   _file->WriteObject(&hmap_trktheta_trkmom_poly_flux_multisim_bs, "hmap_trktheta_trkmom_poly_flux_multisim_bs");
+  //   std::cout << "UBXSecEventHisto checkpoint 4" << std::endl;
+  //   _file->WriteObject(&bs_flux_multisim_poly_reco_per_true, "bs_flux_multisim_poly_reco_per_true");
+  //   std::cout << "UBXSecEventHisto checkpoint 5" << std::endl;
+  // }
 
 
     void UBXSecEventHisto::InitializeBootstraps()
