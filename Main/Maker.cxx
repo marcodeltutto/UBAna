@@ -3055,8 +3055,10 @@ void Main::Maker::MakeFile()
       // For the poly version
       m = _h_poly_reco_per_true[0]->FindBin(_angle_true, _mom_true) - 1;
       int i = _h_poly_reco_per_true[0]->FindBin(_angle_reco, _mom_mcs) - 1;
-      // std::cout << "n bins " << _h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << std::endl;
-      if (m >= 0 && m < _h_poly_reco_per_true[0]->GetNumberOfBins()+1) {
+      // std::cout << "true | n bins " << _h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << std::endl;
+      // std::cout << "reco | n bins " << _h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_reco " << _angle_reco << ", _mom_mcs " << _mom_mcs << ", i " << i << std::endl;
+      if (m >= 0 && m < _h_poly_reco_per_true[0]->GetNumberOfBins()
+        && i >= 0 && i < _h_poly_reco_per_true[0]->GetNumberOfBins()) {
         _h_poly_reco_per_true[m]->Fill(_angle_reco, _mom_mcs, event_weight);
         // if(!isdata && _fill_bootstrap_genie) FillBootstrap(_angle_reco, _mom_mcs, m, event_weight, _event_histo->bs_genie_multisim_poly_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(m, i, event_weight, _event_histo->bs_genie_multisim_poly_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
