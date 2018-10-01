@@ -341,19 +341,29 @@ namespace Base {
   {
 
 
+    LOG_CRITICAL() << "Checkpoint 1" << std::endl;
     // Settings for true distributions
 
     _h_eff_mumom_den->SetTitle("");
+    LOG_CRITICAL() << "Checkpoint a" << std::endl;
     _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");//->SetTitle("p_{#mu}^{truth} [GeV]");
+    LOG_CRITICAL() << "Checkpoint b" << std::endl;
     _h_eff_mumom_den->GetYaxis()->SetTitle("Events");
+    LOG_CRITICAL() << "Checkpoint c" << std::endl;
     _h_eff_mumom_den->SetFillColorAlpha(30, 0.35);
+    LOG_CRITICAL() << "Checkpoint d" << std::endl;
     _h_eff_mumom_den->SetLineColor(30);
+    LOG_CRITICAL() << "Checkpoint e" << std::endl;
     _h_eff_mumom_den->SetLineWidth(3);
 
+    LOG_CRITICAL() << "Checkpoint f" << std::endl;
     _h_eff_mumom_num->SetFillColorAlpha(9, 0.35);
+    LOG_CRITICAL() << "Checkpoint g" << std::endl;
     _h_eff_mumom_num->SetLineColor(9);
+    LOG_CRITICAL() << "Checkpoint h" << std::endl;
     _h_eff_mumom_num->SetLineWidth(3);
 
+    LOG_CRITICAL() << "Checkpoint 2" << std::endl;
 
     //
     // Efficiency (true)
@@ -378,6 +388,7 @@ namespace Base {
     TString name = _folder +_name + "efficiecy_mumon_true";
     c_eff_true->SaveAs(name + ".pdf");
 
+    LOG_CRITICAL() << "Checkpoint 3" << std::endl;
     // 
     // Do the smearing
     //
@@ -400,6 +411,7 @@ namespace Base {
       h_eff_mumom_num_smear->SetBinContent(bin, eff_num_smear[bin-1][0]);
       h_eff_mumom_den_smear->SetBinContent(bin, eff_den_smear[bin-1][0]);
     }
+    LOG_CRITICAL() << "Checkpoint 4" << std::endl;
 
 
 
@@ -438,6 +450,7 @@ namespace Base {
     LOG_INFO() << "_h_eff_mumom_num->Integral(): " << _h_eff_mumom_num->Integral() << std::endl;
     LOG_INFO() << "_h_eff_mumom_den->Integral(): " << _h_eff_mumom_den->Integral() << std::endl;
 
+    LOG_CRITICAL() << "Checkpoint 5" << std::endl;
 
 
     // 
@@ -462,6 +475,7 @@ namespace Base {
     LOG_INFO() << "h_eff_mumom_num_smear->Integral(): " << h_eff_mumom_num_smear->Integral() << std::endl;
     LOG_INFO() << "h_eff_mumom_den_smear->Integral(): " << h_eff_mumom_den_smear->Integral() << std::endl;
 
+    LOG_CRITICAL() << "Checkpoint 6" << std::endl;
 
     //
     // Efficiency (reco)
@@ -491,6 +505,7 @@ namespace Base {
     LOG_INFO() << "Efficiency bin 2: " << teff_reco->GetEfficiency(2) << " - " << teff_reco->GetEfficiencyErrorLow(2) << " + " << teff_reco->GetEfficiencyErrorUp(2) << std::endl;
 
     _eff = teff_reco;
+    LOG_CRITICAL() << "Checkpoint 7" << std::endl;
 
   }
 
@@ -1082,7 +1097,7 @@ namespace Base {
 
     for (auto hname : histos_to_subtract) 
     {
-      LOG_INFO() << "[CrossSectionCalculator1D] Going to subtract histogram " << hname << std::endl;
+      LOG_INFO() << "Going to subtract histogram " << hname << std::endl;
       // Need to remove from the data histogram
       _h_data_subtracted->Add(_hmap_bnbcosmic[hname], -1.);
       // But also form the total MC one, to properly propagate unc

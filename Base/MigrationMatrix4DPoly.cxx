@@ -36,6 +36,11 @@ namespace Base {
     _h_reco_per_true = h_reco_per_true;
   }
 
+  void MigrationMatrix4DPoly::SetRecoPerTrueVectors(std::vector<std::vector<double>> v_reco_per_true)
+  {
+    _v_reco_per_true = v_reco_per_true;
+  }
+
   void MigrationMatrix4DPoly::UseWeights(std::string weight_name, std::string weight_type)
   {
     _use_weights = true;
@@ -71,16 +76,23 @@ namespace Base {
     // Resize the smearing matrix
     _S.Clear(); _S.ResizeTo(_n_bins, _n_bins);
 
-    // True bin m, n
-    //int m = 0, n = 0;
-
     for (int m = 0; m < _n_bins; m++) {
 
-      _reco_per_true = (UBTH2Poly*) _h_reco_per_true[m]->Clone("_reco_per_true");
-
-      for (int i = 0; i < _n_bins; i++) {
-        // LOG_CRITICAL() << "before scale - bin " << i+1 << ", _reco_per_true is " << _reco_per_true->GetBinContent(i+1) << std::endl;
+      if (_h_reco_per_true.size()) {
+        // Case 1, we have set a set of UBTH2Poly per every true bin
+        _reco_per_true = (UBTH2Poly*) _h_reco_per_true[m]->Clone("_reco_per_true");
+      } else {
+        // Case 2, we have set a set a vector of lenght _n_bins (reco bins) per every true bin
+        _reco_per_true = (UBTH2Poly*) _th2poly_template->Clone("_reco_per_true");
+        for (int i = 0; i < _n_bins; i++) {
+          _reco_per_true->SetBinContent(i+1, _v_reco_per_true[m][i]);
+        }
       }
+
+
+      // for (int i = 0; i < _n_bins; i++) {
+        // LOG_CRITICAL() << "before scale - bin " << i+1 << ", _reco_per_true is " << _reco_per_true->GetBinContent(i+1) << std::endl;
+      // }
 
       // Normalize to get a probability
       _reco_per_true->Scale(1./_reco_per_true->Integral());

@@ -101,7 +101,7 @@ namespace Base{
     void SetHistograms(std::map<std::string,std::map<std::string,UBTH2Poly*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, UBTH2Poly* bnbon, UBTH2Poly* extbnb, std::map<std::string,UBTH2Poly*> dirt = std::map<std::string,UBTH2Poly*>(), UBTH2Poly* intimecosmic = 0);
 
     /// Sets num and dem histograms for the efficiency and the reco per true 2D histos
-    void SetTruthHistograms(BootstrapTH2DPoly, BootstrapTH2DPoly, std::map<std::string,std::vector<UBTH2Poly*>>);
+    void SetTruthHistograms(BootstrapTH2DPoly, BootstrapTH2DPoly, std::map<std::string,std::vector<std::vector<double>>>);
 
     /// Sets num and dem histograms for the efficiency
     void SetTruthHistograms(BootstrapTH2DPoly, BootstrapTH2DPoly);
@@ -188,7 +188,7 @@ namespace Base{
     BootstrapTH2DPoly _h_eff_mumom_den; ///< The efficiency denominator
 
     TTree * _t_true_reco; ///< The TTree containing the mapping true to reco (no longer used)
-    std::map<std::string,std::vector<UBTH2Poly*>> _bs_reco_per_true; ///< The Bootstrap containing the reco per true histos for every universe
+    std::map<std::string,std::vector<std::vector<double>>> _bs_reco_per_true; ///< The Bootstrap containing the reco per true histos for every universe (universe, true bin, reco bin)
 
     TTree* true_reco_tree = nullptr; ///< The tree that containes the true to reco mapping
 

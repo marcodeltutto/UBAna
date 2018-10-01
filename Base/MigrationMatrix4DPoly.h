@@ -85,11 +85,17 @@ namespace Base {
     /// Sets the TTree for all signal selected events, to construct S (no longer used)
     void SetTTree(TTree*);
 
-    /// Set 2D reco histogram for every true bin m,n
+    /// Set 2D reco histogram for every true bin m
     void SetRecoPerTrueHistos(std::vector<UBTH2Poly*>);
+
+    /// Set 1D unrolled vector for every true bin m (can be used instead of SetRecoPerTrueHistos)
+    void SetRecoPerTrueVectors(std::vector<std::vector<double>>);
 
     ///
     void SetBins(int);
+
+    /// Sets a template histo, just to keep track of bin sizes etc.
+    void SetTemplateHisto(UBTH2Poly *h) { _th2poly_template = (UBTH2Poly *) h->Clone("_th2poly_template"); };
 
     ///
     void SetOutputFileName(std::string name);
@@ -119,6 +125,9 @@ namespace Base {
 
     TTree *_tree;
     std::vector<UBTH2Poly*> _h_reco_per_true; ///< 2D reco histogram for every true bin
+    std::vector<std::vector<double>> _v_reco_per_true; ///< 1D unrolled vector for every true bin
+
+    UBTH2Poly *_th2poly_template; ///< A template just to keep track of bin sizes etc.
 
     // std::vector<std::pair<double, double>> _var1_bins;
     // std::vector<std::pair<double, double>> _var2_bins;

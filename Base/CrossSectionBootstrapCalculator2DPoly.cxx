@@ -77,7 +77,7 @@ namespace Base {
     }
   }
 
-  void CrossSectionBootstrapCalculator2DPoly::SetTruthHistograms(BootstrapTH2DPoly num, BootstrapTH2DPoly den, std::map<std::string,std::vector<UBTH2Poly*>> bs_reco_per_true)
+  void CrossSectionBootstrapCalculator2DPoly::SetTruthHistograms(BootstrapTH2DPoly num, BootstrapTH2DPoly den, std::map<std::string,std::vector<std::vector<double>>> bs_reco_per_true)
   {
     _h_eff_mumom_num = num;
     _h_eff_mumom_den = den;
@@ -208,7 +208,7 @@ namespace Base {
     
     UBTH2Poly * this_eff_num;
     UBTH2Poly * this_eff_den; 
-    std::vector<UBTH2Poly*> this_reco_per_true;
+    std::vector<std::vector<double>> this_reco_per_true;
     TMatrix S;
 
     // n_universe = 10;
@@ -305,12 +305,14 @@ namespace Base {
       //
       if (_true_to_reco_is_set) {
 
-        LOG_DEBUG() << "Calculating migration matrix. Will have " << input_map_mc["total"]->GetNumberOfBins() << " bins." << std::endl;
+        LOG_DEBUG() << "Calculating migration matrix. It will have " << input_map_mc["total"]->GetNumberOfBins() << " bins." << std::endl;
 
         MigrationMatrix4DPoly migrationmatrix4d;
         migrationmatrix4d.DoMakePlots(false);
         migrationmatrix4d.SetOutDir("migration_matrix_poly_multisim_4D_plots");
-        migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
+        // migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
+        migrationmatrix4d.SetRecoPerTrueVectors(this_reco_per_true);
+        migrationmatrix4d.SetTemplateHisto(input_map_mc["total"]);
         migrationmatrix4d.SetBins(input_map_mc["total"]->GetNumberOfBins());
 
         S.ResizeTo(input_map_mc["total"]->GetNumberOfBins(), input_map_mc["total"]->GetNumberOfBins());
