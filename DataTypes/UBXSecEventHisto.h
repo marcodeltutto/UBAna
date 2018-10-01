@@ -101,9 +101,9 @@ namespace DataTypes {
     std::map<std::string,std::map<std::string,UBTH2Poly*>> hmap_trktheta_trkmom_poly_flux_multisim_bs; ///< Number of events per channel and universe - Double Differential PolyBins - Flux Multisim
     std::map<std::string,std::map<std::string,UBTH2Poly*>> hmap_trktheta_trkmom_poly_extra_syst_multisim_bs; ///< Number of events per channel and universe - Double Differential PolyBins - Extra Syst
 
-    std::map<std::string,std::vector<UBTH2Poly*>> bs_genie_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - Genie Multisim
+    std::map<std::string,std::vector<std::vector<double>>> bs_genie_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - Genie Multisim
     std::map<std::string,std::vector<std::vector<double>>> bs_flux_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - Flux Multisim
-    std::map<std::string,std::vector<UBTH2Poly*>> bs_extra_syst_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - Extra Syst
+    std::map<std::string,std::vector<std::vector<double>>> bs_extra_syst_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - Extra Syst
 
 
 

@@ -1885,100 +1885,100 @@ std::cout << "here 1 " << std::endl;
     _xsec_bs_poly_calc.set_verbosity(Base::msg::kNORMAL);
 
 
-    if (_do_genie_systs) {
-      _xsec_bs_poly_calc.Reset();
-      _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-      _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      _xsec_bs_poly_calc.SetHistograms(_event_histo->hmap_trktheta_trkmom_poly_genie_multisim_bs, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
-      _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo->bs_genie_multisim_eff_poly_muangle_mumom_num, *_event_histo->bs_genie_multisim_eff_poly_muangle_mumom_den, _event_histo->bs_genie_multisim_poly_reco_per_true);
-      _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
-      _xsec_bs_poly_calc.SetSavePrefix("genie_multisim_muangle_mumom");
-      _xsec_bs_poly_calc.SetUpperLabel("GENIE Re-Weighting Only");
-      _xsec_bs_poly_calc.Run();
+//     if (_do_genie_systs) {
+//       _xsec_bs_poly_calc.Reset();
+//       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+//       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
+//       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
+//       _xsec_bs_poly_calc.SetHistograms(_event_histo->hmap_trktheta_trkmom_poly_genie_multisim_bs, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
+//       _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo->bs_genie_multisim_eff_poly_muangle_mumom_num, *_event_histo->bs_genie_multisim_eff_poly_muangle_mumom_den, _event_histo->bs_genie_multisim_poly_reco_per_true);
+//       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
+//       _xsec_bs_poly_calc.SetSavePrefix("genie_multisim_muangle_mumom");
+//       _xsec_bs_poly_calc.SetUpperLabel("GENIE Re-Weighting Only");
+//       _xsec_bs_poly_calc.Run();
 
-      _xsec_bs_poly_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_poly_muangle_mumom");
-      _xsec_bs_poly_calc.SaveFractionalCovarianceMatrix("covariance_genie.root", "frac_covariance_matrix_genie_poly_muangle_mumom");
-      _xsec_bs_poly_calc.GetCovarianceMatrix(covariance_matrix_genie);
-      _xsec_bs_poly_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_genie);
+//       _xsec_bs_poly_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_poly_muangle_mumom");
+//       _xsec_bs_poly_calc.SaveFractionalCovarianceMatrix("covariance_genie.root", "frac_covariance_matrix_genie_poly_muangle_mumom");
+//       _xsec_bs_poly_calc.GetCovarianceMatrix(covariance_matrix_genie);
+//       _xsec_bs_poly_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_genie);
 
-      for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
-        LOG_NORMAL() << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
+//       for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
+//         LOG_NORMAL() << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+//       }
+//     }
 
-    if (_import_genie_systs) {
+//     if (_import_genie_systs) {
 
-      TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_poly_muangle_mumom");
-      frac_covariance_matrix_genie = *m;
+//       TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
+//       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_poly_muangle_mumom");
+//       frac_covariance_matrix_genie = *m;
         
-    }
-std::cout << "here 2 " << std::endl;
+//     }
+// std::cout << "here 2 " << std::endl;
 
-    if (_do_extra_syst_systs) {
-      _xsec_bs_poly_calc.Reset();
-      _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-      _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_extra_syst_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      _xsec_bs_poly_calc.SetHistograms(_event_histo->hmap_trktheta_trkmom_poly_extra_syst_multisim_bs, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
-      _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo->bs_extra_syst_multisim_eff_poly_muangle_mumom_num, *_event_histo->bs_extra_syst_multisim_eff_poly_muangle_mumom_den, _event_histo->bs_extra_syst_multisim_poly_reco_per_true);
-      _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
-      _xsec_bs_poly_calc.SetSavePrefix("extra_syst_muangle_mumom");
-      _xsec_bs_poly_calc.SetUpperLabel("EXTRA SYSTS Re-Weighting Only");
-      _xsec_bs_poly_calc.Run();
+//     if (_do_extra_syst_systs) {
+//       _xsec_bs_poly_calc.Reset();
+//       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+//       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
+//       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_extra_syst_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
+//       _xsec_bs_poly_calc.SetHistograms(_event_histo->hmap_trktheta_trkmom_poly_extra_syst_multisim_bs, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
+//       _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo->bs_extra_syst_multisim_eff_poly_muangle_mumom_num, *_event_histo->bs_extra_syst_multisim_eff_poly_muangle_mumom_den, _event_histo->bs_extra_syst_multisim_poly_reco_per_true);
+//       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
+//       _xsec_bs_poly_calc.SetSavePrefix("extra_syst_muangle_mumom");
+//       _xsec_bs_poly_calc.SetUpperLabel("EXTRA SYSTS Re-Weighting Only");
+//       _xsec_bs_poly_calc.Run();
 
-      _xsec_bs_poly_calc.SaveCovarianceMatrix("covariance_extra_syst.root", "covariance_matrix_extra_syst_poly_muangle_mumom");
-      _xsec_bs_poly_calc.SaveFractionalCovarianceMatrix("covariance_extra_syst.root", "frac_covariance_matrix_extra_syst_poly_muangle_mumom");
-      _xsec_bs_poly_calc.GetCovarianceMatrix(covariance_matrix_extra_syst);
-      _xsec_bs_poly_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_extra_syst);
+//       _xsec_bs_poly_calc.SaveCovarianceMatrix("covariance_extra_syst.root", "covariance_matrix_extra_syst_poly_muangle_mumom");
+//       _xsec_bs_poly_calc.SaveFractionalCovarianceMatrix("covariance_extra_syst.root", "frac_covariance_matrix_extra_syst_poly_muangle_mumom");
+//       _xsec_bs_poly_calc.GetCovarianceMatrix(covariance_matrix_extra_syst);
+//       _xsec_bs_poly_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_extra_syst);
 
-      for (int i = 0; i < covariance_matrix_extra_syst.GetNbinsX(); i++) {
-        std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
+//       for (int i = 0; i < covariance_matrix_extra_syst.GetNbinsX(); i++) {
+//         std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
+//       }
+//     }
 
-    if (_import_extra_syst_systs) {
+//     if (_import_extra_syst_systs) {
 
-      TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_poly_muangle_mumom");
-      frac_covariance_matrix_extra_syst = *m;
+//       TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
+//       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_poly_muangle_mumom");
+//       frac_covariance_matrix_extra_syst = *m;
         
-    }
+//     }
 
 
-    if (_do_flux_systs) {
-      _xsec_bs_poly_calc.Reset();
-      _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-      _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      _xsec_bs_poly_calc.SetHistograms(_event_histo->hmap_trktheta_trkmom_poly_flux_multisim_bs, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
-      _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo->bs_flux_multisim_eff_poly_muangle_mumom_num, *_event_histo->bs_flux_multisim_eff_poly_muangle_mumom_den, _event_histo->bs_flux_multisim_poly_reco_per_true);
-      _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
-      _xsec_bs_poly_calc.SetSavePrefix("flux_multisim_muangle_mumom");
-      _xsec_bs_poly_calc.SetUpperLabel("FLUX Re-Weighting Only");
-      _xsec_bs_poly_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
-      _xsec_bs_poly_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
-      _xsec_bs_poly_calc.Run();
-std::cout << "here 3 " << std::endl;
+//     if (_do_flux_systs) {
+//       _xsec_bs_poly_calc.Reset();
+//       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+//       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
+//       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
+//       _xsec_bs_poly_calc.SetHistograms(_event_histo->hmap_trktheta_trkmom_poly_flux_multisim_bs, h_trktheta_trkmom_total_poly_bnbon, h_trktheta_trkmom_total_poly_extbnb);
+//       _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo->bs_flux_multisim_eff_poly_muangle_mumom_num, *_event_histo->bs_flux_multisim_eff_poly_muangle_mumom_den, _event_histo->bs_flux_multisim_poly_reco_per_true);
+//       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
+//       _xsec_bs_poly_calc.SetSavePrefix("flux_multisim_muangle_mumom");
+//       _xsec_bs_poly_calc.SetUpperLabel("FLUX Re-Weighting Only");
+//       _xsec_bs_poly_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
+//       _xsec_bs_poly_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
+//       _xsec_bs_poly_calc.Run();
+// std::cout << "here 3 " << std::endl;
 
-      _xsec_bs_poly_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_poly_muangle_mumom");
-      _xsec_bs_poly_calc.SaveFractionalCovarianceMatrix("covariance_flux.root", "frac_covariance_matrix_flux_poly_muangle_mumom");
-      _xsec_bs_poly_calc.GetCovarianceMatrix(covariance_matrix_flux);
-      _xsec_bs_poly_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_flux);
+//       _xsec_bs_poly_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_poly_muangle_mumom");
+//       _xsec_bs_poly_calc.SaveFractionalCovarianceMatrix("covariance_flux.root", "frac_covariance_matrix_flux_poly_muangle_mumom");
+//       _xsec_bs_poly_calc.GetCovarianceMatrix(covariance_matrix_flux);
+//       _xsec_bs_poly_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_flux);
 
-      for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
-        std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
+//       for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
+//         std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
+//       }
+//     }
 
-    if (_import_flux_systs) {
+//     if (_import_flux_systs) {
 
-      TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_poly_muangle_mumom");
-      frac_covariance_matrix_flux = *m;
+//       TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
+//       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_poly_muangle_mumom");
+//       frac_covariance_matrix_flux = *m;
 
-    }
+//     }
 
     if (_import_detector_systs) {
 
