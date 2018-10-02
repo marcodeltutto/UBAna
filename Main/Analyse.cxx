@@ -88,6 +88,8 @@ namespace Main {
   std::string mkdir_command = "mkdir -p ";
   mkdir_command += analyser_outdir;
   system(mkdir_command.c_str());
+
+  LOG_NORMAL() << "Created output folder with name " << analyser_outdir << "." << std::endl;
   
   //gROOT->SetBatch(kTRUE);
   gROOT->ProcessLine("gErrorIgnoreLevel = 2001;"); // 1001: INFO, 2001: WARNINGS, 3001: ERRORS
@@ -180,12 +182,12 @@ namespace Main {
   double scale_factor_mc_bnbcosmic = bnbon_pot_meas / mc_pot_sim;
   double scale_factor_mc_dirt = bnbon_pot_meas / mc_pot_sim_dirt;
 
-  std::cout << "Data Scale Factors:" << std::endl;
-  std::cout << "\t BNBON: " << scale_factor_bnbon << std::endl;
-  std::cout << "\t EXTBNB: " << scale_factor_extbnb << std::endl;
-  std::cout << "MC Scale Factors:" << std::endl;
-  std::cout << "\t BNBCOSMIC: " << scale_factor_mc_bnbcosmic << std::endl;
-  std::cout << "\t DIRT: " << scale_factor_mc_dirt << std::endl;
+  LOG_NORMAL() << "Data Scale Factors:" << std::endl;
+  LOG_NORMAL() << "\t BNBON: " << scale_factor_bnbon << std::endl;
+  LOG_NORMAL() << "\t EXTBNB: " << scale_factor_extbnb << std::endl;
+  LOG_NORMAL() << "MC Scale Factors:" << std::endl;
+  LOG_NORMAL() << "\t BNBCOSMIC: " << scale_factor_mc_bnbcosmic << std::endl;
+  LOG_NORMAL() << "\t DIRT: " << scale_factor_mc_dirt << std::endl;
   //std::cout << "\t INTIMECOSMIC: " << scale_factor_mc_intimecosmic << std::endl;
 
   
@@ -279,12 +281,12 @@ namespace Main {
   // Create placeholders to get stuff from file
   std::map<std::string,std::map<std::string,TH1D*>>* temp_map_bs;
   std::map<std::string,std::map<std::string,TH2D*>>* temp_map2d_bs;
-  std::map<std::string,std::map<std::string,UBTH2Poly*>>* temp_map2d_poly_bs;
+  // std::map<std::string,std::map<std::string,UBTH2Poly*>>* temp_map2d_poly_bs; // to be removed
   BootstrapTH1D * temp_bs;
   BootstrapTH2D * temp2d_bs;
-  BootstrapTH2DPoly * temp2d_poly_bs;
+  // BootstrapTH2DPoly * temp2d_poly_bs; // to be removed
   std::map<std::string,std::vector<std::vector<TH2D*>>> * temp_bs_reco_per_true;
-  std::map<std::string,std::vector<UBTH2Poly*>> * temp_bs_poly_reco_per_true;
+  // std::map<std::string,std::vector<UBTH2Poly*>> * temp_bs_poly_reco_per_true; // to be removed
 
 
 
@@ -297,7 +299,6 @@ namespace Main {
   //BootstrapTH1D h_eff_mumom_num_bs = *h_eff_mumom_num_bs_temp;
 
 
-  std::cout << ">> here1" << std::endl;
 
   // Bootstrap efficiency - GENIE pm1sigma
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_num", temp_bs);
@@ -395,11 +396,11 @@ namespace Main {
   std::map<std::string,TH2D*>* temp_map_bs2;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_true_reco_mom", temp_map_bs2);
   std::map<std::string,TH2D*> bs_true_reco_mom_mc = *temp_map_bs2;
-  std::cout << ">> here6" << std::endl;
+
+
 
   // Instantiate the GENIE reweighting plotter
   ReweightingPlotter genie_rw_plotter;
-
 
   if (_do_pm1sigma_plots) {
 
@@ -418,7 +419,6 @@ namespace Main {
     genie_rw_plotter.MakeBackgroundPlots(0, false, true);  
   }
 
-  std::cout << ">> here7" << std::endl;
 
 
   //
@@ -464,8 +464,6 @@ namespace Main {
     // hmap_trktheta_trkmom_genie_multisim_bs_mc["dirt"] = hmap_trktheta_trkmom_genie_multisim_bs_mc_dirt["total"];
   } 
 
-  std::cout << ">> here aaa" << std::endl;
-
 
   // Reco Per True - GENIE Multisim
   mc_bnbcosmic_file->GetObject("bs_genie_multisim_reco_per_true", temp_bs_reco_per_true);
@@ -474,7 +472,6 @@ namespace Main {
   // mc_bnbcosmic_file->GetObject("bs_genie_multisim_poly_reco_per_true", temp_bs_poly_reco_per_true);
   // std::map<std::string,std::vector<UBTH2Poly*>> bs_genie_multisim_poly_reco_per_true_mc = *temp_bs_poly_reco_per_true;
 
-  std::cout << ">> here bbb" << std::endl;
 
 
 
@@ -553,8 +550,6 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("bs_genie_multisim_true_reco_mumom", temp_bs_2d);
   BootstrapTH2D bs_genie_multisim_reco_true_mumom = *temp_bs_2d;
 
-  std::cout << ">> herea" << std::endl;
-
   mc_bnbcosmic_file->GetObject("bs_genie_multisim_true_reco_muangle", temp_bs_2d);
   BootstrapTH2D bs_genie_multisim_true_reco_muangle = *temp_bs_2d;
 
@@ -562,12 +557,8 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("bs_extra_syst_true_reco_mumom", temp_bs_2d);
   BootstrapTH2D bs_extra_syst_reco_true_mumom = *temp_bs_2d;
 
-  std::cout << ">> herea" << std::endl;
-
   mc_bnbcosmic_file->GetObject("bs_extra_syst_true_reco_muangle", temp_bs_2d);
   BootstrapTH2D bs_extra_syst_true_reco_muangle = *temp_bs_2d;
-
-  std::cout << ">> here8" << std::endl;
 
   // Boostrap reco-true - GENIE Models
   mc_bnbcosmic_file->GetObject("bs_mc_stat_multisim_true_reco_mumom", temp_bs_2d);
@@ -585,16 +576,11 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_eff_mumom_den", temp_bs);
   BootstrapTH1D bs_flux_multisim_eff_mumom_den = *temp_bs;
 
-std::cout << ">> here9" << std::endl;
-
-
   // Boostrap reco-true - FLUX Multisim
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_mumom", temp_bs_2d);
   BootstrapTH2D bs_flux_multisim_true_reco_mumom = *temp_bs_2d;
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_true_reco_muangle", temp_bs_2d);
   BootstrapTH2D bs_flux_multisim_true_reco_muangle = *temp_bs_2d;
-
-std::cout << ">> here10" << std::endl;
 
   // Reco Per True - FLUX Multisim
   mc_bnbcosmic_file->GetObject("bs_flux_multisim_reco_per_true", temp_bs_reco_per_true);
@@ -603,7 +589,6 @@ std::cout << ">> here10" << std::endl;
   // Reco Per True - MC Stat Multisim
   mc_bnbcosmic_file->GetObject("bs_mc_stat_multisim_reco_per_true", temp_bs_reco_per_true);
   std::map<std::string,std::vector<std::vector<TH2D*>>> bs_mc_stat_multisim_reco_per_true_mc = *temp_bs_reco_per_true;
-std::cout << ">> here11" << std::endl;
 
 
 
@@ -929,10 +914,14 @@ std::cout << ">> here11" << std::endl;
   }
 
   std::string xsec_file_name = "xsec_file_" + _prefix + ".root";
-  std::cout << "Opening output file with name " << xsec_file_name << std::endl;
+  LOG_NORMAL() << "Opening output file with name " << xsec_file_name << std::endl;
   TFile *file_out = new TFile(xsec_file_name.c_str(),"RECREATE");
-  if ( file_out->IsOpen() )
-    std::cout << "File opened successfully" << std::endl;
+  if ( file_out->IsOpen() ) {
+    LOG_NORMAL() << "File opened successfully." << std::endl;
+  } else {
+    LOG_CRITICAL() << "Failed to open file." << std::endl;
+    throw std::exception();
+  }
   std::string save_name = "";
 
 
@@ -1616,10 +1605,8 @@ std::cout << ">> here11" << std::endl;
     // Double Differential Cross Section
     //
 
-    std::cout << "Here 1" << std::endl;
-
-    TTree * tt;
-    mc_bnbcosmic_file->GetObject("true_reco_tree", tt);
+    // TTree * tt;
+    // mc_bnbcosmic_file->GetObject("true_reco_tree", tt);
 
     CrossSectionBootstrapCalculator2D _xsec_bs_calc;
     _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
@@ -1790,40 +1777,16 @@ std::cout << ">> here11" << std::endl;
     // Double diff cross section
     //
 
-    std::cout << "Here 2" << std::endl;
-
-    MigrationMatrix4D migrationmatrix4d;
-    migrationmatrix4d.SetTTree(tt); 
-    std::cout << "Here 3" << std::endl;
-
-
-    migrationmatrix4d.SetRecoPerTrueHistos(h_reco_per_true_mc);
-    std::cout << "Here 4" << std::endl;
-
-    migrationmatrix4d.SetOutDir();
-
-
-
-    // int n_bins_double_mumom = 4;
-    // double bins_double_mumom[5] = {0.00, 0.25, 0.50, 1.0, 2.50};
-    // int n_bins_double_mucostheta = 6;
-    // double bins_double_mucostheta[7] = {-1.00, -0.50, 0.00, 0.25, 0.50, 0.75, 1.00};
-
-    // int n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
-    // double bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; ///< Momentum bins for double differential
-    // // int n_bins_double_mumom = 5; ///< Number of momentum bins for double differential
-    // // double bins_double_mumom[6] = {0.00, 0.25, 0.50, 0.85, 1.40, 2.50}; ///< Momentum bins for double differential
-    // int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
-    // double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
-
     // Get the bins first
     int n_bins_double_mucostheta = hmap_trktheta_trkmom_mc["total"]->GetNbinsX();
     const double *bins_double_mucostheta = hmap_trktheta_trkmom_mc["total"]->GetXaxis()->GetXbins()->GetArray();
     int n_bins_double_mumom = hmap_trktheta_trkmom_mc["total"]->GetNbinsY();
     const double *bins_double_mumom = hmap_trktheta_trkmom_mc["total"]->GetYaxis()->GetXbins()->GetArray();
 
+    MigrationMatrix4D migrationmatrix4d;
+    migrationmatrix4d.SetRecoPerTrueHistos(h_reco_per_true_mc);
+    migrationmatrix4d.SetOutDir();
     migrationmatrix4d.SetBins(bins_double_mucostheta, n_bins_double_mucostheta, bins_double_mumom, n_bins_double_mumom);
-    
     Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
     
     migrationmatrix4d.SetOutputFileName("latex_test.tex");
@@ -1871,7 +1834,6 @@ std::cout << ">> here11" << std::endl;
 
 
 
-    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
     std::cout << "***************" << std::endl;
     std::cout << "* Double differential cross section (polybins)" << std::endl;
     std::cout << "***************" << std::endl;
@@ -1881,7 +1843,7 @@ std::cout << ">> here11" << std::endl;
     _xsec_bs_poly_calc.SetFluxCorrectionWeight(_flux_correction_weight);
     _xsec_bs_poly_calc.set_verbosity(Base::msg::kNORMAL);
 
-    // if (_do_genie_systs) {
+    if (_do_genie_systs) {
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
@@ -1901,7 +1863,7 @@ std::cout << ">> here11" << std::endl;
       for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
         LOG_NORMAL() << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       }
-    // }
+    }
 
     if (_import_genie_systs) {
 
@@ -1910,7 +1872,7 @@ std::cout << ">> here11" << std::endl;
       frac_covariance_matrix_genie = *m;
         
     }
-std::cout << "here 2 " << std::endl;
+
 
     if (_do_extra_syst_systs) {
       _xsec_bs_poly_calc.Reset();
@@ -1978,7 +1940,7 @@ std::cout << "here 2 " << std::endl;
     if (_import_detector_systs) {
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_syst_muangle_mumom");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_syst_poly_muangle_mumom");
       frac_covariance_matrix_detector = *m;
     }
 
@@ -1986,7 +1948,7 @@ std::cout << "here 2 " << std::endl;
     if (_import_cosmic_systs) {
 
       TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_syst_muangle_mumom");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_syst_poly_muangle_mumom");
       frac_covariance_matrix_cosmic = *m;
     }
 
@@ -1994,7 +1956,7 @@ std::cout << "here 2 " << std::endl;
     if (_import_dirt_systs) {
 
       TFile* cov_file = TFile::Open("covariance_dirt.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_syst_muangle_mumom");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_syst_poly_muangle_mumom");
       frac_covariance_matrix_dirt = *m;
     }
 
@@ -2015,27 +1977,9 @@ std::cout << "here 2 " << std::endl;
     migrationmatrix4dpoly.SetRecoPerTrueHistos(h_poly_reco_per_true_mc);
     migrationmatrix4dpoly.SetBins(hmap_trktheta_trkmom_poly_mc["signal"]->GetNumberOfBins());
     migrationmatrix4dpoly.SetOutDir();
-    
     TMatrix S = migrationmatrix4dpoly.CalculateMigrationMatrix();
-    
-    // migrationmatrix4dpoly.SetOutputFileName("latex_test.tex");
-    // migrationmatrix4dpoly.PrintSmearingMatrixLatex();
-    // migrationmatrix4dpoly.PlotMatrix();
-
-    // int n_bins = h_eff_muangle_mumom_poly_num->GetNumberOfBins();
-    // std::cout << "Number of bins: " << n_bins << std::endl;
-    // TMatrix S;
-    // S.Clear(); 
-    // S.ResizeTo(n_bins, n_bins);
-    // for (int i = 0; i < n_bins; i++) {
-    //   for (int j = 0; j < n_bins; j++) {
-    //     S[i][j] = 0;
-    //     if (i == j) S[i][j] = 1;
-    //   }
-    // }
 
     CrossSectionCalculator2DPoly xsec_calc_poly;
-    std::cout << " logger name: " << xsec_calc_poly.logger().name() << std::endl;
     xsec_calc_poly.set_verbosity(Base::msg::kDEBUG);
     xsec_calc_poly.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
     xsec_calc_poly.SetPOT(bnbon_pot_meas);
@@ -2055,29 +1999,30 @@ std::cout << "here 2 " << std::endl;
     UBTH2Poly * xsec_muangle_mumom_poly_mc = xsec_calc_poly.GetMCCrossSection();
 
 
-    // file_out->cd();
-    // save_name = "xsec_muangle_mumom_POLY_" + _prefix;
-    // xsec_muangle_mumom->Write(save_name.c_str());
-    // save_name = "xsec_muangle_mumom_POLY_mc_" + _prefix;
-    // xsec_muangle_mumom_mc->Write(save_name.c_str());
-    // save_name = "covariance_matrix_muangle_mumom_POLY_" + _prefix;
-    // covariance_matrix_muangle_mumom.Write(save_name.c_str());
+    file_out->cd();
+    save_name = "xsec_poly_muangle_mumom__" + _prefix;
+    xsec_muangle_mumom_poly->Write(save_name.c_str());
+    save_name = "xsec_poly_muangle_mumom__mc_" + _prefix;
+    xsec_muangle_mumom_poly_mc->Write(save_name.c_str());
+    save_name = "covariance_matrix_poly_muangle_mumom__" + _prefix;
+    frac_covariance_matrix_poly_muangle_mumom.Write(save_name.c_str());
   
 
-
-
-    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
   }
 
 
+  LOG_NORMAL() << "Closing output file." << std::endl;
 
-  // file_out->Write();
   file_out->Close();
+
+  LOG_NORMAL() << "Output file closed." << std::endl;
 
 
   gROOT->SetBatch(kFALSE);
 
   
+
+
   // *************************************
   // Doing beam-on minus beam-off subtraction
   // *************************************
