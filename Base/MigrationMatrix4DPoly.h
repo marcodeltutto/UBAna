@@ -97,17 +97,14 @@ namespace Base {
     /// Sets a template histo, just to keep track of bin sizes etc.
     void SetTemplateHisto(UBTH2Poly *h) { _th2poly_template = (UBTH2Poly *) h->Clone("_th2poly_template"); };
 
-    ///
+    /// Openes a text outpu files (then you can call PrintSmearingMatrixLatex)
     void SetOutputFileName(std::string name);
 
     /// Sets the output directory
     void SetOutDir(std::string dir = "migration_matrix_poly_4D_plots");
 
-    ///
+    /// Prints the smeating matrix in latex format on a file opend by SetOutputFileName()
     void PrintSmearingMatrixLatex();
-
-    ///
-    void PrintSmearingMatrixLatex(int true_m, int true_n);
 
     ///
     void PlotMatrix();
@@ -139,10 +136,8 @@ namespace Base {
 
     std::ofstream _f_out; ///< The output file
 
-    bool _verbose = false;
     bool _do_make_plots = false;
     
-
     std::string _outdir;
     std::string _folder = "MigrationMatrix4DPolyPlots/";
 

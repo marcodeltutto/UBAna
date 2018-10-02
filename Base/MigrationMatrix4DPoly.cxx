@@ -155,45 +155,32 @@ namespace Base {
   void MigrationMatrix4DPoly::PlotMatrix()
   {
 
-    // int n_bins = _var1_bins.size() * _var2_bins.size();
-    // TH2D *h_sm = new TH2D("h_sm", "", n_bins, 0, n_bins, n_bins, 0, n_bins);
+    TH2D *h_sm = new TH2D("h_sm", "", _n_bins, 0, _n_bins, _n_bins, 0, _n_bins);
 
-
-    // for (size_t n = 0; n < _var2_bins.size(); n++) {   // pmu true
-    //   for (size_t m = 0; m < _var1_bins.size(); m++) {  // theta true
-    //     for (size_t j = 0; j < _var2_bins.size(); j++) {  // pmu reco
-    //       for (size_t i = 0; i < _var1_bins.size(); i++) {  // theta reco
+    for (size_t m = 0; m < _n_bins; m++) {  // true
+      for (size_t i = 0; i < _n_bins; i++) {  // reco
         
-    //         int reco_bin = i + j * _var1_bins.size() + 1;
-    //         int true_bin = m + n * _var1_bins.size() + 1;
-    //         h_sm->SetBinContent(reco_bin, true_bin, _S[i][j][m][n]);
-    //         if(_verbose) std::cout << "(i, j, m, n) = (" << i << ", " << j << ", " << m << ", " << n << "   reco_bin: " << reco_bin << ", true_bin: " << true_bin << ", S: " << _S[i][j][m][n] << std::endl;
+        h_sm->SetBinContent(m +1, i +1, _S[i][m]);
 
-    //       }
-    //     }
-    //   }
-    // }
+      }
+    }
 
-    // std::vector<std::string> bin_labels;
+    std::vector<std::string> bin_labels;
 
-    // for (size_t j = 0; j < _var2_bins.size(); j++) {  
-    //   for (size_t i = 0; i < _var1_bins.size(); i++) {  
+    for (size_t i = 0; i < _n_bins; i++) {  
 
-    //     //int bin = i + j * _var1_bins.size() + 1;
+      std::stringstream sstm;
+      sstm << i + 1;
+      std::string str = sstm.str();
 
-    //     std::stringstream sstm;
-    //     sstm << i;
-    //     std::string str = sstm.str();
+      bin_labels.emplace_back(str);
 
-    //     bin_labels.emplace_back(str);
+    }
 
-    //   }
-    // }
-
-    // for (int i = 0; i < n_bins; i++) {
-    //   h_sm->GetXaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
-    //   h_sm->GetYaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
-    // }
+    for (int i = 0; i < _n_bins; i++) {
+      h_sm->GetXaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
+      h_sm->GetYaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
+    }
 
     // std::vector<TLine*> lines;
 
@@ -212,58 +199,48 @@ namespace Base {
     // }
 
 
-    // TCanvas *c_sm = new TCanvas();
-    // h_sm->Draw("colz");
+    TCanvas *c_sm = new TCanvas();
+    h_sm->Draw("colz");
  
     // for (auto l : lines)
     //  l->Draw();
 
 
-    // TString name = _folder + "full_migration_matrix_4d";
-    // c_sm->SaveAs(name + ".pdf");
-    // c_sm->SaveAs(name + ".C","C");
+    TString name = _folder + "full_migration_matrix_4d_poly";
+    c_sm->SaveAs(name + ".pdf");
+    c_sm->SaveAs(name + ".C","C");
 
   }
+
+
+
+
 
 
   void MigrationMatrix4DPoly::PrintSmearingMatrixLatex()
   {
 
-    // for (size_t m = 0; m < _var1_bins.size(); m++) {
-    //   for (size_t n = 0; n < _var2_bins.size(); n++) {
-    //     this->PrintSmearingMatrixLatex(m, n);
-    //   }
-    // }
+    if (!_f_out.is_open()) {
+      LOG_WARNING() << "File not opened." << std::endl;
+      return;
+    }
 
-  }
+    _f_out << "\\begin{equation}" << std::endl;
+    _f_out << "S_{ij} =" << std::endl;
+    _f_out << "\\begin{bmatrix}" << std::endl;
 
+    for (size_t m = 0; m < _n_bins; m++) {
+      for (size_t i = 0; i < _n_bins; i++) {
 
+        _f_out << _S[m][i] << "  &  ";
 
-  void MigrationMatrix4DPoly::PrintSmearingMatrixLatex(int true_m, int true_n)
-  {
+      }
 
+      _f_out << " \\\\" << std::endl;
+    }
 
-    // if (!_f_out.is_open()) {
-    //   std::cout << "File not opened." << std::endl;
-    //   return;
-    // }
-
-    // _f_out << "\\begin{equation}" << std::endl;
-    // _f_out << "S_{ij" << true_m << true_n << "} =" << std::endl;
-    // _f_out << "\\begin{bmatrix}" << std::endl;
-
-    // for (size_t i = 0; i < _var1_bins.size(); i++) {
-    //   for (size_t j = 0; j < _var2_bins.size(); j++) {
-
-    //     _f_out << _S[i][j][true_m][true_n] << "  &  ";
-
-    //   }
-
-    //   _f_out << " \\\\" << std::endl;
-    // }
-
-    // _f_out << "\\end{bmatrix}" << std::endl;
-    // _f_out << "\\end{equation}" << std::endl << std::endl;
+    _f_out << "\\end{bmatrix}" << std::endl;
+    _f_out << "\\end{equation}" << std::endl << std::endl;
 
   }
 }
