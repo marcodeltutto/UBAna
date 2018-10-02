@@ -22,7 +22,7 @@ namespace Base {
 
     _folder = _outdir + "_" + timestamp + "/";
 
-    system(("mkdir " + _folder).c_str());
+    system(("mkdir -p " + _folder).c_str());
 
   }
 

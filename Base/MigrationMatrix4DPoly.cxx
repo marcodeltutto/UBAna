@@ -22,7 +22,7 @@ namespace Base {
 
     _folder = _outdir + "_" + timestamp + "/";
 
-    system(("mkdir " + _folder).c_str());
+    system(("mkdir -p " + _folder).c_str());
 
   }
 
@@ -91,7 +91,7 @@ namespace Base {
 
 
       // for (int i = 0; i < _n_bins; i++) {
-        // LOG_CRITICAL() << "before scale - bin " << i+1 << ", _reco_per_true is " << _reco_per_true->GetBinContent(i+1) << std::endl;
+      //   LOG_CRITICAL() << "before scale - bin " << i+1 << ", _reco_per_true is " << _reco_per_true->GetBinContent(i+1) << std::endl;
       // }
 
       // Normalize to get a probability
@@ -139,13 +139,13 @@ namespace Base {
     }
 
 
-    if(_verbose) {
-      for (int i = 0; i < _n_bins; i++) {
-        for (int m = 0; m < _n_bins; m++) {
-          std::cout << "(" << i << ", " << m << ") => " << _S[i][m] << std::endl;
-        }
-      }
-    }
+    // if(_verbose) {
+    //   for (int i = 0; i < _n_bins; i++) {
+    //     for (int m = 0; m < _n_bins; m++) {
+    //       std::cout << "(" << i << ", " << m << ") => " << _S[i][m] << std::endl;
+    //     }
+    //   }
+    // }
 
 
     return _S;

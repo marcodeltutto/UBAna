@@ -862,14 +862,12 @@ std::cout << ">> here11" << std::endl;
 
 
 
-    std::cout << "LLLLLL Just before" << std::endl;
-    UBXSecEventHisto * _event_histo = 0;
-    delete _event_histo;
-    _event_histo = 0;
-    mc_bnbcosmic_file->GetObject("UBXSecEventHisto", _event_histo);
-    // UBXSecEventHisto * _event_histo  = 0;
-    // _event_histo = (UBXSecEventHisto *) mc_bnbcosmic_file->Get("UBXSecEventHisto");
-    std::cout << "LLLLLL Just before" << std::endl;
+  LOG_NORMAL() << "Preparing to load Event Histo." << std::endl;
+
+  UBXSecEventHisto * _event_histo = 0;
+  mc_bnbcosmic_file->GetObject("UBXSecEventHisto", _event_histo);
+ 
+  LOG_NORMAL() << "Event Histo correclty loaded." << std::endl;
 
 
 
@@ -1328,26 +1326,17 @@ std::cout << ">> here11" << std::endl;
     _xsec_calc.SaveEventNumbers("trkmom_eventsperbin_table.tex");
     _xsec_calc.Draw();
     _xsec_calc.Draw(bkg_names);
-    if (h_eff_mumom_num){
-    LOG_CRITICAL() << "histo is good" << std::endl;
-    } else LOG_CRITICAL() << "histo is NOT good" << std::endl;
-    LOG_CRITICAL() << "Checkpoint 1" << std::endl;
     _xsec_calc.Smear(7, 7);
-    LOG_CRITICAL() << "Checkpoint 2" << std::endl;
     if (frac_covariance_matrix_mumom.GetNbinsX() > 1) {
       _xsec_calc.SetFractionalCovarianceMatrix(frac_covariance_matrix_mumom);
     }
-    LOG_CRITICAL() << "Checkpoint 3" << std::endl;
     _xsec_calc.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
-    LOG_CRITICAL() << "Checkpoint 4" << std::endl;
     if (_import_alternative_mc) {
       TH1D* h = (TH1D*)file_alt_mc->Get("xsec_mumom_mc_cv_tune3");
       _xsec_calc.ImportAlternativeMC(*h);
     }
 
-    LOG_CRITICAL() << "Checkpoint 5" << std::endl;
     TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection(bkg_names, "p_{#mu}^{reco} [GeV]", "d#sigma/dp_{#mu}^{reco} [10^{-38} cm^{2}/GeV]");
-    LOG_CRITICAL() << "Checkpoint 6" << std::endl;
 
     TH1D * xsec_mumom_mc = _xsec_calc.GetMCCrossSection();
     file_out->cd();
@@ -1887,14 +1876,12 @@ std::cout << ">> here11" << std::endl;
     std::cout << "* Double differential cross section (polybins)" << std::endl;
     std::cout << "***************" << std::endl;
 
-std::cout << "here 1 " << std::endl;
 
     CrossSectionBootstrapCalculator2DPoly _xsec_bs_poly_calc;
     _xsec_bs_poly_calc.SetFluxCorrectionWeight(_flux_correction_weight);
     _xsec_bs_poly_calc.set_verbosity(Base::msg::kNORMAL);
 
-
-    if (_do_genie_systs) {
+    // if (_do_genie_systs) {
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
@@ -1914,7 +1901,7 @@ std::cout << "here 1 " << std::endl;
       for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
         LOG_NORMAL() << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       }
-    }
+    // }
 
     if (_import_genie_systs) {
 

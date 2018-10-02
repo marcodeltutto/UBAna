@@ -726,6 +726,7 @@ namespace Base {
  
     _h_data = h_data;
     _h_mc = h_mc;
+    _h_syst_unc = h_syst_unc;
 
     if (make_plots) MakeAllCrossSectionPlots(xaxis_label, yaxis_label, zaxis_label);
 
@@ -1011,7 +1012,6 @@ namespace Base {
 
     int x_bins = _h_data->GetNBinsX();
     LOG_INFO() << "n bins x " << x_bins << std::endl;
-    // LOG_INFO() << "n bins y " << h_data->GetNbinsY() << std::endl;
 
     int horizontal_division = 2;
     int vertical_division = floor(x_bins / 2.);

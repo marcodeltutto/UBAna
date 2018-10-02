@@ -38,7 +38,7 @@ analyser.ImportCosmicSystematics(False)
 
 analyser.ImportDirtSystematics(False)
 
-analyser.DoGenieSystematics(True)
+analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)
 
 analyser.DoExtraSystematics(False)

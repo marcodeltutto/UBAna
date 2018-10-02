@@ -254,12 +254,15 @@ namespace Base {
       //
       auto iter = _bs_reco_per_true.find(universe_names.at(s));
       if (iter == _bs_reco_per_true.end()) {
-        std::cout << __PRETTY_FUNCTION__ << "Can't find bs_reco_per_true for universe " << universe_names.at(s) << std::endl;
+        LOG_CRITICAL() << "Can't find bs_reco_per_true for universe " << universe_names.at(s) << std::endl;
         throw std::exception();
       }
       this_reco_per_true = iter->second;
 
-    
+      // for (int i = 0; i < input_map_mc["total"]->GetNumberOfBins(); i++) {
+      //   LOG_CRITICAL() << "before scale - bin " << i+1 << ", _reco_per_true is " << this_reco_per_true[0][i] << std::endl;
+      // }
+
       //
       // Construct the map true vs reco
       //
@@ -309,7 +312,7 @@ namespace Base {
 
         MigrationMatrix4DPoly migrationmatrix4d;
         migrationmatrix4d.DoMakePlots(false);
-        migrationmatrix4d.SetOutDir("migration_matrix_poly_multisim_4D_plots");
+        // migrationmatrix4d.SetOutDir("migration_matrix_poly_multisim_4D_plots");
         // migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
         migrationmatrix4d.SetRecoPerTrueVectors(this_reco_per_true);
         migrationmatrix4d.SetTemplateHisto(input_map_mc["total"]);
@@ -382,7 +385,6 @@ namespace Base {
     _cov_calc.GetFractionalCovarianceMatrix(_frac_cov_matrix);
 
     LOG_NORMAL() << "Covariance matrix calculated." << std::endl;
-    LOG_CRITICAL() << "Cov matrix at bin 3 is " << _cov_matrix.GetBinContent(3, 3) << std::endl;
 
 
 

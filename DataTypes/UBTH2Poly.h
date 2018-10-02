@@ -81,6 +81,10 @@ namespace DataTypes {
     /// Returns the number of bins along x
     Int_t GetNBinsX();
 
+    ///
+    void PutStats(Double_t *stats);
+
+
 
 
     ClassDef(DataTypes::UBTH2Poly, 1) // TH2 with polygonal bins (extended for MicroBooNE)

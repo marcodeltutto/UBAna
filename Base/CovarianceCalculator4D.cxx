@@ -282,7 +282,7 @@ namespace Base {
 
     _bs_poly.ResetIterator();
 
-    LOG_NORMAL() << " Calculating Cov Matrix with " << _bs_poly.GetNUniverses() << " universes. Nominal histogram is excluded." << std::endl;
+    LOG_NORMAL() << "Calculating Cov Matrix with " << _bs_poly.GetNUniverses() -1 << " universes." << std::endl;
 
     double number_of_universes = (double)_bs_poly.GetNUniverses() - 1;
 
@@ -325,6 +325,8 @@ namespace Base {
 
       } // bin j loop
     } // bin i loop
+    std::cout << std::endl;
+
 
     
 
@@ -358,6 +360,7 @@ namespace Base {
 
       } // bin i loop
     } // bin i loop
+
 
   }
 
@@ -612,6 +615,7 @@ namespace Base {
     name = _prefix + "_cov_frac_matrix_2d";
     cov_frac_c->SaveAs(name + ".pdf");
     cov_frac_c->SaveAs(name + ".C","C");
+
 
     TCanvas * corr_c = new TCanvas();
     corr_c->SetRightMargin(0.13);
