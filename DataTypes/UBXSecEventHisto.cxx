@@ -36,6 +36,8 @@ namespace DataTypes {
       bs_flux_multisim_eff_muangle_mumom_den = new BootstrapTH2D("bs_flux_multisim_eff_muangle_mumom_den", "bs_flux_multisim_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
       bs_extra_syst_multisim_eff_muangle_mumom_num = new BootstrapTH2D("bs_extra_syst_multisim_eff_muangle_mumom_num", "bs_extra_syst_eff_muangle_mumom_num_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
       bs_extra_syst_multisim_eff_muangle_mumom_den = new BootstrapTH2D("bs_extra_syst_multisim_eff_muangle_mumom_den", "bs_extra_syst_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      bs_mc_stat_multisim_eff_muangle_mumom_num = new BootstrapTH2D("bs_mc_stat_multisim_eff_muangle_mumom_num", "bs_mc_stat_eff_muangle_mumom_num_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      bs_mc_stat_multisim_eff_muangle_mumom_den = new BootstrapTH2D("bs_mc_stat_multisim_eff_muangle_mumom_den", "bs_mc_stat_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
 
       // Number of events per channel and universe - Double Differential PolyBins - Genie Multisim
       hmap_trktheta_trkmom_genie_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);

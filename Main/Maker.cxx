@@ -1773,7 +1773,7 @@ void Main::Maker::MakeFile()
           fname_genie_multisim.at(i_wgt) = oss.str();
         }
 
-        std::cout << "GENIE Multisim Number of universes: " << fname_genie_multisim.size() << std::endl;
+        LOG_NORMAL() << "GENIE Multisim Number of universes: " << fname_genie_multisim.size() << std::endl;
 
         // if (_override_with_poisson_weights) {
         //   fname_genie_multisim.clear();
@@ -1941,7 +1941,7 @@ void Main::Maker::MakeFile()
           fname_extra_syst.at(i_wgt) = oss.str();
         }
 
-        std::cout << "EXTRA SYST Number of universes: " << fname_extra_syst.size() << std::endl;
+        LOG_NORMAL() << "EXTRA SYST Number of universes: " << fname_extra_syst.size() << std::endl;
 
         // Number of events
         for (auto & iter : hmap_trkmom_extra_syst_bs /*map_bs_trkmom_extra_syst*/) {
@@ -2123,7 +2123,7 @@ void Main::Maker::MakeFile()
         fname_flux_multisim.at(i_wgt) = oss.str();
       }
 
-      std::cout << "FLUX Multisim Number of universes: " << fname_flux_multisim.size() << std::endl;
+      LOG_NORMAL()  << "FLUX Multisim Number of universes: " << fname_flux_multisim.size() << std::endl;
 
       // Number of events
       for (auto iter : hmap_trkmom_flux_multisim_bs) {
@@ -2299,7 +2299,7 @@ void Main::Maker::MakeFile()
           fname_mc_stat_multisim.at(i_wgt) = oss.str();
         }
 
-        std::cout << "MC STAT Multisim Number of universes: " << fname_mc_stat_multisim.size() << std::endl;
+        LOG_NORMAL()  << "MC STAT Multisim Number of universes: " << fname_mc_stat_multisim.size() << std::endl;
 
         // Number of events
         for (auto & iter : hmap_trkmom_mc_stat_multisim_bs) {
