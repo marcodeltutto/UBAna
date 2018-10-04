@@ -197,7 +197,7 @@ namespace DataTypes {
 
     
     void UBXSecEventHisto::_AddPolyBins_(std::vector<std::vector<UBTH2Poly*>> h) {
-      for (int i = 0; i < h.size(); i++) {
+      for (int i = 0; i < (int)h.size(); i++) {
         for (int m = 0; m < _n_poly_bins; m++) {
           _AddPolyBins_(h.at(i).at(m));
         }
