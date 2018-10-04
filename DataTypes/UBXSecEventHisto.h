@@ -42,6 +42,7 @@
 #include "TH2Poly.h"
 
 #include "UBTH2Poly.h"
+#include "BootstrapTH2D.h"
 #include "BootstrapTH2DPoly.h"
 
 namespace DataTypes {
@@ -64,12 +65,6 @@ namespace DataTypes {
     ///
     void InitializeBootstraps();
 
-    // ///
-    // void OpenFile(std::string name);
-
-    // ///
-    // void SaveToFile();
-
     ///
     void AddPolyBins();
 
@@ -90,6 +85,31 @@ namespace DataTypes {
                                                           {1, std::make_pair(4, 5)}, }; //!
 
 
+    //
+    // Double differential 
+    //
+    BootstrapTH2D * bs_genie_multisim_eff_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential - Genie Multisim
+    BootstrapTH2D * bs_genie_multisim_eff_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential - Genie Multisim
+    BootstrapTH2D * bs_flux_multisim_eff_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential - Flux Multisim
+    BootstrapTH2D * bs_flux_multisim_eff_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential - Flux Multisim
+    BootstrapTH2D * bs_extra_syst_multisim_eff_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential - Extra Syst
+    BootstrapTH2D * bs_extra_syst_multisim_eff_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential - Extra Syst
+    BootstrapTH2D * bs_mc_stat_multisim_eff_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential - MC Stat
+    BootstrapTH2D * bs_mc_stat_multisim_eff_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential - MC Stat
+
+    std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_genie_multisim_bs; ///< Number of events per channel and universe - Double Differential - Genie Multisim
+    std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_flux_multisim_bs; ///< Number of events per channel and universe - Double Differential - Flux Multisim
+    std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_extra_syst_multisim_bs; ///< Number of events per channel and universe - Double Differential - Extra Syst
+    std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_mc_stat_multisim_bs; ///< Number of events per channel and universe - Double Differential - MC Stat
+
+    std::map<std::string,std::vector<std::vector<TH2D*>>> bs_genie_multisim_reco_per_true; ///< Reco per true histograms per universe - Double Differential - Genie Multisim
+    std::map<std::string,std::vector<std::vector<TH2D*>>> bs_flux_multisim_reco_per_true; ///< Reco per true histograms per universe - Double Differential - Flux Multisim
+    std::map<std::string,std::vector<std::vector<TH2D*>>> bs_extra_syst_multisim_reco_per_true; ///< Reco per true histograms per universe - Double Differential - Extra Syst
+    std::map<std::string,std::vector<std::vector<TH2D*>>> bs_mc_stat_multisim_reco_per_true; ///< Reco per true histograms per universe - Double Differential - MC Stat
+
+    //
+    // Double differential (polybin)
+    //
     BootstrapTH2DPoly * bs_genie_multisim_eff_poly_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential PolyBins - Genie Multisim
     BootstrapTH2DPoly * bs_genie_multisim_eff_poly_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential PolyBins - Genie Multisim
     BootstrapTH2DPoly * bs_flux_multisim_eff_poly_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential PolyBins - Flux Multisim

@@ -10,7 +10,7 @@ analyser = Main.Analyse()
 
 analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2.root")
 
-# analyser.SetDirtFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_20__v15.root") # dirt v15 (used for nuint)
+analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root")
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 
@@ -58,24 +58,6 @@ analyser.SetExtraFluxUncertainty(0.)
 #analyser.SetTargetFluxSystematic("piminus_PrimaryHadronSWCentral");
 #analyser.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
 analyser.SetTargetFluxSystematic("total");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_piplus.root");
-#analyser.SetTargetFluxSystematic("piplus");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_piminus.root");
-#analyser.SetTargetFluxSystematic("piminus");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kzero.root");
-#analyser.SetTargetFluxSystematic("kzero");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kplus.root");
-#analyser.SetTargetFluxSystematic("kplus");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_kminus.root");
-#analyser.SetTargetFluxSystematic("kminus");
-
-#analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6_fluxunisim.root");
-#analyser.SetTargetFluxSystematic("FluxUnisim");
 
 analyser.DoAnalise();
 

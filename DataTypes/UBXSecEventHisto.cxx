@@ -6,43 +6,126 @@
 
 namespace DataTypes {
 
-  // void UBXSecEventHisto::OpenFile(std::string name)
-  // {
-  //   _file = new TFile(name.c_str(),"RECREATE");
-  // }
-
-  // void UBXSecEventHisto::SaveToFile()
-  // {
-  //   if( !_file->IsOpen() ) {
-  //     std::cout << "File is not opened!" << std::endl;
-  //     throw std::exception();
-  //   }
-
-  //   std::cout << "UBXSecEventHisto checkpoint 1" << std::endl;
-
-  //   _file->WriteObject(bs_flux_multisim_eff_poly_muangle_mumom_num, "bs_flux_multisim_eff_poly_muangle_mumom_num");
-  //   std::cout << "UBXSecEventHisto checkpoint 2" << std::endl;
-  //   _file->WriteObject(bs_flux_multisim_eff_poly_muangle_mumom_den, "bs_flux_multisim_eff_poly_muangle_mumom_den");
-
-  //   std::cout << "UBXSecEventHisto checkpoint 3" << std::endl;
-  //   _file->WriteObject(&hmap_trktheta_trkmom_poly_flux_multisim_bs, "hmap_trktheta_trkmom_poly_flux_multisim_bs");
-  //   std::cout << "UBXSecEventHisto checkpoint 4" << std::endl;
-  //   _file->WriteObject(&bs_flux_multisim_poly_reco_per_true, "bs_flux_multisim_poly_reco_per_true");
-  //   std::cout << "UBXSecEventHisto checkpoint 5" << std::endl;
-  // }
-
 
     void UBXSecEventHisto::InitializeBootstraps()
     {
 
-      // Efficiency - Double Differential PolyBins = Multisim
+      double n_bins_double_mucostheta = _n_bins_double_mucostheta;
+      double * bins_double_mucostheta = _bins_double_mucostheta;
+      double n_bins_double_mumom = _n_bins_double_mumom;
+      double * bins_double_mumom = _bins_double_mumom;
+
+      //
+      // Single differential (mumom)
+      //
+
+
+      //
+      // Single differential (muangle)
+      //
+
+
+      //
+      // Double differential
+      //
+
+      // Efficiency - Double Differential - Multisim
+      bs_genie_multisim_eff_muangle_mumom_num = new BootstrapTH2D("bs_genie_multisim_eff_muangle_mumom_num", "bs_genie_multisim_eff_muangle_mumom_num_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      bs_genie_multisim_eff_muangle_mumom_den = new BootstrapTH2D("bs_genie_multisim_eff_muangle_mumom_den", "bs_genie_multisim_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      bs_flux_multisim_eff_muangle_mumom_num = new BootstrapTH2D("bs_flux_multisim_eff_muangle_mumom_num", "bs_flux_multisim_eff_muangle_mumom_num_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      bs_flux_multisim_eff_muangle_mumom_den = new BootstrapTH2D("bs_flux_multisim_eff_muangle_mumom_den", "bs_flux_multisim_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      bs_extra_syst_multisim_eff_muangle_mumom_num = new BootstrapTH2D("bs_extra_syst_multisim_eff_muangle_mumom_num", "bs_extra_syst_eff_muangle_mumom_num_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      bs_extra_syst_multisim_eff_muangle_mumom_den = new BootstrapTH2D("bs_extra_syst_multisim_eff_muangle_mumom_den", "bs_extra_syst_eff_muangle_mumom_den_title", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+
+      // Number of events per channel and universe - Double Differential PolyBins - Genie Multisim
+      hmap_trktheta_trkmom_genie_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_genie_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_genie_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_genie_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_genie_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_genie_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_genie_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_genie_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+
+      // Number of events per channel and universe - Double Differential - Flux Multisim
+      hmap_trktheta_trkmom_flux_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_flux_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_flux_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_flux_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_flux_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_flux_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_flux_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_flux_multisim_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+
+      // Number of events per channel and universe - Double Differential - Extra Syst
+      hmap_trktheta_trkmom_extra_syst_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_extra_syst_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_extra_syst_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_extra_syst_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_extra_syst_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_extra_syst_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_extra_syst_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_extra_syst_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_extra_syst_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_extra_syst_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_extra_syst_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_extra_syst_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_extra_syst_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_extra_syst_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+
+      // Number of events per channel and universe - Double Differential - MC Stat
+      hmap_trktheta_trkmom_mc_stat_multisim_bs["total"]["nominal"] = new TH2D("h_trktheta_trkmom_total_mc_stat_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_mc_stat_multisim_bs["signal"]["nominal"] = new TH2D("h_trktheta_trkmom_signal_mc_stat_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_mc_stat_multisim_bs["cosmic"]["nominal"] = new TH2D("h_trktheta_trkmom_cosmic_mc_stat_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_mc_stat_multisim_bs["outfv"]["nominal"] = new TH2D("h_trktheta_trkmom_outfv_mc_stat_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_mc_stat_multisim_bs["nc"]["nominal"] = new TH2D("h_trktheta_trkmom_nc_mc_stat_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_mc_stat_multisim_bs["anumu"]["nominal"] = new TH2D("h_trktheta_trkmom_anumu_mc_stat_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+      hmap_trktheta_trkmom_mc_stat_multisim_bs["nue"]["nominal"] = new TH2D("h_trktheta_trkmom_nue_mc_stat_nominal", "; Track cos(#theta);", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+
+      // Reco per true histograms per universe - Double Differential - Genie Multisim
+      bs_genie_multisim_reco_per_true["nominal"].resize(_n_bins_double_mucostheta, std::vector<TH2D*>(_n_bins_double_mumom));
+      for (int m = 0; m < _n_bins_double_mucostheta; m++) {
+        for (int n = 0; n < _n_bins_double_mumom; n++) { 
+          std::stringstream sstm;
+          sstm << "bs_genie_multisim_reco_per_true_nominal_" << m << "_" << n;
+          bs_genie_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+        }
+      }
+
+      // Reco per true histograms per universe - Double Differential - Flux Multisim
+      bs_flux_multisim_reco_per_true["nominal"].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+      for (int m = 0; m < n_bins_double_mucostheta; m++) {
+        for (int n = 0; n < n_bins_double_mumom; n++) { 
+          std::stringstream sstm;
+          sstm << "bs_flux_multisim_reco_per_true_nominal_" << m << "_" << n;
+          bs_flux_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+        }
+      }    
+
+      // Reco per true histograms per universe - Double Differential - Extra Syst
+      bs_extra_syst_multisim_reco_per_true["nominal"].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+      for (int m = 0; m < n_bins_double_mucostheta; m++) {
+        for (int n = 0; n < n_bins_double_mumom; n++) { 
+          std::stringstream sstm;
+          sstm << "bs_extra_syst_multisim_reco_per_true_nominal_" << m << "_" << n;
+          bs_extra_syst_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+        }
+      }
+
+      // Reco per true histograms per universe - Double Differential - MC Stat
+      bs_mc_stat_multisim_reco_per_true["nominal"].resize(n_bins_double_mucostheta, std::vector<TH2D*>(n_bins_double_mumom));
+      for (int m = 0; m < n_bins_double_mucostheta; m++) {
+        for (int n = 0; n < n_bins_double_mumom; n++) { 
+          std::stringstream sstm;
+          sstm << "bs_mc_stat_multisim_reco_per_true_nominal_" << m << "_" << n;
+          bs_mc_stat_multisim_reco_per_true["nominal"][m][n] = new TH2D(sstm.str().c_str(), "reco_per_true", n_bins_double_mucostheta, bins_double_mucostheta, n_bins_double_mumom, bins_double_mumom);
+        }
+      }
+
+
+
+      //
+      // Double differential (polybin)
+      //
+
+      // Efficiency - Double Differential PolyBins - Multisim
       bs_genie_multisim_eff_poly_muangle_mumom_num = new BootstrapTH2DPoly("bs_genie_multisim_eff_poly_muangle_mumom_num", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
       bs_genie_multisim_eff_poly_muangle_mumom_den = new BootstrapTH2DPoly("bs_genie_multisim_eff_poly_muangle_mumom_den", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
       bs_flux_multisim_eff_poly_muangle_mumom_num = new BootstrapTH2DPoly("bs_flux_multisim_eff_poly_muangle_mumom_num", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
       bs_flux_multisim_eff_poly_muangle_mumom_den = new BootstrapTH2DPoly("bs_flux_multisim_eff_poly_muangle_mumom_den", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
       bs_extra_syst_multisim_eff_poly_muangle_mumom_num = new BootstrapTH2DPoly("bs_extra_syst_multisim_eff_poly_muangle_mumom_num", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
       bs_extra_syst_multisim_eff_poly_muangle_mumom_den = new BootstrapTH2DPoly("bs_extra_syst_multisim_eff_poly_muangle_mumom_den", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
-
       
       // Number of events per channel and universe - Double Differential PolyBins - Genie Multisim
       hmap_trktheta_trkmom_poly_genie_multisim_bs["total"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_total_genie_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
@@ -76,43 +159,19 @@ namespace DataTypes {
       for (int m = 0; m < _n_poly_bins; m++) {
         bs_genie_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
       }
-      // bs_genie_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
-      // for (int m = 0; m < _n_poly_bins; m++) {
-      //   std::stringstream sstm;
-      //   sstm << "bs_genie_multisim_poly_reco_per_true_nominal_" << m;
-      //   bs_genie_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
-      // }
 
       // Reco per true histograms per universe - Double Differential PolyBins - Flux Multisim
       bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
       for (int m = 0; m < _n_poly_bins; m++) {
         bs_flux_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
       }
-      // bs_flux_multisim_poly_reco_per_true.resize(1);
-      // bs_flux_multisim_poly_reco_per_true.at(0).resize(_n_poly_bins);
-      // for (int m = 0; m < _n_poly_bins; m++) {
-      //   std::stringstream sstm;
-      //   sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
-      //   bs_flux_multisim_poly_reco_per_true[0][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
-      // }
-      // bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
-      // for (int m = 0; m < _n_poly_bins; m++) {
-      //   std::stringstream sstm;
-      //   sstm << "bs_flux_multisim_poly_reco_per_true_nominal_" << m;
-      //   bs_flux_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
-      // }
 
       // Reco per true histograms per universe - Double Differential PolyBins - Extra Syst
       bs_extra_syst_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
       for (int m = 0; m < _n_poly_bins; m++) {
         bs_extra_syst_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
       }
-      // bs_extra_syst_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
-      // for (int m = 0; m < _n_poly_bins; m++) {
-      //   std::stringstream sstm;
-      //   sstm << "bs_extra_syst_multisim_poly_reco_per_true_nominal_" << m;
-      //   bs_extra_syst_multisim_poly_reco_per_true["nominal"][m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
-      // }
+
     }
 
 
@@ -130,9 +189,6 @@ namespace DataTypes {
       _AddPolyBins_(hmap_trktheta_trkmom_poly_flux_multisim_bs);
       _AddPolyBins_(hmap_trktheta_trkmom_poly_extra_syst_multisim_bs);
 
-      // _AddPolyBins_(bs_genie_multisim_poly_reco_per_true);
-      // _AddPolyBins_(bs_flux_multisim_poly_reco_per_true);
-      // _AddPolyBins_(bs_extra_syst_multisim_poly_reco_per_true);
     }
 
 

@@ -186,13 +186,7 @@ namespace DataTypes {
      // Create Sumw2 if h1p has Sumw2 set
      if (fSumw2.fN == 0 && h1p->GetSumw2N() != 0) Sumw2();
   
-     
-  
-    // Perform the Add.
-    Double_t factor = 1;
-    if (h1p->GetNormFactor() != 0) {
-      factor = h1p->GetNormFactor() / h1p->GetSumOfWeights();
-    }
+    
            
 
      Int_t bi;
@@ -357,10 +351,10 @@ namespace DataTypes {
     }
 
     
-    const char *expectedName = 0;
-    Int_t inNbin;
+    // const char *expectedName = 0;
+    // Int_t inNbin;
     const TAxis* outAxis;
-    const TAxis* inAxis;
+    // const TAxis* inAxis;
  
     // TString opt = option;
     // TString cut;
@@ -381,10 +375,10 @@ namespace DataTypes {
     // }
     // else
     // {
-       expectedName = "_py";
-       inNbin = fXaxis.GetNbins();
+       // expectedName = "_py";
+       // inNbin = fXaxis.GetNbins();
        outAxis = GetYaxis();
-       inAxis = GetXaxis();
+       // inAxis = GetXaxis();
     // }
  
     // // outer axis cannot be outside original axis (this fixes ROOT-8781)
