@@ -80,13 +80,13 @@ namespace Main{
     /// Default destructor
     ~Maker(){}
 
-    ///
+    /// Produces an output file with the relevant histograms
     void MakeFile();
 
-    ///
+    /// Sets the name of the UBXSec input file (the file needs to contain a UBXSec/tree TTree)
     void SetInputFile(std::string);
 
-    ///
+    /// Sets the name of the ouput file
     void SetOutputFile(std::string);
 
     /// Sets the number of entries to loop over (-1: all entries)
@@ -95,62 +95,62 @@ namespace Main{
     /// Sets the first entry that will be used in the tree loop (default is 0)
     void SetInitialEntry(int);
 
-    ///
+    /// Sets the start of beam spill (only used if selection is re-run)
     void SetBeamSpillStart(double);
 
-    ///
+    /// Sets the end of beam spill (only used if selection is re-run)
     void SetBeamSpillEnd(double);
 
-    ///
+    /// Sets the shift between beam-on and beam-off flash timing (just for plotting flash time)
     void SetFlashShift(double);
 
-    ///
+    /// Setd the gain calibration (for dQ/dx) (only used if selection is re-run)
     void SetGainCalibration(double);
 
-    ///
+    /// If set to True, calculated the POT for this file
     void SetCalculatePOT(bool);
 
-    ///
+    /// Sets if the file is a data one or not
     void SetIsData(bool);
 
-    ///
+    /// If true, MEC events are turned off, and MA is scaled up
     void SetMaUpMECOff(bool option) {_maup_mecoff = option;};
-
-    ///
-    void PrintMaUpMECOff();
 
     ///
     void PrintConfig();
 
-    /// 
+    /// Sets an extra weight to be applied to every MC event
     void SetExtraWeight(double w) {_extra_weight = w;};
 
-    ///
+    /// If called, will scaled all cosmics by "w"
     void ScaleCosmics(double w) {_scale_cosmics = true; _scale_factor_cosmic = w;};
 
-    ///
+    /// If True is passed, filles all the universes histogram for Flux
     void FillBootstrapFlux(bool option) {_fill_bootstrap_flux = option;}
 
-    ///
+    /// If True is passed, filles all the universes histogram for GENIE
     void FillBootstrapGenie(bool option) {_fill_bootstrap_genie = option;}
 
-    ///
+    /// If True is passed, filles all the universes histogram for Extra Syst
     void FillBootstrapExtraSyst(bool option) {_fill_bootstrap_extra_syst = option;}
 
-    ///
+    /// If True is passed, filles all the universes histogram for MC Stat
     void FillBootstrapMCStat(bool option) {_fill_bootstrap_mc_stat = option;}
 
-    ///
+    /// Sets the number of universes to create for MC stat Poisson reweighing
     void SetNUniversesMCStat(int n) {_mc_stat_n_events = n;}
 
-    ///
+    /// Sets the target used for Flux systematics
     void SetTargetFluxSystematic(std::string s) { _target_flux_syst = s; }
 
-    ///
+    /// Sets the target used for extra systematics
     void SetTargetExtraSystematic(std::string s) { _extra_syst_target_syst = s; }
 
 
   private:
+
+    /// Prints a warning message if running with MA up and MEC off
+    void PrintMaUpMECOff();
 
     void DrawProgressBar(double progress, double barWidth);
 

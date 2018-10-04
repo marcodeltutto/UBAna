@@ -51,13 +51,7 @@ analyser.ImportMCStatSystematics(False)
 analyser.DoFluxSystematics(False)
 analyser.ImportFluxSystematics(False)
 analyser.SetExtraFluxUncertainty(0.)
-#analyser.SetTargetFluxSystematic("FluxUnisim");
-#analyser.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
-#analyser.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
-#analyser.SetTargetFluxSystematic("kzero_PrimaryHadronSanfordWang");
-#analyser.SetTargetFluxSystematic("piminus_PrimaryHadronSWCentral");
-#analyser.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
-analyser.SetTargetFluxSystematic("total");
+analyser.SetTargetFluxSystematic("total"); # Other options: "FluxUnisim", "kminus", "kplus", "kzero", "piminus", "piplus"
 
 analyser.DoAnalise();
 
