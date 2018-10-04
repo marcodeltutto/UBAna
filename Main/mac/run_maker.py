@@ -16,8 +16,8 @@ maker = Main.Maker()
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_tune3_mcc8.9_test5.root") # tune 3
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_tune3_mcc8.9_test5.root"); # tune 3
 
-maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux (not high stat)
-maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux (not high stat)
+# maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux (not high stat)
+# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root"); # tune 1 - genie flux (not high stat)
 
 # maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsec_output_mc_bnbcosmic_mcc8.9_test6.root") # tune 1 high stat weights (genie syst DIS bugged)
 # maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/mcc8.9/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled_new4.root"); # tune 1 high stat weights (genie syst DIS bugged)
@@ -50,6 +50,9 @@ maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bn
 
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v1.root"); # After Neutrino
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v1.root"); # After Neutrino
+
+maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v2.root"); # After Neutrino
+maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2.root"); # After Neutrino
 
 # maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_mc_bnbnuecosmic_ubcodev06_26_01_18__v10.root"); # After Neutrino (nue)
 # maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbnuecosmic_ubcodev06_26_01_18__v10.root"); # After Neutrino (nue)
@@ -106,8 +109,8 @@ maker.FillBootstrapFlux(True)
 #maker.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
 maker.SetTargetFluxSystematic("total")
 
-# maker.FillBootstrapMCStat(True)
-
+maker.FillBootstrapMCStat(True)
+maker.SetNUniversesMCStat(1000)
 
 maker.PrintConfig()
 

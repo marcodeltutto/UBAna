@@ -141,6 +141,9 @@ namespace Main{
     void FillBootstrapMCStat(bool option) {_fill_bootstrap_mc_stat = option;}
 
     ///
+    void SetNUniversesMCStat(int n) {_mc_stat_n_events = n;}
+
+    ///
     void SetTargetFluxSystematic(std::string s) { _target_flux_syst = s; }
 
     ///
@@ -306,8 +309,8 @@ namespace Main{
     std::vector<double> _wgts_flux_multisim;
 
 
-    bool _fill_bootstrap_mc_stat = false; ///< If true, fills bootstrap with poisson weights
-    int _mc_stat_n_events = 100;
+    bool _fill_bootstrap_mc_stat = false; ///< If true, fills bootstrap with poisson weights (mc stat)
+    int _mc_stat_n_events = 100; ///< Number of universes uses for poisson weights (mc stat)
 
     TRandom _random_engine; ///< The engine to generate random numbers
     
