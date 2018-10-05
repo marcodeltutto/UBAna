@@ -30,8 +30,10 @@
 #pragma link C++ class Base::CrossSectionBootstrapCalculator2D+;
 #pragma link C++ class Base::CrossSectionBootstrapCalculator2DPoly+;
 #pragma link C++ class Base::UBAnaLogger+;
+#pragma link C++ class Base::UncertaintyPlotter+;
 //ADD_NEW_CLASS ... do not change this line
 #endif
+
 
 
 

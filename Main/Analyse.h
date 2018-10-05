@@ -66,6 +66,7 @@
 #include "ubana/Base/CrossSectionBootstrapCalculator2D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator2DPoly.h"
 #include "ubana/Base/CrossSectionCalculator2DPoly.h"
+#include "ubana/Base/UncertaintyPlotter.h"
 
 #include "ubana/Base/LoggerFeature.h"
 

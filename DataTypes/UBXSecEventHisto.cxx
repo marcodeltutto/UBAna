@@ -128,6 +128,8 @@ namespace DataTypes {
       bs_flux_multisim_eff_poly_muangle_mumom_den = new BootstrapTH2DPoly("bs_flux_multisim_eff_poly_muangle_mumom_den", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
       bs_extra_syst_multisim_eff_poly_muangle_mumom_num = new BootstrapTH2DPoly("bs_extra_syst_multisim_eff_poly_muangle_mumom_num", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
       bs_extra_syst_multisim_eff_poly_muangle_mumom_den = new BootstrapTH2DPoly("bs_extra_syst_multisim_eff_poly_muangle_mumom_den", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
+      bs_mc_stat_multisim_eff_poly_muangle_mumom_num = new BootstrapTH2DPoly("bs_mc_stat_multisim_eff_poly_muangle_mumom_num", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
+      bs_mc_stat_multisim_eff_poly_muangle_mumom_den = new BootstrapTH2DPoly("bs_mc_stat_multisim_eff_poly_muangle_mumom_den", ";Muon Momentum (Truth) [GeV]; Muon Momentum (MCS) [GeV]", -1., 1., 0., 2.5, _n_bins_double_mucostheta);
       
       // Number of events per channel and universe - Double Differential PolyBins - Genie Multisim
       hmap_trktheta_trkmom_poly_genie_multisim_bs["total"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_total_genie_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
@@ -156,6 +158,15 @@ namespace DataTypes {
       hmap_trktheta_trkmom_poly_extra_syst_multisim_bs["anumu"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_anumu_extra_syst_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
       hmap_trktheta_trkmom_poly_extra_syst_multisim_bs["nue"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_nue_extra_syst_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
 
+      // Number of events per channel and universe - Double Differential PolyBins - MC Stat
+      hmap_trktheta_trkmom_poly_mc_stat_multisim_bs["total"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_total_mc_stat_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
+      hmap_trktheta_trkmom_poly_mc_stat_multisim_bs["signal"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_signal_mc_stat_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
+      hmap_trktheta_trkmom_poly_mc_stat_multisim_bs["cosmic"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_cosmic_mc_stat_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
+      hmap_trktheta_trkmom_poly_mc_stat_multisim_bs["outfv"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_outfv_mc_stat_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
+      hmap_trktheta_trkmom_poly_mc_stat_multisim_bs["nc"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_nc_mc_stat_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
+      hmap_trktheta_trkmom_poly_mc_stat_multisim_bs["anumu"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_anumu_mc_stat_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
+      hmap_trktheta_trkmom_poly_mc_stat_multisim_bs["nue"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_nue_mc_stat_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
+
       // Reco per true histograms per universe - Double Differential PolyBins - Genie Multisim
       bs_genie_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
       for (int m = 0; m < _n_poly_bins; m++) {
@@ -174,6 +185,12 @@ namespace DataTypes {
         bs_extra_syst_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
       }
 
+      // Reco per true histograms per universe - Double Differential PolyBins - MC Stat
+      bs_mc_stat_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
+      for (int m = 0; m < _n_poly_bins; m++) {
+        bs_mc_stat_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
+      }
+
     }
 
 
@@ -186,10 +203,13 @@ namespace DataTypes {
       _AddPolyBins_(bs_flux_multisim_eff_poly_muangle_mumom_den);
       _AddPolyBins_(bs_extra_syst_multisim_eff_poly_muangle_mumom_num);
       _AddPolyBins_(bs_extra_syst_multisim_eff_poly_muangle_mumom_den);
+      _AddPolyBins_(bs_mc_stat_multisim_eff_poly_muangle_mumom_num);
+      _AddPolyBins_(bs_mc_stat_multisim_eff_poly_muangle_mumom_den);
 
       _AddPolyBins_(hmap_trktheta_trkmom_poly_genie_multisim_bs);
       _AddPolyBins_(hmap_trktheta_trkmom_poly_flux_multisim_bs);
       _AddPolyBins_(hmap_trktheta_trkmom_poly_extra_syst_multisim_bs);
+      _AddPolyBins_(hmap_trktheta_trkmom_poly_mc_stat_multisim_bs);
 
     }
 

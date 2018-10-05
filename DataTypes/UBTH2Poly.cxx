@@ -117,13 +117,13 @@ namespace DataTypes {
      if (resetStats)  {
         // statistics need to be reset in case coefficient are negative
         // ResetStats();
-      // std::cout << "kNstat = " << kNstat << std::endl;
+      std::cout << "kNstat = " << kNstat << std::endl;
         Double_t stats[kNstat] = {0};
         fTsumw = 0;
         fEntries = 1; // to force re-calculation of the statistics in TH1::GetStats
-      // std::cout << "Before GetStats" << std::endl;
+      std::cout << "Before GetStats" << std::endl;
         GetStats(stats);
-      // std::cout << "Before PutStats" << std::endl;
+      std::cout << "Before PutStats" << std::endl;
         PutStats(stats);
         fEntries = TMath::Abs(fTsumw);
         // use effective entries for weighted histograms:  (sum_w) ^2 / sum_w2
@@ -142,9 +142,9 @@ namespace DataTypes {
 
   void UBTH2Poly::PutStats(Double_t *stats)
   {
-     // std::cout << "Before TH1::PutStats" << std::endl;
+     std::cout << "Before TH1::PutStats" << std::endl;
      TH1::PutStats(stats);
-     // std::cout << "After TH1::PutStats" << std::endl;
+     std::cout << "After TH1::PutStats" << std::endl;
      fTsumwy  = stats[4];
      fTsumwy2 = stats[5];
      fTsumwxy = stats[6];

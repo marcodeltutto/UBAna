@@ -116,14 +116,18 @@ namespace DataTypes {
     BootstrapTH2DPoly * bs_flux_multisim_eff_poly_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential PolyBins - Flux Multisim
     BootstrapTH2DPoly * bs_extra_syst_multisim_eff_poly_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential PolyBins - Extra Syst
     BootstrapTH2DPoly * bs_extra_syst_multisim_eff_poly_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential PolyBins - Extra Syst
+    BootstrapTH2DPoly * bs_mc_stat_multisim_eff_poly_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential PolyBins - MC Stat
+    BootstrapTH2DPoly * bs_mc_stat_multisim_eff_poly_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential PolyBins - MC Stat
 
     std::map<std::string,std::map<std::string,UBTH2Poly*>> hmap_trktheta_trkmom_poly_genie_multisim_bs; ///< Number of events per channel and universe - Double Differential PolyBins - Genie Multisim
     std::map<std::string,std::map<std::string,UBTH2Poly*>> hmap_trktheta_trkmom_poly_flux_multisim_bs; ///< Number of events per channel and universe - Double Differential PolyBins - Flux Multisim
     std::map<std::string,std::map<std::string,UBTH2Poly*>> hmap_trktheta_trkmom_poly_extra_syst_multisim_bs; ///< Number of events per channel and universe - Double Differential PolyBins - Extra Syst
+    std::map<std::string,std::map<std::string,UBTH2Poly*>> hmap_trktheta_trkmom_poly_mc_stat_multisim_bs; ///< Number of events per channel and universe - Double Differential PolyBins - MC Stat
 
     std::map<std::string,std::vector<std::vector<double>>> bs_genie_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - Genie Multisim
     std::map<std::string,std::vector<std::vector<double>>> bs_flux_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - Flux Multisim
     std::map<std::string,std::vector<std::vector<double>>> bs_extra_syst_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - Extra Syst
+    std::map<std::string,std::vector<std::vector<double>>> bs_mc_stat_multisim_poly_reco_per_true; ///< Reco per true histograms per universe - Double Differential PolyBins - MC Stat
 
 
 
