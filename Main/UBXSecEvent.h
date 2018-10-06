@@ -28,6 +28,7 @@ public :
    Int_t           run;
    Int_t           subrun;
    Int_t           event;
+   TString         file_type;
    Bool_t          muon_is_reco;
    Double_t        muon_reco_pur;
    Double_t        muon_reco_eff;
@@ -173,6 +174,7 @@ public :
    TBranch        *b_ubxsec_event_split_run;   //!
    TBranch        *b_ubxsec_event_split_subrun;   //!
    TBranch        *b_ubxsec_event_split_event;   //!
+   TBranch        *b_ubxsec_event_split_file_type;   //!
    TBranch        *b_ubxsec_event_split_muon_is_reco;   //!
    TBranch        *b_ubxsec_event_split_muon_reco_pur;   //!
    TBranch        *b_ubxsec_event_split_muon_reco_eff;   //!
@@ -388,6 +390,7 @@ void UBXSecEvent::Init(TTree *tree)
    fChain->SetBranchAddress("run", &run, &b_ubxsec_event_split_run);
    fChain->SetBranchAddress("subrun", &subrun, &b_ubxsec_event_split_subrun);
    fChain->SetBranchAddress("event", &event, &b_ubxsec_event_split_event);
+   fChain->SetBranchAddress("file_type", &file_type, &b_ubxsec_event_split_file_type);
    fChain->SetBranchAddress("muon_is_reco", &muon_is_reco, &b_ubxsec_event_split_muon_is_reco);
    fChain->SetBranchAddress("muon_reco_pur", &muon_reco_pur, &b_ubxsec_event_split_muon_reco_pur);
    fChain->SetBranchAddress("muon_reco_eff", &muon_reco_eff, &b_ubxsec_event_split_muon_reco_eff);
