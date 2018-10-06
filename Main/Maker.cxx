@@ -2032,7 +2032,7 @@ void Main::Maker::MakeFile()
       _event_histo->bs_extra_syst_multisim_eff_mumom_den->SetWeightNames(fname_extra_syst);
 
       _event_histo->bs_extra_syst_multisim_eff_muangle_num->SetWeightNames(fname_extra_syst);
-      _event_histo->bs_extra_syst_multisim_eff_muangle_num->SetWeightNames(fname_extra_syst);
+      _event_histo->bs_extra_syst_multisim_eff_muangle_den->SetWeightNames(fname_extra_syst);
 
       _event_histo->bs_extra_syst_true_reco_mumom->SetWeightNames(fname_extra_syst);
       _event_histo->bs_extra_syst_true_reco_muangle->SetWeightNames(fname_extra_syst);
