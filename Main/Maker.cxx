@@ -1662,6 +1662,8 @@ void Main::Maker::MakeFile()
     event_weight *= _extra_weight;
     if (isdata) event_weight = 1.;
 
+    if (t->file_type == "dirt") event_weight /= _extra_weight;
+
 
     // bool is_from_kaon = false;
 
