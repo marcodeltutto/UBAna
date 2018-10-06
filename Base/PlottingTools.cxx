@@ -40,6 +40,18 @@ namespace Base {
     prelim->Draw();
   }
 
+  void PlottingTools::DrawPreliminaryXSecCentered() {
+    TLatex* prelim = new TLatex(0.7645688,0.9174208, "MicroBooNE Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    prelim->SetTextSize(0.03959276);
+    prelim->SetTextAlign(32);
+    prelim->SetLineWidth(2);
+    //prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
   void PlottingTools::DrawSimulation() {
     TLatex* prelim = new TLatex(0.94,0.93, "MicroBooNE Simulation, Preliminary");
     prelim->SetTextFont(62);

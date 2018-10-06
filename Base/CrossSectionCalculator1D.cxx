@@ -760,8 +760,13 @@ namespace Base {
 
     // Plot the cross section
 
-    TCanvas * c = new TCanvas();
+    TCanvas * c;
+
+    if (_name.find("onebin") != std::string::npos) c = new TCanvas("c", "c", 0, 45, 400, 888);
+    else c = new TCanvas();
+
     c->SetBottomMargin(0.15);
+
     _h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
     _h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
     _h_mc->GetXaxis()->SetTitleOffset(0.95);
@@ -773,6 +778,23 @@ namespace Base {
     if (_name.find("mom") != std::string::npos) {
       _h_mc->SetMinimum(0.);
       _h_mc->SetMaximum(1.6);
+    } else if (_name.find("onebin") != std::string::npos) {
+      c->SetLeftMargin(0.2438017);
+      c->SetRightMargin(0.1239669);
+      c->SetBottomMargin(0.1515789);
+      _h_mc->SetMinimum(0.2);
+      _h_mc->SetMaximum(1.5);
+      _h_mc->GetXaxis()->SetTitle("");
+      _h_mc->GetYaxis()->CenterTitle(true);
+      _h_mc->GetXaxis()->SetLabelSize(0);
+      _h_mc->GetXaxis()->SetTitleSize(0.055);
+      _h_mc->GetXaxis()->SetTickLength(0);
+      _h_mc->GetYaxis()->SetNdivisions(506);
+      _h_mc->GetYaxis()->SetLabelFont(42);
+      _h_mc->GetYaxis()->SetLabelSize(0.05);
+      _h_mc->GetYaxis()->SetTitleSize(0.07);
+      _h_mc->GetYaxis()->SetTitleOffset(1.24);
+      _h_mc->GetYaxis()->SetTitleFont(42);
     } else {
       _h_mc->SetMinimum(0.);
       _h_mc->SetMaximum(2.8);
@@ -902,13 +924,18 @@ namespace Base {
 
     if (xaxis_label.find("cos") != std::string::npos) {
       l = new TLegend(0.1590258,0.7052632,0.512894,0.8421053,NULL,"brNDC");
+      l->SetTextSize(0.03578947);
     }
-    else {
+    else if (_name.find("onebin") != std::string::npos) {
+      l = new TLegend(0.2960373,0.8042986,0.7832168,0.8642534,NULL,"brNDC");
+      l->SetTextSize(0.04298643);
+    } else {
       l = new TLegend(0.3825215,0.7178947,0.7363897,0.8547368,NULL,"brNDC");
+      l->SetTextSize(0.03578947);
     }
     l->SetFillColor(0);
     l->SetFillStyle(0);
-    l->SetTextSize(0.03578947);
+    
     if (!_add_alt_mc_xsec) l->AddEntry(_h_mc, "MC (Stat. Uncertainty)");
     //l->AddEntry(_truth_xsec, "Monte Carlo (Truth)", "l");
     if (_add_alt_mc_xsec) {
@@ -935,6 +962,7 @@ namespace Base {
 
     if (_fake_data_mode) PlottingTools::DrawSimulation();
     else if (_overlay_mode) PlottingTools::DrawOverlay();
+    else if (_name.find("onebin") != std::string::npos) PlottingTools::DrawPreliminaryXSecCentered();
     else PlottingTools::DrawPreliminaryXSec();
 
     if (_fake_data_mode) {
