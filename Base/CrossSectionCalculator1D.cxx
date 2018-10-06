@@ -795,6 +795,8 @@ namespace Base {
       _h_mc->GetYaxis()->SetTitleSize(0.07);
       _h_mc->GetYaxis()->SetTitleOffset(1.24);
       _h_mc->GetYaxis()->SetTitleFont(42);
+      _h_mc->GetYaxis()->SetTickLength(0.05);
+      _h_mc->GetYaxis()->SetDecimals();
     } else {
       _h_mc->SetMinimum(0.);
       _h_mc->SetMaximum(2.8);

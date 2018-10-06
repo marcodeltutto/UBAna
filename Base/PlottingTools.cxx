@@ -41,7 +41,7 @@ namespace Base {
   }
 
   void PlottingTools::DrawPreliminaryXSecCentered() {
-    TLatex* prelim = new TLatex(0.7645688,0.9174208, "MicroBooNE Preliminary");
+    TLatex* prelim = new TLatex(0.77,0.92, "MicroBooNE Preliminary");
     prelim->SetTextFont(62);
     prelim->SetTextColor(kGray+2);
     prelim->SetNDC();
