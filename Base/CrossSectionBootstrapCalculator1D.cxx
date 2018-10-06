@@ -330,7 +330,7 @@ namespace Base {
       //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
       _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb, _hmap_dirt);  
       if (_true_to_reco_is_set) {
-        _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den, &this_reco_true);
+        _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
       } else {
         _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
       }

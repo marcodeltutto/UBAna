@@ -90,6 +90,11 @@ namespace DataTypes {
     //
     // Total Cross Section
     //
+
+    std::map<std::string,TH1D*> hmap_onebin; ///< Number of events per channel - Total Cross Section
+    TH1D * h_eff_onebin_num = 0; ///< Efficiency Numerator - Total Cross Section
+    TH1D * h_eff_onebin_den = 0; ///< Efficiency Denominator - Total Cross Section
+
     BootstrapTH1D * bs_genie_multisim_eff_onebin_num = 0; ///< Efficiency Numerator - Total Cross Section - Genie Multisim
     BootstrapTH1D * bs_genie_multisim_eff_onebin_den = 0; ///< Efficiency Denominator - Total Cross Section - Genie Multisim
     BootstrapTH1D * bs_flux_multisim_eff_onebin_num = 0; ///< Efficiency Numerator - Total Cross Section - Flux Multisim
@@ -108,6 +113,12 @@ namespace DataTypes {
     //
     // Single differential (mumom)
     //
+
+    std::map<std::string,TH1D*> hmap_trkmom; ///< Number of events per channel - Single Differential (mumom)
+    TH1D* h_eff_mumom_num = 0; ///< Efficiency Numerator - Single Differential (mumom)
+    TH1D* h_eff_mumom_den = 0; ///< Efficiency Denominator - Single Differential (mumom)
+    TH2D * h_true_reco_mom = 0; ///< Reco to true histogram - Single Differential (mumom)
+
     BootstrapTH1D * bs_genie_multisim_eff_mumom_num = 0; ///< Efficiency Numerator - Single Differential (mumom) - Genie Multisim
     BootstrapTH1D * bs_genie_multisim_eff_mumom_den = 0; ///< Efficiency Denominator - Single Differential (mumom) - Genie Multisim
     BootstrapTH1D * bs_flux_multisim_eff_mumom_num = 0; ///< Efficiency Numerator - Single Differential (mumom) - Flux Multisim
@@ -122,16 +133,22 @@ namespace DataTypes {
     std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_extra_syst_multisim_bs; ///< Number of events per channel and universe - Single Differential (mumom) - Extra Syst
     std::map<std::string,std::map<std::string,TH1D*>> hmap_trkmom_mc_stat_multisim_bs; ///< Number of events per channel and universe - Single Differential (mumom) - MC Stat
 
-    BootstrapTH2D * bs_genie_multisim_true_reco_mumom; ///< Reco to true histograms for every universe - Single Differential (mumom) - Genie Multisim
-    BootstrapTH2D * bs_flux_multisim_true_reco_mumom; ///< Reco to true histograms for every universe - Single Differential (mumom) - Flux Multisim
-    BootstrapTH2D * bs_extra_syst_true_reco_mumom; ///< Reco to true histograms for every universe - Single Differential (mumom) - Extra Syst
-    BootstrapTH2D * bs_mc_stat_multisim_true_reco_mumom; ///< Reco to true histograms for every universe - Single Differential (mumom) - MC Stat
+    BootstrapTH2D * bs_genie_multisim_true_reco_mumom = 0; ///< Reco to true histograms for every universe - Single Differential (mumom) - Genie Multisim
+    BootstrapTH2D * bs_flux_multisim_true_reco_mumom = 0; ///< Reco to true histograms for every universe - Single Differential (mumom) - Flux Multisim
+    BootstrapTH2D * bs_extra_syst_true_reco_mumom = 0; ///< Reco to true histograms for every universe - Single Differential (mumom) - Extra Syst
+    BootstrapTH2D * bs_mc_stat_multisim_true_reco_mumom = 0; ///< Reco to true histograms for every universe - Single Differential (mumom) - MC Stat
 
 
 
     //
     // Single differential (muangle)
     //
+
+    std::map<std::string,TH1D*> hmap_trktheta; ///< Number of events per channel - Single Differential (mumom)
+    TH1D* h_eff_muangle_num = 0; ///< Efficiency Numerator - Single Differential (mumom)
+    TH1D* h_eff_muangle_den = 0; ///< Efficiency Denominator - Single Differential (mumom)
+    TH2D * h_true_reco_costheta = 0; ///< Reco to true histogram - Single Differential (mumom)
+
     BootstrapTH1D * bs_genie_multisim_eff_muangle_num = 0; ///< Efficiency Numerator - Single Differential (muangle) - Genie Multisim
     BootstrapTH1D * bs_genie_multisim_eff_muangle_den = 0; ///< Efficiency Denominator - Single Differential (muangle) - Genie Multisim
     BootstrapTH1D * bs_flux_multisim_eff_muangle_num = 0; ///< Efficiency Numerator - Single Differential (muangle) - Flux Multisim
@@ -146,14 +163,21 @@ namespace DataTypes {
     std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_extra_syst_multisim_bs; ///< Number of events per channel and universe - Single Differential (muangle) - Extra Syst
     std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_mc_stat_multisim_bs; ///< Number of events per channel and universe - Single Differential (muangle) - MC Stat
 
-    BootstrapTH2D * bs_genie_multisim_true_reco_muangle; ///< Reco to true histograms for every universe - Single Differential (muangle) - Genie Multisim
-    BootstrapTH2D * bs_flux_multisim_true_reco_muangle; ///< Reco to true histograms for every universe - Single Differential (muangle) - Flux Multisim
-    BootstrapTH2D * bs_extra_syst_true_reco_muangle; ///< Reco to true histograms for every universe - Single Differential (muangle) - Extra Syst
-    BootstrapTH2D * bs_mc_stat_multisim_true_reco_muangle; ///< Reco to true histograms for every universe - Single Differential (muangle) - MC Stat
+    BootstrapTH2D * bs_genie_multisim_true_reco_muangle = 0; ///< Reco to true histograms for every universe - Single Differential (muangle) - Genie Multisim
+    BootstrapTH2D * bs_flux_multisim_true_reco_muangle = 0; ///< Reco to true histograms for every universe - Single Differential (muangle) - Flux Multisim
+    BootstrapTH2D * bs_extra_syst_true_reco_muangle = 0; ///< Reco to true histograms for every universe - Single Differential (muangle) - Extra Syst
+    BootstrapTH2D * bs_mc_stat_multisim_true_reco_muangle = 0; ///< Reco to true histograms for every universe - Single Differential (muangle) - MC Stat
 
     //
     // Double differential 
     //
+
+    std::map<std::string,TH2D*> hmap_trktheta_trkmom; ///< Number of events per channel - Double Differential
+    TH2D* h_eff_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential
+    TH2D* h_eff_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential
+    std::vector<std::vector<TH2D*>> h_reco_per_true; ///< Per true bins m,n, it contains the distribution of the reco quantity
+
+
     BootstrapTH2D * bs_genie_multisim_eff_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential - Genie Multisim
     BootstrapTH2D * bs_genie_multisim_eff_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential - Genie Multisim
     BootstrapTH2D * bs_flux_multisim_eff_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential - Flux Multisim
@@ -173,9 +197,16 @@ namespace DataTypes {
     std::map<std::string,std::vector<std::vector<TH2D*>>> bs_extra_syst_multisim_reco_per_true; ///< Reco per true histograms per universe - Double Differential - Extra Syst
     std::map<std::string,std::vector<std::vector<TH2D*>>> bs_mc_stat_multisim_reco_per_true; ///< Reco per true histograms per universe - Double Differential - MC Stat
 
+
     //
     // Double differential (polybin)
     //
+    std::map<std::string,UBTH2Poly*> hmap_trktheta_trkmom_poly; ///< Number of events per channel - Double Differential (polybin)
+    UBTH2Poly * h_eff_muangle_mumom_poly_num = 0; ///< Efficiency Numerator - Double Differential (polybin)
+    UBTH2Poly * h_eff_muangle_mumom_poly_den = 0; ///< Efficiency Denominator - Double Differential (polybin)
+    std::vector<UBTH2Poly*> h_poly_reco_per_true; ///< Per true bins m (unrolled) it contains the distribution of the reco quantity
+
+
     BootstrapTH2DPoly * bs_genie_multisim_eff_poly_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential PolyBins - Genie Multisim
     BootstrapTH2DPoly * bs_genie_multisim_eff_poly_muangle_mumom_den = 0; ///< Efficiency Denominator - Double Differential PolyBins - Genie Multisim
     BootstrapTH2DPoly * bs_flux_multisim_eff_poly_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential PolyBins - Flux Multisim
@@ -216,6 +247,12 @@ namespace DataTypes {
 
     ///
     void _AddPolyBins_(std::map<std::string,std::map<std::string,UBTH2Poly*>> h);
+
+    ///
+    void _AddPolyBins_(std::map<std::string,UBTH2Poly*> h);
+
+    ///
+    void _AddPolyBins_(std::vector<UBTH2Poly*> h);
 
     
   };
