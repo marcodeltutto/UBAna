@@ -887,27 +887,6 @@ namespace Main {
     std::cout << "Original   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
     std::cout << "Projection bin 2, content: " << h_test->GetBinContent(2) << " +- " << h_test->GetBinError(2) << std::endl;
 
-    // std::cout << "Just before subtratcion" << std::endl;
-    // std::cout << "Subtracting   h_trktheta_trkmom_total_poly_bnbonbin 2, content: " << h_trktheta_trkmom_total_poly_bnbon->GetBinContent(9) << " +- " << h_trktheta_trkmom_total_poly_bnbon->GetBinError(9) << std::endl;
-    // hmap_trktheta_trkmom_poly_mc["signal"]->Add(h_trktheta_trkmom_total_poly_bnbon, 1);
-    // std::cout << "After subtraction   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
-    // std::cout << "Just after subtratcion" << std::endl;
-    // std::cout << "h_trktheta_trkmom_total_poly_bnbon->GetSumw2N() " << h_trktheta_trkmom_total_poly_bnbon->GetSumw2N() << std::endl;
-
-
-    // std::cout << "JJJJJ Just after" << std::endl;
-
-    // std::cout << "Just before divide" << std::endl;
-    // std::cout << "Before divide   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
-    // std::cout << "Before divide   h_trktheta_trkmom_total_poly_bnbonbin 2, content: " << h_trktheta_trkmom_total_poly_bnbon->GetBinContent(9) << " +- " << h_trktheta_trkmom_total_poly_bnbon->GetBinError(9) << std::endl;
-    // hmap_trktheta_trkmom_poly_mc["signal"]->Divide(h_trktheta_trkmom_total_poly_bnbon);
-    // std::cout << "After divide   bin 2, content: " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinContent(9) << " +- " << hmap_trktheta_trkmom_poly_mc["signal"]->GetBinError(9) << std::endl;
-    // std::cout << "Just after divide" << std::endl;
-
-
-
-  
-
   std::cout << "maximum h_eff_muangle_mumom_poly_num " << h_eff_muangle_mumom_poly_num->GetMaximum() << std::endl;
   std::cout << "maximum h_eff_muangle_mumom_poly_den " << h_eff_muangle_mumom_poly_den->GetMaximum() << std::endl;
   std::cout << "maximum h_trktheta_trkmom_total_poly_bnbon " << h_trktheta_trkmom_total_poly_bnbon->GetMaximum() << std::endl;
@@ -1028,8 +1007,8 @@ namespace Main {
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_onebin_genie_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_onebin_num, bs_genie_multisim_eff_onebin_den);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_onebin_genie_multisim_bs, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_genie_multisim_eff_onebin_num, *_event_histo->bs_genie_multisim_eff_onebin_den);
         _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("genie_multisim_onebin");
@@ -1042,8 +1021,8 @@ namespace Main {
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_onebin_extra_syst_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_extra_syst_eff_onebin_num, bs_extra_syst_eff_onebin_den);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_onebin_extra_syst_multisim_bs, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_extra_syst_multisim_eff_onebin_num, *_event_histo->bs_extra_syst_multisim_eff_onebin_den);
         _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("extra_syst_onebin");
@@ -1060,8 +1039,8 @@ namespace Main {
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_onebin_flux_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_onebin_num, bs_flux_multisim_eff_onebin_den);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_onebin_flux_multisim_bs, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_flux_multisim_eff_onebin_num, *_event_histo->bs_flux_multisim_eff_onebin_den);
         _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("flux_multisim_onebin");
@@ -1079,8 +1058,8 @@ namespace Main {
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_onebin_mc_stat_multisim_bs_mc, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_mc_stat_multisim_eff_onebin_num, bs_mc_stat_multisim_eff_onebin_den);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_onebin_mc_stat_multisim_bs, h_onebin_total_bnbon, h_onebin_total_extbnb, hmap_onebin_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_mc_stat_multisim_eff_onebin_num, *_event_histo->bs_mc_stat_multisim_eff_onebin_den);
         _xsec_bs_calc.SetBkgToSubtract(bkg_names);
         _xsec_bs_calc.DoNotSmear(); // No smearing for total cross section
         _xsec_bs_calc.SetSavePrefix("mc_stat_multisim_onebin");
@@ -1135,16 +1114,16 @@ namespace Main {
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
       _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
       _xsec_bs_calc.set_verbosity(Base::msg::kINFO);
+      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mumom, n_bins_mumom);
+      _xsec_bs_calc.SetBkgToSubtract(bkg_names);
 
       if (_do_genie_systs) {
         _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_trkmom_genie_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_mumom_num, bs_genie_multisim_eff_mumom_den, bs_genie_multisim_reco_true_mumom);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mumom, n_bins_mumom);
-        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_trkmom_genie_multisim_bs, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_genie_multisim_eff_mumom_num, *_event_histo->bs_genie_multisim_eff_mumom_den, *_event_histo->bs_genie_multisim_true_reco_mumom);
         _xsec_bs_calc.SetSavePrefix("genie_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -1172,13 +1151,9 @@ namespace Main {
 
       if (_do_extra_syst_systs) {
         _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_trkmom_extra_syst_bs_mc, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_extra_syst_eff_mumom_num, bs_extra_syst_eff_mumom_den, bs_extra_syst_reco_true_mumom);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mumom, n_bins_mumom);
-        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_trkmom_extra_syst_multisim_bs, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_extra_syst_multisim_eff_mumom_num, *_event_histo->bs_extra_syst_multisim_eff_mumom_den, *_event_histo->bs_extra_syst_true_reco_mumom);
         _xsec_bs_calc.SetSavePrefix("extra_syst_mumom");
         _xsec_bs_calc.SetUpperLabel("EXTRA SYSTS Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -1211,13 +1186,9 @@ namespace Main {
       //
       if (_do_flux_systs) {
         _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_trkmom_flux_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_mumom_num, bs_flux_multisim_eff_mumom_den, bs_flux_multisim_true_reco_mumom);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mumom, n_bins_mumom);
-        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_trkmom_flux_multisim_bs, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_flux_multisim_eff_mumom_num, *_event_histo->bs_flux_multisim_eff_mumom_den, *_event_histo->bs_flux_multisim_true_reco_mumom);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
@@ -1250,13 +1221,9 @@ namespace Main {
 
       if (_do_mc_stat_systs) {
         _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkmom_mc_stat_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_trkmom_mc_stat_multisim_bs_mc/*map_bs_trkmom_genie_multisim*/, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_mc_stat_multisim_eff_mumom_num, bs_mc_stat_multisim_eff_mumom_den, bs_mc_stat_multisim_reco_true_mumom);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mumom, n_bins_mumom);
-        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_trkmom_mc_stat_multisim_bs, h_trkmom_total_bnbon, h_trkmom_total_extbnb, hmap_trkmom_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_mc_stat_multisim_eff_mumom_num, *_event_histo->bs_mc_stat_multisim_eff_mumom_den, *_event_histo->bs_mc_stat_multisim_true_reco_mumom);
         _xsec_bs_calc.SetSavePrefix("mc_stat_multisim_mumom");
         _xsec_bs_calc.SetUpperLabel("MC Stats. Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -1415,16 +1382,17 @@ namespace Main {
 
       CrossSectionBootstrapCalculator1D _xsec_bs_calc;
       _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
+      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+      _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mucostheta, n_bins_mucostheta);
+      _xsec_bs_calc.SetBkgToSubtract(bkg_names);
 
       if (_do_genie_systs) {
         _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+        
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";cos(#theta_{#mu}^{reco}); Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_trkangle_genie_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_genie_multisim_eff_muangle_num, bs_genie_multisim_eff_muangle_den, bs_genie_multisim_true_reco_muangle);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mucostheta, n_bins_mucostheta);
-        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_trkangle_genie_multisim_bs, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_genie_multisim_eff_muangle_num, *_event_histo->bs_genie_multisim_eff_muangle_den, *_event_histo->bs_genie_multisim_true_reco_muangle);
         _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -1452,13 +1420,9 @@ namespace Main {
 
       if (_do_extra_syst_systs) {
         _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_extra_syst", ";cos(#theta_{#mu}^{reco}); Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_trkangle_extra_syst_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_extra_syst_eff_muangle_num, bs_extra_syst_eff_muangle_den, bs_extra_syst_true_reco_muangle);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mucostheta, n_bins_mucostheta);
-        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_trkangle_extra_syst_multisim_bs, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_extra_syst_multisim_eff_muangle_num, *_event_histo->bs_extra_syst_multisim_eff_muangle_den, *_event_histo->bs_extra_syst_true_reco_muangle);
         _xsec_bs_calc.SetSavePrefix("extra_syst_muangle");
         _xsec_bs_calc.SetUpperLabel("EXTRA SYSTS Re-Weighting Only");
         _xsec_bs_calc.Run();
@@ -1490,13 +1454,9 @@ namespace Main {
       //
       if (_do_flux_systs) {
         _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_flux_multisim", ";Candidate Track cos(#theta_{#mu}^{reco}) [GeV]; Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_trkangle_flux_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_flux_multisim_eff_muangle_num, bs_flux_multisim_eff_muangle_den, bs_flux_multisim_true_reco_muangle);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mucostheta, n_bins_mucostheta);
-        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_trkangle_flux_multisim_bs, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_flux_multisim_eff_muangle_num, *_event_histo->bs_flux_multisim_eff_muangle_den, *_event_histo->bs_flux_multisim_true_reco_muangle);
         _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
@@ -1530,13 +1490,9 @@ namespace Main {
 
       if (_do_mc_stat_systs) {
         _xsec_bs_calc.Reset();
-        _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-        _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_mc_stat_multisim", ";cos(#theta_{#mu}^{reco}); Selected Events");
-        _xsec_bs_calc.SetHistograms(hmap_trkangle_mc_stat_multisim_bs_mc, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);
-        _xsec_bs_calc.SetTruthHistograms(bs_mc_stat_multisim_eff_muangle_num, bs_mc_stat_multisim_eff_muangle_den, bs_mc_stat_multisim_true_reco_muangle);
-        _xsec_bs_calc.SetMigrationMatrixDimensions(n_bins_mucostheta, n_bins_mucostheta);
-        _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+        _xsec_bs_calc.SetHistograms(_event_histo->hmap_trkangle_mc_stat_multisim_bs, h_trktheta_total_bnbon, h_trktheta_total_extbnb, hmap_trktheta_mc_dirt);
+        _xsec_bs_calc.SetTruthHistograms(*_event_histo->bs_mc_stat_multisim_eff_muangle_num, *_event_histo->bs_mc_stat_multisim_eff_muangle_den, *_event_histo->bs_mc_stat_multisim_true_reco_muangle);
         _xsec_bs_calc.SetSavePrefix("mc_stat_multisim_muangle");
         _xsec_bs_calc.SetUpperLabel("MC Stats. Re-Weighting Only");
         _xsec_bs_calc.Run();
