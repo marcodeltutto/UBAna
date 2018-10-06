@@ -51,6 +51,7 @@
 #include "ubana/DataTypes/UBTH2Poly.h"
 #include "ubana/DataTypes/BootstrapTH2DPoly.h"
 #include "ubana/DataTypes/UBXSecEventHisto.h"
+#include "ubana/DataTypes/UBXSecEventHisto1D.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/DataTypes/BootstrapTH1D.h"
@@ -229,7 +230,8 @@ namespace Main{
 
     void AddPolyBins(BootstrapTH2DPoly h);
 
-    UBXSecEventHisto * _event_histo;
+    UBXSecEventHisto1D * _event_histo_1d;
+    UBXSecEventHisto   * _event_histo;
 
 
 

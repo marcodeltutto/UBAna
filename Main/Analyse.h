@@ -49,6 +49,7 @@
 #include "ubana/DataTypes/UBTH2Poly.h"
 #include "ubana/DataTypes/BootstrapTH2DPoly.h"
 
+#include "ubana/DataTypes/UBXSecEventHisto1D.h"
 #include "ubana/DataTypes/UBXSecEventHisto.h"
 
 #include "UBXSecEvent.h"
