@@ -2094,8 +2094,8 @@ namespace Main {
     
     MigrationMatrix4DPoly migrationmatrix4dpoly;
     migrationmatrix4dpoly.SetRecoPerTrueHistos(_event_histo_mc->h_poly_reco_per_true);
-    migrationmatrix4dpoly.SetBins(_event_histo_bnbon->hmap_trktheta_trkmom_poly["total"]->GetNumberOfBins());
-    migrationmatrix4dpoly.SetTemplateHisto(_event_histo_bnbon->hmap_trktheta_trkmom_poly["total"]);
+    migrationmatrix4dpoly.SetBins(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins());
+    migrationmatrix4dpoly.SetTemplateHisto(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]);
     migrationmatrix4dpoly.SetOutDir();
     TMatrix S = migrationmatrix4dpoly.CalculateMigrationMatrix();
 

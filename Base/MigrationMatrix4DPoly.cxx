@@ -159,6 +159,8 @@ namespace Base {
     h_sm->GetYaxis()->SetLabelSize(0.03);
     h_sm->GetXaxis()->SetTitle("Reconstructed Bin Number");
     h_sm->GetYaxis()->SetTitle("True Bin Number");
+    h_sm->GetZaxis()->SetTitle("Probability");
+
 
 
 
@@ -189,22 +191,11 @@ namespace Base {
       sum += separators[s];
     }
 
-    // for (size_t i = 1; i < _var2_bins.size(); i++) {
-    //   TLine *line = new TLine(_var1_bins.size() * i, 0, _var1_bins.size() * i, n_bins);
-    //   line->SetLineColor(kRed);
-    //   line->SetLineWidth(2);
-    //   lines.emplace_back(line);
-    // }
 
-    // for (size_t i = 1; i < _var2_bins.size(); i++) {
-    //   TLine *line = new TLine(0, _var1_bins.size() * i, n_bins, _var1_bins.size() * i);
-    //   line->SetLineColor(kRed);
-    //   line->SetLineWidth(2);
-    //   lines.emplace_back(line);
-    // }
 
 
     TCanvas *c_sm = new TCanvas();
+    c_sm->SetRightMargin(0.14);
     h_sm->Draw("colz");
  
     for (auto l : lines)

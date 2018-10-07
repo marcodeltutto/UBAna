@@ -278,20 +278,6 @@ namespace Base {
 
     }
 
-    // Mat2D matrix_angle_mom_den_truth;
-    // matrix_angle_mom_den_truth.resize(_h_eff_mumom_den->GetNbinsX(), std::vector<double>(_h_eff_mumom_den->GetNbinsY(), 0));
-
-    // Mat2D matrix_angle_mom_num_truth;
-    // matrix_angle_mom_num_truth.resize(_h_eff_mumom_num->GetNbinsX(), std::vector<double>(_h_eff_mumom_num->GetNbinsY(), 0));
-
-    // for (int m = 0; m < _h_eff_mumom_den->GetNbinsX(); m++) {
-    //   for (int n = 0; n < _h_eff_mumom_den->GetNbinsY(); n++) {
-    //     matrix_angle_mom_den_truth[m][n] = _h_eff_mumom_den->GetBinContent(m+1, n+1);
-    //     matrix_angle_mom_num_truth[m][n] = _h_eff_mumom_num->GetBinContent(m+1, n+1);
-    //     //std::cout << "den (" << m << ", " << n << ") = " << matrix_angle_mom_den_truth[m][n] << std::endl;
-    //     //std::cout << "num (" << m << ", " << n << ") = " << matrix_angle_mom_num_truth[m][n] << std::endl;
-    //   }
-    // }
 
     TCanvas * c_truth_den = new TCanvas;
     _h_eff_mumom_den->SetMarkerColor(kWhite);
@@ -299,10 +285,13 @@ namespace Base {
     _h_eff_mumom_den->SetTitle("Generated");
     _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");
     _h_eff_mumom_den->GetYaxis()->SetTitle("p_{#mu}^{truth}");
-    _h_eff_mumom_den->Draw("colz text");
+    _h_eff_mumom_den->GetXaxis()->SetTitleOffset(0.8);
+    _h_eff_mumom_den->GetYaxis()->SetTitleOffset(0.8);
+    _h_eff_mumom_den->Draw("colz");
 
     TString name = _folder +_prefix + "all_truth";
     c_truth_den->SaveAs(name + ".pdf");
+    c_truth_den->SaveAs(name + ".C");
 
     TCanvas * c_truth_num = new TCanvas;
     _h_eff_mumom_num->SetMarkerColor(kWhite);
@@ -310,62 +299,22 @@ namespace Base {
     _h_eff_mumom_num->SetTitle("Selected");
     _h_eff_mumom_num->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");
     _h_eff_mumom_num->GetYaxis()->SetTitle("p_{#mu}^{truth}");
-    _h_eff_mumom_num->Draw("colz text");
+    _h_eff_mumom_num->GetXaxis()->SetTitleOffset(0.8);
+    _h_eff_mumom_num->GetYaxis()->SetTitleOffset(0.8);
+    _h_eff_mumom_num->Draw("colz");
 
     name = _folder +_prefix + "selected_truth";
     c_truth_num->SaveAs(name + ".pdf");
+    c_truth_num->SaveAs(name + ".C");
 
 
     //
     // Smearing 
     //
-// TMatrix S;
-//     S.Clear(); 
-//     S.ResizeTo(n_bins, n_bins);
-//     for (int i = 0; i < n_bins; i++) {
-//       for (int j = 0; j < n_bins; j++) {
-//         S[i][j] = 0;
-//         if (i == j) S[i][j] = 1;
-//       }
-//     }
-    // TMatrix matrix_angle_mom_den_smear; matrix_angle_mom_den_smear.Clear(); matrix_angle_mom_den_smear.ResizeTo(n_bins, 1);
-    // TMatrix matrix_angle_mom_num_smear; matrix_angle_mom_num_smear.Clear(); matrix_angle_mom_num_smear.ResizeTo(n_bins, 1);
 
     TMatrix matrix_angle_mom_den_smear = _S * matrix_angle_mom_den_truth;
     TMatrix matrix_angle_mom_num_smear = _S * matrix_angle_mom_num_truth;
 
-    // for (int i = 0; i < n_bins; i++) {
-    //   for (int j = 0; j < n_bins; j++) {
-
-    //     matrix_angle_mom_den_smear[i] +=  _S[i][j] * matrix_angle_mom_den_truth[j];
-    //     matrix_angle_mom_num_smear[i] +=  _S[i][j] * matrix_angle_mom_num_truth[j];
-
-    //   }
-    // }
-
-
-    // Mat2D matrix_angle_mom_den_smear;
-    // matrix_angle_mom_den_smear.resize(_h_eff_mumom_den->GetNbinsX(), std::vector<double>(_h_eff_mumom_den->GetNbinsY(), 0));
-
-    // Mat2D matrix_angle_mom_num_smear;
-    // matrix_angle_mom_num_smear.resize(_h_eff_mumom_num->GetNbinsX(), std::vector<double>(_h_eff_mumom_num->GetNbinsY(), 0));
-
-
-    // // Reco bins i, j
-    // for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
-    //   for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {  
-
-    //     // Truth bins m, n
-    //     for (int m = 0; m < _h_eff_mumom_den->GetNbinsX(); m++) {
-    //       for (int n = 0; n < _h_eff_mumom_den->GetNbinsY(); n++) {
-
-    //         matrix_angle_mom_den_smear[i][j] +=  _S[i][j][m][n] * matrix_angle_mom_den_truth[m][n];
-    //         matrix_angle_mom_num_smear[i][j] +=  _S[i][j][m][n] * matrix_angle_mom_num_truth[m][n];
-
-    //       }
-    //     }
-    //   }
-    // }
 
 
     //
@@ -377,13 +326,6 @@ namespace Base {
       h_eff_den_smear->SetBinContent(i+1, matrix_angle_mom_den_smear[i][0]);
       h_eff_num_smear->SetBinContent(i+1, matrix_angle_mom_num_smear[i][0]);
     }
-    // for (int i = 0; i < _h_eff_mumom_den->GetNbinsX(); i++) {
-    //   for (int j = 0; j < _h_eff_mumom_den->GetNbinsY(); j++) {
-    //     h_eff_den_smear->SetBinContent(i+1, j+1, matrix_angle_mom_den_smear[i][j]);
-    //     h_eff_num_smear->SetBinContent(i+1, j+1, matrix_angle_mom_num_smear[i][j]);
-    //   } 
-    // }
-
 
 
     TCanvas * c_smear_den = new TCanvas;
@@ -392,10 +334,14 @@ namespace Base {
     h_eff_den_smear->SetTitle("Generated");
     h_eff_den_smear->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
     h_eff_den_smear->GetYaxis()->SetTitle("p_{#mu}^{reco}");
-    h_eff_den_smear->Draw("colz text");
+    h_eff_den_smear->GetXaxis()->SetTitleOffset(0.8);
+    h_eff_den_smear->GetYaxis()->SetTitleOffset(0.8);
+    h_eff_den_smear->Draw("colz");
 
     name = _folder +_prefix + "all_smeared";
     c_smear_den->SaveAs(name + ".pdf");
+    c_smear_den->SaveAs(name + ".C");
+
 
     TCanvas * c_smear_num = new TCanvas;
     h_eff_num_smear->SetMarkerColor(kWhite);
@@ -403,61 +349,63 @@ namespace Base {
     h_eff_num_smear->SetTitle("Selected");
     h_eff_num_smear->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
     h_eff_num_smear->GetYaxis()->SetTitle("p_{#mu}^{reco}");
-    h_eff_num_smear->Draw("colz text");
+    h_eff_num_smear->GetXaxis()->SetTitleOffset(0.8);
+    h_eff_num_smear->GetYaxis()->SetTitleOffset(0.8);
+    h_eff_num_smear->Draw("colz");
 
     name = _folder +_prefix + "selected_smeared";
     c_smear_num->SaveAs(name + ".pdf");
-
-
-    //
-    // Efficiency (true)
-    //
-
-    // TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
-
-    // TCanvas * c_eff_true = new TCanvas;
-    // teff_true->SetMarkerColor(kWhite);
-    // teff_true->SetMarkerSize(1.6);
-    // teff_true->SetTitle("Efficiency;cos(#theta_{#mu}^{true});p_{#mu}^{true}");
-    // teff_true->Draw("colz text");
-    // gPad->Update(); 
-    // auto graph_t = teff_true->GetPaintedHistogram(); 
-    // graph_t->SetMinimum(0);
-    // graph_t->SetMaximum(1); 
-    // gPad->Update();
-
-    // name = _folder +_prefix + "efficiency_true";
-    // c_eff_true->SaveAs(name + ".pdf");
-    // c_eff_true->SaveAs(name + ".C");
-
-
-    //
-    // Efficiency (reco)
-    //
-
-    // TEfficiency* teff_reco = new TEfficiency(*h_eff_num_smear,*h_eff_den_smear);
-
-    // TCanvas * c_eff_reco = new TCanvas;
-    // teff_reco->SetMarkerColor(kWhite);
-    // teff_reco->SetMarkerSize(1.6);
-    // teff_reco->SetTitle("Efficiency;cos(#theta_{#mu}^{reco});p_{#mu}^{reco}");
-    // teff_reco->Draw("colz text");
-    // gPad->Update(); 
-    // auto graph = teff_reco->GetPaintedHistogram(); 
-    // graph->SetMinimum(0);
-    // graph->SetMaximum(1); 
-    // gPad->Update();
-
-    // name = _folder +_prefix + "_efficiency_reco";
-    // c_eff_reco->SaveAs(name + ".pdf");
-    // c_eff_reco->SaveAs(name + ".C");
+    c_smear_num->SaveAs(name + ".C");
 
 
 
-    _eff = (UBTH2Poly*) h_eff_num_smear->Clone("_eff");
+
+
 
     double level = 0.683; // 1 sigma
     double alpha = (1.0 - level)/2;
+
+
+    //
+    // Efficiency (true) - Just a plot
+    //
+
+    UBTH2Poly * eff_true = (UBTH2Poly*) _h_eff_mumom_num->Clone("eff_true");
+
+    for (int bin = 1; bin <= eff_true->GetNumberOfBins(); bin++) {
+
+        double average = _h_eff_mumom_num->GetBinContent(bin) / _h_eff_mumom_den->GetBinContent(bin);
+        double sigma = std::sqrt(average * (1 - average) / _h_eff_mumom_den->GetBinContent(bin));
+        double delta = ROOT::Math::normal_quantile(1 - alpha, sigma);
+
+        eff_true->SetBinContent(bin, average);
+        eff_true->SetBinError(bin, delta);
+
+    }
+
+    TCanvas * c_eff_true = new TCanvas;
+    eff_true->SetMarkerColor(kWhite);
+    eff_true->SetMarkerSize(1.6);
+    eff_true->SetTitle("Selected");
+    eff_true->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
+    eff_true->GetYaxis()->SetTitle("p_{#mu}^{reco}");
+    eff_true->SetMaximum(1.0);
+    eff_true->SetMinimum(0.0);
+    eff_true->GetXaxis()->SetTitleOffset(0.8);
+    eff_true->GetYaxis()->SetTitleOffset(0.8);
+    eff_true->Draw("colz");
+
+    name = _folder +_prefix + "efficiency_true";
+    c_eff_true->SaveAs(name + ".pdf");
+    c_eff_true->SaveAs(name + ".C");
+
+
+
+    //
+    // Efficiency (reco) - Used for cross section extraction (_eff)
+    //
+
+    _eff = (UBTH2Poly*) h_eff_num_smear->Clone("_eff");
 
     for (int bin = 1; bin <= _eff->GetNumberOfBins(); bin++) {
 
@@ -466,14 +414,29 @@ namespace Base {
         double delta = ROOT::Math::normal_quantile(1 - alpha, sigma);
 
         _eff->SetBinContent(bin, average);
-        _eff->SetBinError(bin, delta);
+        _eff->SetBinError(bin-1, delta);
         LOG_DEBUG() << "bin = " << bin << ", average = " << average << ", sigma = " << sigma << ", delta = " << delta << std::endl;
-
     }
-    
 
-    _eff = h_eff_num_smear;
-    _eff->Divide(h_eff_den_smear);
+
+    TCanvas * c_eff_reco = new TCanvas;
+    UBTH2Poly* eff_reco = (UBTH2Poly*) _eff->Clone("eff_reco");
+    eff_reco->SetMarkerColor(kWhite);
+    eff_reco->SetMarkerSize(1.6);
+    eff_reco->SetTitle("Selected");
+    eff_reco->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
+    eff_reco->GetYaxis()->SetTitle("p_{#mu}^{reco}");
+    eff_reco->SetMaximum(1.0);
+    eff_reco->SetMinimum(0.0);
+    eff_reco->GetXaxis()->SetTitleOffset(0.8);
+    eff_reco->GetYaxis()->SetTitleOffset(0.8);
+    eff_reco->Draw("colz");
+
+    name = _folder +_prefix + "efficiency_smear";
+    c_eff_reco->SaveAs(name + ".pdf");
+    c_eff_reco->SaveAs(name + ".C");
+
+    LOG_DEBUG() << "bin 1. Eff = " << _eff->GetBinContent(1) << " +- " << _eff->GetBinError(1) << std::endl;
 
   }
 
@@ -555,6 +518,9 @@ namespace Base {
       LOG_WARNING() << "MC cross section histogram does not have Sum2w active." << std::endl;
     }
 
+    LOG_DEBUG() << "bin 1. h_mc = " << h_mc->GetBinContent(1) << " +- " << h_mc->GetBinError(1) << std::endl;
+
+
     // LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_prefixs) 
     {
@@ -566,6 +532,9 @@ namespace Base {
     }
     // std::cout << std::endl;
 
+    LOG_DEBUG() << "bin 1. sub h_data = " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
+
+
     LOG_DEBUG() << "sub h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
 
 
@@ -573,35 +542,17 @@ namespace Base {
 
 
     //
-    // Create efficiency histogram
-    //
-    // UBTH2Poly * h_eff = (UBTH2Poly*)h_mc->Clone("h_eff");
-    // h_eff->Sumw2();
-    // for (int i = 1; i < h_mc->GetNbinsX() + 1; i++) {
-    //   for (int j = 1; j < h_mc->GetNbinsY() + 1; j++) {
-    
-    //     h_eff->SetBinContent(i, j, _eff->GetEfficiency(_eff->GetGlobalBin(i, j)));
-    //     double unc = 0.;
-    //     unc += _eff->GetEfficiencyErrorLow(_eff->GetGlobalBin(i, j));
-    //     unc += _eff->GetEfficiencyErrorUp(_eff->GetGlobalBin(i, j));
-    //     unc /= 2.;
-    //     h_eff->SetBinError(i, j, unc);
-
-    //     //std::cout << "Efficiency at bin " << i << ", " << j << ": " << h_eff->GetBinContent(i, j) << " =- " << unc << std::endl;
-    //   }
-    // }
-
-    UBTH2Poly * h_eff = _eff;
-
-    //
     // Divide by efficiency
     //
+    UBTH2Poly * h_eff = _eff;
 
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
     LOG_INFO() << "Efficiency in bin (6, 2) is " << h_eff->GetBinContent(14) << std::endl;
     LOG_DEBUG() << "eff h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
+
+    LOG_DEBUG() << "bin 1. eff h_data = " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
 
 
 
@@ -617,6 +568,7 @@ namespace Base {
     h_data->Scale(1. / den, "width");
 
     LOG_DEBUG() << "scale h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
+    LOG_DEBUG() << "bin 1. scale h_data = " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
 
 
 
@@ -1062,19 +1014,20 @@ namespace Base {
       h_main->SetFillColor(0); // fully transparent
       h_main->Draw("histo same");
 
-      xsec_mc_histos.at(i).SetMinimum(0.);
+      // xsec_mc_histos.at(i).SetMinimum(0.);
+
       // if (i == 0) {
       //   xsec_mc_histos.at(i).SetMaximum(0.4);
       // } else if (i == 1) {
       //   xsec_mc_histos.at(i).SetMaximum(0.4);
       // } 
 
-      if (i == 0) xsec_mc_histos.at(i).SetMaximum(0.5);
-      if (i == 1) xsec_mc_histos.at(i).SetMaximum(1.00);
-      if (i == 2) xsec_mc_histos.at(i).SetMaximum(1.00);
-      if (i == 3) xsec_mc_histos.at(i).SetMaximum(1.25);
-      if (i == 4) xsec_mc_histos.at(i).SetMaximum(1.60);
-      if (i == 5) xsec_mc_histos.at(i).SetMaximum(1.90);
+      
+      double min = std::min(xsec_data_histos.at(i).GetMinimum(), xsec_mc_histos.at(i).GetMinimum());
+      double max = std::max(xsec_data_histos.at(i).GetMaximum(), xsec_mc_histos.at(i).GetMaximum());
+
+      xsec_mc_histos.at(i).SetMinimum(min - std::abs(min) * 0.4);
+      xsec_mc_histos.at(i).SetMaximum(max * 1.5);
 
       // The outer uncertainty bar
       xsec_data_unc_histos.at(i).SetMarkerStyle(20);
