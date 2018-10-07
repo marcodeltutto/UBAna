@@ -130,7 +130,7 @@ namespace Base {
     // std::vector<std::pair<double, double>> _var2_bins;
     int _n_bins;
 
-    UBTH2Poly *_reco_per_true;
+    UBTH2Poly *_reco_per_true = 0; ///< A UBTH2Poly, just used to retrive the bins
 
     TMatrix _S; ///< The smearing matrix
 

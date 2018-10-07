@@ -153,7 +153,33 @@ namespace Base {
       h_sm->GetYaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
     }
 
-    // std::vector<TLine*> lines;
+    Int_t * separators = _th2poly_template->GetSeparators();
+    Int_t separators_length = _th2poly_template->GetSeparatorsLength();
+    LOG_CRITICAL() << "separators_length is " << separators_length << std::endl;
+
+    std::vector<TLine*> lines;
+
+    // Vertical lines
+    Int_t sum = 0;
+    for (Int_t s = 0; s < separators_length; s++) {
+      // LOG_CRITICAL() << "separators[s] is " << separators[s] << std::endl;
+      // LOG_CRITICAL() << "separators[s] + sum is " << separators[s] + sum << std::endl;
+      TLine *line = new TLine(separators[s] + sum, 0, separators[s] + sum, _n_bins);
+      line->SetLineColor(kRed);
+      line->SetLineWidth(2);
+      lines.emplace_back(line);
+      sum += separators[s];
+    }
+
+    // Horizontal lines
+    sum = 0;
+    for (Int_t s = 0; s < separators_length; s++) {
+      TLine *line = new TLine(0, separators[s] + sum, _n_bins, separators[s] + sum);
+      line->SetLineColor(kRed);
+      line->SetLineWidth(2);
+      lines.emplace_back(line);
+      sum += separators[s];
+    }
 
     // for (size_t i = 1; i < _var2_bins.size(); i++) {
     //   TLine *line = new TLine(_var1_bins.size() * i, 0, _var1_bins.size() * i, n_bins);
@@ -173,8 +199,8 @@ namespace Base {
     TCanvas *c_sm = new TCanvas();
     h_sm->Draw("colz");
  
-    // for (auto l : lines)
-    //  l->Draw();
+    for (auto l : lines)
+      l->Draw();
 
 
     TString name = _folder + "full_migration_matrix_4d_poly";

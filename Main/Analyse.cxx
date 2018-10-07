@@ -7,17 +7,17 @@
 namespace Main {
 
 
-	void Analyse::SetBNBCosmicFile(std::string f) {
+  void Analyse::SetBNBCosmicFile(std::string f) {
    
     mc_bnbcosmic_file_name = f;
 
-	}
+  }
 
-	void Analyse::SetInTimeCosmicFile(std::string f) {
+  void Analyse::SetInTimeCosmicFile(std::string f) {
    
     mc_intimecosmic_file_name = f;
 
-	}
+  }
 
   void Analyse::SetDirtFile(std::string f) {
    
@@ -25,43 +25,43 @@ namespace Main {
 
   }
 
-	void Analyse::SetBNBONFile(std::string f) {
+  void Analyse::SetBNBONFile(std::string f) {
    
     bnbon_file_name = f;
 
-	}
+  }
 
-	void Analyse::SetEXTBNBFile(std::string f) {
+  void Analyse::SetEXTBNBFile(std::string f) {
    
     extbnb_file_name = f;
 
-	}
+  }
 
-	void Analyse::SetBNBPOT(double v) {
+  void Analyse::SetBNBPOT(double v) {
    
     bnbon_pot_meas = v;
 
-	}
+  }
 
-	void Analyse::SetBNBONTriggers(double v) {
+  void Analyse::SetBNBONTriggers(double v) {
    
     bnbon_triggers = v;
 
-	}
+  }
 
-	void Analyse::SetEXTBNBTriggers(double v) {
+  void Analyse::SetEXTBNBTriggers(double v) {
    
     extbnb_triggers = v;
 
-	}
+  }
 
-	void Analyse::SetTargetFluxSystematic(std::string s) {
-		_target_flux_syst = s;
-	}
+  void Analyse::SetTargetFluxSystematic(std::string s) {
+    _target_flux_syst = s;
+  }
 
-	void Analyse::SetPrefix(std::string p) {
-		_prefix = p;
-	}
+  void Analyse::SetPrefix(std::string p) {
+    _prefix = p;
+  }
 
 
   // void Analyse::AddExtraDiagonalUncertainty(TH2D & matrix, double frac_unc)
@@ -77,10 +77,10 @@ namespace Main {
 
 
 
-	void Analyse::DoAnalise() 
-	{
+  void Analyse::DoAnalise() 
+  {
 
-	clock_t begin = clock();
+  clock_t begin = clock();
 
 
   std::string analyser_outdir = std::getenv("MYSW_OUTDIR");
@@ -923,7 +923,7 @@ namespace Main {
   gROOT->SetBatch(kTRUE);
 
   if (_fake_data_mode || _overlay_mode) {
-  	this->PrintFakeDataMessage();
+    this->PrintFakeDataMessage();
   }
 
   std::string xsec_file_name = "xsec_file_" + _prefix + ".root";
@@ -952,8 +952,8 @@ namespace Main {
     _xsec_calc.set_verbosity(Base::msg::kDEBUG);
 
     if (_fake_data_mode) {
-    	this->PrintFakeDataMessage();
-    	_xsec_calc.SetFakeDataMode(true);
+      this->PrintFakeDataMessage();
+      _xsec_calc.SetFakeDataMode(true);
     }
     if (_overlay_mode) {
       this->PrintFakeDataMessage();
@@ -1056,7 +1056,7 @@ namespace Main {
       //
 
       if (_do_flux_systs) {
-      	_xsec_bs_calc.Reset();
+        _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
         _xsec_bs_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
@@ -1158,7 +1158,7 @@ namespace Main {
         _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_genie);
 
         for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
-      	  std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+          std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
 
         unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
@@ -1166,7 +1166,7 @@ namespace Main {
 
       if (_import_genie_systs) {
 
-      	TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
+        TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_mumom");
         frac_covariance_matrix_genie = *m;
 
@@ -1230,7 +1230,7 @@ namespace Main {
         covariance_matrix_flux.Write(("flux_syst_covariance_matrix_mumom_" + _target_flux_syst).c_str());
 
         for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
-      	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
+          std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
         }
 
         unc_plotter.AddFracCovarianceMatrix("FLUX", frac_covariance_matrix_flux);
@@ -1238,7 +1238,7 @@ namespace Main {
 
       if (_import_flux_systs) {
 
-      	TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
+        TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_mumom");
         frac_covariance_matrix_flux = *m;
 
@@ -1346,7 +1346,7 @@ namespace Main {
     _xsec_calc.SetTruthHistograms(_event_histo_1d_mc->h_eff_mumom_num, _event_histo_1d_mc->h_eff_mumom_den);
     _xsec_calc.SetTruthXSec(h_truth_xsec_mumom);
     if (_fake_data_mode) {
-    	_xsec_calc.SetTruthXSec(h_truth_xsec_mumom_fake, n_bins_mumom, n_bins_mumom);
+      _xsec_calc.SetTruthXSec(h_truth_xsec_mumom_fake, n_bins_mumom, n_bins_mumom);
     }
     _xsec_calc.SetNameAndLabel("trkmom", ";p_{#mu}^{reco} [GeV]; Selected Events");
     _xsec_calc.ProcessPlots();
@@ -1432,7 +1432,7 @@ namespace Main {
         _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_genie);
 
         for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
-      	  std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+          std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
 
         unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
@@ -1440,10 +1440,10 @@ namespace Main {
 
       if (_import_genie_systs) {
 
-      	TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
+        TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_muangle");
         frac_covariance_matrix_genie = *m;
-      	
+        
         unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
       }
 
@@ -1503,7 +1503,7 @@ namespace Main {
         covariance_matrix_flux.Write(("flux_syst_covariance_matrix_muangle_" + _target_flux_syst).c_str());
 
         for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
-      	  std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
+          std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
         }
 
         unc_plotter.AddFracCovarianceMatrix("FLUX", frac_covariance_matrix_flux);
@@ -1511,7 +1511,7 @@ namespace Main {
 
       if (_import_flux_systs) {
 
-      	TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
+        TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_muangle");
         frac_covariance_matrix_flux = *m;
 
@@ -1618,7 +1618,7 @@ namespace Main {
     _xsec_calc.SetTruthHistograms(_event_histo_1d_mc->h_eff_muangle_num, _event_histo_1d_mc->h_eff_muangle_den);
     _xsec_calc.SetTruthXSec(h_truth_xsec_muangle);
     if (_fake_data_mode) {
-    	_xsec_calc.SetTruthXSec(h_truth_xsec_muangle_fake, n_bins_mucostheta, n_bins_mucostheta);
+      _xsec_calc.SetTruthXSec(h_truth_xsec_muangle_fake, n_bins_mucostheta, n_bins_mucostheta);
     }
     _xsec_calc.SetNameAndLabel("trkcostheta", ";cos(#theta_{#mu}^{reco}); Selected Events");
     _xsec_calc.ProcessPlots();
@@ -2091,10 +2091,22 @@ namespace Main {
     //
     // Double diff cross section (polybin)
     //
+    Int_t * separators = _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetSeparators();
+
+    Int_t separators_length = _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetSeparatorsLength();
+
+    LOG_CRITICAL() << "separators_length is " << separators_length << std::endl;
+//     for (Int_t s = 0; s < separators_length; s++) {
+
+//       LOG_CRITICAL() << "separators[s] is " << separators[s] << std::endl;
+
+// }
+LOG_CRITICAL() << "bnbon total separators_length is " << _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"]->GetSeparatorsLength() << std::endl;
 
     MigrationMatrix4DPoly migrationmatrix4dpoly;
     migrationmatrix4dpoly.SetRecoPerTrueHistos(_event_histo_mc->h_poly_reco_per_true);
     migrationmatrix4dpoly.SetBins(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins());
+    migrationmatrix4dpoly.SetTemplateHisto(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]);
     migrationmatrix4dpoly.SetOutDir();
     TMatrix S = migrationmatrix4dpoly.CalculateMigrationMatrix();
 
@@ -3074,17 +3086,17 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   //rootapp->Terminate(0);
   
   return;
-	}
+  }
 
-	void Analyse::DrawDataMC(TCanvas *c,
-		                       THStack *hs_mc, 
-		                       double scale_factor_mc_bnbcosmic, 
-		                       bool breakdown_plots, 
-		                       std::map<std::string,TH1D*> hmap_mc, 
-		                       TH1D* h_data_bnbon,
-		                       double bnbon_pot_meas) 
-	{
-		// Define the Canvas
+  void Analyse::DrawDataMC(TCanvas *c,
+                           THStack *hs_mc, 
+                           double scale_factor_mc_bnbcosmic, 
+                           bool breakdown_plots, 
+                           std::map<std::string,TH1D*> hmap_mc, 
+                           TH1D* h_data_bnbon,
+                           double bnbon_pot_meas) 
+  {
+    // Define the Canvas
     //TCanvas *c = new TCanvas("c", "canvas", 800, 800);
 
     // Upper plot will be in pad1
@@ -3105,7 +3117,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
     if (hmap_mc.find("outfv") != hmap_mc.end()) {
       leg = PlottingTools::DrawTHStack(hs_mc, scale_factor_mc_bnbcosmic, breakdown_plots, hmap_mc);
     } else {
-    	leg = PlottingTools::DrawTHStack2(hs_mc, scale_factor_mc_bnbcosmic, breakdown_plots, hmap_mc);
+      leg = PlottingTools::DrawTHStack2(hs_mc, scale_factor_mc_bnbcosmic, breakdown_plots, hmap_mc);
     }
     PlottingTools::DrawDataHisto(h_data_bnbon);
 
@@ -3204,12 +3216,12 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
 
 
-	}
+  }
 
-	void Analyse::PlotMCTHStack(THStack *hs_trklen, std::map<std::string,TH1D*> themap, double scale_factor_mc_bnbcosmic)
+  void Analyse::PlotMCTHStack(THStack *hs_trklen, std::map<std::string,TH1D*> themap, double scale_factor_mc_bnbcosmic)
 {
 
-	for (auto iter : themap) {
+  for (auto iter : themap) {
     iter.second->Scale(scale_factor_mc_bnbcosmic);
   }
 
@@ -3242,19 +3254,19 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TString xaxis_title = hs_trklen->GetXaxis()->GetTitle();
   if (xaxis_title.Contains("theta")) {
-  	leg2 = new TLegend(0.1747851,0.5431579,0.4355301,0.8231579,NULL,"brNDC");
-  	hs_trklen->SetMaximum(6200);
+    leg2 = new TLegend(0.1747851,0.5431579,0.4355301,0.8231579,NULL,"brNDC");
+    hs_trklen->SetMaximum(6200);
   } else if (xaxis_title.Contains("phi")) {
-  	leg2 = new TLegend(0.6203438,0.5905263,0.8810888,0.8705263,NULL,"brNDC");
-  	hs_trklen->SetMaximum(2500);
+    leg2 = new TLegend(0.6203438,0.5905263,0.8810888,0.8705263,NULL,"brNDC");
+    hs_trklen->SetMaximum(2500);
   } else if (xaxis_title.Contains("Energy")){
-  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
-  	hs_trklen->SetMaximum(3600);
+    leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+    hs_trklen->SetMaximum(3600);
   } else if (xaxis_title.Contains("Momentum")){
-  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
-  	hs_trklen->SetMaximum(4200);
+    leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+    hs_trklen->SetMaximum(4200);
   } else {
-  	leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
+    leg2 = new TLegend(0.56,0.54,0.82,0.82,NULL,"brNDC");
   }
 
   std::stringstream sstm;
@@ -3293,8 +3305,8 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 }
 
 void Analyse::PrintFakeDataMessage() {
-  for (int i = 0; i < 100; i++) {  	
-  	std::cout << "****************************** RUNNING WITH FAKE DATA ******************************" << std::endl;
+  for (int i = 0; i < 100; i++) {   
+    std::cout << "****************************** RUNNING WITH FAKE DATA ******************************" << std::endl;
   }
 }
 
