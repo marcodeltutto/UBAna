@@ -85,10 +85,13 @@ namespace DataTypes {
     void PutStats(Double_t *stats);
 
     /// Sets a vector containing the boundaris for Y variable
-    void SetSeparators(std::vector<int> v) {_separators_v = v;}
+    void SetSeparators(std::vector<int> v) {_separator_length = 0; for (size_t i = 0; i < v.size(); i++) {_separators_v[i] = v.at(i); _separator_length++;}; } 
 
     /// Gets a vector containing the boundaris for Y variable
-    std::vector<int> GetSeparators() {return _separators_v;}
+    Int_t * GetSeparators() {return _separators_v;}
+
+    /// Gets a vector containing the boundaris for Y variable
+    Int_t GetSeparatorsLength() {return _separator_length;}
 
 
     ClassDef(DataTypes::UBTH2Poly, 1) // TH2 with polygonal bins (extended for MicroBooNE)
@@ -97,7 +100,8 @@ namespace DataTypes {
 
     Int_t _n_bins_x = 100;
 
-    std::vector<int> _separators_v;
+    Int_t _separators_v[50];
+    Int_t _separator_length = 0;
     
   };
 }
