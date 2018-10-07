@@ -278,7 +278,6 @@ namespace DataTypes {
     void UBXSecEventHisto::_AddPolyBins_(std::map<std::string,UBTH2Poly*> h) {
       for (auto it : h) {
         _AddPolyBins_(it.second);
-        std::cout << "for " << it.first << ", n separators = " << it.second->GetSeparatorsLength() << std::endl;
       }
     }
 

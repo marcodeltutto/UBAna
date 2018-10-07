@@ -37,50 +37,50 @@ namespace DataTypes {
       hmap_onebin["signal_nostopmu"] = new TH1D("h_onebin_signal_nostopmu", "; Track length;", 1, 0, 1);
 
       // Efficiency - Total Cross Section - Multisim
-      bs_genie_multisim_eff_onebin_num = new BootstrapTH1D("bs_genie_multisim_eff_onebin_num", "bs_genie_multisim_eff_onebin_num_title", 0, 1, 0);
-      bs_genie_multisim_eff_onebin_den = new BootstrapTH1D("bs_genie_multisim_eff_onebin_den", "bs_genie_multisim_eff_onebin_den_title", 0, 1, 0);
-      bs_flux_multisim_eff_onebin_num = new BootstrapTH1D("bs_flux_multisim_eff_onebin_num", "bs_flux_multisim_eff_onebin_num_title", 0, 1, 0);
-      bs_flux_multisim_eff_onebin_den = new BootstrapTH1D("bs_flux_multisim_eff_onebin_den", "bs_flux_multisim_eff_onebin_den_title", 0, 1, 0);
-      bs_extra_syst_multisim_eff_onebin_num = new BootstrapTH1D("bs_extra_syst_multisim_eff_onebin_num", "bs_extra_syst_eff_onebin_num_title", 0, 1, 0);
-      bs_extra_syst_multisim_eff_onebin_den = new BootstrapTH1D("bs_extra_syst_multisim_eff_onebin_den", "bs_extra_syst_eff_onebin_den_title", 0, 1, 0);
-      bs_mc_stat_multisim_eff_onebin_num = new BootstrapTH1D("bs_mc_stat_multisim_eff_onebin_num", "bs_mc_stat_eff_onebin_num_title", 0, 1, 0);
-      bs_mc_stat_multisim_eff_onebin_den = new BootstrapTH1D("bs_mc_stat_multisim_eff_onebin_den", "bs_mc_stat_eff_onebin_den_title", 0, 1, 0);
+      bs_genie_multisim_eff_onebin_num = new BootstrapTH1D("bs_genie_multisim_eff_onebin_num", "bs_genie_multisim_eff_onebin_num_title", 1, 0, 1);
+      bs_genie_multisim_eff_onebin_den = new BootstrapTH1D("bs_genie_multisim_eff_onebin_den", "bs_genie_multisim_eff_onebin_den_title", 1, 0, 1);
+      bs_flux_multisim_eff_onebin_num = new BootstrapTH1D("bs_flux_multisim_eff_onebin_num", "bs_flux_multisim_eff_onebin_num_title", 1, 0, 1);
+      bs_flux_multisim_eff_onebin_den = new BootstrapTH1D("bs_flux_multisim_eff_onebin_den", "bs_flux_multisim_eff_onebin_den_title", 1, 0, 1);
+      bs_extra_syst_multisim_eff_onebin_num = new BootstrapTH1D("bs_extra_syst_multisim_eff_onebin_num", "bs_extra_syst_eff_onebin_num_title", 1, 0, 1);
+      bs_extra_syst_multisim_eff_onebin_den = new BootstrapTH1D("bs_extra_syst_multisim_eff_onebin_den", "bs_extra_syst_eff_onebin_den_title", 1, 0, 1);
+      bs_mc_stat_multisim_eff_onebin_num = new BootstrapTH1D("bs_mc_stat_multisim_eff_onebin_num", "bs_mc_stat_eff_onebin_num_title", 1, 0, 1);
+      bs_mc_stat_multisim_eff_onebin_den = new BootstrapTH1D("bs_mc_stat_multisim_eff_onebin_den", "bs_mc_stat_eff_onebin_den_title", 1, 0, 1);
 
       // Number of events per channel and universe - Total Cross Section - Genie Multisim
-      hmap_onebin_genie_multisim_bs["total"]["nominal"] = new TH1D("h_onebin_total_genie_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_genie_multisim_bs["signal"]["nominal"] = new TH1D("h_onebin_signal_genie_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_genie_multisim_bs["cosmic"]["nominal"] = new TH1D("h_onebin_cosmic_genie_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_genie_multisim_bs["outfv"]["nominal"] = new TH1D("h_onebin_outfv_genie_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_genie_multisim_bs["nc"]["nominal"] = new TH1D("h_onebin_nc_genie_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_genie_multisim_bs["anumu"]["nominal"] = new TH1D("h_onebin_anumu_genie_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_genie_multisim_bs["nue"]["nominal"] = new TH1D("h_onebin_nue_genie_mulinominal", "; Track length;", 0, 1, 0);
+      hmap_onebin_genie_multisim_bs["total"]["nominal"] = new TH1D("h_onebin_total_genie_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_genie_multisim_bs["signal"]["nominal"] = new TH1D("h_onebin_signal_genie_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_genie_multisim_bs["cosmic"]["nominal"] = new TH1D("h_onebin_cosmic_genie_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_genie_multisim_bs["outfv"]["nominal"] = new TH1D("h_onebin_outfv_genie_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_genie_multisim_bs["nc"]["nominal"] = new TH1D("h_onebin_nc_genie_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_genie_multisim_bs["anumu"]["nominal"] = new TH1D("h_onebin_anumu_genie_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_genie_multisim_bs["nue"]["nominal"] = new TH1D("h_onebin_nue_genie_mulinominal", "; Track length;", 1, 0, 1);
 
       // Number of events per channel and universe - Total Cross Section - Flux Multisim
-      hmap_onebin_flux_multisim_bs["total"]["nominal"] = new TH1D("h_onebin_total_flux_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_flux_multisim_bs["signal"]["nominal"] = new TH1D("h_onebin_signal_flux_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_flux_multisim_bs["cosmic"]["nominal"] = new TH1D("h_onebin_cosmic_flux_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_flux_multisim_bs["outfv"]["nominal"] = new TH1D("h_onebin_outfv_flux_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_flux_multisim_bs["nc"]["nominal"] = new TH1D("h_onebin_nc_flux_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_flux_multisim_bs["anumu"]["nominal"] = new TH1D("h_onebin_anumu_flux_mulinominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_flux_multisim_bs["nue"]["nominal"] = new TH1D("h_onebin_nue_flux_mulinominal", "; Track length;", 0, 1, 0);
+      hmap_onebin_flux_multisim_bs["total"]["nominal"] = new TH1D("h_onebin_total_flux_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_flux_multisim_bs["signal"]["nominal"] = new TH1D("h_onebin_signal_flux_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_flux_multisim_bs["cosmic"]["nominal"] = new TH1D("h_onebin_cosmic_flux_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_flux_multisim_bs["outfv"]["nominal"] = new TH1D("h_onebin_outfv_flux_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_flux_multisim_bs["nc"]["nominal"] = new TH1D("h_onebin_nc_flux_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_flux_multisim_bs["anumu"]["nominal"] = new TH1D("h_onebin_anumu_flux_mulinominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_flux_multisim_bs["nue"]["nominal"] = new TH1D("h_onebin_nue_flux_mulinominal", "; Track length;", 1, 0, 1);
 
       // Number of events per channel and universe - Total Cross Section - Extra Syst
-      hmap_onebin_extra_syst_multisim_bs["total"]["nominal"] = new TH1D("h_onebin_total_extra_syst_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_extra_syst_multisim_bs["signal"]["nominal"] = new TH1D("h_onebin_signal_extra_syst_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_extra_syst_multisim_bs["cosmic"]["nominal"] = new TH1D("h_onebin_cosmic_extra_syst_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_extra_syst_multisim_bs["outfv"]["nominal"] = new TH1D("h_onebin_outfv_extra_syst_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_extra_syst_multisim_bs["nc"]["nominal"] = new TH1D("h_onebin_nc_extra_syst_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_extra_syst_multisim_bs["anumu"]["nominal"] = new TH1D("h_onebin_anumu_extra_syst_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_extra_syst_multisim_bs["nue"]["nominal"] = new TH1D("h_onebin_nue_extra_syst_multisim_nominal", "; Track length;", 0, 1, 0);
+      hmap_onebin_extra_syst_multisim_bs["total"]["nominal"] = new TH1D("h_onebin_total_extra_syst_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_extra_syst_multisim_bs["signal"]["nominal"] = new TH1D("h_onebin_signal_extra_syst_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_extra_syst_multisim_bs["cosmic"]["nominal"] = new TH1D("h_onebin_cosmic_extra_syst_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_extra_syst_multisim_bs["outfv"]["nominal"] = new TH1D("h_onebin_outfv_extra_syst_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_extra_syst_multisim_bs["nc"]["nominal"] = new TH1D("h_onebin_nc_extra_syst_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_extra_syst_multisim_bs["anumu"]["nominal"] = new TH1D("h_onebin_anumu_extra_syst_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_extra_syst_multisim_bs["nue"]["nominal"] = new TH1D("h_onebin_nue_extra_syst_multisim_nominal", "; Track length;", 1, 0, 1);
 
       // Number of events per channel and universe - Total Cross Section - MC Stat
-      hmap_onebin_mc_stat_multisim_bs["total"]["nominal"] = new TH1D("h_onebin_total_mc_stat_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_mc_stat_multisim_bs["signal"]["nominal"] = new TH1D("h_onebin_signal_mc_stat_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_mc_stat_multisim_bs["cosmic"]["nominal"] = new TH1D("h_onebin_cosmic_mc_stat_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_mc_stat_multisim_bs["outfv"]["nominal"] = new TH1D("h_onebin_outfv_mc_stat_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_mc_stat_multisim_bs["nc"]["nominal"] = new TH1D("h_onebin_nc_mc_stat_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_mc_stat_multisim_bs["anumu"]["nominal"] = new TH1D("h_onebin_anumu_mc_stat_multisim_nominal", "; Track length;", 0, 1, 0);
-      hmap_onebin_mc_stat_multisim_bs["nue"]["nominal"] = new TH1D("h_onebin_nue_mc_stat_multisim_nominal", "; Track length;", 0, 1, 0);
+      hmap_onebin_mc_stat_multisim_bs["total"]["nominal"] = new TH1D("h_onebin_total_mc_stat_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_mc_stat_multisim_bs["signal"]["nominal"] = new TH1D("h_onebin_signal_mc_stat_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_mc_stat_multisim_bs["cosmic"]["nominal"] = new TH1D("h_onebin_cosmic_mc_stat_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_mc_stat_multisim_bs["outfv"]["nominal"] = new TH1D("h_onebin_outfv_mc_stat_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_mc_stat_multisim_bs["nc"]["nominal"] = new TH1D("h_onebin_nc_mc_stat_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_mc_stat_multisim_bs["anumu"]["nominal"] = new TH1D("h_onebin_anumu_mc_stat_multisim_nominal", "; Track length;", 1, 0, 1);
+      hmap_onebin_mc_stat_multisim_bs["nue"]["nominal"] = new TH1D("h_onebin_nue_mc_stat_multisim_nominal", "; Track length;", 1, 0, 1);
 
       
 

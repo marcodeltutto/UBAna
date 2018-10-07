@@ -38,7 +38,11 @@ namespace DataTypes {
       thisBin = (TH2PolyBin *)fBins->At(bin - 1);
       h->SetBinContent(thisBin->GetBinNumber(), thisBin->GetBinNumber());
     }
-    
+
+    h->GetYaxis()->CenterTitle();;
+    h->GetXaxis()->CenterTitle();;
+    h->GetYaxis()->SetTitleOffset(0.80);
+
     return h;
 
   }
