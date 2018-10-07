@@ -128,8 +128,8 @@ namespace Base {
 
     TH2D *h_sm = new TH2D("h_sm", "", _n_bins, 0, _n_bins, _n_bins, 0, _n_bins);
 
-    for (size_t m = 0; m < _n_bins; m++) {  // true
-      for (size_t i = 0; i < _n_bins; i++) {  // reco
+    for (int m = 0; m < _n_bins; m++) {  // true
+      for (int i = 0; i < _n_bins; i++) {  // reco
         
         h_sm->SetBinContent(m +1, i +1, _S[i][m]);
 
@@ -138,7 +138,7 @@ namespace Base {
 
     std::vector<std::string> bin_labels;
 
-    for (size_t i = 0; i < _n_bins; i++) {  
+    for (int i = 0; i < _n_bins; i++) {  
 
       std::stringstream sstm;
       sstm << i + 1;
@@ -153,17 +153,25 @@ namespace Base {
       h_sm->GetYaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
     }
 
+    h_sm->GetXaxis()->SetTickLength(0);
+    h_sm->GetYaxis()->SetTickLength(0);
+    h_sm->GetXaxis()->SetLabelSize(0.03);
+    h_sm->GetYaxis()->SetLabelSize(0.03);
+    h_sm->GetXaxis()->SetTitle("Reconstructed Bin Number");
+    h_sm->GetYaxis()->SetTitle("True Bin Number");
+
+
+
     Int_t * separators = _th2poly_template->GetSeparators();
     Int_t separators_length = _th2poly_template->GetSeparatorsLength();
-    LOG_CRITICAL() << "separators_length is " << separators_length << std::endl;
+
+    if (separators_length > 50) separators_length = 0;
 
     std::vector<TLine*> lines;
 
     // Vertical lines
     Int_t sum = 0;
-    for (Int_t s = 0; s < separators_length; s++) {
-      // LOG_CRITICAL() << "separators[s] is " << separators[s] << std::endl;
-      // LOG_CRITICAL() << "separators[s] + sum is " << separators[s] + sum << std::endl;
+    for (Int_t s = 0; s < separators_length - 1; s++) {
       TLine *line = new TLine(separators[s] + sum, 0, separators[s] + sum, _n_bins);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
@@ -173,7 +181,7 @@ namespace Base {
 
     // Horizontal lines
     sum = 0;
-    for (Int_t s = 0; s < separators_length; s++) {
+    for (Int_t s = 0; s < separators_length - 1; s++) {
       TLine *line = new TLine(0, separators[s] + sum, _n_bins, separators[s] + sum);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
@@ -226,8 +234,8 @@ namespace Base {
     _f_out << "S_{ij} =" << std::endl;
     _f_out << "\\begin{bmatrix}" << std::endl;
 
-    for (size_t m = 0; m < _n_bins; m++) {
-      for (size_t i = 0; i < _n_bins; i++) {
+    for (int m = 0; m < _n_bins; m++) {
+      for (int i = 0; i < _n_bins; i++) {
 
         _f_out << _S[m][i] << "  &  ";
 

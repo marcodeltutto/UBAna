@@ -2091,22 +2091,11 @@ namespace Main {
     //
     // Double diff cross section (polybin)
     //
-    Int_t * separators = _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetSeparators();
-
-    Int_t separators_length = _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetSeparatorsLength();
-
-    LOG_CRITICAL() << "separators_length is " << separators_length << std::endl;
-//     for (Int_t s = 0; s < separators_length; s++) {
-
-//       LOG_CRITICAL() << "separators[s] is " << separators[s] << std::endl;
-
-// }
-LOG_CRITICAL() << "bnbon total separators_length is " << _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"]->GetSeparatorsLength() << std::endl;
-
+    
     MigrationMatrix4DPoly migrationmatrix4dpoly;
     migrationmatrix4dpoly.SetRecoPerTrueHistos(_event_histo_mc->h_poly_reco_per_true);
-    migrationmatrix4dpoly.SetBins(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins());
-    migrationmatrix4dpoly.SetTemplateHisto(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]);
+    migrationmatrix4dpoly.SetBins(_event_histo_bnbon->hmap_trktheta_trkmom_poly["total"]->GetNumberOfBins());
+    migrationmatrix4dpoly.SetTemplateHisto(_event_histo_bnbon->hmap_trktheta_trkmom_poly["total"]);
     migrationmatrix4dpoly.SetOutDir();
     TMatrix S = migrationmatrix4dpoly.CalculateMigrationMatrix();
 
