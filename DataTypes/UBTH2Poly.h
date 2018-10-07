@@ -24,7 +24,7 @@
 
 #include <iostream>
 #include <map>
-
+#include <vector>
 
 namespace DataTypes {
 
@@ -84,7 +84,11 @@ namespace DataTypes {
     ///
     void PutStats(Double_t *stats);
 
+    /// Sets a vector containing the boundaris for Y variable
+    void SetSeparators(std::vector<int> v) {_separators_v = v;}
 
+    /// Gets a vector containing the boundaris for Y variable
+    std::vector<int> GetSeparators() {return _separators_v;}
 
 
     ClassDef(DataTypes::UBTH2Poly, 1) // TH2 with polygonal bins (extended for MicroBooNE)
@@ -92,6 +96,8 @@ namespace DataTypes {
   protected:
 
     Int_t _n_bins_x = 100;
+
+    std::vector<int> _separators_v;
     
   };
 }

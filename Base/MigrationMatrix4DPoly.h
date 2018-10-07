@@ -98,7 +98,7 @@ namespace Base {
     void SetTemplateHisto(UBTH2Poly *h) { _th2poly_template = (UBTH2Poly *) h->Clone("_th2poly_template"); };
 
     /// Openes a text outpu files (then you can call PrintSmearingMatrixLatex)
-    void SetOutputFileName(std::string name);
+    void SetLaTeXOutputFileName(std::string name);
 
     /// Sets the output directory
     void SetOutDir(std::string dir = "migration_matrix_poly_4D_plots");

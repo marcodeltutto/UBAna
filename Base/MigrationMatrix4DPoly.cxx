@@ -5,7 +5,7 @@
 
 namespace Base {
 
-  void MigrationMatrix4DPoly::SetOutputFileName(std::string name) 
+  void MigrationMatrix4DPoly::SetLaTeXOutputFileName(std::string name) 
   {
     _f_out.open(name, std::ios::out | std::ios::trunc);
   }
@@ -50,23 +50,7 @@ namespace Base {
 
   void MigrationMatrix4DPoly::SetBins(int n_bins)
   {
-
-    // for (int i = 0; i < n_var1_bins; i++) 
-    // {
-    //   _var1_bins.push_back(std::make_pair(var1_b[i], var1_b[i+1]));
-    // }
-
-    // for (int i = 0; i < n_var2_bins; i++) 
-    // {
-    //   _var2_bins.push_back(std::make_pair(var2_b[i], var2_b[i+1]));
-    // }
-
-    // // std::cout << _prefix << "Number of var1 bins: " << _var1_bins.size() << std::endl;
-    // // std::cout << _prefix << "Number of var2 bins: " << _var2_bins.size() << std::endl;
-
-    // _reco_per_true = new TH2D("reco_per_true", "reco_per_true", n_var1_bins, var1_b, n_var2_bins, var2_b);
-    _n_bins = n_bins;
-    
+    _n_bins = n_bins;    
   }
 
 
@@ -76,7 +60,7 @@ namespace Base {
     // Resize the smearing matrix
     _S.Clear(); _S.ResizeTo(_n_bins, _n_bins);
 
-    for (int m = 0; m < _n_bins; m++) {
+    for (int m = 0; m < _n_bins; m++) { // True bin
 
       if (_h_reco_per_true.size()) {
         // Case 1, we have set a set of UBTH2Poly per every true bin
@@ -89,10 +73,6 @@ namespace Base {
         }
       }
 
-
-      // for (int i = 0; i < _n_bins; i++) {
-      //   LOG_CRITICAL() << "before scale - bin " << i+1 << ", _reco_per_true is " << _reco_per_true->GetBinContent(i+1) << std::endl;
-      // }
 
       // Normalize to get a probability
       _reco_per_true->Scale(1./_reco_per_true->Integral());
@@ -108,7 +88,6 @@ namespace Base {
       for (int i = 0; i < _n_bins; i++) {
 
         double value = _reco_per_true->GetBinContent(i+1);
-        // LOG_CRITICAL() << "after scale - bin " << i+1 << ", _reco_per_true is " << _reco_per_true->GetBinContent(i+1) << std::endl;
 
         if (std::isnan(value))
           value = 0.;
@@ -139,18 +118,10 @@ namespace Base {
     }
 
 
-    // if(_verbose) {
-    //   for (int i = 0; i < _n_bins; i++) {
-    //     for (int m = 0; m < _n_bins; m++) {
-    //       std::cout << "(" << i << ", " << m << ") => " << _S[i][m] << std::endl;
-    //     }
-    //   }
-    // }
-
-
     return _S;
 
   }
+
 
   void MigrationMatrix4DPoly::PlotMatrix()
   {

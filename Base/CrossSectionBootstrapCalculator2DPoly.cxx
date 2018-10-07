@@ -312,8 +312,6 @@ namespace Base {
 
         MigrationMatrix4DPoly migrationmatrix4d;
         migrationmatrix4d.DoMakePlots(false);
-        // migrationmatrix4d.SetOutDir("migration_matrix_poly_multisim_4D_plots");
-        // migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
         migrationmatrix4d.SetRecoPerTrueVectors(this_reco_per_true);
         migrationmatrix4d.SetTemplateHisto(input_map_mc["total"]);
         migrationmatrix4d.SetBins(input_map_mc["total"]->GetNumberOfBins());
@@ -321,10 +319,6 @@ namespace Base {
         S.ResizeTo(input_map_mc["total"]->GetNumberOfBins(), input_map_mc["total"]->GetNumberOfBins());
 
         S = migrationmatrix4d.CalculateMigrationMatrix();
-
-        migrationmatrix4d.SetOutputFileName("latex_test_bootstrap.tex");
-        migrationmatrix4d.PrintSmearingMatrixLatex();
-
       }
 
       LOG_DEBUG() << "Migration matrix calculated for universe " << s << "." << std::endl;
