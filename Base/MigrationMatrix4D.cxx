@@ -96,21 +96,10 @@ namespace Base {
     // True bin m, n
     //int m = 0, n = 0;
 
-    for (size_t m = 0; m < _var1_bins.size(); m++) {
-      for (size_t n = 0; n < _var2_bins.size(); n++) {
+    for (size_t m = 0; m < _var1_bins.size(); m++) { // True angle bin
+      for (size_t n = 0; n < _var2_bins.size(); n++) { // True mom bin
 
         LOG_DEBUG() << "Evaluating Migration Matrix at m = " << m << ", n = " << n << std::endl;
- 
-        // std::cout << _prefix << "m = " << m << ", n = " << n << std::endl;
-
-        // auto v1_bin = _var1_bins.at(m);
-        // auto v2_bin = _var2_bins.at(n);
-
-        // std::cout << "Done 1" << std::endl;
-
-        // if(_verbose) std::cout << _prefix << "b1: " << v1_bin.first << " - " << v1_bin.second << std::endl;
-        // if(_verbose) std::cout << _prefix << "b2: " << v2_bin.first << " - " << v2_bin.second << std::endl;
-
 
         _reco_per_true = (TH2D*) _h_reco_per_true[m][n]->Clone("_reco_per_true");
 
@@ -187,16 +176,17 @@ namespace Base {
     TH2D *h_sm = new TH2D("h_sm", "", n_bins, 0, n_bins, n_bins, 0, n_bins);
 
 
-    for (size_t n = 0; n < _var2_bins.size(); n++) {   // pmu true
-      for (size_t m = 0; m < _var1_bins.size(); m++) {  // theta true
-        for (size_t j = 0; j < _var2_bins.size(); j++) {  // pmu reco
-          for (size_t i = 0; i < _var1_bins.size(); i++) {  // theta reco
-        
-            int reco_bin = i + j * _var1_bins.size() + 1;
-            int true_bin = m + n * _var1_bins.size() + 1;
-            h_sm->SetBinContent(reco_bin, true_bin, _S[i][j][m][n]);
-            if(_verbose) std::cout << "(i, j, m, n) = (" << i << ", " << j << ", " << m << ", " << n << "   reco_bin: " << reco_bin << ", true_bin: " << true_bin << ", S: " << _S[i][j][m][n] << std::endl;
+    for (size_t m = 0; m < _var1_bins.size(); m++) {  // theta true
+      for (size_t n = 0; n < _var2_bins.size(); n++) {   // pmu true
+        for (size_t i = 0; i < _var1_bins.size(); i++) {  // theta reco
+          for (size_t j = 0; j < _var2_bins.size(); j++) {  // pmu reco
 
+            int reco_bin = j + i * _var2_bins.size() + 1;
+            int true_bin = n + m * _var2_bins.size() + 1;
+
+            h_sm->SetBinContent(reco_bin, true_bin, _S[i][j][m][n]);
+
+            if(_verbose) std::cout << "(i, j, m, n) = (" << i << ", " << j << ", " << m << ", " << n << "   reco_bin: " << reco_bin << ", true_bin: " << true_bin << ", S: " << _S[i][j][m][n] << std::endl;
           }
         }
       }
@@ -204,13 +194,12 @@ namespace Base {
 
     std::vector<std::string> bin_labels;
 
-    for (size_t j = 0; j < _var2_bins.size(); j++) {  
-      for (size_t i = 0; i < _var1_bins.size(); i++) {  
 
-        //int bin = i + j * _var1_bins.size() + 1;
+    for (size_t i = 0; i < _var1_bins.size(); i++) {  
+      for (size_t j = 0; j < _var2_bins.size(); j++) {  
 
         std::stringstream sstm;
-        sstm << i;
+        sstm << j;
         std::string str = sstm.str();
 
         bin_labels.emplace_back(str);
@@ -223,17 +212,22 @@ namespace Base {
       h_sm->GetYaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
     }
 
+    h_sm->GetXaxis()->SetTickLength(0);
+    h_sm->GetYaxis()->SetTickLength(0);
+    h_sm->GetXaxis()->SetLabelSize(0.03);
+    h_sm->GetYaxis()->SetLabelSize(0.03);
+
     std::vector<TLine*> lines;
 
-    for (size_t i = 1; i < _var2_bins.size(); i++) {
-      TLine *line = new TLine(_var1_bins.size() * i, 0, _var1_bins.size() * i, n_bins);
+    for (size_t i = 1; i < _var1_bins.size(); i++) {
+      TLine *line = new TLine(_var2_bins.size() * i, 0, _var2_bins.size() * i, n_bins);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
       lines.emplace_back(line);
     }
 
-    for (size_t i = 1; i < _var2_bins.size(); i++) {
-      TLine *line = new TLine(0, _var1_bins.size() * i, n_bins, _var1_bins.size() * i);
+    for (size_t i = 1; i < _var1_bins.size(); i++) {
+      TLine *line = new TLine(0, _var2_bins.size() * i, n_bins, _var2_bins.size() * i);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
       lines.emplace_back(line);
