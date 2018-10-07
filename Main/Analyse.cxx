@@ -280,7 +280,7 @@ namespace Main {
 
   // Create placeholders to get stuff from file
   std::map<std::string,std::map<std::string,TH1D*>>* temp_map_bs;
-  std::map<std::string,std::map<std::string,TH2D*>>* temp_map2d_bs;
+  // std::map<std::string,std::map<std::string,TH2D*>>* temp_map2d_bs; 
   // std::map<std::string,std::map<std::string,UBTH2Poly*>>* temp_map2d_poly_bs; // to be removed
   BootstrapTH1D * temp_bs;
   // BootstrapTH2D * temp2d_bs;// to event histo
@@ -533,23 +533,19 @@ namespace Main {
   std::map<std::string,std::map<std::string,TH1D*>> hmap_trkangle_flux_multisim_bs_mc_dirt;
   std::map<std::string,std::map<std::string,TH2D*>> hmap_trktheta_trkmom_flux_multisim_bs_mc_dirt;
 
-  if (mc_dirt_file) {
-    mc_dirt_file->GetObject("hmap_onebin_flux_multisim_bs", temp_map_bs);
-    hmap_onebin_flux_multisim_bs_mc_dirt = *temp_map_bs;
-    // hmap_onebin_flux_multisim_bs_mc["dirt"] = hmap_onebin_flux_multisim_bs_mc_dirt["total"];
+  // if (mc_dirt_file) { // to eh
+  //   mc_dirt_file->GetObject("hmap_onebin_flux_multisim_bs", temp_map_bs);
+  //   hmap_onebin_flux_multisim_bs_mc_dirt = *temp_map_bs;
 
-    mc_dirt_file->GetObject("hmap_trkmom_flux_multisim_bs", temp_map_bs);
-    hmap_trkmom_flux_multisim_bs_mc_dirt = *temp_map_bs;
-    // hmap_trkmom_flux_multisim_bs_mc["dirt"] = hmap_trkmom_flux_multisim_bs_mc_dirt["total"];
+  //   mc_dirt_file->GetObject("hmap_trkmom_flux_multisim_bs", temp_map_bs);
+  //   hmap_trkmom_flux_multisim_bs_mc_dirt = *temp_map_bs;
 
-    mc_dirt_file->GetObject("hmap_trkangle_flux_multisim_bs", temp_map_bs);
-    hmap_trkangle_flux_multisim_bs_mc_dirt = *temp_map_bs;
-    // hmap_trkangle_flux_multisim_bs_mc["dirt"] = hmap_trkangle_flux_multisim_bs_mc_dirt["total"];
+  //   mc_dirt_file->GetObject("hmap_trkangle_flux_multisim_bs", temp_map_bs);
+  //   hmap_trkangle_flux_multisim_bs_mc_dirt = *temp_map_bs;
 
-    mc_dirt_file->GetObject("hmap_trktheta_trkmom_flux_multisim_bs", temp_map2d_bs);
-    hmap_trktheta_trkmom_flux_multisim_bs_mc_dirt = *temp_map2d_bs;
-    // hmap_trktheta_trkmom_flux_multisim_bs_mc["dirt"] = hmap_trktheta_trkmom_flux_multisim_bs_mc_dirt["total"];
-  } 
+  //   mc_dirt_file->GetObject("hmap_trktheta_trkmom_flux_multisim_bs", temp_map2d_bs);
+  //   hmap_trktheta_trkmom_flux_multisim_bs_mc_dirt = *temp_map2d_bs;
+  // } 
 
   LOG_NORMAL() << "Checkpoint 12" << std::endl;
 
@@ -604,8 +600,8 @@ namespace Main {
   // Getting the relevant histograms from MC file DIRT
   // *************************************
   if (mc_dirt_file) {
-    // mc_dirt_file->GetObject("hmap_trklen", temp_map);
-    // hmap_trklen_mc_dirt = *temp_map;
+    mc_dirt_file->GetObject("hmap_trklen", temp_map);
+    hmap_trklen_mc_dirt = *temp_map;
     // mc_dirt_file->GetObject("hmap_onebin", temp_map);
     // hmap_onebin_mc_dirt = *temp_map;
     // mc_dirt_file->GetObject("hmap_trkmom", temp_map);
@@ -2102,8 +2098,9 @@ namespace Main {
     migrationmatrix4dpoly.SetOutDir();
     TMatrix S = migrationmatrix4dpoly.CalculateMigrationMatrix();
 
-    migrationmatrix4d.SetOutputFileName("migration_matrix_4d_poly_trkangle_trkmom.tex");
-    migrationmatrix4d.PrintSmearingMatrixLatex();
+    migrationmatrix4dpoly.SetLaTeXOutputFileName("migration_matrix_4d_poly_trkangle_trkmom.tex");
+    migrationmatrix4dpoly.PrintSmearingMatrixLatex();
+    migrationmatrix4dpoly.PlotMatrix();
 
     CrossSectionCalculator2DPoly xsec_calc_poly;
     xsec_calc_poly.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
