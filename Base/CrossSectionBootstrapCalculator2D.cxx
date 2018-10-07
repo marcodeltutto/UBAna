@@ -19,6 +19,7 @@ namespace Base {
     _do_smear = true;
 
     _hmap_bnbcosmic.clear();
+    _hmap_dirt.clear();
     _h_bnbon = NULL;
     _h_extbnb = NULL;
     _h_intimecosmic = NULL;
