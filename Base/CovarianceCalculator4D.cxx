@@ -453,15 +453,42 @@ namespace Base {
     //
 
     std::vector<TLine*> lines;
-    if (!_polybin_mode) {
+
+    if (_polybin_mode) {
+
+      Int_t * separators = _bs_poly.GetNominal()->GetSeparators();
+      Int_t separators_length = _bs_poly.GetNominal()->GetSeparatorsLength();
+
+      if (separators_length > 50) separators_length = 0;
+
+      // Vertical lines
+      Int_t sum = 0;
+      for (Int_t s = 0; s < separators_length - 1; s++) {
+        TLine *line = new TLine(separators[s] + sum, 0, separators[s] + sum, n_bins);
+        line->SetLineColor(kRed);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+        sum += separators[s];
+      }
+
+      // Horizontal lines
+      sum = 0;
+      for (Int_t s = 0; s < separators_length - 1; s++) {
+        TLine *line = new TLine(0, separators[s] + sum, n_bins, separators[s] + sum);
+        line->SetLineColor(kRed);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+        sum += separators[s];
+      }
+    }
+    else {
 
       for (int i = 1; i < _bs.GetNbinsX(); i++) {
         TLine *line = new TLine(_bs.GetNbinsY()  * i, 0, _bs.GetNbinsY() * i, n_bins);
         line->SetLineColor(kGreen+2);
         line->SetLineWidth(2);
         lines.emplace_back(line);
-      }
-
+      }        
       for (int i = 1; i < _bs.GetNbinsX(); i++) {
         TLine *line = new TLine(0, _bs.GetNbinsY() * i, n_bins, _bs.GetNbinsY() * i);
         line->SetLineColor(kGreen+2);

@@ -55,6 +55,12 @@ namespace DataTypes {
     /// Add a rectangular bin
     void AddBin(Double_t x1, Double_t y1, Double_t x2, Double_t y2);
 
+    /// Sets the number of bins along x
+    void SetNBinsX(Int_t n);
+
+    /// Sets a vector containing the boundaris for Y variable
+    void SetSeparators(std::vector<int> v);
+
     ///
     void PrintConfig(){std::cout << "_hname is " << _hname << std::endl;
     /*std::cout << "map size is " << _hmap.size() << std::endl;*/}

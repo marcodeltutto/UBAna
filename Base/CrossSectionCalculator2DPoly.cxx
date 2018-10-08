@@ -1059,18 +1059,41 @@ namespace Base {
       xsec_data_histos.at(i).SetMarkerSize(0.5);
       xsec_data_histos.at(i).Draw("E1 X0 same");
 
-      if (i == 0) {
-        TLegend *l;
-        l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
-        l->SetFillColor(0);
-        l->SetFillStyle(0);
-        l->SetTextSize(0.03407284);
-        l->AddEntry(&xsec_mc_histos.at(i), "GENIE Default + Emp. MEC (Stat. Unc.)");
-        l->AddEntry(&xsec_data_histos.at(i), "Measured (Stat. Unc.)", "ep");
-        l->Draw();
-      }
+      // if (i == 0) {
+      //   TLegend *l;
+      //   l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
+      //   l->SetFillColor(0);
+      //   l->SetFillStyle(0);
+      //   l->SetTextSize(0.03407284);
+      //   l->AddEntry(&xsec_mc_histos.at(i), "GENIE Default + Emp. MEC (Stat. Unc.)");
+      //   l->AddEntry(&xsec_data_histos.at(i), "Measured (Stat. Unc.)", "ep");
+      //   l->Draw();
+      // }
     }
     // PlottingTools::DrawPreliminaryXSec();
+
+    // Add a legend
+    int legend_pad = 0;
+    if (x_bins / 2. != floor(x_bins / 2.)) legend_pad = horizontal_division * vertical_division; // Last empty pad
+    else legend_pad = 1; // First pad
+
+    c_test->cd(legend_pad);
+    TLegend *leg = new TLegend(0.15,0.44,0.82,0.670,NULL,"brNDC");
+    leg->SetBorderSize(0);
+    // leg->SetTextAlign(22);
+    leg->SetTextSize(0.08402531);
+    leg->SetLineColor(1);
+    leg->SetLineStyle(1);
+    leg->SetLineWidth(1);
+    leg->SetFillColor(0);
+    leg->SetFillStyle(0);
+    leg->AddEntry(&xsec_mc_histos.at(0), "GENIE Default + Emp. MEC (Stat. Unc.)");
+    if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
+      leg->AddEntry(&xsec_data_histos.at(0), "Measured (Stat. #oplus Syst. Unc.)", "ep");
+    } else {
+      leg->AddEntry(&xsec_data_histos.at(0), "Measured (Stat. Unc.)", "ep");
+    }
+    leg->Draw();
 
 
     name = _folder +_prefix + "_xsec_anglesplit";

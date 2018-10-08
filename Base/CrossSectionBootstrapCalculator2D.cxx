@@ -180,7 +180,7 @@ namespace Base {
 
 		gROOT->SetBatch(kTRUE);
 
-		std::cout << _prefix << "Started running." << std::endl;
+		LOG_NORMAL() << "Started running." << std::endl;
 
 		std::map<std::string, TH2D*> xsec_mumom_per_universe;
 
@@ -190,8 +190,8 @@ namespace Base {
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
     _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
-    std::cout << _prefix << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
-    std::cout << _prefix << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
+    LOG_NORMAL() << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
+    LOG_NORMAL() << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
     _xsec_calc.SetVerbosity(false);
     // _xsec_calc.set_verbosity(this->logger().level());
     // _xsec_calc.set_verbosity(Base::msg::kWARNING);
@@ -200,9 +200,9 @@ namespace Base {
     size_t n_universe = _h_eff_mumom_num.GetNWeights();
     std::vector<std::string> universe_names = _h_eff_mumom_num.GetUniverseNames();
 
-    std::cout << _prefix << "Number of Universes: " << n_universe << std::endl;
+    LOG_NORMAL() << "Number of Universes: " << n_universe << std::endl;
 
-    std::cout << _prefix << "Universes Names: ";
+    LOG_NORMAL() << "Universes Names: ";
     for (auto s : universe_names) {
     	std::cout << s << ", ";
     }
@@ -268,14 +268,6 @@ namespace Base {
       LOG_INFO() << "Reco per true histogram construncted for universe " << s << "." << std::endl;
 
 
-    
-      //
-      // Construct the map true vs reco
-      //
-      // if (_true_to_reco_is_set) {
-      //   hname = "this_reco_true" + universe_names.at(s);
-      //   _h_true_reco_mom.GetUniverseHisto(universe_names.at(s), this_reco_true);
-      // }
 
 
       //
@@ -325,11 +317,7 @@ namespace Base {
 
         MigrationMatrix4D migrationmatrix4d;
         migrationmatrix4d.DoMakePlots(false);
-        // migrationmatrix4d.set_verbosity(this->logger().level());
-        // migrationmatrix4d.set_verbosity(Base::msg::kWARNING);
-        // migrationmatrix4d.SetTTree(_t_true_reco);
         migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
-        // migrationmatrix4d.UseWeights(universe_names.at(s), weight_type);
         migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
 
         S_4d = migrationmatrix4d.CalculateMigrationMatrix();

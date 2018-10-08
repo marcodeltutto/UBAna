@@ -315,22 +315,33 @@ namespace DataTypes {
 
     void UBXSecEventHisto::_AddPolyBins_(BootstrapTH2DPoly * h) {
 
+      h->SetNBinsX(_n_bins_double_mucostheta);
+
+      int separator_counter = 0;
+      std::vector<int> separators;
+      separators.clear();
+
       for (int x = 0; x < _n_bins_double_mucostheta; x++) {
         for (int y = 0; y < _n_bins_double_mumom; y++) {
 
           auto it = _exclusion_map.find(x);
           if (it != _exclusion_map.end()) {
             if (y == it->second.first) {
+              separator_counter++;
               h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
               continue;
             } else if (y == it->second.second) {
               continue;
             }
           }
+          separator_counter++;
           h->AddBin(_bins_double_mucostheta[x], _bins_double_mumom[y], _bins_double_mucostheta[x+1], _bins_double_mumom[y+1]);
         }
+        separators.emplace_back(separator_counter);
+        separator_counter = 0;
       }
 
+      h->SetSeparators(separators);
     }
 
 

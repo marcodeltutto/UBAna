@@ -107,13 +107,11 @@ namespace DataTypes {
 
   size_t BootstrapTH1D::GetNWeights()
   {
-    std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
     return _n_weights;
   }
 
   std::vector<std::string> BootstrapTH1D::GetUniverseNames()
   {
-    std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
     return _name_v;
   }
 

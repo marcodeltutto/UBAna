@@ -56,6 +56,27 @@ namespace DataTypes {
     }
 
   }
+  
+
+  void BootstrapTH2DPoly::SetNBinsX(Int_t n)
+  {
+
+    for (size_t i = 0; i < _h_v.size(); i++) {
+      _h_v.at(i)->SetNBinsX(n);
+    }
+
+  }
+
+  
+
+  void BootstrapTH2DPoly::SetSeparators(std::vector<int> v) 
+  {
+
+    for (size_t i = 0; i < _h_v.size(); i++) {
+      _h_v.at(i)->SetSeparators(v);
+    }
+
+  } 
 
 
   void BootstrapTH2DPoly::SetAllHistograms(std::map<std::string,UBTH2Poly*> input_map) 
