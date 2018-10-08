@@ -137,7 +137,10 @@ namespace Base {
     void SetSmearingMatrix(TMatrix);
 
     ///
-    void SetCovarianceMatrix(UBTH2Poly);
+    void SetCovarianceMatrix(TH2D);
+
+    ///
+    void SetFractionalCovarianceMatrix(TH2D);
 
     ///
     void Smear();
@@ -212,8 +215,11 @@ namespace Base {
 
     double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
 
-    UBTH2Poly _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
+    TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
+
+    TH2D _frac_covariance_matrix; ///< 2D Histogram representing the fractional covariance matrix (to be set externally)
+    bool _frac_covariance_matrix_is_set = false; ///< Flag that remembers if the fractional covariance matrix was set for this cross section calculation (if not, no syst will be added)
 
     UBTH2Poly *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
     UBTH2Poly *_cov_matrix_total = NULL; ///< Total  covariance matrix

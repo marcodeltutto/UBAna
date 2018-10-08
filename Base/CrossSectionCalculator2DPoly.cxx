@@ -71,10 +71,26 @@ namespace Base {
 
   }
 
-  void CrossSectionCalculator2DPoly::SetCovarianceMatrix(UBTH2Poly h)
+  void CrossSectionCalculator2DPoly::SetCovarianceMatrix(TH2D h)
   {
     _covariance_matrix = h;
     _covariance_matrix_is_set = true;
+
+    if (_frac_covariance_matrix_is_set) {
+      LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
+      throw std::exception();
+    }
+  }
+
+  void CrossSectionCalculator2DPoly::SetFractionalCovarianceMatrix(TH2D h)
+  {
+    _frac_covariance_matrix = h;
+    _frac_covariance_matrix_is_set = true;
+
+    if (_covariance_matrix_is_set) {
+      LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
+      throw std::exception();
+    }
   }
 
   void CrossSectionCalculator2DPoly::PrintConfig() {
@@ -604,6 +620,26 @@ namespace Base {
 
     UBTH2Poly * h_syst_unc = (UBTH2Poly*) h_data->Clone("h_syst_unc");
 
+    if (_frac_covariance_matrix_is_set) {
+
+      _covariance_matrix = * ( (TH2D*)_frac_covariance_matrix.Clone("_covariance_matrix") );
+      _covariance_matrix.Reset();
+
+      // Loop over the bins and multiply this fractional covariance matrix by the xsec
+      // so to obtain a covariance matrix 
+      for (int a = 0; a < _frac_covariance_matrix.GetNbinsX(); a++) {
+
+        for (int b = 0; b < _frac_covariance_matrix.GetNbinsX(); b++) {
+
+          _covariance_matrix.SetBinContent(a+1, b+1, _frac_covariance_matrix.GetBinContent(a+1, b+1) * (h_data->GetBinContent(a+1) * h_data->GetBinContent(b+1)) );
+
+        }
+      }
+
+      _covariance_matrix_is_set = true;
+    }
+
+
     if (_covariance_matrix_is_set) {
 
       // Just to set the right bins:
@@ -611,50 +647,34 @@ namespace Base {
       _frac_cov_matrix_total = (UBTH2Poly*)_covariance_matrix.Clone("_frac_cov_matrix_total");
       _corr_matrix_total = (UBTH2Poly*)_covariance_matrix.Clone("_corr_matrix_total");
 
-      int i = 0, j = 0, m = 0, n = 0;
  
       for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {
 
         for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
 
-          // Unroll a and b lablel into a = i,j and b = m,n
-          if (a % h_data->GetNbinsY() == 0){
-              i = a / h_data->GetNbinsY();
-          }
-          j = a % h_data->GetNbinsY();
-
-          if (b % h_data->GetNbinsY() == 0){
-              m = b / h_data->GetNbinsY();
-          }
-          n = b % h_data->GetNbinsY();
-
-          // std::cout << "a = " << a << ", i = " << i << ", j = " << j << std::endl;
-          // std::cout << "b = " << b << ", m = " << m << ", n = " << n << std::endl;
-
-
           // The statictial uncertainty squared
-          double unc_stat_2 = h_data->GetBinError(i+1, j+1) * h_data->GetBinError(m+1, n+1);
+          double unc_stat_2 = h_data->GetBinError(a+1) * h_data->GetBinError(b+1);
 
           // The systematic uncertainty squared
           double unc_syst_2 = _covariance_matrix.GetBinContent(a+1, b+1);
 
           // The extra systematic uncertainty squared (POT normalisation, ...)
-          double extra_unc_2 = _extra_fractional_uncertainty * h_data->GetBinContent(i+1, j+1)   *    _extra_fractional_uncertainty * h_data->GetBinContent(m+1, n+1);
+          double extra_unc_2 = _extra_fractional_uncertainty * h_data->GetBinContent(a+1)   *    _extra_fractional_uncertainty * h_data->GetBinContent(b+1);
 
           // The total uncertainty (quadrature sum)
           double unc_tot = std::sqrt(unc_stat_2 + unc_syst_2 + extra_unc_2);
 
           if (a == b) {
-            std::cout << "Bin " << a << " (aka i = " << i << ", j = " << j << ")" << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
-            h_syst_unc->SetBinError(i+1, j+1, unc_tot); 
+            LOG_INFO() << "Bin " << a << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
+            h_syst_unc->SetBinError(a+1, unc_tot); 
           }
 
           // Also construct the total syst covariance matrix
           double total_syst_unc_2 = unc_syst_2 + extra_unc_2;
 
           _cov_matrix_total->SetBinContent(a+1, b+1, total_syst_unc_2);
-          if (h_data->GetBinContent(i+1, j+1) != 0. && h_data->GetBinContent(m+1, n+1) != 0.) {
-            _frac_cov_matrix_total->SetBinContent(a+1, b+1, (total_syst_unc_2) / (h_data->GetBinContent(i+1, j+1) * h_data->GetBinContent(m+1, n+1)));
+          if (h_data->GetBinContent(a+1) != 0. && h_data->GetBinContent(b+1) != 0.) {
+            _frac_cov_matrix_total->SetBinContent(a+1, b+1, (total_syst_unc_2) / (h_data->GetBinContent(a+1) * h_data->GetBinContent(b+1)));
           } else {
             _frac_cov_matrix_total->SetBinContent(a+1, b+1, 0.);
           }

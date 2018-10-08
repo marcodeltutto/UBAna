@@ -260,18 +260,6 @@ namespace Base {
       }
       this_reco_per_true = iter->second;
 
-      // for (int i = 0; i < input_map_mc["total"]->GetNumberOfBins(); i++) {
-      //   LOG_CRITICAL() << "before scale - bin " << i+1 << ", _reco_per_true is " << this_reco_per_true[0][i] << std::endl;
-      // }
-
-      //
-      // Construct the map true vs reco
-      //
-      // if (_true_to_reco_is_set) {
-      //   hname = "this_reco_true" + universe_names.at(s);
-      //   _h_true_reco_mom.GetUniverseHisto(universe_names.at(s), this_reco_true);
-      // }
-
 
       //
       // Calculate flux for this universe
@@ -388,6 +376,8 @@ namespace Base {
     // Plot all the xsec in one plot
     //
     
+    LOG_NORMAL() << "Generating plots. This may take a while." << std::endl;
+
     DrawXSec(xsec_mumom_per_universe);
 
     LOG_NORMAL() << "All done here." << std::endl;
@@ -423,6 +413,9 @@ namespace Base {
     maxima.resize(xsec_mumom_per_universe["nominal"]->GetNBinsX(), 0);
 
     std::vector<std::vector<int>> bin_numbers;
+  
+    TH1D* h_nominal; // just for the legend
+    TH1D* h_other; // just for the legend
 
     while (it != xsec_mumom_per_universe.rend()) {    
 
@@ -467,15 +460,15 @@ namespace Base {
         xsec_mc_histos.at(i).SetFillColor(29);
         xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
         xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
-        if (it->first == "nominal") {
-          xsec_mc_histos.at(i).SetLineColor(kGreen+3);
-        }
+        // if (it->first == "nominal") {
+        //   xsec_mc_histos.at(i).SetLineColor(kRed+2);
+        // }
         // xsec_mc_histos.at(i).Draw("E2");
         TH1D* h_main = (TH1D*) xsec_mc_histos.at(i).Clone("h_main");
         h_main->SetLineColor(kGreen+2);
         if (it->first == "nominal") {
-          h_main->SetLineColor(kGreen+3);
-          h_main->SetLineWidth(3);
+          h_main->SetLineColor(kRed+2);
+          h_main->SetLineWidth(2);
 
           // Add uncertainties if nominal histo
           for (int bin = 1; bin <= h_main->GetNbinsX(); bin++) {
@@ -485,10 +478,12 @@ namespace Base {
           }
           h_main->SetFillColor(0); // fully transparent
           h_main->Draw("E1 same"); // also error bars for nominal
+          h_nominal = h_main;
         }
         else {
           h_main->SetFillColor(0); // fully transparent
           h_main->Draw("histo same");
+          h_other = h_main;
         }
 
         // if (h_main->GetMaximum() > maxima.at(i)) maxima.at(i) = h_main->GetMaximum();
@@ -506,23 +501,30 @@ namespace Base {
 
       }
 
-      // xsec_data_histos.at(i).Draw("E1 X0 same");
-
-      // if (i == 0) {
-      //   TLegend *l;
-      //   l = new TLegend(0.3671979,0.67415,0.7178785,0.8019232,NULL,"brNDC");
-      //   l->SetFillColor(0);
-      //   l->SetFillStyle(0);
-      //   l->SetTextSize(0.03407284);
-      //   l->AddEntry(&xsec_mc_histos.at(i), "GENIE Default + Emp. MEC (Stat. Unc.)");
-      //   // l->AddEntry(&xsec_data_histos.at(i), "Measured (Stat. Unc.)", "ep");
-      //   l->Draw();
-      // }
-
       
 
       it++;
     } // Loop over universes in reverse order
+
+
+    // Add a legend
+    int legend_pad = 0;
+    if (x_bins / 2. != floor(x_bins / 2.)) legend_pad = horizontal_division * vertical_division; // Last empty pad
+    else legend_pad = 1; // First pad
+
+    c_test->cd(legend_pad);
+    TLegend *leg = new TLegend(0.15,0.44,0.82,0.670,NULL,"brNDC");
+    leg->SetBorderSize(0);
+    leg->SetTextAlign(22);
+    leg->SetTextSize(0.08402531);
+    leg->SetLineColor(1);
+    leg->SetLineStyle(1);
+    leg->SetLineWidth(1);
+    leg->SetFillColor(0);
+    leg->SetFillStyle(0);
+    leg->AddEntry(h_other,   "Data Cross Section - All Universes","l");
+    leg->AddEntry(h_nominal, "Data Cross Section - Central Value","le");
+    leg->Draw();
 
     c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.pdf").c_str());
     c_test->SaveAs((_save_prefix + "_xsec_all_fancy_2d.C").c_str());

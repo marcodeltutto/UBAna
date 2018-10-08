@@ -2119,6 +2119,11 @@ namespace Main {
     xsec_calc_poly.Smear();
     xsec_calc_poly.Draw();
 
+    if (frac_covariance_matrix_poly_muangle_mumom.GetNbinsX() > 1) {
+      xsec_calc_poly.SetFractionalCovarianceMatrix(frac_covariance_matrix_poly_muangle_mumom);
+    }
+    xsec_calc_poly.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
+
     UBTH2Poly * xsec_muangle_mumom_poly = xsec_calc_poly.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
     UBTH2Poly * xsec_muangle_mumom_poly_mc = xsec_calc_poly.GetMCCrossSection();
 
