@@ -144,6 +144,19 @@ namespace DataTypes {
      return kTRUE;
   }
 
+  void UBTH2Poly::GetStats(Double_t *stats) const
+  {
+     std::cout << "Start UBTH2Poly::GetStats" << std::endl;
+    stats[0] = fTsumw;
+    stats[1] = fTsumw2;
+    stats[2] = fTsumwx;
+    stats[3] = fTsumwx2;
+    stats[4] = fTsumwy;
+    stats[5] = fTsumwy2;
+    stats[6] = fTsumwxy;
+     std::cout << "End UBTH2Poly::GetStats" << std::endl;
+  }
+
   void UBTH2Poly::PutStats(Double_t *stats)
   {
      std::cout << "Before TH1::PutStats" << std::endl;

@@ -9,9 +9,9 @@ analyser = Main.Analyse()
 
 
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_nosyst.root")
-analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2.root")
+analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_ccqe.root")
 
-analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root")
+# analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root")
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 
@@ -39,10 +39,10 @@ analyser.ImportCosmicSystematics(False)
 
 analyser.ImportDirtSystematics(False)
 
-analyser.DoGenieSystematics(True)
+analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)
 
-analyser.DoExtraSystematics(False)
+analyser.DoExtraSystematics(True)
 analyser.ImportExtraSystematics(False)
 
 analyser.DoMCStatSystematics(False)

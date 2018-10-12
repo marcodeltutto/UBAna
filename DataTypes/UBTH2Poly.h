@@ -82,6 +82,9 @@ namespace DataTypes {
     Int_t GetNBinsX();
 
     ///
+    void GetStats(Double_t *stats) const;
+
+    ///
     void PutStats(Double_t *stats);
 
     /// Sets a vector containing the boundaris for Y variable
