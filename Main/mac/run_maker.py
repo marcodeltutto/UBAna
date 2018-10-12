@@ -17,6 +17,9 @@ maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxs
 maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
 maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
 
+maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root"); # After Neutrino - Tune3 (run on gpvm)
+maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root"); # After Neutrino - Tune3 (run on gpvm)
+
 
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)

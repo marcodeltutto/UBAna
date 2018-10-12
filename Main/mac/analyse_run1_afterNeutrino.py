@@ -10,6 +10,7 @@ analyser = Main.Analyse()
 
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_nosyst.root")
 analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_ccqe.root")
+analyser.SetBNBCosmicFile     ("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root") # Tune 3 (full)
 
 # analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root")
 
