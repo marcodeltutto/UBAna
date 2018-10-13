@@ -28,8 +28,8 @@ for systname in det_syst_list:
   maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/detsyst/ubxsecana_output_mc_bnbcosmic_detsyst" + systname + "_ubcodev06_26_01_22_.root");
 
   maker.SetEntries(-1)
-  maker.SetBeamSpillStart(3.2)    
-  maker.SetBeamSpillEnd(4.8)    
+  maker.SetBeamSpillStart(3.1)    
+  maker.SetBeamSpillEnd(4.9)    
   maker.SetFlashShift(0.)    
   maker.SetGainCalibration(198)    
   maker.SetCalculatePOT(True)    
