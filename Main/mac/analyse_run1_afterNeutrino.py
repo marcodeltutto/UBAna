@@ -8,11 +8,11 @@ from ROOT import Main
 analyser = Main.Analyse()
 
 
-# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_nosyst.root")
-analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_ccqe.root")
-analyser.SetBNBCosmicFile     ("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root") # Tune 3 (full)
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_nosyst.root") # Tune 1
+analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_ccqe.root") # Tune 1
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root") # Tune 3 (full)
 
-# analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root")
+analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root")
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 
@@ -26,7 +26,7 @@ analyser.SetPrefix("cv")
 # analyser.SetPrefix("cv_cosmicscaled_overlay")
 analyser.SetFluxCorrectionWeight(1.028)
 
-# analyser.ImportAlternativeMC("xsec_file_cv_tune3.root")
+analyser.ImportAlternativeMC("xsec_file_cv_tune3.root")
 
 analyser.SetBeamOffSubtraction(False)
 analyser.SetBreakdownPlots(True)
@@ -43,7 +43,7 @@ analyser.ImportDirtSystematics(False)
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)
 
-analyser.DoExtraSystematics(True)
+analyser.DoExtraSystematics(False)
 analyser.ImportExtraSystematics(False)
 
 analyser.DoMCStatSystematics(False)
