@@ -16,11 +16,16 @@ analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecan
 
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 
-analyser.SetBNBONFile         ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_run1_ubcodev06_26_01_22__v1.root")    
-analyser.SetEXTBNBFile        ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v1.root")
-analyser.SetBNBPOT(1.159e+20)    
-analyser.SetBNBONTriggers(25848208.0)   
-analyser.SetEXTBNBTriggers(28745873)
+# analyser.SetBNBONFile         ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_run1_ubcodev06_26_01_22__v1.root")    
+# analyser.SetEXTBNBFile        ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v1.root")
+# analyser.SetBNBPOT(1.159e+20)    
+# analyser.SetBNBONTriggers(25848208.0)   
+# analyser.SetEXTBNBTriggers(28745873)
+analyser.SetBNBONFile         ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_run1_ubcodev06_26_01_22__v4.root")    
+analyser.SetEXTBNBFile        ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v4.root")
+analyser.SetBNBPOT(1.592e+20)    
+analyser.SetBNBONTriggers(35388924.0)   
+analyser.SetEXTBNBTriggers(72299264.0)
 analyser.SetPrefix("cv")
 # analyser.SetPrefix("cv_tune3")
 # analyser.SetPrefix("cv_cosmicscaled_overlay")

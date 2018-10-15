@@ -11,8 +11,8 @@ maker = Main.Maker()
 
 # Overlay
 
-maker.SetInputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Input/ubxsec_output_data_overlay_mcc8.9_test10.root") # Overlay
-maker.SetOutputFile("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_overlay_mcc8.9_test10.root"); # Overlay
+maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_overlay_ubcodev06_26_01_22__v4.root") # Overlay
+maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_overlay_ubcodev06_26_01_22__v4.root"); # Overlay
 
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)

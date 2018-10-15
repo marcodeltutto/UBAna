@@ -2129,11 +2129,11 @@ namespace Main {
 
 
     file_out->cd();
-    save_name = "xsec_poly_muangle_mumom__" + _prefix;
+    save_name = "xsec_poly_muangle_mumom_" + _prefix;
     xsec_muangle_mumom_poly->Write(save_name.c_str());
-    save_name = "xsec_poly_muangle_mumom__mc_" + _prefix;
+    save_name = "xsec_poly_muangle_mumom_mc_" + _prefix;
     xsec_muangle_mumom_poly_mc->Write(save_name.c_str());
-    save_name = "covariance_matrix_poly_muangle_mumom__" + _prefix;
+    save_name = "covariance_matrix_poly_muangle_mumom_" + _prefix;
     frac_covariance_matrix_poly_muangle_mumom.Write(save_name.c_str());
   
 
