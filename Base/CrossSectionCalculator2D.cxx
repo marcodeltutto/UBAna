@@ -579,11 +579,13 @@ namespace Base {
     // Divide by flux, and N_target and bin width
     //
 
-    LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
-    double den = _flux * _n_target * 1e-38;
+    // LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
 
-    h_mc->Scale(1. / den, "width");
-    h_data->Scale(1. / den, "width");
+    double den_data = _flux * _n_target_data * 1e-38;
+    double den_mc   = _flux * _n_target_mc   * 1e-38;
+
+    h_mc->Scale(1. / den_mc, "width");
+    h_data->Scale(1. / den_data, "width");
 
     LOG_INFO() << "Cross section in bin (5, 2) is " << h_data->GetBinContent(5, 2) << std::endl;
 

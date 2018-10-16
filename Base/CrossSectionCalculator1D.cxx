@@ -739,15 +739,17 @@ namespace Base {
     // Divide by flux, and N_target and bin width
     //
 
-    LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
-    double den = _flux * _n_target * 1e-38;
+    // LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
 
-    _h_mc->Scale(1. / den, "width");
-    _h_data->Scale(1. / den, "width");
+    double den_data = _flux * _n_target_data * 1e-38;
+    double den_mc   = _flux * _n_target_mc   * 1e-38;
+
+    _h_mc->Scale(1. / den_mc, "width");
+    _h_data->Scale(1. / den_data, "width");
 
 
     // Do it also for the truth xsec
-    if (_fake_data_mode) _truth_xsec_smeared->Scale(1. / den, "width");
+    if (_fake_data_mode) _truth_xsec_smeared->Scale(1. / den_mc, "width");
 
 
     LOG_INFO() << "Data Integral: " << _h_data->Integral() << std::endl;

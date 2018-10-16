@@ -158,6 +158,12 @@ namespace Base {
     ///
     void AddExtraDiagonalUncertainty(double v) {_extra_fractional_uncertainty = v;};
 
+    ///
+    void SetNTargetData(double n = 2.64218e31) {_n_target_data = n;}
+
+    ///
+    void SetNTargetMC(double n = 2.66471e31) {_n_target_mc = n;}
+
   private:
 
     std::string _namebase = "[CrossSectionCalculator2D] ";
@@ -175,7 +181,8 @@ namespace Base {
     double _pot;
     double _flux;
 
-    double _n_target = 2.64218e31;
+    double _n_target_data = 2.64218e31;
+    double _n_target_mc = 2.66471e31;
 
     std::string _name = "trklen"; 
     std::string _label = ";Test [cm]; Selected Events";

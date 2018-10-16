@@ -577,11 +577,13 @@ namespace Base {
     // Divide by flux, and N_target and bin width
     //
 
-    LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
-    double den = _flux * _n_target * 1e-38;
+    // LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
 
-    h_mc->Scale(1. / den, "width");
-    h_data->Scale(1. / den, "width");
+    double den_data = _flux * _n_target_data * 1e-38;
+    double den_mc   = _flux * _n_target_mc   * 1e-38;
+
+    h_mc->Scale(1. / den_mc, "width");
+    h_data->Scale(1. / den_data, "width");
 
     LOG_DEBUG() << "scale h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
     LOG_DEBUG() << "bin 1. scale h_data = " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
@@ -950,6 +952,7 @@ namespace Base {
 
     std::vector<TH1D> xsec_data_histos;
     std::vector<TH1D> xsec_mc_histos;
+    std::vector<TH1D> xsec_mc_alt_histos;
     std::vector<TH1D> xsec_data_unc_histos;
     // std::vector<std::string> costhetamu_ranges = {"-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50",
     //                                               "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00",
@@ -1003,10 +1006,10 @@ namespace Base {
 
 
     for (int i = 0; i < x_bins; i++) {
-
       xsec_data_histos.emplace_back(*_h_data->ProjectionY("fuck", i+1, bin_numbers));
-      xsec_mc_histos.emplace_back(*_h_mc->ProjectionY("fuck", i+1, bin_numbers));
       xsec_data_unc_histos.emplace_back(*_h_syst_unc->ProjectionY("fuck", i+1, bin_numbers));
+      xsec_mc_histos.emplace_back(*_h_mc->ProjectionY("fuck", i+1, bin_numbers));
+      if (_add_alt_mc_xsec) xsec_mc_alt_histos.emplace_back(*_h_alt_mc_xsec->ProjectionY("fuck", i+1, bin_numbers));
     }
 
 
@@ -1049,6 +1052,19 @@ namespace Base {
       xsec_mc_histos.at(i).SetMinimum(min - std::abs(min) * 0.4);
       xsec_mc_histos.at(i).SetMaximum(max * 1.5);
 
+
+      // The alternative cross section
+      if (_add_alt_mc_xsec) {
+        xsec_mc_alt_histos.at(i).SetLineColor(kBlue+1);
+        xsec_mc_alt_histos.at(i).SetFillColor(38);
+        xsec_mc_alt_histos.at(i).Draw("E2 same");
+
+        UBTH2Poly* h_alt_mc_xsec_main = (UBTH2Poly*) xsec_mc_alt_histos.at(i).Clone("h_alt_mc_xsec_main");
+        h_alt_mc_xsec_main->SetLineColor(kBlue+1);
+        h_alt_mc_xsec_main->SetFillColor(0); // fully transparent
+        h_alt_mc_xsec_main->Draw("histo same");
+      }
+
       // The outer uncertainty bar
       xsec_data_unc_histos.at(i).SetMarkerStyle(20);
       xsec_data_unc_histos.at(i).SetMarkerSize(0.1);
@@ -1088,6 +1104,9 @@ namespace Base {
     leg->SetFillColor(0);
     leg->SetFillStyle(0);
     leg->AddEntry(&xsec_mc_histos.at(0), "GENIE Default + Emp. MEC (Stat. Unc.)");
+    if (_add_alt_mc_xsec) {
+      leg->AddEntry(&xsec_mc_alt_histos.at(0), "GENIE Alternative (Stat. Unc.)");
+    }
     if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
       leg->AddEntry(&xsec_data_histos.at(0), "Measured (Stat. #oplus Syst. Unc.)", "ep");
     } else {
