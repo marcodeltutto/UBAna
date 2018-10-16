@@ -73,12 +73,21 @@ namespace DataTypes {
     int _n_bins_double_mumom = 6; ///< Number of momentum bins for double differential
     int _n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
 
-    double _bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50}; //!
-    double _bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; //!
+    double _bins_double_mumom[7] = {0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50};
+    double _bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00};
 
-    int _n_poly_bins = 53;
-    std::map<int, std::pair<int, int>> _exclusion_map = { {0, std::make_pair(4, 5)},
-                                                          {1, std::make_pair(4, 5)}, }; //!
+    int _n_poly_bins = 43;
+    std::map<int, std::pair<int, int>> _exclusion_map = { {0, std::make_pair(4, 5)}, // for costheta bin 0, merge pmu bin 4 and 5
+                                                          {1, std::make_pair(4, 5)},
+                                                          {2, std::make_pair(4, 5)},
+                                                          {3, std::make_pair(4, 5)},
+                                                          {4, std::make_pair(4, 5)},
+                                                          {5, std::make_pair(4, 5)},
+                                                          {4, std::make_pair(0, 1)},
+                                                          {5, std::make_pair(0, 1)},
+                                                          {6, std::make_pair(0, 1)},
+                                                          {7, std::make_pair(0, 1)},
+                                                          {8, std::make_pair(0, 1)}, };
 
 
 
