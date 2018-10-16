@@ -964,7 +964,7 @@ namespace Main {
     if (_import_alternative_mc) {
       file_alt_mc = TFile::Open(_alternative_mc_file.c_str(),"READ");
       if ( !file_alt_mc->IsOpen() ) {
-        std::cout << "Cannot open file containing alternative MC with name " << _alternative_mc_file << std::endl;
+        LOG_CRITICAL() << "Cannot open file containing alternative MC with name " << _alternative_mc_file << std::endl;
         exit(0);
       }
     }
@@ -2123,6 +2123,12 @@ namespace Main {
       xsec_calc_poly.SetFractionalCovarianceMatrix(frac_covariance_matrix_poly_muangle_mumom);
     }
     xsec_calc_poly.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
+
+    if (_import_alternative_mc) {
+      UBTH2Poly* h = (UBTH2Poly*)file_alt_mc->Get("xsec_poly_muangle_mumom_mc_cv_tune3");
+      LOG_CRITICAL() << "h->GetNumberOfBins() " << h->GetNumberOfBins() << std::endl;
+      xsec_calc_poly.ImportAlternativeMC(h);
+    }
 
     UBTH2Poly * xsec_muangle_mumom_poly = xsec_calc_poly.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
     UBTH2Poly * xsec_muangle_mumom_poly_mc = xsec_calc_poly.GetMCCrossSection();

@@ -1928,15 +1928,6 @@ void Main::Maker::MakeFile()
 
     if (i == _initial_entry && !isdata && _fill_bootstrap_extra_syst) {
 
-       // for (int i_func = 0; i_func < t->evtwgt_extra_syst_multisim_nfunc; i_func++) {
-
-        // if (t->evtwgt_extra_syst_multisim_funcname.at(i_func) == _extra_syst_target_syst) {
-        //   std::cout << "GENIE Multisim: func name is " << t->evtwgt_extra_syst_multisim_funcname.at(i_func) 
-        //             << " which is what we expected." << std::endl;
-        //   extra_syst_function_number = i_func;
-        // } else {
-        //   continue;
-        // }
 
         fname_extra_syst.clear();
         fname_extra_syst.resize(100/*t->evtwgt_extra_syst_multisim_nweight.at(i_func)*/);
