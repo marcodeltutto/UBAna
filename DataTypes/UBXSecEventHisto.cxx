@@ -330,8 +330,8 @@ namespace DataTypes {
       for (int x = 0; x < _n_bins_double_mucostheta; x++) {
         for (int y = 0; y < _n_bins_double_mumom; y++) {
 
-          auto it = _exclusion_map.find(x);
-          if (it != _exclusion_map.end()) {
+          auto it = _exclusion_map1.find(x);
+          if (it != _exclusion_map1.end()) {
             if (y == it->second.first) {
               separator_counter++;
               h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
@@ -340,6 +340,18 @@ namespace DataTypes {
               continue;
             }
           }
+
+          it = _exclusion_map2.find(x);
+          if (it != _exclusion_map2.end()) {
+            if (y == it->second.first) {
+              separator_counter++;
+              h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
+              continue;
+            } else if (y == it->second.second) {
+              continue;
+            }
+          }
+
           separator_counter++;
           h->AddBin(_bins_double_mucostheta[x], _bins_double_mumom[y], _bins_double_mucostheta[x+1], _bins_double_mumom[y+1]);
         }
@@ -362,8 +374,8 @@ namespace DataTypes {
       for (int x = 0; x < _n_bins_double_mucostheta; x++) {
         for (int y = 0; y < _n_bins_double_mumom; y++) {
 
-          auto it = _exclusion_map.find(x);
-          if (it != _exclusion_map.end()) {
+          auto it = _exclusion_map1.find(x);
+          if (it != _exclusion_map1.end()) {
             if (y == it->second.first) {
               separator_counter++;
               h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
@@ -372,6 +384,18 @@ namespace DataTypes {
               continue;
             }
           }
+
+          it = _exclusion_map2.find(x);
+          if (it != _exclusion_map2.end()) {
+            if (y == it->second.first) {
+              separator_counter++;
+              h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
+              continue;
+            } else if (y == it->second.second) {
+              continue;
+            }
+          }
+
           separator_counter++;
           h->AddBin(_bins_double_mucostheta[x], _bins_double_mumom[y], _bins_double_mucostheta[x+1], _bins_double_mumom[y+1]);
         }

@@ -77,17 +77,18 @@ namespace DataTypes {
     double _bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00};
 
     int _n_poly_bins = 43;
-    std::map<int, std::pair<int, int>> _exclusion_map = { {0, std::make_pair(4, 5)}, // for costheta bin 0, merge pmu bin 4 and 5
-                                                          {1, std::make_pair(4, 5)},
-                                                          {2, std::make_pair(4, 5)},
-                                                          {3, std::make_pair(4, 5)},
-                                                          {4, std::make_pair(4, 5)},
-                                                          {5, std::make_pair(4, 5)},
-                                                          {4, std::make_pair(0, 1)},
-                                                          {5, std::make_pair(0, 1)},
-                                                          {6, std::make_pair(0, 1)},
-                                                          {7, std::make_pair(0, 1)},
-                                                          {8, std::make_pair(0, 1)}, };
+    std::map<int, std::pair<int, int>> _exclusion_map1 = { {0, std::make_pair(4, 5)}, // for costheta bin 0, merge pmu bin 4 and 5
+                                                           {1, std::make_pair(4, 5)},
+                                                           {2, std::make_pair(4, 5)},
+                                                           {3, std::make_pair(4, 5)},
+                                                           {4, std::make_pair(4, 5)},
+                                                           {5, std::make_pair(4, 5)},
+                                                           {6, std::make_pair(0, 1)},
+                                                           {7, std::make_pair(0, 1)},
+                                                           {8, std::make_pair(0, 1)}, };
+
+    std::map<int, std::pair<int, int>> _exclusion_map2 = { {4, std::make_pair(0, 1)},
+                                                           {5, std::make_pair(0, 1)}, };
 
 
 
