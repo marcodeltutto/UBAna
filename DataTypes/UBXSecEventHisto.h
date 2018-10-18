@@ -87,10 +87,6 @@ namespace DataTypes {
                                                            {7, std::make_pair(0, 1)},
                                                            {8, std::make_pair(0, 1)}, };
 
-    std::map<int, std::pair<int, int>> _exclusion_map2 = { {4, std::make_pair(0, 1)},
-                                                           {5, std::make_pair(0, 1)}, };
-
-
 
 
     //
