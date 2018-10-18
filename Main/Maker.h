@@ -290,7 +290,7 @@ namespace Main{
     int n_bins_double_mucostheta = 9; ///< Number of costheta bins for double differential
     double bins_double_mucostheta[10] = {-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00}; ///< costheta bins for double differential
 
-    int _n_poly_bins = 53;
+    int _n_poly_bins = 43;
     std::map<int, std::pair<int, int>> _exclusion_map = { {0, std::make_pair(4, 5)},
                                                           {1, std::make_pair(4, 5)}, };
 

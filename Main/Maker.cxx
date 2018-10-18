@@ -544,6 +544,9 @@ void Main::Maker::MakeFile()
   _event_histo->InitializeBootstraps();
   // _event_histo->OpenFile(fileoutn + "mytest");
 
+  _n_poly_bins = _event_histo->_n_poly_bins;
+  LOG_NORMAL() << "Number of polybins: " << _n_poly_bins << std::endl;
+
   double nsignal = 0;
 
   double nsignal_qe = 0;

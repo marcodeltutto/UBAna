@@ -2053,7 +2053,7 @@ namespace Main {
     if (_import_detector_systs) {
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_syst_poly_muangle_mumom");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_poly_detector_muangle_mumom");
       frac_covariance_matrix_detector = *m;
 
       unc_plotter.AddFracCovarianceMatrix("DETECTOR", frac_covariance_matrix_detector);

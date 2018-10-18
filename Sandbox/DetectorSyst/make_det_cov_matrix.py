@@ -120,7 +120,6 @@ for syst_name in det_syst_list:
  	xsec_muangle            = file.Get("xsec_muangle_" + syst_name)
  	xsec_muangle_mumom      = file.Get("xsec_muangle_mumom_" + syst_name)
  	xsec_poly_muangle_mumom = file.Get("xsec_poly_muangle_mumom_" + syst_name)
-	print " ==== Number of poly bins:", xsec_poly_muangle_mumom.GetNumberOfBins()
 
 	# for i in xrange(0, n_bins_muangle):
 	# 	for j in xrange(0, n_bins_mumom):
@@ -208,6 +207,32 @@ print "Total onebin syst err (relative):", math.sqrt(syst_total_xsec) / xsec_one
 
 # gStyle.SetPalette(kDeepSea);
 
+
+
+
+# alpha = 1
+
+# # stops = [    0.0000,    0.1250,    0.2500,    0.3750,    0.5000,    0.6250,    0.7500,    0.8750,    1.0000];
+# # red   = [   6./255.,   8./255.,  36./255.,  91./255., 169./255., 235./255., 246./255., 240./255., 233./255.];
+# # green = [   0./255.,  46./255.,  99./255., 149./255., 194./255., 220./255., 183./255., 166./255., 147./255.];
+# # blue  = [ 243./255., 243./255., 240./255., 240./255., 241./255., 239./255., 186./255., 151./255., 129./255.];
+
+# stops = [    0.0000,    0.1250,    0.2500,    0.3750,    0.5000,    0.6250,    0.7500,    0.8750,    1.0000];
+# red   = [   6./255.,   8./255.,  36./255.,  91./255., 255./255., 235./255., 246./255., 240./255., 233./255.];
+# green = [   0./255.,  46./255.,  99./255., 149./255., 255./255., 220./255., 183./255., 166./255., 147./255.];
+# blue  = [ 243./255., 243./255., 240./255., 240./255., 255./255., 239./255., 186./255., 151./255., 129./255.];
+
+# stops_a = array('d', stops)
+# red_a = array('d', red)
+# green_a = array('d', green)
+# blue_a = array('d', blue)
+
+# Idx = TColor.CreateGradientColorTable(9, stops_a, red_a, green_a, blue_a, 255, alpha);
+
+
+
+
+
 NRGBs = 5
 NCont = 100
 mainColour = [ 1.00, 1.00, 1.00, 1.00, 1.00 ]
@@ -255,11 +280,16 @@ gStyle.SetNumberContours(NCont)
 # cov_matrix_mumom
 # cov_matrix_mumom.Draw("colz TEXT")
 
-cov_file = TFile("covariance_detector_secondround.root", "RECREATE");
+cov_file = TFile("covariance_detector.root", "RECREATE");
 cov_file.cd();
 cov_matrix_mumom.Write("covariance_matrix_detector_mumom");
 cov_matrix_muangle.Write("covariance_matrix_detector_muangle");
 cov_matrix_muangle_mumom.Write("covariance_matrix_detector_muangle_mumom");
+cov_matrix_poly_muangle_mumom.Write("covariance_matrix_poly_detector_muangle_mumom");
+cov_matrix_mumom_frac.Write("frac_covariance_matrix_detector_mumom");
+cov_matrix_muangle_frac.Write("frac_covariance_matrix_detector_muangle");
+cov_matrix_muangle_mumom_frac.Write("frac_covariance_matrix_detector_muangle_mumom");
+cov_matrix_poly_muangle_mumom_frac.Write("frac_covariance_matrix_poly_detector_muangle_mumom");
 cov_file.Close();
 
 gStyle.SetPaintTextFormat("4.3f");
@@ -300,6 +330,8 @@ cov_matrix_poly_muangle_mumom_frac.GetXaxis().SetTitle("Bin i");
 cov_matrix_poly_muangle_mumom_frac.GetYaxis().SetTitle("Bin j");
 cov_matrix_poly_muangle_mumom_frac.GetXaxis().CenterTitle();
 cov_matrix_poly_muangle_mumom_frac.GetYaxis().CenterTitle();
+cov_matrix_poly_muangle_mumom_frac.SetMaximum(1.5)
+cov_matrix_poly_muangle_mumom_frac.SetMinimum(-1.5)
 cov_matrix_poly_muangle_mumom_frac.Draw("colz TEXT")
 
 # gStyle.SetPaintTextFormat("4.3f");
