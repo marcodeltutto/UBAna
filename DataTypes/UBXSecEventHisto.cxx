@@ -269,6 +269,12 @@ namespace DataTypes {
       _AddPolyBins_(hmap_trktheta_trkmom_poly_extra_syst_multisim_bs);
       _AddPolyBins_(hmap_trktheta_trkmom_poly_mc_stat_multisim_bs);
 
+      UBTH2Poly* h_poly_binnumber = h_eff_muangle_mumom_poly_num->GetCopyWithBinNumbers("bs");
+      TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 800, 700);
+      // gStyle->SetPaintTextFormat("4.0f");
+      h_poly_binnumber->Draw("text");
+      canvas_binnumber_poly->SaveAs("bin_numbers.pdf");
+
     }
 
 
