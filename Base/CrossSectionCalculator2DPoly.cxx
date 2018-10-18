@@ -1024,7 +1024,7 @@ namespace Base {
 
       xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
       xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
-      xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} cm^{2}/GeV/n]");
+      xsec_mc_histos.at(i).GetYaxis()->SetTitle("#frac{d^{2}#sigma}{dp_{#mu}^{reco}dcos(#theta_{#mu}^{reco})} [10^{-38} #frac{cm^{2}}{GeV Nucleon}]");
       xsec_mc_histos.at(i).GetXaxis()->CenterTitle();
       xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
       xsec_mc_histos.at(i).SetLineColor(kGreen+2);
