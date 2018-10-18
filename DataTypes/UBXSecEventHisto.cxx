@@ -321,7 +321,8 @@ namespace DataTypes {
 
     void UBXSecEventHisto::_AddPolyBins_(BootstrapTH2DPoly * h) {
 
-      std::map<int, std::pair<int, int>> _exclusion_map2 = { {4, std::make_pair(0, 1)},
+      std::map<int, std::pair<int, int>> _exclusion_map2 = { {3, std::make_pair(0, 1)},
+                                                             {4, std::make_pair(0, 1)},
                                                              {5, std::make_pair(0, 1)}, };
 
       h->SetNBinsX(_n_bins_double_mucostheta);
@@ -368,7 +369,8 @@ namespace DataTypes {
 
     void UBXSecEventHisto::_AddPolyBins_(UBTH2Poly * h) {
 
-      std::map<int, std::pair<int, int>> _exclusion_map2 = { {4, std::make_pair(0, 1)},
+      std::map<int, std::pair<int, int>> _exclusion_map2 = { {3, std::make_pair(0, 1)},
+                                                             {4, std::make_pair(0, 1)},
                                                              {5, std::make_pair(0, 1)}, };
 
       h->SetNBinsX(_n_bins_double_mucostheta);

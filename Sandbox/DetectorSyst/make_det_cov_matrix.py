@@ -12,7 +12,7 @@ xsec_onebin_cv = file_cv.Get("xsec_onebin_CV")
 xsec_mumom_cv = file_cv.Get("xsec_mumom_CV")
 xsec_muangle_cv = file_cv.Get("xsec_muangle_CV")
 xsec_muangle_mumom_cv = file_cv.Get("xsec_muangle_mumom_CV")
-xsec_poly_muangle_mumom_cv = file_cv.Get("xsec_poly_muangle_mumom__CV")
+xsec_poly_muangle_mumom_cv = file_cv.Get("xsec_poly_muangle_mumom_CV")
 
 print "Number of muon momentum bins", xsec_mumom_cv.GetNbinsX()
 print "Number of muon angle bins", xsec_muangle_cv.GetNbinsX()
@@ -119,7 +119,8 @@ for syst_name in det_syst_list:
  	xsec_mumom              = file.Get("xsec_mumom_" + syst_name)
  	xsec_muangle            = file.Get("xsec_muangle_" + syst_name)
  	xsec_muangle_mumom      = file.Get("xsec_muangle_mumom_" + syst_name)
- 	xsec_poly_muangle_mumom = file.Get("xsec_poly_muangle_mumom__" + syst_name)
+ 	xsec_poly_muangle_mumom = file.Get("xsec_poly_muangle_mumom_" + syst_name)
+	print " ==== Number of poly bins:", xsec_poly_muangle_mumom.GetNumberOfBins()
 
 	# for i in xrange(0, n_bins_muangle):
 	# 	for j in xrange(0, n_bins_mumom):
