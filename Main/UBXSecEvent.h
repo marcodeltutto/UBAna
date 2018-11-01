@@ -28,6 +28,7 @@ public :
    Int_t           run;
    Int_t           subrun;
    Int_t           event;
+   TString         file_type;
    Bool_t          muon_is_reco;
    Double_t        muon_reco_pur;
    Double_t        muon_reco_eff;
@@ -159,10 +160,10 @@ public :
    vector<string>  evtwgt_genie_multisim_funcname;
    vector<int>     evtwgt_genie_multisim_nweight;
    vector<vector<double> > evtwgt_genie_multisim_weight;
-   Int_t           evtwgt_genie_models_multisim_nfunc;
-   vector<string>  evtwgt_genie_models_multisim_funcname;
-   vector<int>     evtwgt_genie_models_multisim_nweight;
-   vector<vector<double> > evtwgt_genie_models_multisim_weight;
+   Int_t           evtwgt_extra_syst_multisim_nfunc;
+   vector<string>  evtwgt_extra_syst_multisim_funcname;
+   vector<int>     evtwgt_extra_syst_multisim_nweight;
+   vector<vector<double> > evtwgt_extra_syst_multisim_weight;
    Int_t           evtwgt_flux_multisim_nfunc;
    vector<string>  evtwgt_flux_multisim_funcname;
    vector<int>     evtwgt_flux_multisim_nweight;
@@ -173,6 +174,7 @@ public :
    TBranch        *b_ubxsec_event_split_run;   //!
    TBranch        *b_ubxsec_event_split_subrun;   //!
    TBranch        *b_ubxsec_event_split_event;   //!
+   TBranch        *b_ubxsec_event_split_file_type;   //!
    TBranch        *b_ubxsec_event_split_muon_is_reco;   //!
    TBranch        *b_ubxsec_event_split_muon_reco_pur;   //!
    TBranch        *b_ubxsec_event_split_muon_reco_eff;   //!
@@ -304,10 +306,10 @@ public :
    TBranch        *b_ubxsec_event_split_evtwgt_genie_multisim_funcname;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_genie_multisim_nweight;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_genie_multisim_weight;   //!
-   TBranch        *b_ubxsec_event_split_evtwgt_genie_models_multisim_nfunc;   //!
-   TBranch        *b_ubxsec_event_split_evtwgt_genie_models_multisim_funcname;   //!
-   TBranch        *b_ubxsec_event_split_evtwgt_genie_models_multisim_nweight;   //!
-   TBranch        *b_ubxsec_event_split_evtwgt_genie_models_multisim_weight;   //!
+   TBranch        *b_ubxsec_event_split_evtwgt_extra_syst_multisim_nfunc;   //!
+   TBranch        *b_ubxsec_event_split_evtwgt_extra_syst_multisim_funcname;   //!
+   TBranch        *b_ubxsec_event_split_evtwgt_extra_syst_multisim_nweight;   //!
+   TBranch        *b_ubxsec_event_split_evtwgt_extra_syst_multisim_weight;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_flux_multisim_nfunc;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_flux_multisim_funcname;   //!
    TBranch        *b_ubxsec_event_split_evtwgt_flux_multisim_nweight;   //!
@@ -388,6 +390,7 @@ void UBXSecEvent::Init(TTree *tree)
    fChain->SetBranchAddress("run", &run, &b_ubxsec_event_split_run);
    fChain->SetBranchAddress("subrun", &subrun, &b_ubxsec_event_split_subrun);
    fChain->SetBranchAddress("event", &event, &b_ubxsec_event_split_event);
+   fChain->SetBranchAddress("file_type", &file_type, &b_ubxsec_event_split_file_type);
    fChain->SetBranchAddress("muon_is_reco", &muon_is_reco, &b_ubxsec_event_split_muon_is_reco);
    fChain->SetBranchAddress("muon_reco_pur", &muon_reco_pur, &b_ubxsec_event_split_muon_reco_pur);
    fChain->SetBranchAddress("muon_reco_eff", &muon_reco_eff, &b_ubxsec_event_split_muon_reco_eff);
@@ -519,10 +522,10 @@ void UBXSecEvent::Init(TTree *tree)
    fChain->SetBranchAddress("evtwgt_genie_multisim_funcname", &evtwgt_genie_multisim_funcname, &b_ubxsec_event_split_evtwgt_genie_multisim_funcname);
    fChain->SetBranchAddress("evtwgt_genie_multisim_nweight", &evtwgt_genie_multisim_nweight, &b_ubxsec_event_split_evtwgt_genie_multisim_nweight);
    fChain->SetBranchAddress("evtwgt_genie_multisim_weight", &evtwgt_genie_multisim_weight, &b_ubxsec_event_split_evtwgt_genie_multisim_weight);
-   fChain->SetBranchAddress("evtwgt_genie_models_multisim_nfunc", &evtwgt_genie_models_multisim_nfunc, &b_ubxsec_event_split_evtwgt_genie_models_multisim_nfunc);
-   fChain->SetBranchAddress("evtwgt_genie_models_multisim_funcname", &evtwgt_genie_models_multisim_funcname, &b_ubxsec_event_split_evtwgt_genie_models_multisim_funcname);
-   fChain->SetBranchAddress("evtwgt_genie_models_multisim_nweight", &evtwgt_genie_models_multisim_nweight, &b_ubxsec_event_split_evtwgt_genie_models_multisim_nweight);
-   fChain->SetBranchAddress("evtwgt_genie_models_multisim_weight", &evtwgt_genie_models_multisim_weight, &b_ubxsec_event_split_evtwgt_genie_models_multisim_weight);
+   fChain->SetBranchAddress("evtwgt_extra_syst_multisim_nfunc", &evtwgt_extra_syst_multisim_nfunc, &b_ubxsec_event_split_evtwgt_extra_syst_multisim_nfunc);
+   fChain->SetBranchAddress("evtwgt_extra_syst_multisim_funcname", &evtwgt_extra_syst_multisim_funcname, &b_ubxsec_event_split_evtwgt_extra_syst_multisim_funcname);
+   fChain->SetBranchAddress("evtwgt_extra_syst_multisim_nweight", &evtwgt_extra_syst_multisim_nweight, &b_ubxsec_event_split_evtwgt_extra_syst_multisim_nweight);
+   fChain->SetBranchAddress("evtwgt_extra_syst_multisim_weight", &evtwgt_extra_syst_multisim_weight, &b_ubxsec_event_split_evtwgt_extra_syst_multisim_weight);
    fChain->SetBranchAddress("evtwgt_flux_multisim_nfunc", &evtwgt_flux_multisim_nfunc, &b_ubxsec_event_split_evtwgt_flux_multisim_nfunc);
    fChain->SetBranchAddress("evtwgt_flux_multisim_funcname", &evtwgt_flux_multisim_funcname, &b_ubxsec_event_split_evtwgt_flux_multisim_funcname);
    fChain->SetBranchAddress("evtwgt_flux_multisim_nweight", &evtwgt_flux_multisim_nweight, &b_ubxsec_event_split_evtwgt_flux_multisim_nweight);

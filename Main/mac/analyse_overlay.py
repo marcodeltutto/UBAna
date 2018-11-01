@@ -8,23 +8,25 @@ from ROOT import Main
 analyser = Main.Analyse()
 
 
-analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.9_500k.root") # tune 1
+analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_nosyst.root") # tune 1
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6_fluxscaled_cosmicscaled.root") # tune 1 high stat - genie and flux styst (from uboonegpvm) (with bnb_weight increased by 3%) (with comisc blue bkg scaled by 0.54548, from the overlay)
 
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_mc_bnbcosmic_mcc8.9_test6.root") # tune 1 high stat - genie and flux styst (from uboonegpvm)
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # tune 1- genie and flux styst (no high stat)
 
-analyser.SetInTimeCosmicFile  ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
-analyser.SetBNBONFile         ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_data_overlay_mcc8.9_test10.root") # fake data! Overlay
-analyser.SetEXTBNBFile        ("/Users/deltutto/RealWork/CCInclusiveEventSelection/Files/Output/ubxsecana_output_extbnb_a_mcc8.9_test4.root") 
-analyser.SetBNBPOT(1.01969e+20)    #88601
-analyser.SetBNBONTriggers(22673383.741764)    
-analyser.SetEXTBNBTriggers(33320382)
+# analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root")
+
+analyser.SetInTimeCosmicFile  ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
+analyser.SetBNBONFile         ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_overlay_ubcodev06_26_01_22__v4.root") # fake data! Overlay
+analyser.SetEXTBNBFile        ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v4.root") 
+analyser.SetBNBPOT(1.65319e+20)    #88601
+analyser.SetBNBONTriggers(36749130.19319)    
+analyser.SetEXTBNBTriggers(72299264)
 analyser.SetFakeDataMode(False)
 analyser.SetOverlayMode(True)
-# 36177265 bnbon triggers corrspond to 1.627e+20 POT
-# and for bnbext we have 33320382, bnbext stays the same
-# for bnbon we have to increase the triggers to 36177265/1.627e+20*1.01969e+20 = 22673383.741764
+# 35388924 bnbon triggers corrspond to 1.592e+20 POT
+# and for bnbext we have 72299264, bnbext stays the same
+# for bnbon we have to increase the triggers to 35388924/1.592e+20*1.65319e+20 = 36749130.19319
 analyser.SetPrefix("cv")
 analyser.SetFluxCorrectionWeight(1.028)
 

@@ -44,21 +44,37 @@
 #include <TH2D.h>
 #include <TLatex.h>
 #include <TCanvas.h>
+#include <TH2Poly.h>
+
+#include "ubana/DataTypes/UBTH2Poly.h"
+#include "ubana/DataTypes/BootstrapTH2DPoly.h"
+
+#include "ubana/DataTypes/UBXSecEventHisto1D.h"
+#include "ubana/DataTypes/UBXSecEventHisto.h"
 
 #include "UBXSecEvent.h"
-#include "ubana/Base/BootstrapTH1D.h"
-#include "ubana/Base/BootstrapTH2D.h"
+#include "ubana/DataTypes/BootstrapTH1D.h"
+#include "ubana/DataTypes/BootstrapTH2D.h"
 #include "ubana/Base/PlottingTools.h"
 #include "ubana/Base/CrossSectionCalculator1D.h"
 #include "ubana/Base/MigrationMatrix2D.h"
 #include "ubana/Base/MigrationMatrix4D.h"
+#include "ubana/Base/MigrationMatrix4DPoly.h"
 #include "ubana/Base/CrossSectionCalculator2D.h"
 #include "ubana/Base/ReweightingPlotter.h"
 #include "ubana/Base/CovarianceCalculator2D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator1D.h"
 #include "ubana/Base/CrossSectionBootstrapCalculator2D.h"
+#include "ubana/Base/CrossSectionBootstrapCalculator2DPoly.h"
+#include "ubana/Base/CrossSectionCalculator2DPoly.h"
+#include "ubana/Base/UncertaintyPlotter.h"
 
+#include "ubana/Base/LoggerFeature.h"
+
+
+using namespace DataTypes;
 using namespace Base;
+
 
 namespace Main {
 
@@ -67,12 +83,13 @@ namespace Main {
      User defined class Analyse ... these comments are used to generate
      doxygen documentation!
   */
-  class Analyse{
+  class Analyse : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    Analyse(){}
+    Analyse(std::string name = "Analyse") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~Analyse(){}
@@ -116,20 +133,29 @@ namespace Main {
     /// Imports all the detector systs from files (previously calculated via external macro, and adds them togheter)
     void ImportDetectorSystematics(bool option, std::string file = "file.root") {_import_detector_systs = option; _detector_syst_file = file;}
 
-    /// Calculates the genie multisim covariance matrix and saves it to a file for a particular flux syst
+    /// Calculates the genie multisim covariance matrix and saves it to a file
     void DoGenieSystematics(bool option) {_do_genie_systs = option;}
 
-    /// Calculates the genie models covariance matrix and saves it to a file for a particular flux syst
-    void DoGenieModelsSystematics(bool option) {_do_genie_models_systs = option;}
+    /// Calculates the genie models covariance matrix and saves it to a file
+    void DoExtraSystematics(bool option) {_do_extra_syst_systs = option;}
 
-    /// Imports all the genie multisim systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
+    /// Calculates the mc stat multisim covariance matrix and saves it to a file
+    void DoMCStatSystematics(bool option) {_do_mc_stat_systs = option;}
+
+    /// Imports all the genie multisim systs from files (previously calculated via DoGenieSystematics, and adds them togheter)
     void ImportGenieSystematics(bool option, std::string file = "file.root") {_import_genie_systs = option; _genie_syst_file = file;}
 
-    /// Imports all the genie models systs from files (previously calculated via DoFluxSystematics, and adds them togheter)
-    void ImportGenieModelsSystematics(bool option, std::string file = "file.root") {_import_genie_models_systs = option; _genie_models_syst_file = file;}
+    /// Imports all the genie models systs from files (previously calculated via DoExtraSystematics, and adds them togheter)
+    void ImportExtraSystematics(bool option, std::string file = "file.root") {_import_extra_syst_systs = option; _extra_syst_syst_file = file;}
 
-    /// Imports  the cosmic systs from files (previously calculated via external macro, and adds them togheter)
+    /// Imports all the mc stats multisim systs from files (previously calculated via DoMCStatSystematics, and adds them togheter)
+    void ImportMCStatSystematics(bool option, std::string file = "file.root") {_import_mc_stat_systs = option; _mc_stat_syst_file = file;}
+
+    /// Imports the cosmic systs from files (previously calculated via external macro, and adds them togheter)
     void ImportCosmicSystematics(bool option, std::string file = "file.root") {_import_cosmic_systs = option; _cosmic_syst_file = file;}
+
+    /// Imports the dirt systs from files (previously calculated via external macro, and adds them togheter)
+    void ImportDirtSystematics(bool option, std::string file = "file.root") {_import_dirt_systs = option; _dirt_syst_file = file;}
 
     ///
     void DrawDataMC(TCanvas *c, THStack *hs_mc, double scale_factor_mc_bnbcosmic, bool breakdown_plots, std::map<std::string,TH1D*> hmap_mc, TH1D* h_data_bnbon, double bnbon_pot_meas);
@@ -169,6 +195,8 @@ namespace Main {
 
   private:
 
+    
+
     bool _calculate_xsec = true;
     bool _do_pm1sigma_plots = false;
     bool _do_reweighting_plots = true;
@@ -193,13 +221,20 @@ namespace Main {
     bool _import_cosmic_systs = false;
     std::string _cosmic_syst_file = "";
 
+    bool _import_dirt_systs = false;
+    std::string _dirt_syst_file = "";
+
     bool _do_genie_systs = false;
     bool _import_genie_systs = false;
     std::string _genie_syst_file;
 
-    bool _do_genie_models_systs = false;
-    bool _import_genie_models_systs = false;
-    std::string _genie_models_syst_file;
+    bool _do_extra_syst_systs = false;
+    bool _import_extra_syst_systs = false;
+    std::string _extra_syst_syst_file;
+
+    bool _do_mc_stat_systs = false;
+    bool _import_mc_stat_systs = false;
+    std::string _mc_stat_syst_file;
 
     bool _fake_data_mode = false;
     bool _overlay_mode = false;

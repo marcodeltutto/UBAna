@@ -19,6 +19,7 @@ namespace Base {
     _do_smear = true;
 
     _hmap_bnbcosmic.clear();
+    _hmap_dirt.clear();
     _h_bnbon = NULL;
     _h_extbnb = NULL;
     _h_intimecosmic = NULL;
@@ -31,11 +32,12 @@ namespace Base {
     //_h_true_reco_mom = NULL;
   }
 
-  void CrossSectionBootstrapCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic)
+  void CrossSectionBootstrapCalculator2D::SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt, double intimecosmic)
   {
     _scale_factor_mc_bnbcosmic = bnbcosmic;
     _scale_factor_bnbon = bnbon;
     _scale_factor_extbnb = extbnb;
+    _scale_factor_mc_dirt = dirt;
     _scale_factor_mc_intimecosmic = intimecosmic;
 
     _configured = true;
@@ -57,40 +59,14 @@ namespace Base {
     _label = label;
   }
 
-  void CrossSectionBootstrapCalculator2D::SetOutDir(std::string dir)
-  {
-    _outdir = dir;
 
-    auto now = std::time(nullptr);
-    char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
-    std::string timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
-
-    _folder = _outdir + "_" + timestamp + "/";
-
-    system(("mkdir " + _folder).c_str());
-
-  }
-
-
-
-/*
-  void CrossSectionBootstrapCalculator2D::PrintConfig() {
-
-    std::cout << "--- CrossSectionBootstrapCalculator2D:" << std::endl;
-    std::cout << "---   _scale_factor_mc_bnbcosmic     = " << _scale_factor_mc_bnbcosmic << std::endl;
-    std::cout << "---   _scale_factor_bnbon            = " << _scale_factor_bnbon << std::endl;
-    std::cout << "---   _scale_factor_extbnb           = " << _scale_factor_extbnb << std::endl;
-    std::cout << "---   _scale_factor_mc_intimecosmic  = " << _scale_factor_mc_intimecosmic << std::endl;
-    std::cout << "---   _pot                           = " << _pot << std::endl;
-
-  }
-  */
-
-  void CrossSectionBootstrapCalculator2D::SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, TH2D* intimecosmic) 
+  void CrossSectionBootstrapCalculator2D::SetHistograms(std::map<std::string,std::map<std::string,TH2D*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, TH2D* bnbon, TH2D* extbnb, std::map<std::string,TH2D*> dirt, TH2D* intimecosmic) 
   {
 
     _hmap_bnbcosmic = bnbcosmic;
     
+    _hmap_dirt = dirt;
+
     if (bnbon != NULL) {
       _h_bnbon = (TH2D*)bnbon->Clone("_h_bnbon");
     }
@@ -147,15 +123,17 @@ namespace Base {
 
   void CrossSectionBootstrapCalculator2D::SetSavePrefix(std::string s, std::string folder)
   {
+    std::string out_folder_base = std::getenv("MYSW_OUTDIR");
+
+    std::string out_folder = out_folder_base + folder;
+
     std::string timestamp;
-    if (folder != "") {
-      auto now = std::time(nullptr);
-      char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
-      timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
+    auto now = std::time(nullptr);
+    char buf[sizeof("YYYY-MM-DD_HH-MM-SS")];
+    timestamp = std::string(buf,buf + std::strftime(buf,sizeof(buf),"%F_%H-%M-%S",std::gmtime(&now)));
       
-      system(("mkdir -p " + folder + "_" + timestamp).c_str());    
-    }
-  	_save_prefix = folder + "_" + timestamp + "/" + s;
+    system(("mkdir -p " + out_folder + "_" + s + "_" + timestamp).c_str());    
+    _save_prefix = out_folder + "_" + s + "_" + timestamp + "/" + s;
   }
 
   void CrossSectionBootstrapCalculator2D::SetFluxHistogramType(bool rwgt_flux, std::string flux_unc_type)
@@ -169,11 +147,24 @@ namespace Base {
     h = _cov_matrix;
   }
 
+  void CrossSectionBootstrapCalculator2D::GetFractionalCovarianceMatrix(TH2D & h)
+  {
+    h = _frac_cov_matrix;
+  }
+
   void CrossSectionBootstrapCalculator2D::SaveCovarianceMatrix(std::string file_name, std::string name)
   {
     TFile* cov_file = TFile::Open(file_name.c_str(), "UPDATE");
     cov_file->cd();
     _cov_matrix.Write(name.c_str());
+    cov_file->Close();
+  }
+
+  void CrossSectionBootstrapCalculator2D::SaveFractionalCovarianceMatrix(std::string file_name, std::string name)
+  {
+    TFile* cov_file = TFile::Open(file_name.c_str(), "UPDATE");
+    cov_file->cd();
+    _frac_cov_matrix.Write(name.c_str());
     cov_file->Close();
   }
 
@@ -189,27 +180,29 @@ namespace Base {
 
 		gROOT->SetBatch(kTRUE);
 
-		std::cout << _prefix << "Started running." << std::endl;
+		LOG_NORMAL() << "Started running." << std::endl;
 
 		std::map<std::string, TH2D*> xsec_mumom_per_universe;
 
 
 		CrossSectionCalculator2D _xsec_calc;
-    _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb);
+    _xsec_calc.SetScaleFactors(_scale_factor_mc_bnbcosmic, _scale_factor_bnbon, _scale_factor_extbnb, _scale_factor_mc_dirt);
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
     _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
-    std::cout << _prefix << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
-    std::cout << _prefix << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
+    LOG_NORMAL() << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
+    LOG_NORMAL() << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
     _xsec_calc.SetVerbosity(false);
+    // _xsec_calc.set_verbosity(this->logger().level());
+    // _xsec_calc.set_verbosity(Base::msg::kWARNING);
 
 
     size_t n_universe = _h_eff_mumom_num.GetNWeights();
     std::vector<std::string> universe_names = _h_eff_mumom_num.GetUniverseNames();
 
-    std::cout << _prefix << "Number of Universes: " << n_universe << std::endl;
+    LOG_NORMAL() << "Number of Universes: " << n_universe << std::endl;
 
-    std::cout << _prefix << "Universes Names: ";
+    LOG_NORMAL() << "Universes Names: ";
     for (auto s : universe_names) {
     	std::cout << s << ", ";
     }
@@ -221,14 +214,14 @@ namespace Base {
     std::vector<std::vector<TH2D*>> this_reco_per_true;
     Mat4D S_4d;
 
-    // n_universe = 5;
+    // n_universe = 30;
 
     for (size_t s = 0; s < n_universe; s++) { 
 
       DrawProgressBar((double)s/(double)n_universe, 70);
 
       //
-    	// Construct the hmap for the MC histograms
+    	// Construct the hmap for the MC histograms (bnbcosmic)
       //
       std::map<std::string, TH2D*> input_map_mc;
       for (auto iter : _hmap_bnbcosmic) {
@@ -244,6 +237,9 @@ namespace Base {
         }      
       }
 
+      LOG_INFO() << "Number of events histograms constructed for universe " << s << "." << std::endl;
+
+
 
       std::string hname; 
 
@@ -255,25 +251,23 @@ namespace Base {
       hname = "this_eff_den" + universe_names.at(s);
       _h_eff_mumom_den.GetUniverseHisto(universe_names.at(s), this_eff_den);
 
+      LOG_INFO() << "Efficiency histograms constructed for this universe " << s << "." << std::endl;
+
+
 
       //
       // Costruct the reco_per_true histos for this universe
       //
       auto iter = _bs_reco_per_true.find(universe_names.at(s));
       if (iter == _bs_reco_per_true.end()) {
-        std::cout << __PRETTY_FUNCTION__ << "Can't find bs_reco_per_true for universe " << universe_names.at(s) << std::endl;
+        LOG_CRITICAL() << "Can't find bs_reco_per_true for universe " << universe_names.at(s) << std::endl;
         throw std::exception();
       }
       this_reco_per_true = iter->second;
 
-    
-      //
-      // Construct the map true vs reco
-      //
-      // if (_true_to_reco_is_set) {
-      //   hname = "this_reco_true" + universe_names.at(s);
-      //   _h_true_reco_mom.GetUniverseHisto(universe_names.at(s), this_reco_true);
-      // }
+      LOG_INFO() << "Reco per true histogram construncted for universe " << s << "." << std::endl;
+
+
 
 
       //
@@ -282,19 +276,33 @@ namespace Base {
       if (_rwgt_flux && universe_names.at(s) != "nominal") {
       	std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
+        // Find the universe number
+        std::string universe_number;
+        std::string::size_type pos = universe_names.at(s).find("universe");
+        if (universe_names.at(s).npos != pos) {
+          universe_number = universe_names.at(s).substr(pos+8);
+        } else {
+          LOG_CRITICAL() << "Universe name is not nominal nor universeXXX." << std::endl;
+          throw std::exception();
+        }
+
       	std::stringstream sstm;
-        sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << s << "_AV_TPC";
+        sstm << "numu/" << _flux_unc_type << "/Active_TPC_Volume/numu_" << _flux_unc_type << "_Uni_" << universe_number << "_AV_TPC";
         std::string flux_name = sstm.str();
 
-        std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
+        LOG_INFO() << _prefix << "Using flux file: " << flux_file << ", with name " << flux_name << std::endl;
         _xsec_calc.EstimateFlux(flux_file, flux_name);
       }
       if (universe_names.at(s) == "nominal") {
         std::string flux_file = "MCC8_FluxHistograms_Uncertainties.root";
 
-        std::cout << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
+        LOG_INFO() << _prefix << "Using flux file: " << flux_file << ", with name " << "numu/numu_CV_AV_TPC" << std::endl;
         _xsec_calc.EstimateFlux(flux_file, "numu/numu_CV_AV_TPC");
       }
+
+      LOG_INFO() << "Flux estimated for universe " << s << "." << std::endl;
+
+
 
       //
       // Calculate the migration matrix for this universe
@@ -308,9 +316,8 @@ namespace Base {
         const double *bins_mumom_temp = input_map_mc["total"]->GetYaxis()->GetXbins()->GetArray();
 
         MigrationMatrix4D migrationmatrix4d;
-        // migrationmatrix4d.SetTTree(_t_true_reco);
+        migrationmatrix4d.DoMakePlots(false);
         migrationmatrix4d.SetRecoPerTrueHistos(this_reco_per_true);
-        // migrationmatrix4d.UseWeights(universe_names.at(s), weight_type);
         migrationmatrix4d.SetBins(bins_mucostheta_temp, n_bins_mucostheta_temp, bins_mumom_temp, n_bins_mumom_temp);
 
         S_4d = migrationmatrix4d.CalculateMigrationMatrix();
@@ -320,13 +327,16 @@ namespace Base {
 
       }
 
+      LOG_INFO() << "Migration matrix estimated for universe " << s << "." << std::endl;
+
+
 
       //
       // Calculate the cross section with these new objects in this universe
       //
       _xsec_calc.Reset();
       //h_trkmom_total_extbnb->Scale(1./scale_factor_extbnb);
-      _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb);  
+      _xsec_calc.SetHistograms(input_map_mc, _h_bnbon, _h_extbnb, _hmap_dirt);  
       if (_true_to_reco_is_set) {
         _xsec_calc.SetTruthHistograms(&this_eff_num, &this_eff_den);
       } else {
@@ -338,7 +348,11 @@ namespace Base {
       _xsec_calc.SetSmearingMatrix(S_4d);
       _xsec_calc.Smear();
 
-      TH2D* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+      LOG_INFO() << "Starting to calculate cross section for universe " << s << "." << std::endl;
+
+      TH2D* universe_xsec = _xsec_calc.ExtractCrossSection(_bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]", false);
+
+      LOG_INFO() << "Cross section calculated for universe " << s << "." << std::endl;
 
       xsec_mumom_per_universe[universe_names.at(s)] = universe_xsec;
 
@@ -366,6 +380,7 @@ namespace Base {
     _cov_calc.CalculateCovarianceMatrix();
     _cov_calc.PlotMatrices();
     _cov_calc.GetCovarianceMatrix(_cov_matrix);
+    _cov_calc.GetFractionalCovarianceMatrix(_frac_cov_matrix);
 
 
 
@@ -376,10 +391,6 @@ namespace Base {
     DrawXSec(xsec_mumom_per_universe);
 
    
-
-
-    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
-
 	}
 
 
@@ -419,8 +430,7 @@ namespace Base {
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",
                                                   "nan #leq cos(#theta_{#mu}^{reco}) < nan",};
 
-      std::cout << "n bins x " << h_xsec_2d.GetNbinsX() << std::endl;
-      std::cout << "n bins y " << h_xsec_2d.GetNbinsY() << std::endl;    
+     
 
       for (int i = 0; i < h_xsec_2d.GetNbinsX(); i++) {
         // xsec_data_histos.emplace_back(*h_data->ProjectionY("fuck", i+1, i+2));

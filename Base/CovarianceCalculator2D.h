@@ -41,8 +41,11 @@
 #include <TObject.h>
 
 
+#include "LoggerFeature.h"
 
-#include "BootstrapTH1D.h"
+#include "ubana/DataTypes/BootstrapTH1D.h"
+
+using namespace DataTypes;
 
 namespace Base {
 
@@ -51,12 +54,13 @@ namespace Base {
      User defined class CovarianceCalculator2D ... these comments are used to generate
      doxygen documentation!
   */
-  class CovarianceCalculator2D{
+  class CovarianceCalculator2D : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    CovarianceCalculator2D(){}
+    CovarianceCalculator2D(std::string name = "CovarianceCalculator2D") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~CovarianceCalculator2D(){}
@@ -72,6 +76,9 @@ namespace Base {
 
     /// 
     void GetCovarianceMatrix(TH2D &);
+
+    /// 
+    void GetFractionalCovarianceMatrix(TH2D &);
 
     ///
     void PlotMatrices();

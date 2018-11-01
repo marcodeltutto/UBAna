@@ -11,8 +11,8 @@
 /** \addtogroup Base
 
     @{*/
-#ifndef __BASE_BOOTSTRAPTH1D_H__
-#define __BASE_BOOTSTRAPTH1D_H__
+#ifndef __DATATYPES_BOOTSTRAPTH1D_H__
+#define __DATATYPES_BOOTSTRAPTH1D_H__
 
 #include <iostream>
 #include <sstream>
@@ -30,7 +30,7 @@
 
 #include <TH1D.h>
 
-namespace Base {
+namespace DataTypes {
 
   /**
      \class BootstrapTH1D
@@ -60,26 +60,29 @@ namespace Base {
     ///
     void SetWeightNames(std::vector<std::string>);
 
-    ///
+    /// Emplaces all histograms on the fly
     void SetAllHistograms(std::map<std::string,TH1D*>);
 
-    ///
+    /// Returns the number of bins along x
     int GetNbinsX();
 
-    ///
+    /// Returns the number of universes
     int GetNUniverses();
 
-    ///
+    /// Returns the number of weigths (should be the same as the number of universes)
     size_t GetNWeights();
 
-    ///
+    /// Returns a vector with the names of the universes
     std::vector<std::string> GetUniverseNames();
 
-    ///
+    /// Sets the iterator to the first universe, use this at the beginning of a loop over universes
     void ResetIterator();
 
-    ///
-    bool NextUniverse(std::string & uni_name, TH1D & uni_histo);
+    /// Returns the hitogram for the next universe
+    const TH1D & NextUniverse();
+
+    /// Returns the hitogram for the current universe (has to be called after a NextUniverse())
+    const TH1D & SameUniverse();
 
     ///
     std::map<std::string, std::vector<TH1D>> UnpackPMHisto();
@@ -87,14 +90,12 @@ namespace Base {
     /// Fill the value bin with a general weight and the vector of weights
     void Fill(double, double, std::vector<double>);
 
-    ///
-    TH1D GetNominal();
+    /// Returns the nominal histogram
+    const TH1D& GetNominal();
 
-    ///
+    /// Returns the histogram for a particular universe
     void GetUniverseHisto(std::string, TH1D &);
 
-    ///
-    void GetUniverseHistoFast(std::string, TH1D &);
 
   protected:
 
@@ -109,7 +110,7 @@ namespace Base {
     std::vector<TH1D> _h_v; ///< The vector of histograms 
     std::vector<std::string> _name_v; ///< The name of the above histograms ("nominal", "universe1"...)
 
-    size_t _n_weights; ///< Number of weigths to use
+    size_t _n_weights = 0; ///< Number of weigths to use
     std::vector<double> _weights; ///< Weigths to use
     std::vector<std::string> _wnames; ///< Weight names
 

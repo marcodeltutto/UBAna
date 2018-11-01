@@ -1,12 +1,11 @@
 lib
+.depend
 *.o
 *Dict.cxx
 build
 covariance*
 output*
 xsec*
-migration*
-Migration*
 *.pdf
 ./*.C
 *.txt

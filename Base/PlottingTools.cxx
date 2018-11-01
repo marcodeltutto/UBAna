@@ -5,6 +5,19 @@
 
 namespace Base {
 
+  void PlottingTools::DrawProgressBar(double progress, double barWidth) {
+  
+    std::cout << "[";
+    int pos = barWidth * progress;
+    for (int i = 0; i < barWidth; ++i) {
+    if (i < pos) std::cout << "=";
+      else if (i == pos) std::cout << ">";
+      else std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " % completed.\r";
+    std::cout.flush();
+  }
+
   void PlottingTools::DrawPreliminary() {
     TLatex* prelim = new TLatex(0.94,0.93, "MicroBooNE Preliminary");
     prelim->SetTextFont(62);
@@ -23,6 +36,18 @@ namespace Base {
     prelim->SetNDC();
     prelim->SetTextSize(1/30.);
     prelim->SetTextAlign(32);
+    //prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
+  void PlottingTools::DrawPreliminaryXSecCentered() {
+    TLatex* prelim = new TLatex(0.77,0.92, "MicroBooNE Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    prelim->SetTextSize(0.03959276);
+    prelim->SetTextAlign(32);
+    prelim->SetLineWidth(2);
     //prelim->SetTextSize(0.04631579);
     prelim->Draw();
   }

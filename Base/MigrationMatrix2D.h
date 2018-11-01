@@ -55,6 +55,8 @@
 #include "TMatrix.h"
 
 #include "Types.h"
+#include "LoggerFeature.h"
+
 
 namespace Base {
 
@@ -63,12 +65,13 @@ namespace Base {
      User defined class MigrationMatrix2D ... these comments are used to generate
      doxygen documentation!
   */
-  class MigrationMatrix2D{
+  class MigrationMatrix2D : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    MigrationMatrix2D(){}
+    MigrationMatrix2D(std::string name = "MigrationMatrix2D") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~MigrationMatrix2D(){}
@@ -101,9 +104,7 @@ namespace Base {
 
     std::string _name = "[MigrationMatrix2D] ";
 
-    bool _configured = false;
-
-    TTree *_tree;
+    // TTree *_tree;
 
     //std::vector<std::pair<double, double>> _var1_bins;
     //std::vector<std::pair<double, double>> _var2_bins;

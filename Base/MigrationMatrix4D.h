@@ -54,6 +54,8 @@
 #include "TGaxis.h"
 
 #include "Types.h"
+#include "LoggerFeature.h"
+
 
 namespace Base {
 
@@ -62,12 +64,14 @@ namespace Base {
      User defined class MigrationMatrix4D ... these comments are used to generate
      doxygen documentation!
   */
-  class MigrationMatrix4D{
+  class MigrationMatrix4D : public LoggerFeature {
+
     
   public:
     
     /// Default constructor
-    MigrationMatrix4D(){}
+    MigrationMatrix4D(std::string name = "MigrationMatrix4D") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~MigrationMatrix4D(){}
@@ -87,6 +91,9 @@ namespace Base {
     ///
     void SetOutputFileName(std::string name);
 
+    /// Sets the output directory
+    void SetOutDir(std::string dir = "migration_matrix_4D_plots");
+
     ///
     void PrintSmearingMatrixLatex();
 
@@ -95,6 +102,9 @@ namespace Base {
 
     ///
     void PlotMatrix();
+
+    ///
+    void DoMakePlots(bool option = true) { _do_make_plots = option; }
 
     /// If called uses the weights with name specified
     void UseWeights(std::string weight_name = "universe0", std::string weight_type = "genie_multisim");
@@ -117,7 +127,9 @@ namespace Base {
     std::ofstream _f_out; ///< The output file
 
     bool _verbose = false;
+    bool _do_make_plots = false;
 
+    std::string _outdir;
     std::string _folder = "MigrationMatrix4DPlots/";
 
     bool _use_weights = false; ///< If true uses additional wights (usually for multisim)

@@ -55,6 +55,8 @@
 
 #include "PlottingTools.h"
 
+#include "LoggerFeature.h"
+
 namespace Base {
 
   /**
@@ -62,18 +64,19 @@ namespace Base {
      User defined class CrossSectionCalculator1D ... these comments are used to generate
      doxygen documentation!
   */
-  class CrossSectionCalculator1D{
+  class CrossSectionCalculator1D : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    CrossSectionCalculator1D(){}
+    CrossSectionCalculator1D(std::string name = "CrossSectionCalculator1D") 
+    : LoggerFeature(name) {}
     
     /// Default destructor
     ~CrossSectionCalculator1D(){}
 
     /// Configure function parameters
-    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double intimecosmic = 0);
+    void SetScaleFactors(double bnbcosmic, double bnbon, double extbnb, double dirt = 0, double intimecosmic = 0);
 
     /// Sets the POT number
     void SetPOT(double pot);
@@ -85,7 +88,7 @@ namespace Base {
     void SetOutDir(std::string dir);
 
     /// Sets all the histograms
-    void SetHistograms(std::map<std::string,TH1D*> bnbcosmic, TH1D* bnbon, TH1D* extbnb, TH1D* intimecosmic = 0);
+    void SetHistograms(std::map<std::string,TH1D*> bnbcosmic, TH1D* bnbon, TH1D* extbnb, std::map<std::string,TH1D*> dirt = std::map<std::string,TH1D*>(), TH1D* intimecosmic = 0);
 
     /// Sets num and dem histograms for the efficiency and the reco vs true 2d histo
     void SetTruthHistograms(TH1D*, TH1D*, TH2D*);
@@ -101,6 +104,9 @@ namespace Base {
 
     ///
     void SetCovarianceMatrix(TH2D);
+
+    ///
+    void SetFractionalCovarianceMatrix(TH2D);
 
     /// Printd the current configuration
     void PrintConfig();
@@ -169,21 +175,35 @@ namespace Base {
     void AddExtraDiagonalUncertainty(double v) {_extra_fractional_uncertainty = v;};
 
     ///
+    void SetNTargetData(double n = 2.64218e31) {_n_target_data = n;}
+
+    ///
+    void SetNTargetMC(double n = 2.66471e31) {_n_target_mc = n;}
+
+    ///
     void Reset();
+
+    ///
+    void SetVerbose(bool verbose) {_verbose = verbose;}
 
   private:
     
     bool _configured = false;
+    bool _verbose = true;
 
     double _scale_factor_mc_bnbcosmic;
     double _scale_factor_bnbon;
     double _scale_factor_extbnb;
+    double _scale_factor_mc_dirt;
     double _scale_factor_mc_intimecosmic;
+
+    bool _dirt_is_set = false;
 
     double _pot;
     double _flux;
 
-    double _n_target = 2.64218e31;
+    double _n_target_data = 2.64218e31;
+    double _n_target_mc = 2.66471e31;
 
     std::string _name = "trklen"; 
     std::string _label = ";Test [cm]; Selected Events";
@@ -192,6 +212,7 @@ namespace Base {
     std::string _folder;
 
     std::map<std::string,TH1D*> _hmap_bnbcosmic;
+    std::map<std::string,TH1D*> _hmap_dirt;
     TH1D* _h_bnbon;
     TH1D* _h_extbnb;
     TH1D* _h_intimecosmic;
@@ -211,6 +232,9 @@ namespace Base {
 
     TH2D _covariance_matrix; ///< 2D Histogram representing the covariance matrix (to be set externally)
     bool _covariance_matrix_is_set = false; ///< Flag that remembers if the covariance matrix was set for this cross section calculation (if not, no syst will be added)
+
+    TH2D _frac_covariance_matrix; ///< 2D Histogram representing the fractional covariance matrix (to be set externally)
+    bool _frac_covariance_matrix_is_set = false; ///< Flag that remembers if the fractional covariance matrix was set for this cross section calculation (if not, no syst will be added)
     
     bool _fake_data_mode = false;
     bool _overlay_mode = false;

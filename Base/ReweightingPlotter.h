@@ -58,7 +58,9 @@
 #include "TGaxis.h"
 #include "TLine.h"
 
-#include "BootstrapTH1D.h"
+#include "ubana/DataTypes/BootstrapTH1D.h"
+
+using namespace DataTypes;
 
 namespace Base {
 
