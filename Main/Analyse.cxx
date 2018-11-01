@@ -1367,6 +1367,8 @@ namespace Main {
 
     TH1D * xsec_mumom_mc = _xsec_calc.GetMCCrossSection();
     file_out->cd();
+    save_name = "smearing_matrix_mumom_" + _prefix;
+    S_2d.Write(save_name.c_str());
     save_name = "xsec_mumom_" + _prefix;
     xsec_mumom->Write(save_name.c_str());
     save_name = "xsec_mumom_mc_" + _prefix;
