@@ -1844,7 +1844,7 @@ void Main::Maker::MakeFile()
     //
     // Construct the denominator for the efficiency plots
     //
-    for (int j = 0; j < t->nu_e.size(); j++) {
+    for (int j = 0; j < t->truth_nu_e.size(); j++) {
       if (t->truth_nupdg.at(j) == 14 && t->truth_ccnc.at(j) == 0 && t->truth_fv.at(j) == 1) {
         nsignal_all += event_weight;
       }
