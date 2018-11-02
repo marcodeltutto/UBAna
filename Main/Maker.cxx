@@ -534,19 +534,19 @@ void Main::Maker::MakeFile()
   double nsignal_coh = 0;
   double nsignal_mec = 0;
   
-  int signal_sel = 0;
-  int bkg_anumu_sel = 0;
-  int bkg_nue_sel = 0;
-  int bkg_nc_sel = 0;
-  int bkg_outfv_sel = 0;
-  int bkg_cosmic_sel = 0;
-  int bkg_cosmic_top_sel = 0;
+  double signal_sel = 0;
+  double bkg_anumu_sel = 0;
+  double bkg_nue_sel = 0;
+  double bkg_nc_sel = 0;
+  double bkg_outfv_sel = 0;
+  double bkg_cosmic_sel = 0;
+  double bkg_cosmic_top_sel = 0;
 
-  int signal_sel_qe = 0;
-  int signal_sel_res = 0;
-  int signal_sel_dis = 0;
-  int signal_sel_coh = 0;
-  int signal_sel_mec = 0;
+  double signal_sel_qe = 0;
+  double signal_sel_res = 0;
+  double signal_sel_dis = 0;
+  double signal_sel_coh = 0;
+  double signal_sel_mec = 0;
   
   int nEvtsWFlashInBeamSpill = 0;
   int nNumuCC = 0;
