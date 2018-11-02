@@ -526,6 +526,7 @@ void Main::Maker::MakeFile()
   LOG_NORMAL() << "Number of polybins: " << _n_poly_bins << std::endl;
 
   double nsignal = 0;
+  double nsignal_all = 0;
 
   double nsignal_qe = 0;
   double nsignal_res = 0;
@@ -1843,119 +1844,235 @@ void Main::Maker::MakeFile()
     //
     // Construct the denominator for the efficiency plots
     //
-    if (isSignal) {
+    for (int t = 0; t < t->nu_e.size(); t++) {
+      if (t->nupdg.at(t) == 14 && t->ccnc.at(t) == 0 && t->fv.at(t) == 1) {
+        nsignal_all += event_weight;
+      }
+      // _event_histo_1d->h_eff_onebin_den->Fill(0.5, event_weight);
+      // h_eff_den->Fill(t->nu_e, event_weight);
+      // _event_histo_1d->h_eff_mumom_den->Fill(t->true_muon_mom, event_weight);
+      // if (!isdata && _fill_bootstrap_genie) bs_genie_pm1_eff_mumom_den.Fill(t->true_muon_mom, event_weight, wgts_genie_pm1);
       
-      _event_histo_1d->h_eff_onebin_den->Fill(0.5, event_weight);
-      h_eff_den->Fill(t->nu_e, event_weight);
-      _event_histo_1d->h_eff_mumom_den->Fill(t->true_muon_mom, event_weight);
-      if (!isdata && _fill_bootstrap_genie) bs_genie_pm1_eff_mumom_den.Fill(t->true_muon_mom, event_weight, wgts_genie_pm1);
+      // if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) _event_histo->bs_genie_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_genie_multisim);
+      // if (!isdata && _fill_bootstrap_genie) _event_histo->bs_genie_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_genie_multisim);
+
+      // if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_extra_syst);
+      // if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_extra_syst);
+      // if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_extra_syst);
+      // if (!isdata && _fill_bootstrap_extra_syst) _event_histo->bs_extra_syst_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_extra_syst);
+      // if (!isdata && _fill_bootstrap_extra_syst) _event_histo->bs_extra_syst_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_extra_syst);
+
+      // if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_flux_multisim);
+      // if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_flux_multisim);
+      // if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_flux_multisim);
+      // if (!isdata && _fill_bootstrap_flux) _event_histo->bs_flux_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_flux_multisim);
+      // if (!isdata && _fill_bootstrap_flux) _event_histo->bs_flux_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_flux_multisim);
+
+      // if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_mc_stat_multisim);
+      // if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
+      // if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_mc_stat_multisim);
+      // if (!isdata && _fill_bootstrap_mc_stat) _event_histo->bs_mc_stat_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
+      // if (!isdata && _fill_bootstrap_mc_stat) _event_histo->bs_mc_stat_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
+
+
+      // _event_histo_1d->h_eff_muangle_den->Fill(t->lep_costheta, event_weight);
+      // _event_histo->h_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+      // _event_histo->h_eff_muangle_mumom_poly_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+      // h_eff_muphi_den->Fill(t->lep_phi, event_weight);
+      // h_eff_mult_den->Fill(t->genie_mult, event_weight);
+      // h_eff_mult_ch_den->Fill(t->genie_mult_ch, event_weight);
+
+      // if (t->mode == 0) h_eff_qe_den->Fill(t->nu_e, event_weight);
+      // if (t->mode == 1) h_eff_res_den->Fill(t->nu_e, event_weight);
+      // if (t->mode == 2) h_eff_dis_den->Fill(t->nu_e, event_weight);
+      // if (t->mode == 3) h_eff_coh_den->Fill(t->nu_e, event_weight);
+      // if (t->mode == 10) h_eff_mec_den->Fill(t->nu_e, event_weight);
+
+      // h_truth_xsec_mumom->Fill(t->true_muon_mom, event_weight);
+      // h_truth_xsec_muangle->Fill(t->lep_costheta, event_weight);
+
+      // h_mueff_den->Fill(t->true_muon_mom, event_weight);
+      // h_mueff_angle_den->Fill(t->lep_costheta, event_weight);
+
+      // h_true_nu_eng_beforesel->Fill(t->nu_e, event_weight);
       
-      if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_genie_multisim);
-      if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_genie_multisim);
-      if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_genie_multisim);
-      if (!isdata && _fill_bootstrap_genie) _event_histo->bs_genie_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_genie_multisim);
-      if (!isdata && _fill_bootstrap_genie) _event_histo->bs_genie_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_genie_multisim);
-
-      if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_extra_syst);
-      if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_extra_syst);
-      if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_extra_syst);
-      if (!isdata && _fill_bootstrap_extra_syst) _event_histo->bs_extra_syst_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_extra_syst);
-      if (!isdata && _fill_bootstrap_extra_syst) _event_histo->bs_extra_syst_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_extra_syst);
-
-      if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_flux_multisim);
-      if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_flux_multisim);
-      if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_flux_multisim);
-      if (!isdata && _fill_bootstrap_flux) _event_histo->bs_flux_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_flux_multisim);
-      if (!isdata && _fill_bootstrap_flux) _event_histo->bs_flux_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_flux_multisim);
-
-      if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_mc_stat_multisim);
-      if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
-      if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_mc_stat_multisim);
-      if (!isdata && _fill_bootstrap_mc_stat) _event_histo->bs_mc_stat_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
-      if (!isdata && _fill_bootstrap_mc_stat) _event_histo->bs_mc_stat_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
-
-
-      _event_histo_1d->h_eff_muangle_den->Fill(t->lep_costheta, event_weight);
-      _event_histo->h_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
-      _event_histo->h_eff_muangle_mumom_poly_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
-      h_eff_muphi_den->Fill(t->lep_phi, event_weight);
-      h_eff_mult_den->Fill(t->genie_mult, event_weight);
-      h_eff_mult_ch_den->Fill(t->genie_mult_ch, event_weight);
-
-      if (t->mode == 0) h_eff_qe_den->Fill(t->nu_e, event_weight);
-      if (t->mode == 1) h_eff_res_den->Fill(t->nu_e, event_weight);
-      if (t->mode == 2) h_eff_dis_den->Fill(t->nu_e, event_weight);
-      if (t->mode == 3) h_eff_coh_den->Fill(t->nu_e, event_weight);
-      if (t->mode == 10) h_eff_mec_den->Fill(t->nu_e, event_weight);
-
-      h_truth_xsec_mumom->Fill(t->true_muon_mom, event_weight);
-      h_truth_xsec_muangle->Fill(t->lep_costheta, event_weight);
-
-      h_mueff_den->Fill(t->true_muon_mom, event_weight);
-      h_mueff_angle_den->Fill(t->lep_costheta, event_weight);
-
-      h_true_nu_eng_beforesel->Fill(t->nu_e, event_weight);
-      
-      if (t->muon_is_reco){
-        h_mumom_nue->Fill(t->nu_e, t->true_muon_mom, event_weight);
-        nSignalWMuonReco++;
-        h_mueff_num->Fill(t->true_muon_mom, event_weight);
-        h_mueff_angle_num->Fill(t->lep_costheta, event_weight);
-        for (auto origin : t->slc_origin){
-          if (origin == 0 || origin == 2) {
-            h_mueff_2_num->Fill(t->true_muon_mom, event_weight);
-            break;
-          }
-        }
-        if (t->vtx_resolution > -1 && t->vtx_resolution < 10) nSignalMuonRecoVtxOk++;
+      // if (t->muon_is_reco){
+      //   h_mumom_nue->Fill(t->nu_e, t->true_muon_mom, event_weight);
+      //   nSignalWMuonReco++;
+      //   h_mueff_num->Fill(t->true_muon_mom, event_weight);
+      //   h_mueff_angle_num->Fill(t->lep_costheta, event_weight);
+      //   for (auto origin : t->slc_origin){
+      //     if (origin == 0 || origin == 2) {
+      //       h_mueff_2_num->Fill(t->true_muon_mom, event_weight);
+      //       break;
+      //     }
+      //   }
+      //   if (t->vtx_resolution > -1 && t->vtx_resolution < 10) nSignalMuonRecoVtxOk++;
         
-        h_muon_track_eff->Fill(t->muon_reco_eff, event_weight);
-        h_muon_track_pur->Fill(t->muon_reco_pur, event_weight);
+      //   h_muon_track_eff->Fill(t->muon_reco_eff, event_weight);
+      //   h_muon_track_pur->Fill(t->muon_reco_pur, event_weight);
         
-        h_mu_eff_mom->Fill(t->true_muon_mom, t->muon_reco_eff, event_weight);
-        h_mu_pur_mom->Fill(t->true_muon_mom, t->muon_reco_pur, event_weight);
-      }
-      else{
-        //std::cout << "This is a signal event but the muon was not reconstructed. Event: " << event << std::endl;
-      }
+      //   h_mu_eff_mom->Fill(t->true_muon_mom, t->muon_reco_eff, event_weight);
+      //   h_mu_pur_mom->Fill(t->true_muon_mom, t->muon_reco_pur, event_weight);
+      // }
+      // else{
+      //   //std::cout << "This is a signal event but the muon was not reconstructed. Event: " << event << std::endl;
+      // }
 
 
-      // Also save the mc truth histogram per interaction type
-      hmap_mctruth_nuenergy_gen["total"]->Fill(t->nu_e, event_weight);
-      hmap_mctruth_mumom_gen["total"]->Fill(t->true_muon_mom, event_weight);
-      hmap_mctruth_mucostheta_gen["total"]->Fill(t->lep_costheta, event_weight);
-      hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi, event_weight);
-      if (t->mode == 0) {
-        hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e, event_weight);
-        hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom, event_weight);
-        hmap_mctruth_mucostheta_gen["qe"]->Fill(t->lep_costheta, event_weight);
-        hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi, event_weight);
-      }
-      if (t->mode == 1) {
-        hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e, event_weight);
-        hmap_mctruth_mumom_gen["res"]->Fill(t->true_muon_mom, event_weight);
-        hmap_mctruth_mucostheta_gen["res"]->Fill(t->lep_costheta, event_weight);
-        hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi, event_weight);
-      }
-      if (t->mode == 2) {
-        hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e, event_weight);
-        hmap_mctruth_mumom_gen["dis"]->Fill(t->true_muon_mom, event_weight);
-        hmap_mctruth_mucostheta_gen["dis"]->Fill(t->lep_costheta, event_weight);
-        hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi, event_weight);
-      }
-      if (t->mode == 3) {
-        hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e, event_weight);
-        hmap_mctruth_mumom_gen["coh"]->Fill(t->true_muon_mom, event_weight);
-        hmap_mctruth_mucostheta_gen["coh"]->Fill(t->lep_costheta, event_weight);
-        hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi, event_weight);
-      }
-      if (t->mode == 10) {
-        hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e, event_weight);
-        hmap_mctruth_mumom_gen["mec"]->Fill(t->true_muon_mom, event_weight);
-        hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta, event_weight);
-        hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
-      }
-    } // if is signal
+      // // Also save the mc truth histogram per interaction type
+      // hmap_mctruth_nuenergy_gen["total"]->Fill(t->nu_e, event_weight);
+      // hmap_mctruth_mumom_gen["total"]->Fill(t->true_muon_mom, event_weight);
+      // hmap_mctruth_mucostheta_gen["total"]->Fill(t->lep_costheta, event_weight);
+      // hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi, event_weight);
+      // if (t->mode == 0) {
+      //   hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e, event_weight);
+      //   hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom, event_weight);
+      //   hmap_mctruth_mucostheta_gen["qe"]->Fill(t->lep_costheta, event_weight);
+      //   hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi, event_weight);
+      // }
+      // if (t->mode == 1) {
+      //   hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e, event_weight);
+      //   hmap_mctruth_mumom_gen["res"]->Fill(t->true_muon_mom, event_weight);
+      //   hmap_mctruth_mucostheta_gen["res"]->Fill(t->lep_costheta, event_weight);
+      //   hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi, event_weight);
+      // }
+      // if (t->mode == 2) {
+      //   hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e, event_weight);
+      //   hmap_mctruth_mumom_gen["dis"]->Fill(t->true_muon_mom, event_weight);
+      //   hmap_mctruth_mucostheta_gen["dis"]->Fill(t->lep_costheta, event_weight);
+      //   hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi, event_weight);
+      // }
+      // if (t->mode == 3) {
+      //   hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e, event_weight);
+      //   hmap_mctruth_mumom_gen["coh"]->Fill(t->true_muon_mom, event_weight);
+      //   hmap_mctruth_mucostheta_gen["coh"]->Fill(t->lep_costheta, event_weight);
+      //   hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi, event_weight);
+      // }
+      // if (t->mode == 10) {
+      //   hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e, event_weight);
+      //   hmap_mctruth_mumom_gen["mec"]->Fill(t->true_muon_mom, event_weight);
+      //   hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta, event_weight);
+      //   hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
+      // }
+    }
+
+    // if (isSignal) {
+      
+    //   _event_histo_1d->h_eff_onebin_den->Fill(0.5, event_weight);
+    //   h_eff_den->Fill(t->nu_e, event_weight);
+    //   _event_histo_1d->h_eff_mumom_den->Fill(t->true_muon_mom, event_weight);
+    //   if (!isdata && _fill_bootstrap_genie) bs_genie_pm1_eff_mumom_den.Fill(t->true_muon_mom, event_weight, wgts_genie_pm1);
+      
+    //   if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_genie_multisim);
+    //   if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_genie_multisim);
+    //   if (!isdata && _fill_bootstrap_genie) _event_histo_1d->bs_genie_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_genie_multisim);
+    //   if (!isdata && _fill_bootstrap_genie) _event_histo->bs_genie_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_genie_multisim);
+    //   if (!isdata && _fill_bootstrap_genie) _event_histo->bs_genie_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_genie_multisim);
+
+    //   if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_extra_syst);
+    //   if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_extra_syst);
+    //   if (!isdata && _fill_bootstrap_extra_syst) _event_histo_1d->bs_extra_syst_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_extra_syst);
+    //   if (!isdata && _fill_bootstrap_extra_syst) _event_histo->bs_extra_syst_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_extra_syst);
+    //   if (!isdata && _fill_bootstrap_extra_syst) _event_histo->bs_extra_syst_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_extra_syst);
+
+    //   if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_flux_multisim);
+    //   if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_flux_multisim);
+    //   if (!isdata && _fill_bootstrap_flux) _event_histo_1d->bs_flux_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_flux_multisim);
+    //   if (!isdata && _fill_bootstrap_flux) _event_histo->bs_flux_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_flux_multisim);
+    //   if (!isdata && _fill_bootstrap_flux) _event_histo->bs_flux_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_flux_multisim);
+
+    //   if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_onebin_den->Fill(0.5, event_weight, wgts_mc_stat_multisim);
+    //   if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_mumom_den->Fill(t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
+    //   if (!isdata && _fill_bootstrap_mc_stat) _event_histo_1d->bs_mc_stat_multisim_eff_muangle_den->Fill(t->lep_costheta, event_weight, wgts_mc_stat_multisim);
+    //   if (!isdata && _fill_bootstrap_mc_stat) _event_histo->bs_mc_stat_multisim_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
+    //   if (!isdata && _fill_bootstrap_mc_stat) _event_histo->bs_mc_stat_multisim_eff_poly_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight, wgts_mc_stat_multisim);
+
+
+    //   _event_histo_1d->h_eff_muangle_den->Fill(t->lep_costheta, event_weight);
+    //   _event_histo->h_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+    //   _event_histo->h_eff_muangle_mumom_poly_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+    //   h_eff_muphi_den->Fill(t->lep_phi, event_weight);
+    //   h_eff_mult_den->Fill(t->genie_mult, event_weight);
+    //   h_eff_mult_ch_den->Fill(t->genie_mult_ch, event_weight);
+
+    //   if (t->mode == 0) h_eff_qe_den->Fill(t->nu_e, event_weight);
+    //   if (t->mode == 1) h_eff_res_den->Fill(t->nu_e, event_weight);
+    //   if (t->mode == 2) h_eff_dis_den->Fill(t->nu_e, event_weight);
+    //   if (t->mode == 3) h_eff_coh_den->Fill(t->nu_e, event_weight);
+    //   if (t->mode == 10) h_eff_mec_den->Fill(t->nu_e, event_weight);
+
+    //   h_truth_xsec_mumom->Fill(t->true_muon_mom, event_weight);
+    //   h_truth_xsec_muangle->Fill(t->lep_costheta, event_weight);
+
+    //   h_mueff_den->Fill(t->true_muon_mom, event_weight);
+    //   h_mueff_angle_den->Fill(t->lep_costheta, event_weight);
+
+    //   h_true_nu_eng_beforesel->Fill(t->nu_e, event_weight);
+      
+    //   if (t->muon_is_reco){
+    //     h_mumom_nue->Fill(t->nu_e, t->true_muon_mom, event_weight);
+    //     nSignalWMuonReco++;
+    //     h_mueff_num->Fill(t->true_muon_mom, event_weight);
+    //     h_mueff_angle_num->Fill(t->lep_costheta, event_weight);
+    //     for (auto origin : t->slc_origin){
+    //       if (origin == 0 || origin == 2) {
+    //         h_mueff_2_num->Fill(t->true_muon_mom, event_weight);
+    //         break;
+    //       }
+    //     }
+    //     if (t->vtx_resolution > -1 && t->vtx_resolution < 10) nSignalMuonRecoVtxOk++;
+        
+    //     h_muon_track_eff->Fill(t->muon_reco_eff, event_weight);
+    //     h_muon_track_pur->Fill(t->muon_reco_pur, event_weight);
+        
+    //     h_mu_eff_mom->Fill(t->true_muon_mom, t->muon_reco_eff, event_weight);
+    //     h_mu_pur_mom->Fill(t->true_muon_mom, t->muon_reco_pur, event_weight);
+    //   }
+    //   else{
+    //     //std::cout << "This is a signal event but the muon was not reconstructed. Event: " << event << std::endl;
+    //   }
+
+
+    //   // Also save the mc truth histogram per interaction type
+    //   hmap_mctruth_nuenergy_gen["total"]->Fill(t->nu_e, event_weight);
+    //   hmap_mctruth_mumom_gen["total"]->Fill(t->true_muon_mom, event_weight);
+    //   hmap_mctruth_mucostheta_gen["total"]->Fill(t->lep_costheta, event_weight);
+    //   hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi, event_weight);
+    //   if (t->mode == 0) {
+    //     hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e, event_weight);
+    //     hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom, event_weight);
+    //     hmap_mctruth_mucostheta_gen["qe"]->Fill(t->lep_costheta, event_weight);
+    //     hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi, event_weight);
+    //   }
+    //   if (t->mode == 1) {
+    //     hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e, event_weight);
+    //     hmap_mctruth_mumom_gen["res"]->Fill(t->true_muon_mom, event_weight);
+    //     hmap_mctruth_mucostheta_gen["res"]->Fill(t->lep_costheta, event_weight);
+    //     hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi, event_weight);
+    //   }
+    //   if (t->mode == 2) {
+    //     hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e, event_weight);
+    //     hmap_mctruth_mumom_gen["dis"]->Fill(t->true_muon_mom, event_weight);
+    //     hmap_mctruth_mucostheta_gen["dis"]->Fill(t->lep_costheta, event_weight);
+    //     hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi, event_weight);
+    //   }
+    //   if (t->mode == 3) {
+    //     hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e, event_weight);
+    //     hmap_mctruth_mumom_gen["coh"]->Fill(t->true_muon_mom, event_weight);
+    //     hmap_mctruth_mucostheta_gen["coh"]->Fill(t->lep_costheta, event_weight);
+    //     hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi, event_weight);
+    //   }
+    //   if (t->mode == 10) {
+    //     hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e, event_weight);
+    //     hmap_mctruth_mumom_gen["mec"]->Fill(t->true_muon_mom, event_weight);
+    //     hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta, event_weight);
+    //     hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
+    //   }
+    // } // if is signal
 
     if(t->nupdg == 14 && t->ccnc == 0){
       nNumuCC++;
@@ -3160,6 +3277,7 @@ void Main::Maker::MakeFile()
   // ************************
   std::cout << std::endl << std::endl;
   LOG_NORMAL() << "Number of simulated signal events is " << nsignal << std::endl;
+  LOG_NORMAL() << "Number of ALL simulated signal events is " << nsignal_all << std::endl;
   int sel_tot = signal_sel + bkg_anumu_sel + bkg_nue_sel + bkg_nc_sel + bkg_outfv_sel + bkg_cosmic_sel;
   LOG_NORMAL() << "Selected signal is " << signal_sel     << ", " << (double)signal_sel/(double)sel_tot * 100. << std::endl;
   LOG_NORMAL() << "Selected anumu is  " << bkg_anumu_sel  << ", " << (double)bkg_anumu_sel/(double)sel_tot * 100. << std::endl;
