@@ -1844,8 +1844,8 @@ void Main::Maker::MakeFile()
     //
     // Construct the denominator for the efficiency plots
     //
-    for (int t = 0; t < t->nu_e.size(); t++) {
-      if (t->nupdg.at(t) == 14 && t->ccnc.at(t) == 0 && t->fv.at(t) == 1) {
+    for (int j = 0; j < t->nu_e.size(); j++) {
+      if (t->nupdg.at(j) == 14 && t->ccnc.at(j) == 0 && t->fv.at(j) == 1) {
         nsignal_all += event_weight;
       }
       // _event_histo_1d->h_eff_onebin_den->Fill(0.5, event_weight);
