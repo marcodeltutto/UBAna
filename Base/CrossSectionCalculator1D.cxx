@@ -741,6 +741,9 @@ namespace Base {
 
     // LOG_INFO() << "FLUX: " << _flux << ", N_target: " << _n_target << ", FLUX x N_target: " << _flux*_n_target << std::endl;
 
+    LOG_INFO() << "Number of targets (MC)   = " << _n_target_mc << std::endl;
+    LOG_INFO() << "Number of targets (DATA) = " << _n_target_data << std::endl;
+
     double den_data = _flux * _n_target_data * 1e-38;
     double den_mc   = _flux * _n_target_mc   * 1e-38;
 
