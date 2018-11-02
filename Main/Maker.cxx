@@ -1814,7 +1814,7 @@ void Main::Maker::MakeFile()
     // This variable will store if this is a signal event or not
     bool isSignal = false;
 
-    if (t->nupdg == 14 && t->ccnc == 0 && t->fv == 1 && (t->tvtx_z[0] < 675 || t->tvtx_z[0] > 775)){
+    if (t->nupdg == 14 && t->ccnc == 0 && t->fv == 1 /*&& (t->tvtx_z[0] < 675 || t->tvtx_z[0] > 775)*/){
 
       nsignal += event_weight;
       isSignal = true;
@@ -1955,7 +1955,8 @@ void Main::Maker::MakeFile()
         hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
       }
-    }
+    } // if is signal
+
     if(t->nupdg == 14 && t->ccnc == 0){
       nNumuCC++;
     }
