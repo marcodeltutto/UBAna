@@ -167,10 +167,10 @@ namespace Base {
     void ImportAlternativeMC(UBTH2Poly* h) {_add_alt_mc_xsec = true; _h_alt_mc_xsec = h;};
 
     ///
-    void SetNTargetData(double n = 2.64218e31) {_n_target_data = n;}
+    void SetNTargetData(double n = 2.6123744020373e+31) {_n_target_data = n;}
 
     ///
-    void SetNTargetMC(double n = 2.66471e31) {_n_target_mc = n;}
+    void SetNTargetMC(double n = 2.634653975573033e31) {_n_target_mc = n;}
 
   private:
 
@@ -189,8 +189,8 @@ namespace Base {
     double _pot;
     double _flux;
 
-    double _n_target_data = 2.64218e31;
-    double _n_target_mc = 2.66471e31;
+    double _n_target_data = 2.6123744020373e+31;
+    double _n_target_mc = 2.634653975573033e31;
 
     std::string _prefix = "trklen"; 
     std::string _label = ";Test [cm]; Selected Events";

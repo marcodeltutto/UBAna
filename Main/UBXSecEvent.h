@@ -53,6 +53,17 @@ public :
    Int_t           genie_mult_ch;
    Double_t        bnb_weight;
    Bool_t          is_selected;
+
+   // std::vector<Int_t> truth_nupdg;
+   // std::vector<Int_t> truth_mode;
+   // std::vector<Int_t> truth_ccnc;
+   // std::vector<Bool_t> truth_fv;
+   // std::vector<Double_t> truth_nu_e;
+   // std::vector<Double_t> truth_lep_costheta;
+   // std::vector<Double_t> truth_lep_phi;
+   // std::vector<Double_t> truth_lep_p;
+
+
    Int_t           mc_muon_contained;
    Int_t           is_swtriggered;
    Double_t        vtx_resolution;
@@ -199,6 +210,16 @@ public :
    TBranch        *b_ubxsec_event_split_genie_mult_ch;   //!
    TBranch        *b_ubxsec_event_split_bnb_weight;   //!
    TBranch        *b_ubxsec_event_split_is_selected;   //!
+
+   // TBranch        *b_ubxsec_event_split_truth_nupdg;   //!
+   // TBranch        *b_ubxsec_event_split_truth_mode;   //!
+   // TBranch        *b_ubxsec_event_split_truth_ccnc;   //!
+   // TBranch        *b_ubxsec_event_split_truth_fv;   //!
+   // TBranch        *b_ubxsec_event_split_truth_nu_e;   //!
+   // TBranch        *b_ubxsec_event_split_truth_lep_costheta;   //!
+   // TBranch        *b_ubxsec_event_split_truth_lep_phi;   //!
+   // TBranch        *b_ubxsec_event_split_truth_lep_p;   //!
+
    TBranch        *b_ubxsec_event_split_mc_muon_contained;   //!
    TBranch        *b_ubxsec_event_split_is_swtriggered;   //!
    TBranch        *b_ubxsec_event_split_vtx_resolution;   //!
@@ -415,6 +436,16 @@ void UBXSecEvent::Init(TTree *tree)
    fChain->SetBranchAddress("genie_mult_ch", &genie_mult_ch, &b_ubxsec_event_split_genie_mult_ch);
    fChain->SetBranchAddress("bnb_weight", &bnb_weight, &b_ubxsec_event_split_bnb_weight);
    fChain->SetBranchAddress("is_selected", &is_selected, &b_ubxsec_event_split_is_selected);
+
+   // fChain->SetBranchAddress("truth_nupdg", &truth_nupdg, &b_ubxsec_event_split_truth_nupdg);
+   // fChain->SetBranchAddress("truth_mode", &truth_mode, &b_ubxsec_event_split_truth_mode);
+   // fChain->SetBranchAddress("truth_ccnc", &truth_ccnc, &b_ubxsec_event_split_truth_ccnc);
+   // fChain->SetBranchAddress("truth_fv", &truth_fv, &b_ubxsec_event_split_truth_fv);
+   // fChain->SetBranchAddress("truth_nu_e", &truth_nu_e, &b_ubxsec_event_split_truth_nu_e);
+   // fChain->SetBranchAddress("truth_lep_costheta", &truth_lep_costheta, &b_ubxsec_event_split_truth_lep_costheta);
+   // fChain->SetBranchAddress("truth_lep_phi", &truth_lep_phi, &b_ubxsec_event_split_truth_lep_phi);
+   // fChain->SetBranchAddress("truth_lep_p", &truth_lep_p, &b_ubxsec_event_split_truth_lep_p);
+
    fChain->SetBranchAddress("mc_muon_contained", &mc_muon_contained, &b_ubxsec_event_split_mc_muon_contained);
    fChain->SetBranchAddress("is_swtriggered", &is_swtriggered, &b_ubxsec_event_split_is_swtriggered);
    fChain->SetBranchAddress("vtx_resolution", &vtx_resolution, &b_ubxsec_event_split_vtx_resolution);

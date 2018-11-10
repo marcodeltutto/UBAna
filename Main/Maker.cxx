@@ -526,6 +526,7 @@ void Main::Maker::MakeFile()
   LOG_NORMAL() << "Number of polybins: " << _n_poly_bins << std::endl;
 
   double nsignal = 0;
+  double nsignal_all = 0;
 
   double nsignal_qe = 0;
   double nsignal_res = 0;
@@ -533,19 +534,19 @@ void Main::Maker::MakeFile()
   double nsignal_coh = 0;
   double nsignal_mec = 0;
   
-  int signal_sel = 0;
-  int bkg_anumu_sel = 0;
-  int bkg_nue_sel = 0;
-  int bkg_nc_sel = 0;
-  int bkg_outfv_sel = 0;
-  int bkg_cosmic_sel = 0;
-  int bkg_cosmic_top_sel = 0;
+  double signal_sel = 0;
+  double bkg_anumu_sel = 0;
+  double bkg_nue_sel = 0;
+  double bkg_nc_sel = 0;
+  double bkg_outfv_sel = 0;
+  double bkg_cosmic_sel = 0;
+  double bkg_cosmic_top_sel = 0;
 
-  int signal_sel_qe = 0;
-  int signal_sel_res = 0;
-  int signal_sel_dis = 0;
-  int signal_sel_coh = 0;
-  int signal_sel_mec = 0;
+  double signal_sel_qe = 0;
+  double signal_sel_res = 0;
+  double signal_sel_dis = 0;
+  double signal_sel_coh = 0;
+  double signal_sel_mec = 0;
   
   int nEvtsWFlashInBeamSpill = 0;
   int nNumuCC = 0;
@@ -1814,7 +1815,7 @@ void Main::Maker::MakeFile()
     // This variable will store if this is a signal event or not
     bool isSignal = false;
 
-    if (t->nupdg == 14 && t->ccnc == 0 && t->fv == 1 && (t->tvtx_z[0] < 675 || t->tvtx_z[0] > 775)){
+    if (t->nupdg == 14 && t->ccnc == 0 && t->fv == 1 /*&& (t->tvtx_z[0] < 675 || t->tvtx_z[0] > 775)*/){
 
       nsignal += event_weight;
       isSignal = true;
@@ -1843,6 +1844,11 @@ void Main::Maker::MakeFile()
     //
     // Construct the denominator for the efficiency plots
     //
+    // for (int j = 0; j < t->truth_nu_e.size(); j++) {
+    //   if (t->truth_nupdg.at(j) == 14 && t->truth_ccnc.at(j) == 0 && t->truth_fv.at(j) == 1) {
+    //     nsignal_all += event_weight;
+    //   }
+    // }
     if (isSignal) {
       
       _event_histo_1d->h_eff_onebin_den->Fill(0.5, event_weight);
@@ -1955,7 +1961,8 @@ void Main::Maker::MakeFile()
         hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
       }
-    }
+    } // if is signal
+
     if(t->nupdg == 14 && t->ccnc == 0){
       nNumuCC++;
     }
@@ -2620,7 +2627,7 @@ void Main::Maker::MakeFile()
       
       //std::cout << "Is signal and is selected. event: " << t->event << std::endl;
 
-      signal_sel ++;
+      signal_sel += event_weight;
       _event_histo_1d->h_eff_onebin_num->Fill(0.5, event_weight);
       h_eff_num->Fill(t->nu_e, event_weight);
       _event_histo_1d->h_eff_mumom_num->Fill(t->true_muon_mom, event_weight);
@@ -2661,23 +2668,23 @@ void Main::Maker::MakeFile()
 
       if (t->mode == 0) {
         h_eff_qe_num->Fill(t->nu_e, event_weight);
-        signal_sel_qe++;
+        signal_sel_qe += event_weight;
       }
       if (t->mode == 1) {
         h_eff_res_num->Fill(t->nu_e, event_weight);
-        signal_sel_res++;
+        signal_sel_res += event_weight;
       }
       if (t->mode == 2) {
         h_eff_dis_num->Fill(t->nu_e, event_weight);
-        signal_sel_dis++;
+        signal_sel_dis += event_weight;
       }
       if (t->mode == 3) {
         h_eff_coh_num->Fill(t->nu_e, event_weight);
-        signal_sel_coh++;
+        signal_sel_coh += event_weight;
       }
       if (t->mode == 10) {
         h_eff_mec_num->Fill(t->nu_e, event_weight);
-        signal_sel_mec++;
+        signal_sel_mec += event_weight;
       }
 
       // Also save themc truth histogram per interaction type
@@ -2792,7 +2799,7 @@ void Main::Maker::MakeFile()
     // ANUMU
     //
     else if(nu_origin && t->ccnc==0 && t->nupdg==-14 && t->fv==1){
-      bkg_anumu_sel ++;
+      bkg_anumu_sel += event_weight;
       pEff->Fill(false, t->nu_e);
       _event_histo_1d->hmap_onebin["anumu"]->Fill(0.5, event_weight);
       hmap_trklen["anumu"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
@@ -2839,7 +2846,7 @@ void Main::Maker::MakeFile()
     // NUE
     //
     else if(nu_origin && t->ccnc==0 && (t->nupdg==-12 || t->nupdg==12) && t->fv==1){
-      bkg_nue_sel ++;
+      bkg_nue_sel += event_weight;
       pEff->Fill(false, t->nu_e);
       _event_histo_1d->hmap_onebin["nue"]->Fill(0.5, event_weight);
       hmap_trklen["nue"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
@@ -2888,7 +2895,7 @@ void Main::Maker::MakeFile()
     // NC
     //
     else if(nu_origin && t->ccnc==1 && t->fv==1){
-      bkg_nc_sel ++;
+      bkg_nc_sel += event_weight;
       pEff->Fill(false, t->nu_e);
       _event_histo_1d->hmap_onebin["nc"]->Fill(0.5, event_weight);
       hmap_trklen["nc"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
@@ -2982,7 +2989,7 @@ void Main::Maker::MakeFile()
     // OUTFV
     //
     else if(nu_origin && t->fv==0){
-      bkg_outfv_sel ++;
+      bkg_outfv_sel += event_weight;
       pEff->Fill(false, t->nu_e);
       _event_histo_1d->hmap_onebin["outfv"]->Fill(0.5, event_weight);
       hmap_trklen["outfv"]->Fill(t->slc_longesttrack_length.at(scl_ll_max), event_weight);
@@ -3057,7 +3064,7 @@ void Main::Maker::MakeFile()
     // COSMIC
     //
     else {
-      bkg_cosmic_sel ++;
+      bkg_cosmic_sel += event_weight;
       // Add extra weight to event_weight if we are scaling the cosmic background (for example from overlays)
       if (_scale_cosmics) event_weight *= _scale_factor_cosmic;
       if (t->slc_crosses_top_boundary.at(scl_ll_max) == 1 ) bkg_cosmic_top_sel++;
@@ -3159,6 +3166,7 @@ void Main::Maker::MakeFile()
   // ************************
   std::cout << std::endl << std::endl;
   LOG_NORMAL() << "Number of simulated signal events is " << nsignal << std::endl;
+  // LOG_NORMAL() << "Number of ALL simulated signal events is " << nsignal_all << std::endl;
   int sel_tot = signal_sel + bkg_anumu_sel + bkg_nue_sel + bkg_nc_sel + bkg_outfv_sel + bkg_cosmic_sel;
   LOG_NORMAL() << "Selected signal is " << signal_sel     << ", " << (double)signal_sel/(double)sel_tot * 100. << std::endl;
   LOG_NORMAL() << "Selected anumu is  " << bkg_anumu_sel  << ", " << (double)bkg_anumu_sel/(double)sel_tot * 100. << std::endl;
