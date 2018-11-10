@@ -3166,7 +3166,7 @@ void Main::Maker::MakeFile()
   // ************************
   std::cout << std::endl << std::endl;
   LOG_NORMAL() << "Number of simulated signal events is " << nsignal << std::endl;
-  LOG_NORMAL() << "Number of ALL simulated signal events is " << nsignal_all << std::endl;
+  // LOG_NORMAL() << "Number of ALL simulated signal events is " << nsignal_all << std::endl;
   int sel_tot = signal_sel + bkg_anumu_sel + bkg_nue_sel + bkg_nc_sel + bkg_outfv_sel + bkg_cosmic_sel;
   LOG_NORMAL() << "Selected signal is " << signal_sel     << ", " << (double)signal_sel/(double)sel_tot * 100. << std::endl;
   LOG_NORMAL() << "Selected anumu is  " << bkg_anumu_sel  << ", " << (double)bkg_anumu_sel/(double)sel_tot * 100. << std::endl;
