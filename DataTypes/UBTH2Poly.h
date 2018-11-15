@@ -19,6 +19,7 @@
 #include <TString.h>
 #include <TROOT.h>
 #include <TMath.h>
+#include <TGraph.h>
 
 
 
@@ -55,6 +56,9 @@ namespace DataTypes {
 
     /// Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
     Int_t        AddBin(TObject *poly);
+
+    /// Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
+    Int_t        AddBin(Double_t x1, Double_t y1, Double_t x2, Double_t  y2);
 
     /// Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
     Int_t        Fill(Double_t x,Double_t y, Double_t w);

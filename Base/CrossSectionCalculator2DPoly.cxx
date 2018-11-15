@@ -645,9 +645,9 @@ namespace Base {
     if (_covariance_matrix_is_set) {
 
       // Just to set the right bins:
-      _cov_matrix_total = (UBTH2Poly*)_covariance_matrix.Clone("_cov_matrix_total");
-      _frac_cov_matrix_total = (UBTH2Poly*)_covariance_matrix.Clone("_frac_cov_matrix_total");
-      _corr_matrix_total = (UBTH2Poly*)_covariance_matrix.Clone("_corr_matrix_total");
+      _cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");
+      _frac_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_frac_cov_matrix_total");
+      _corr_matrix_total = (TH2D*)_covariance_matrix.Clone("_corr_matrix_total");
 
  
       for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {

@@ -231,9 +231,9 @@ namespace Base {
     TH2D _frac_covariance_matrix; ///< 2D Histogram representing the fractional covariance matrix (to be set externally)
     bool _frac_covariance_matrix_is_set = false; ///< Flag that remembers if the fractional covariance matrix was set for this cross section calculation (if not, no syst will be added)
 
-    UBTH2Poly *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
-    UBTH2Poly *_cov_matrix_total = NULL; ///< Total  covariance matrix
-    UBTH2Poly *_corr_matrix_total = NULL; ///< Total correlation matrix
+    TH2D *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    TH2D *_cov_matrix_total = NULL; ///< Total  covariance matrix
+    TH2D *_corr_matrix_total = NULL; ///< Total correlation matrix
 
     bool _add_alt_mc_xsec = false; ///< If true draws an alternative MC cross section from ImportAlternativeMC
     UBTH2Poly* _h_alt_mc_xsec; ///< Stores an alternative MC cross section (from Tune3, or theory, in the latter has to be smeared)

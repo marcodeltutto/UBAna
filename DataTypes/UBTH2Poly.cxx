@@ -59,7 +59,14 @@ namespace DataTypes {
   }
 
 
-
+Int_t UBTH2Poly::AddBin(Double_t x1, Double_t y1, Double_t x2, Double_t  y2)
+{
+   Double_t x[] = {x1, x1, x2, x2, x1};
+   Double_t y[] = {y1, y2, y2, y1, y1};
+   TGraph *g = new TGraph(5, x, y);
+   Int_t bin = AddBin(g);
+   return bin;
+}
 
 
 
