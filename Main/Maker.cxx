@@ -526,7 +526,7 @@ void Main::Maker::MakeFile()
   LOG_NORMAL() << "Number of polybins: " << _n_poly_bins << std::endl;
 
   double nsignal = 0;
-  double nsignal_all = 0;
+  // double nsignal_all = 0;
 
   double nsignal_qe = 0;
   double nsignal_res = 0;

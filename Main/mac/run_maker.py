@@ -11,8 +11,8 @@ maker = Main.Maker()
 
 # BNBComisc
 
-maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v2.root"); # After Neutrino (run on gpvm)
-maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2.root"); # After Neutrino (run on gpvm)
+maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v5.root"); # After Neutrino (run on gpvm)
+maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v5.root"); # After Neutrino (run on gpvm)
 
 maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
 maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
@@ -35,7 +35,7 @@ maker.SetExtraWeight(1.028); # Flux correction
 maker.SetMaUpMECOff(False)
 # maker.ScaleCosmics(0.54548) # For overlay systematics
 
-maker.FillBootstrapGenie(True)
+maker.FillBootstrapGenie(False)
 
 maker.FillBootstrapExtraSyst(False)
 maker.SetTargetExtraSystematic("model_q0q3_ccmec_HistogramWeight")
@@ -46,7 +46,7 @@ maker.SetTargetExtraSystematic("model_q0q3_ccmec_HistogramWeight")
 # maker.SetTargetExtraSystematic("reinteractions_piminus")
 # maker.SetTargetExtraSystematic("total")
 
-maker.FillBootstrapFlux(True)
+maker.FillBootstrapFlux(False)
 #maker.SetTargetFluxSystematic("FluxUnisim");
 #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
 #maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
@@ -55,7 +55,7 @@ maker.FillBootstrapFlux(True)
 #maker.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
 maker.SetTargetFluxSystematic("total")
 
-maker.FillBootstrapMCStat(True)
+maker.FillBootstrapMCStat(False)
 maker.SetNUniversesMCStat(1000)
 
 maker.PrintConfig()

@@ -286,10 +286,6 @@ namespace Main {
   BootstrapTH1D bs_genie_pm1_eff_mumom_num = *temp_bs;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_eff_mumom_den", temp_bs);
   BootstrapTH1D bs_genie_pm1_eff_mumom_den = *temp_bs;
-  LOG_NORMAL() << "Checkpoint 3" << std::endl;
-  LOG_NORMAL() << "Checkpoint 4" << std::endl;
-  LOG_NORMAL() << "Checkpoint 5" << std::endl;
-  LOG_NORMAL() << "Checkpoint 6" << std::endl;
 
   // Boostrap reco-true
   std::map<std::string,TH2D*>* temp_map_bs2;
@@ -543,6 +539,24 @@ namespace Main {
     std::cout << "after calling GetCopyWithBinNumbers" << std::endl;
 
     std::cout << "Original   bin 2, content: " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(9) << " +- " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(9) << std::endl;
+    
+    h_poly_binnumber->GetYaxis()->SetRangeUser(0,1.28);
+    h_poly_binnumber->Reset();
+    for (double x = 0; x < 3; x+=0.3) {
+    for (double y = 0.1; y < 0.6; y+=0.3) {
+      h_poly_binnumber->Fill(x, y, 1);
+    }}
+    std::cout << "h_poly_binnumber->GetBinContent(-1): " << h_poly_binnumber->GetBinContent(-1) << std::endl;
+    std::cout << "h_poly_binnumber->GetBinContent(-2): " << h_poly_binnumber->GetBinContent(-2) << std::endl;
+    std::cout << "h_poly_binnumber->GetBinContent(-3): " << h_poly_binnumber->GetBinContent(-3) << std::endl;
+    std::cout << "h_poly_binnumber->GetBinContent(-4): " << h_poly_binnumber->GetBinContent(-4) << std::endl;
+    std::cout << "h_poly_binnumber->GetBinContent(-5): " << h_poly_binnumber->GetBinContent(-5) << std::endl;
+    std::cout << "h_poly_binnumber->GetBinContent(-6): " << h_poly_binnumber->GetBinContent(-6) << std::endl;
+    std::cout << "h_poly_binnumber->GetBinContent(-7): " << h_poly_binnumber->GetBinContent(-7) << std::endl;
+    std::cout << "h_poly_binnumber->GetBinContent(-8): " << h_poly_binnumber->GetBinContent(-8) << std::endl;
+    std::cout << "h_poly_binnumber->GetBinContent(-9): " << h_poly_binnumber->GetBinContent(-9) << std::endl;
+
+    // std::cout << "JJJJJ h_poly_binnumber->FindBin(-0.99, 3.) = " << h_poly_binnumber->FindBin(-0.99, 3.)<< std::endl;
     std::cout << "JJJJJ Just after" << std::endl;
 
 
