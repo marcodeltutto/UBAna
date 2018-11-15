@@ -90,6 +90,7 @@ det_syst_list = ["CV", "dataSCE", "withDIC", "stretchResp", "squeezeResp", "DLdo
 det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "DLdown", "DTup", "LArG4BugFix", "downPEnoise", "noiseAmpUp"]
 
 det_syst_list = ["CV", "dataSCE", "withDIC"]
+det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "stretchResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp", "enhancedexttpcvis", "birksrecomb" ,"deadSaturatedChannels", "altDeadChannels"]
 
 stat_err_perbin_mumom = [0.0041, 0.013, 0.010, 0.0048, 0.0028, 0.00067]
 stat_err_perbin_muangle = [0.0034, 0.0026, 0.0060, 0.0038, 0.0055, 0.0087, 0.0080, 0.011, 0.018]
@@ -167,21 +168,21 @@ for syst_name in det_syst_list:
 					a = j + i * n_bins_mumom + 1;
 					b = n + m * n_bins_mumom + 1;
 					# print 'a', a, 'b', b
-					my_a = 12 #5
-					my_b = 12 #5
-					if (a==my_a and b==my_b): print 'Here starts', syst_name
-					if (a==my_a and b==my_b): print 'i', i, ', j', j, ', m', m, ', n', n
-					if (a==my_a and b==my_b): print 'syst', xsec_muangle_mumom.GetBinContent(i+1, j+1), '   cv', xsec_muangle_mumom_cv.GetBinContent(i+1, j+1)
+					# my_a = 12 #5
+					# my_b = 12 #5
+					# if (a==my_a and b==my_b): print 'Here starts', syst_name
+					# if (a==my_a and b==my_b): print 'i', i, ', j', j, ', m', m, ', n', n
+					# if (a==my_a and b==my_b): print 'syst', xsec_muangle_mumom.GetBinContent(i+1, j+1), '   cv', xsec_muangle_mumom_cv.GetBinContent(i+1, j+1)
 					d0 = (xsec_muangle_mumom.GetBinContent(i+1, j+1) - xsec_muangle_mumom_cv.GetBinContent(i+1, j+1))*(xsec_muangle_mumom.GetBinContent(m+1, n+1) - xsec_muangle_mumom_cv.GetBinContent(m+1, n+1))
 					den = ((xsec_muangle_mumom_cv.GetBinContent(i+1, j+1))*xsec_muangle_mumom_cv.GetBinContent(m+1, n+1))
 					cov_matrix_muangle_mumom.SetBinContent(a, b, cov_matrix_muangle_mumom.GetBinContent(a, b) + d0)
 					# print 'd0', d0
-					if (a==my_a and b==my_b): print 'd0', d0, 'den', den
+					# if (a==my_a and b==my_b): print 'd0', d0, 'den', den
 					if (den != 0):
 						d0_frac = d0 / den
-						if (a==my_a and b==my_b): print 'd0_frac', d0_frac 
+						# if (a==my_a and b==my_b): print 'd0_frac', d0_frac 
 						cov_matrix_muangle_mumom_frac.SetBinContent(a, b, cov_matrix_muangle_mumom_frac.GetBinContent(a, b) + d0_frac)
-					if (a==my_a and b==my_b): print 'Here ends', syst_name
+					# if (a==my_a and b==my_b): print 'Here ends', syst_name
 
 
 
@@ -330,8 +331,8 @@ cov_matrix_poly_muangle_mumom_frac.GetXaxis().SetTitle("Bin i");
 cov_matrix_poly_muangle_mumom_frac.GetYaxis().SetTitle("Bin j");
 cov_matrix_poly_muangle_mumom_frac.GetXaxis().CenterTitle();
 cov_matrix_poly_muangle_mumom_frac.GetYaxis().CenterTitle();
-cov_matrix_poly_muangle_mumom_frac.SetMaximum(1.5)
-cov_matrix_poly_muangle_mumom_frac.SetMinimum(-1.5)
+cov_matrix_poly_muangle_mumom_frac.SetMaximum(2)
+cov_matrix_poly_muangle_mumom_frac.SetMinimum(-2)
 cov_matrix_poly_muangle_mumom_frac.Draw("colz TEXT")
 
 # gStyle.SetPaintTextFormat("4.3f");
