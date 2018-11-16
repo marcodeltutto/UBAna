@@ -323,6 +323,8 @@ void Main::Maker::FillBootstrap(int m, // true bin m (1 number, unrolled)
                                 std::vector<double> wgts) {
 
 
+  if (j < 0) j = 0; // Negative bins are overflows, and are all added to entry 0 of the vector
+
   bs_poly_reco_per_true["nominal"][m][j] += evt_wgt;
 
   for (size_t i = 0; i < fname.size(); i++) {
@@ -2478,17 +2480,18 @@ void Main::Maker::MakeFile()
       }
 
       // For the poly version
-      m = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_true, _mom_true) - 1;
-      int i = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_reco, _mom_mcs) - 1;
+      m = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_true, _mom_true);
+      int i = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_reco, _mom_mcs);
       // std::cout << "true | n bins " << _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << std::endl;
       // std::cout << "reco | n bins " << _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_reco " << _angle_reco << ", _mom_mcs " << _mom_mcs << ", i " << i << std::endl;
-      if (m >= 0 && m < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()
-        && i >= 0 && i < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()) {
+      if (m < 0) m = 0; // Negative bins are overflows, and are all added in entry 0 of the vector
+      if (m < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()+1
+        /*&& i >= 0 && i < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()*/) {
         _event_histo->h_poly_reco_per_true[m]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(m, i, event_weight, _event_histo->bs_genie_multisim_poly_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_flux) FillBootstrap(m, i, event_weight, _event_histo->bs_flux_multisim_poly_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(m, i, event_weight, _event_histo->bs_extra_syst_multisim_poly_reco_per_true, fname_extra_syst, wgts_extra_syst);
-        if(!isdata && _fill_bootstrap_mc_stat) FillBootstrap(m, i, event_weight, _event_histo->bs_mc_stat_multisim_poly_reco_per_true, fname_mc_stat, wgts_mc_stat);
+        if(!isdata && _fill_bootstrap_mc_stat) FillBootstrap(m, i, event_weight, _event_histo->bs_mc_stat_multisim_poly_reco_per_true, fname_mc_stat_multisim, wgts_mc_stat_multisim);
       }
       // *** addition ends
 

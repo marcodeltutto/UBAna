@@ -57,16 +57,19 @@ namespace Base {
   TMatrix MigrationMatrix4DPoly::CalculateMigrationMatrix() 
   {
     
-    // Resize the smearing matrix
-    _S.Clear(); _S.ResizeTo(_n_bins, _n_bins);
+    // Resize the smearing matrix (recon bin has +1 for overflows)
+    _S.Clear(); _S.ResizeTo(_n_bins + 1, _n_bins);
 
     for (int m = 0; m < _n_bins; m++) { // True bin
 
       if (_h_reco_per_true.size()) {
         // Case 1, we have set a set of UBTH2Poly per every true bin
+        LOG_CRITICAL() << "case 1" << std::endl;
+        LOG_CRITICAL() << "-2 ov: " << _h_reco_per_true[m]->GetBinContent(-2) << std::endl;
         _reco_per_true = (UBTH2Poly*) _h_reco_per_true[m]->Clone("_reco_per_true");
       } else {
         // Case 2, we have set a set a vector of lenght _n_bins (reco bins) per every true bin
+        LOG_CRITICAL() << "case 2" << std::endl;
         _reco_per_true = (UBTH2Poly*) _th2poly_template->Clone("_reco_per_true");
         for (int i = 0; i < _n_bins; i++) {
           _reco_per_true->SetBinContent(i+1, _v_reco_per_true[m][i]);
@@ -94,7 +97,18 @@ namespace Base {
   
         _S[i][m] = value;
         
-       }
+      }
+
+      // Add overflows for recon bin
+      double overflow = 0.;
+        LOG_CRITICAL() << " true bin " << m << std::endl;
+      for (int i = -9; i < 0; i++) {
+        overflow += _reco_per_true->GetBinContent(i);
+        LOG_CRITICAL() << "\toverflow " << i << " => " << _reco_per_true->GetBinContent(i) << std::endl;
+      }
+      if (std::isnan(overflow)) overflow = 0.;
+      _S[_n_bins][m] = overflow;
+
 
       // Saving the plot
       if (make_plot && _do_make_plots) {  
