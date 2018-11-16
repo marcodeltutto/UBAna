@@ -67,6 +67,9 @@ namespace DataTypes {
     void         SetBinContent(Int_t bin, Double_t content);
 
     /// Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
+    void         SetBinError(Int_t bin, Double_t content);
+
+    /// Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
     Double_t     GetBinError(Int_t bin) const;
 
     /// Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
@@ -77,13 +80,17 @@ namespace DataTypes {
 
     /// Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
     virtual Double_t RetrieveBinContent(Int_t bin) const {
-        return (bin>=kNOverflow) ? GetBinContent(bin-kNOverflow+1) : GetBinContent(-bin-1);
+        return (bin>=kNOverflow) ? GetBinContent(bin-kNOverflow+1) : GetBinContent(-kNOverflow+bin);
+        std::cout << "-------->RetrieveBinContent called" << std::endl;
     }
 
     /// Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
     virtual void UpdateBinContent(Int_t bin, Double_t content) {
        return (bin>=kNOverflow) ? SetBinContent(bin-kNOverflow+1,content) : SetBinContent(-bin-1,content);
     }
+
+    /// Returns the bin width (area) for bin
+    Double_t GetBinWidth(Int_t bin) const;
 
     /// Projects in Y slices, firstxbin is the X bin you want to select, bin_numbersis a returned vectors with the corresponding bin numbers
     TH1D* ProjectionY(const char *name, Int_t firstxbin, std::vector<int> & bin_numbers) const;
@@ -110,7 +117,7 @@ namespace DataTypes {
     UBTH2Poly & operator= (const UBTH2Poly &h1);
 
     /// Reset this histogram: contents, errors, etc.
-    void Reset(Option_t *opt = "") {for (int i=0; i<9; i++) fOverflow[i] = 0.; TH2Poly::Reset(opt);}
+    void Reset(Option_t *opt = "") {for (int i=0; i<kNOverflow; i++) fOverflow[i] = 0.; TH2Poly::Reset(opt);}
 
     /// Sets the number of bins along x
     void SetNBinsX(Int_t n);
@@ -142,7 +149,7 @@ namespace DataTypes {
        kNOverflow       = 9  //  number of overflows bins
     };
 
-    Double_t fOverflow[kNOverflow]; 
+    Double_t fOverflow[kNOverflow] = {0}; 
 
     Int_t _n_bins_x = 100;
 
