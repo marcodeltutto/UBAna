@@ -91,7 +91,12 @@ void Main::Maker::PrintMaUpMECOff()
   }
 }
 
-
+void Main::Maker::PrintReweighKaons()
+{
+  for (int i = 0; i < 10; i++) {
+    std::cout << "**************************** RUNNING WITH KAON FLUX SCALED BY 1.5 ****************************" << std::endl;
+  }
+}
 
 
 
@@ -1095,8 +1100,12 @@ void Main::Maker::MakeFile()
   std::vector<std::string> fname_flux_multisim;
 
 
-  if(_maup_mecoff && !isdata) {
+  if (_maup_mecoff && !isdata) {
     PrintMaUpMECOff();
+  }
+
+  if (_reweigh_kaons) {
+    PrintReweighKaons();
   }
     
   int barWidth = 70;
@@ -1159,7 +1168,7 @@ void Main::Maker::MakeFile()
     if (t->file_type == "dirt") event_weight /= _extra_weight;
 
 
-    // bool is_from_kaon = false;
+    bool is_from_kaon = false;
 
     // ************************
     //
@@ -1630,7 +1639,7 @@ void Main::Maker::MakeFile()
         keep_all = true;
       }
 
-      // Loop over all the flux reweighting function names and find the one we want unlsee "total" was requested
+      // Loop over all the flux reweighting function names and find the one we want unless "total" was requested
       for (size_t i_func = 0; i_func < t->evtwgt_flux_multisim_funcname.size(); i_func++) {
 
         std::string func_name = t->evtwgt_flux_multisim_funcname.at(i_func);
@@ -1655,14 +1664,23 @@ void Main::Maker::MakeFile()
         for (size_t i_wgt = 0; i_wgt < fname_flux_multisim.size(); i_wgt++) {
 
           wgts_flux_multisim.at(i_wgt) *= t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt);
+
+          if (_reweigh_kaons
+             && (t->evtwgt_flux_multisim_funcname.at(i_func) == "kminus_PrimaryHadronNormalization" 
+             || t->evtwgt_flux_multisim_funcname.at(i_func) == "kplus_PrimaryHadronFeynmanScaling" 
+             || t->evtwgt_flux_multisim_funcname.at(i_func) == "kzero_PrimaryHadronSanfordWang")) {
+            // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+            if (t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt) != 1) {
+              is_from_kaon = true;
+            }
+          }
         }
       }
     }
 
-    // if (is_from_kaon) {
-    //   // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    //   event_weight *= 1.5;
-    // }
+    if (is_from_kaon && _reweigh_kaons) {
+      event_weight *= 1.5;
+    }
 
 
 /*
@@ -2465,13 +2483,12 @@ void Main::Maker::MakeFile()
 
       _true_reco_tree->Fill();
 
-      // *** Migr mat addition
-      int m = _event_histo->h_reco_per_true[0][0]->GetXaxis()->FindBin(_angle_true) - 1;
-      int n = _event_histo->h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1;
+      // For the migration matrix
+      int m = _event_histo->h_reco_per_true[0][0]->GetXaxis()->FindBin(_angle_true) - 1; // true bin
+      int n = _event_histo->h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1; // true bin
       if (m >= 0 && n >= 0 
           && m < _event_histo->h_reco_per_true[0][0]->GetNbinsX()    // Avoid overflows
           && n < _event_histo->h_reco_per_true[0][0]->GetNbinsY()) { // Avoid overflows
-        // std::cout << "_angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << ", n " << n << std::endl;
         _event_histo->h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, _event_histo->bs_genie_multisim_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, _event_histo->bs_extra_syst_multisim_reco_per_true, fname_extra_syst, wgts_extra_syst);
@@ -2479,24 +2496,17 @@ void Main::Maker::MakeFile()
         if(!isdata && _fill_bootstrap_mc_stat) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, _event_histo->bs_mc_stat_multisim_reco_per_true, fname_mc_stat_multisim, wgts_mc_stat_multisim);
       }
 
-      // For the poly version
-      m = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_true, _mom_true);
-      int i = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_reco, _mom_mcs);
-      // std::cout << "true | n bins " << _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << std::endl;
-      // std::cout << "reco | n bins " << _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_reco " << _angle_reco << ", _mom_mcs " << _mom_mcs << ", i " << i << std::endl;
+      // For the migration matrix (poly)
+      m = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_true, _mom_true); // true bin
+      int i = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_reco, _mom_mcs); // reco bin
       if (m < 0) m = 0; // Negative bins are overflows, and are all added in entry 0 of the vector
-      if (m < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()+1
-        /*&& i >= 0 && i < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()*/) {
+      if (m < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()+1) {
         _event_histo->h_poly_reco_per_true[m]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(m, i, event_weight, _event_histo->bs_genie_multisim_poly_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_flux) FillBootstrap(m, i, event_weight, _event_histo->bs_flux_multisim_poly_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(m, i, event_weight, _event_histo->bs_extra_syst_multisim_poly_reco_per_true, fname_extra_syst, wgts_extra_syst);
         if(!isdata && _fill_bootstrap_mc_stat) FillBootstrap(m, i, event_weight, _event_histo->bs_mc_stat_multisim_poly_reco_per_true, fname_mc_stat_multisim, wgts_mc_stat_multisim);
       }
-      // *** addition ends
-
-      // // Also fill the same tree for all te universes
-      // FillTrueRecoTree(tmap_mom_tree_gene_multisim_bs, _mom_true, _mom_mcs, _angle_true, _angle_reco, fname_genie_multisim, wgts_genie_multisim);
 
       _event_histo_1d->h_true_reco_mom->Fill(_mom_true, _mom_mcs, event_weight);
       _event_histo_1d->h_true_reco_costheta->Fill(_angle_true, _angle_reco, event_weight);
@@ -2605,7 +2615,6 @@ void Main::Maker::MakeFile()
       nue_cc_selected_total+=t->bnb_weight;
       if (t->nu_e >= 0.05 && t->nu_e <= 1.5){
         nue_cc_selected_total_energy_range+=t->bnb_weight;
-        //std::cout << "Selected nue event, run " << t->run << ", " << t->subrun << ", " << t->event << ", index " << scl_ll_max << std::endl;
       }
     }
     if (isNue) {
@@ -2619,7 +2628,6 @@ void Main::Maker::MakeFile()
         if (std::abs(true_pdg) == 11) n_nue_electron+=t->bnb_weight;
         if (std::abs(true_pdg) == 2212) n_nue_proton+=t->bnb_weight;
         if (std::abs(true_pdg) == 211) n_nue_pion+=t->bnb_weight;
-        //std::cout << "Selected nue event, run " << t->run << ", " << t->subrun << ", " << t->event << ", index " << scl_ll_max << std::endl;
       }
     }
 

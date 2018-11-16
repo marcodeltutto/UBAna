@@ -117,6 +117,9 @@ namespace Main{
     /// If true, MEC events are turned off, and MA is scaled up
     void SetMaUpMECOff(bool option) {_maup_mecoff = option;};
 
+    /// Call this to scale the kaon flux by 1.5
+    void ReweighKaons(bool option = true) {_reweigh_kaons = option;};
+
     ///
     void PrintConfig();
 
@@ -152,6 +155,9 @@ namespace Main{
 
     /// Prints a warning message if running with MA up and MEC off
     void PrintMaUpMECOff();
+
+    /// Prints a warning message if running with scaled kaon flux
+    void PrintReweighKaons();
 
     void DrawProgressBar(double progress, double barWidth);
 
@@ -263,6 +269,8 @@ namespace Main{
     bool isdata           = false;
 
     double _extra_weight = 1.; ///Extra weight to be applied to the events
+
+    bool _reweigh_kaons = false;
 
     const double _pe_cut = 50;
 
