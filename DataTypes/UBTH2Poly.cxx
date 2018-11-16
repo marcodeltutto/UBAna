@@ -82,7 +82,7 @@ Int_t UBTH2Poly::AddBin(Double_t x1, Double_t y1, Double_t x2, Double_t  y2)
    if      (x > fXaxis.GetXmax()) overflow += -2;
    else if (x > fXaxis.GetXmin()) overflow += -1;
    if (overflow != -5) {
-      fOverflow[-overflow - 1]+= w;
+      fOverflow[-overflow - 1] += w;
       if (fSumw2.fN) fSumw2.fArray[-overflow - 1] += w*w;
       return overflow;
    }
@@ -501,6 +501,15 @@ void UBTH2Poly::SetBinError(Int_t bin, Double_t error)
       w = bin->GetArea();
       if (width) integral += w * bin->GetContent();
       else integral += bin->GetContent();
+    }
+
+    if (opt.Contains("overflow")) {
+      for (int i = 0; i < kNOverflow; i++) {
+        if (width) {
+          Warning("Integral","width (area) not fully supported together with overflow option.");    
+        }
+        else integral += fOverflow[i]; 
+      }
     }
 
     return integral;
