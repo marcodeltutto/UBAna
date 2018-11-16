@@ -115,10 +115,10 @@ namespace Main{
     void SetIsData(bool);
 
     /// If true, MEC events are turned off, and MA is scaled up
-    void SetMaUpMECOff(bool option) {_maup_mecoff = option;};
+    void SetMaUpMECOff(bool option) {_maup_mecoff = option;}
 
     /// Call this to scale the kaon flux by 1.5
-    void ReweighKaons(bool option = true) {_reweigh_kaons = option;};
+    void ReweighKaons(bool option = true, double factor = 1.5) {_reweigh_kaons = option; _kaon_reweigh_factor = factor;}
 
     ///
     void PrintConfig();
@@ -242,6 +242,8 @@ namespace Main{
 
 
     bool _maup_mecoff = false;
+    bool _reweigh_kaons = false;
+    double _kaon_reweigh_factor = 1.5;
 
     const bool _breakdownPlots = true;
     const bool _makePlots = false;
@@ -269,8 +271,6 @@ namespace Main{
     bool isdata           = false;
 
     double _extra_weight = 1.; ///Extra weight to be applied to the events
-
-    bool _reweigh_kaons = false;
 
     const double _pe_cut = 50;
 

@@ -33,6 +33,7 @@ maker.SetExtraWeight(1.028); # Flux correction
 
 
 maker.SetMaUpMECOff(False)
+maker.ReweighKaons(False)
 # maker.ScaleCosmics(0.54548) # For overlay systematics
 
 maker.FillBootstrapGenie(False)

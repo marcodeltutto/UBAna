@@ -1679,7 +1679,7 @@ void Main::Maker::MakeFile()
     }
 
     if (is_from_kaon && _reweigh_kaons) {
-      event_weight *= 1.5;
+      event_weight *= _kaon_reweigh_factor;
     }
 
 
