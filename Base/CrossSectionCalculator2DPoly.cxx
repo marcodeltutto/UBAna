@@ -430,7 +430,7 @@ namespace Base {
         double delta = ROOT::Math::normal_quantile(1 - alpha, sigma);
 
         _eff->SetBinContent(bin, average);
-        _eff->SetBinError(bin-1, delta);
+        _eff->SetBinError(bin, delta);
         LOG_DEBUG() << "bin = " << bin << ", average = " << average << ", sigma = " << sigma << ", delta = " << delta << std::endl;
     }
 
@@ -452,7 +452,7 @@ namespace Base {
     c_eff_reco->SaveAs(name + ".pdf");
     c_eff_reco->SaveAs(name + ".C");
 
-    LOG_DEBUG() << "bin 1. Eff = " << _eff->GetBinContent(1) << " +- " << _eff->GetBinError(1) << std::endl;
+    LOG_DEBUG() << "bin 40. Eff = " << _eff->GetBinContent(40) << " +- " << _eff->GetBinError(40) << std::endl;
 
   }
 
@@ -528,6 +528,9 @@ namespace Base {
     h_mc->SetTitle(_label.c_str());
     h_data->Sumw2();
 
+    LOG_CRITICAL() << " h_data->GetNumberOfBins() = " << h_data->GetNumberOfBins()  << std::endl;
+    LOG_CRITICAL() << " h_mc->GetNumberOfBins() = " << h_mc->GetNumberOfBins()  << std::endl;
+
     LOG_DEBUG() << "initial h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
 
     if (h_mc->GetSumw2N() == 0) { 
@@ -566,7 +569,6 @@ namespace Base {
     h_data->Divide(h_eff);
 
     LOG_INFO() << "Efficiency in bin (6, 2) is " << h_eff->GetBinContent(14) << std::endl;
-    LOG_DEBUG() << "eff h_data->GetBinContent(14) = " << h_data->GetBinContent(14) << std::endl;
 
     LOG_DEBUG() << "bin 1. eff h_data = " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
 
@@ -589,6 +591,7 @@ namespace Base {
     LOG_DEBUG() << "bin 1. scale h_data = " << h_data->GetBinContent(1) << " +- " << h_data->GetBinError(1) << std::endl;
 
 
+    LOG_CRITICAL() << " h_data->GetNumberOfBins() = " << h_data->GetNumberOfBins()  << std::endl;
 
 
     // for (int bin_i = 1; bin_i < h_data->GetNbinsX()+1; bin_i++) {
@@ -611,6 +614,7 @@ namespace Base {
     LOG_INFO() << "MC Integral: " << h_mc->Integral() << std::endl;
     LOG_INFO() << "Data Integral: " << h_data->Integral() << std::endl;
 
+    LOG_CRITICAL() << " h_data->GetNumberOfBins() = " << h_data->GetNumberOfBins()  << std::endl;
 
     //
     // Add systs uncertainties (if cov. matrix is set)
@@ -641,6 +645,7 @@ namespace Base {
       _covariance_matrix_is_set = true;
     }
 
+    LOG_CRITICAL() << " h_data->GetNumberOfBins() = " << h_data->GetNumberOfBins()  << std::endl;
 
     if (_covariance_matrix_is_set) {
 
