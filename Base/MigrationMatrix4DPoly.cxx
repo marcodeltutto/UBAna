@@ -157,8 +157,8 @@ namespace Base {
     h_sm->GetYaxis()->SetTickLength(0);
     h_sm->GetXaxis()->SetLabelSize(0.03);
     h_sm->GetYaxis()->SetLabelSize(0.03);
-    h_sm->GetXaxis()->SetTitle("Reconstructed Bin Number");
-    h_sm->GetYaxis()->SetTitle("True Bin Number");
+    h_sm->GetXaxis()->SetTitle("True Bin Number");
+    h_sm->GetYaxis()->SetTitle("Reconstructed Bin Number");
     h_sm->GetZaxis()->SetTitle("Probability");
 
 
