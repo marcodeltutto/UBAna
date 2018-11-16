@@ -94,7 +94,7 @@ void Main::Maker::PrintMaUpMECOff()
 void Main::Maker::PrintReweighKaons()
 {
   for (int i = 0; i < 10; i++) {
-    std::cout << "**************************** RUNNING WITH KAON FLUX SCALED BY 1.5 ****************************" << std::endl;
+    std::cout << "**************************** RUNNING WITH KAON FLUX SCALED BY " << _kaon_reweigh_factor << " ****************************" << std::endl;
   }
 }
 

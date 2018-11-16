@@ -1744,9 +1744,6 @@ namespace Main {
     //
     
     MigrationMatrix4DPoly migrationmatrix4dpoly;
-    for (int m = 0; m < 42; m++) {
-        LOG_CRITICAL() << "in ana, -2 ov: " << _event_histo_mc->h_poly_reco_per_true[m]->GetBinContent(-2) << std::endl;
-    }
     migrationmatrix4dpoly.SetRecoPerTrueHistos(_event_histo_mc->h_poly_reco_per_true);
     migrationmatrix4dpoly.SetBins(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins());
     migrationmatrix4dpoly.SetTemplateHisto(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]);
@@ -1780,7 +1777,6 @@ namespace Main {
 
     if (_import_alternative_mc) {
       UBTH2Poly* h = (UBTH2Poly*)file_alt_mc->Get("xsec_poly_muangle_mumom_mc_cv_tune3");
-      LOG_CRITICAL() << "h->GetNumberOfBins() " << h->GetNumberOfBins() << std::endl;
       xsec_calc_poly.ImportAlternativeMC(h);
     }
 
@@ -2056,24 +2052,10 @@ namespace Main {
   gStyle->SetPaintTextFormat("4.0f");
 
   TCanvas* canvas_trktheta_trkmom_poly = new TCanvas("canvas_trktheta_trkmom_poly", "canvas", 800, 700);
-    LOG_CRITICAL() << "-------------" << std::endl;
 
-for (int bin = 0; bin <= _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins()+9; bin++) {
-    // LOG_CRITICAL() << "RetrieveBinContent = " << bin << ", content = " <<  _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->RetrieveBinContent(bin) << std::endl;
-  }
-
-  for (int bin = -9; bin <= _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins(); bin++) {
-    // LOG_CRITICAL() << "before add - bin = " << bin << ", content = " <<  _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(bin) << " , error = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(bin) << std::endl;
-  }
-
-  LOG_CRITICAL() << " before overflow -2 = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(-2) << " , error = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(-2) << std::endl;
-_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->Sumw2();
-_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->Divide(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]);
+// _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->Sumw2();
+// _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->Divide(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]);
   _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->Draw("colz text");
-for (int bin = -9; bin <= _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins(); bin++) {
-    // LOG_CRITICAL() << "after add - bin = " << bin << ", content = " <<  _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(bin) << " , error = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(bin) << std::endl;
-  }
-  LOG_CRITICAL() << " after overflow -2 = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(-2) << " , error = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(-2) << std::endl;
 
   name = outdir + "trktheta_trkmom_poly_signal";
   canvas_trktheta_trkmom_poly->SaveAs(name + ".pdf");
