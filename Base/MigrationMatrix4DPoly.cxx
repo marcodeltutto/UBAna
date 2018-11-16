@@ -57,23 +57,24 @@ namespace Base {
   TMatrix MigrationMatrix4DPoly::CalculateMigrationMatrix() 
   {
     
-    // Resize the smearing matrix (recon bin has +1 for overflows)
-    _S.Clear(); _S.ResizeTo(_n_bins + 1, _n_bins);
+    // Resize the smearing matrix (+1 for overflows)
+    _S.Clear(); _S.ResizeTo(_n_bins + 1, _n_bins + 1);
 
-    for (int m = 0; m < _n_bins; m++) { // True bin
+    for (int m = 0; m < _n_bins + 1; m++) { // True bin
+
+      int true_idx = m - 1;
+      if (true_idx < 0) true_idx = _n_bins;
 
       if (_h_reco_per_true.size()) {
         // Case 1, we have set a set of UBTH2Poly per every true bin
-        LOG_CRITICAL() << "case 1" << std::endl;
-        LOG_CRITICAL() << "-2 ov: " << _h_reco_per_true[m]->GetBinContent(-2) << std::endl;
         _reco_per_true = (UBTH2Poly*) _h_reco_per_true[m]->Clone("_reco_per_true");
       } else {
         // Case 2, we have set a set a vector of lenght _n_bins (reco bins) per every true bin
-        LOG_CRITICAL() << "case 2" << std::endl;
         _reco_per_true = (UBTH2Poly*) _th2poly_template->Clone("_reco_per_true");
-        for (int i = 0; i < _n_bins; i++) {
-          _reco_per_true->SetBinContent(i+1, _v_reco_per_true[m][i]);
+        for (int i = 1; i < _n_bins + 1; i++) {
+          _reco_per_true->SetBinContent(i, _v_reco_per_true[m][i]);
         }
+        _reco_per_true->SetBinContent(-2, _v_reco_per_true[m][0]); // Set overflows to bin number -2 (just convention)
       }
 
 
@@ -95,19 +96,17 @@ namespace Base {
         if (std::isnan(value))
           value = 0.;
   
-        _S[i][m] = value;
+        _S[i][true_idx] = value;
         
       }
 
-      // Add overflows for recon bin
+      // Add overflows
       double overflow = 0.;
-        LOG_CRITICAL() << " true bin " << m << std::endl;
       for (int i = -9; i < 0; i++) {
         overflow += _reco_per_true->GetBinContent(i);
-        LOG_CRITICAL() << "\toverflow " << i << " => " << _reco_per_true->GetBinContent(i) << std::endl;
       }
       if (std::isnan(overflow)) overflow = 0.;
-      _S[_n_bins][m] = overflow;
+      _S[_n_bins][true_idx] = overflow;
 
 
       // Saving the plot
@@ -140,12 +139,12 @@ namespace Base {
   void MigrationMatrix4DPoly::PlotMatrix()
   {
 
-    TH2D *h_sm = new TH2D("h_sm", "", _n_bins, 0, _n_bins, _n_bins, 0, _n_bins);
+    TH2D *h_sm = new TH2D("h_sm", "", _n_bins + 1, 0, _n_bins + 1, _n_bins + 1, 0, _n_bins + 1);
 
-    for (int m = 0; m < _n_bins; m++) {  // true
-      for (int i = 0; i < _n_bins; i++) {  // reco
+    for (int m = 0; m < _n_bins + 1; m++) {  // true
+      for (int i = 0; i < _n_bins + 1; i++) {  // reco
         
-        h_sm->SetBinContent(m +1, i +1, _S[i][m]);
+        h_sm->SetBinContent(m + 1, i + 1, _S[i][m]);
 
       }
     }
@@ -166,6 +165,8 @@ namespace Base {
       h_sm->GetXaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
       h_sm->GetYaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
     }
+    h_sm->GetXaxis()->SetBinLabel(_n_bins + 1, "OF");
+    h_sm->GetYaxis()->SetBinLabel(_n_bins + 1, "OF");
 
     h_sm->GetXaxis()->SetTickLength(0);
     h_sm->GetYaxis()->SetTickLength(0);
@@ -188,7 +189,7 @@ namespace Base {
     // Vertical lines
     Int_t sum = 0;
     for (Int_t s = 0; s < separators_length - 1; s++) {
-      TLine *line = new TLine(separators[s] + sum, 0, separators[s] + sum, _n_bins);
+      TLine *line = new TLine(separators[s] + sum, 0, separators[s] + sum, _n_bins + 1);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
       lines.emplace_back(line);
@@ -198,13 +199,23 @@ namespace Base {
     // Horizontal lines
     sum = 0;
     for (Int_t s = 0; s < separators_length - 1; s++) {
-      TLine *line = new TLine(0, separators[s] + sum, _n_bins, separators[s] + sum);
+      TLine *line = new TLine(0, separators[s] + sum, _n_bins + 1, separators[s] + sum);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
       lines.emplace_back(line);
       sum += separators[s];
     }
 
+    // Last two lines for overflows
+    TLine *line_of_v = new TLine(_n_bins, 0, _n_bins, _n_bins + 1);
+    line_of_v->SetLineColor(kRed);
+    line_of_v->SetLineWidth(2);
+    lines.emplace_back(line_of_v);
+
+    TLine *line_of_h = new TLine(0, _n_bins, _n_bins + 1, _n_bins);
+    line_of_h->SetLineColor(kRed);
+    line_of_h->SetLineWidth(2);
+    lines.emplace_back(line_of_h);
 
 
 

@@ -284,8 +284,8 @@ namespace Base {
 
     LOG_DEBUG() << "Number of bins: " << n_bins << std::endl;
 
-    TMatrix matrix_angle_mom_den_truth; matrix_angle_mom_den_truth.Clear(); matrix_angle_mom_den_truth.ResizeTo(n_bins, 1);
-    TMatrix matrix_angle_mom_num_truth; matrix_angle_mom_num_truth.Clear(); matrix_angle_mom_num_truth.ResizeTo(n_bins, 1);
+    TMatrix matrix_angle_mom_den_truth; matrix_angle_mom_den_truth.Clear(); matrix_angle_mom_den_truth.ResizeTo(n_bins + 1, 1);
+    TMatrix matrix_angle_mom_num_truth; matrix_angle_mom_num_truth.Clear(); matrix_angle_mom_num_truth.ResizeTo(n_bins + 1, 1);
 
     for (int i = 0; i < n_bins; i++) {
 
@@ -293,6 +293,14 @@ namespace Base {
       matrix_angle_mom_num_truth[i][0] = _h_eff_mumom_num->GetBinContent(i+1);
 
     }
+
+    // Adding overflows
+    double den_overflow = 0;
+    double num_overflow = 0;
+    for (int i = -9; i < 0; i++) den_overflow += _h_eff_mumom_den->GetBinContent(i);
+    for (int i = -9; i < 0; i++) num_overflow += _h_eff_mumom_num->GetBinContent(i);
+    matrix_angle_mom_den_truth[n_bins][0] = den_overflow; // Last bin contains overflows
+    matrix_angle_mom_num_truth[n_bins][0] = num_overflow; // Last bin contains overflows
 
 
     TCanvas * c_truth_den = new TCanvas;
@@ -342,6 +350,9 @@ namespace Base {
       h_eff_den_smear->SetBinContent(i+1, matrix_angle_mom_den_smear[i][0]);
       h_eff_num_smear->SetBinContent(i+1, matrix_angle_mom_num_smear[i][0]);
     }
+
+    h_eff_den_smear->SetBinContent(-2, matrix_angle_mom_den_smear[n_bins][0]); // Set overflows to bin number -2 (just convention)
+    h_eff_num_smear->SetBinContent(-2, matrix_angle_mom_num_smear[n_bins][0]); // Set overflows to bin number -2 (just convention)
 
 
     TCanvas * c_smear_den = new TCanvas;
