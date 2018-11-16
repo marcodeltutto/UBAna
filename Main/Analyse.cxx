@@ -540,21 +540,21 @@ namespace Main {
 
     std::cout << "Original   bin 2, content: " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(9) << " +- " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(9) << std::endl;
     
-    h_poly_binnumber->GetYaxis()->SetRangeUser(0,1.28);
-    h_poly_binnumber->Reset();
-    for (double x = 0; x < 3; x+=0.3) {
-    for (double y = 0.1; y < 0.6; y+=0.3) {
-      h_poly_binnumber->Fill(x, y, 1);
-    }}
-    std::cout << "h_poly_binnumber->GetBinContent(-1): " << h_poly_binnumber->GetBinContent(-1) << std::endl;
-    std::cout << "h_poly_binnumber->GetBinContent(-2): " << h_poly_binnumber->GetBinContent(-2) << std::endl;
-    std::cout << "h_poly_binnumber->GetBinContent(-3): " << h_poly_binnumber->GetBinContent(-3) << std::endl;
-    std::cout << "h_poly_binnumber->GetBinContent(-4): " << h_poly_binnumber->GetBinContent(-4) << std::endl;
-    std::cout << "h_poly_binnumber->GetBinContent(-5): " << h_poly_binnumber->GetBinContent(-5) << std::endl;
-    std::cout << "h_poly_binnumber->GetBinContent(-6): " << h_poly_binnumber->GetBinContent(-6) << std::endl;
-    std::cout << "h_poly_binnumber->GetBinContent(-7): " << h_poly_binnumber->GetBinContent(-7) << std::endl;
-    std::cout << "h_poly_binnumber->GetBinContent(-8): " << h_poly_binnumber->GetBinContent(-8) << std::endl;
-    std::cout << "h_poly_binnumber->GetBinContent(-9): " << h_poly_binnumber->GetBinContent(-9) << std::endl;
+    // h_poly_binnumber->GetYaxis()->SetRangeUser(0,1.28);
+    // h_poly_binnumber->Reset();
+    // for (double x = 0; x < 3; x+=0.3) {
+    // for (double y = 0.1; y < 0.6; y+=0.3) {
+    //   h_poly_binnumber->Fill(x, y, 1);
+    // }}
+    // std::cout << "h_poly_binnumber->GetBinContent(-1): " << h_poly_binnumber->GetBinContent(-1) << std::endl;
+    // std::cout << "h_poly_binnumber->GetBinContent(-2): " << h_poly_binnumber->GetBinContent(-2) << std::endl;
+    // std::cout << "h_poly_binnumber->GetBinContent(-3): " << h_poly_binnumber->GetBinContent(-3) << std::endl;
+    // std::cout << "h_poly_binnumber->GetBinContent(-4): " << h_poly_binnumber->GetBinContent(-4) << std::endl;
+    // std::cout << "h_poly_binnumber->GetBinContent(-5): " << h_poly_binnumber->GetBinContent(-5) << std::endl;
+    // std::cout << "h_poly_binnumber->GetBinContent(-6): " << h_poly_binnumber->GetBinContent(-6) << std::endl;
+    // std::cout << "h_poly_binnumber->GetBinContent(-7): " << h_poly_binnumber->GetBinContent(-7) << std::endl;
+    // std::cout << "h_poly_binnumber->GetBinContent(-8): " << h_poly_binnumber->GetBinContent(-8) << std::endl;
+    // std::cout << "h_poly_binnumber->GetBinContent(-9): " << h_poly_binnumber->GetBinContent(-9) << std::endl;
 
     // std::cout << "JJJJJ h_poly_binnumber->FindBin(-0.99, 3.) = " << h_poly_binnumber->FindBin(-0.99, 3.)<< std::endl;
     std::cout << "JJJJJ Just after" << std::endl;
@@ -1326,8 +1326,8 @@ namespace Main {
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
       _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
-      else                      _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
+      if (_event_histo_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
+      else                   _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
       _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_genie_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_genie_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_genie_multisim_reco_per_true);
       _xsec_bs_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle_mumom");
@@ -1388,8 +1388,8 @@ namespace Main {
       _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_calc.SetPOT(bnbon_pot_meas);
       _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
-      else                      _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
+      if (_event_histo_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
+      else                   _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
       _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_flux_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_flux_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_flux_multisim_reco_per_true);
       _xsec_bs_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle_mumom");
@@ -1564,8 +1564,8 @@ namespace Main {
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_1d_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
-      else                      _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
+      if (_event_histo_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
+      else                   _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
       _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo_mc->bs_genie_multisim_eff_poly_muangle_mumom_num, *_event_histo_mc->bs_genie_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_genie_multisim_poly_reco_per_true);
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_poly_calc.SetSavePrefix("genie_multisim_muangle_mumom");
@@ -1599,8 +1599,8 @@ namespace Main {
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_extra_syst_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_1d_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
-      else                      _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
+      if (_event_histo_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
+      else                   _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
       _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo_mc->bs_extra_syst_multisim_eff_poly_muangle_mumom_num, *_event_histo_mc->bs_extra_syst_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_extra_syst_multisim_poly_reco_per_true);
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_poly_calc.SetSavePrefix("extra_syst_muangle_mumom");
@@ -1634,8 +1634,8 @@ namespace Main {
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_1d_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
-      else                      _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
+      if (_event_histo_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
+      else                   _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
       _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo_mc->bs_flux_multisim_eff_poly_muangle_mumom_num, *_event_histo_mc->bs_flux_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_flux_multisim_poly_reco_per_true);
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_poly_calc.SetSavePrefix("flux_multisim_muangle_mumom");
@@ -1671,8 +1671,8 @@ namespace Main {
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_mc_stat_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_1d_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
-      else                      _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
+      if (_event_histo_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
+      else                   _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
       _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo_mc->bs_mc_stat_multisim_eff_poly_muangle_mumom_num, *_event_histo_mc->bs_mc_stat_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_mc_stat_multisim_poly_reco_per_true);
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_poly_calc.SetSavePrefix("mc_stat_multisim_muangle_mumom");
@@ -1744,6 +1744,9 @@ namespace Main {
     //
     
     MigrationMatrix4DPoly migrationmatrix4dpoly;
+    for (int m = 0; m < 42; m++) {
+        LOG_CRITICAL() << "in ana, -2 ov: " << _event_histo_mc->h_poly_reco_per_true[m]->GetBinContent(-2) << std::endl;
+    }
     migrationmatrix4dpoly.SetRecoPerTrueHistos(_event_histo_mc->h_poly_reco_per_true);
     migrationmatrix4dpoly.SetBins(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins());
     migrationmatrix4dpoly.SetTemplateHisto(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]);
@@ -1761,8 +1764,8 @@ namespace Main {
     xsec_calc_poly.SetFluxCorrectionWeight(_flux_correction_weight);
     xsec_calc_poly.EstimateFlux();
 
-    if (_event_histo_1d_dirt) xsec_calc_poly.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
-    else                      xsec_calc_poly.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
+    if (_event_histo_dirt) xsec_calc_poly.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
+    else                   xsec_calc_poly.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
     xsec_calc_poly.SetTruthHistograms(_event_histo_mc->h_eff_muangle_mumom_poly_num, _event_histo_mc->h_eff_muangle_mumom_poly_den);
     xsec_calc_poly.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
     xsec_calc_poly.ProcessPlots();
@@ -2053,8 +2056,24 @@ namespace Main {
   gStyle->SetPaintTextFormat("4.0f");
 
   TCanvas* canvas_trktheta_trkmom_poly = new TCanvas("canvas_trktheta_trkmom_poly", "canvas", 800, 700);
+    LOG_CRITICAL() << "-------------" << std::endl;
 
+for (int bin = 0; bin <= _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins()+9; bin++) {
+    // LOG_CRITICAL() << "RetrieveBinContent = " << bin << ", content = " <<  _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->RetrieveBinContent(bin) << std::endl;
+  }
+
+  for (int bin = -9; bin <= _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins(); bin++) {
+    // LOG_CRITICAL() << "before add - bin = " << bin << ", content = " <<  _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(bin) << " , error = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(bin) << std::endl;
+  }
+
+  LOG_CRITICAL() << " before overflow -2 = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(-2) << " , error = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(-2) << std::endl;
+_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->Sumw2();
+_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->Divide(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]);
   _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->Draw("colz text");
+for (int bin = -9; bin <= _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins(); bin++) {
+    // LOG_CRITICAL() << "after add - bin = " << bin << ", content = " <<  _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(bin) << " , error = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(bin) << std::endl;
+  }
+  LOG_CRITICAL() << " after overflow -2 = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(-2) << " , error = " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(-2) << std::endl;
 
   name = outdir + "trktheta_trkmom_poly_signal";
   canvas_trktheta_trkmom_poly->SaveAs(name + ".pdf");

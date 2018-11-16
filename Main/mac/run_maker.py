@@ -11,8 +11,8 @@ maker = Main.Maker()
 
 # BNBComisc
 
-maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v5.root"); # After Neutrino (run on gpvm)
-maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v5.root"); # After Neutrino (run on gpvm)
+maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v4.root"); # After Neutrino (run on gpvm)
+maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4.root"); # After Neutrino (run on gpvm)
 
 maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
 maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
