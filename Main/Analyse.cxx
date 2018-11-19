@@ -1289,6 +1289,8 @@ namespace Main {
     TH1D * xsec_muangle_mc = _xsec_calc.GetMCCrossSection();
 
     file_out->cd();
+    save_name = "smearing_matrix_muangle_" + _prefix;
+    S_2d.Write(save_name.c_str());
     save_name = "xsec_muangle_" + _prefix;
     xsec_muangle->Write(save_name.c_str());
     save_name = "xsec_muangle_mc_" + _prefix;
@@ -1566,7 +1568,7 @@ namespace Main {
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
       if (_event_histo_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
       else                   _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
-      _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo_mc->bs_genie_multisim_eff_poly_muangle_mumom_num, *_event_histo_mc->bs_genie_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_genie_multisim_poly_reco_per_true);
+      _xsec_bs_poly_calc.SetTruthHistograms(_event_histo_mc->bs_genie_multisim_eff_poly_muangle_mumom_num, _event_histo_mc->bs_genie_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_genie_multisim_poly_reco_per_true);
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_poly_calc.SetSavePrefix("genie_multisim_muangle_mumom");
       _xsec_bs_poly_calc.SetUpperLabel("GENIE Re-Weighting Only");
@@ -1601,7 +1603,7 @@ namespace Main {
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_extra_syst_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
       if (_event_histo_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
       else                   _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
-      _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo_mc->bs_extra_syst_multisim_eff_poly_muangle_mumom_num, *_event_histo_mc->bs_extra_syst_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_extra_syst_multisim_poly_reco_per_true);
+      _xsec_bs_poly_calc.SetTruthHistograms(_event_histo_mc->bs_extra_syst_multisim_eff_poly_muangle_mumom_num, _event_histo_mc->bs_extra_syst_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_extra_syst_multisim_poly_reco_per_true);
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_poly_calc.SetSavePrefix("extra_syst_muangle_mumom");
       _xsec_bs_poly_calc.SetUpperLabel("EXTRA SYSTS Re-Weighting Only");
@@ -1636,7 +1638,7 @@ namespace Main {
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
       if (_event_histo_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
       else                   _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
-      _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo_mc->bs_flux_multisim_eff_poly_muangle_mumom_num, *_event_histo_mc->bs_flux_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_flux_multisim_poly_reco_per_true);
+      _xsec_bs_poly_calc.SetTruthHistograms(_event_histo_mc->bs_flux_multisim_eff_poly_muangle_mumom_num, _event_histo_mc->bs_flux_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_flux_multisim_poly_reco_per_true);
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_poly_calc.SetSavePrefix("flux_multisim_muangle_mumom");
       _xsec_bs_poly_calc.SetUpperLabel("FLUX Re-Weighting Only");
@@ -1673,7 +1675,7 @@ namespace Main {
       _xsec_bs_poly_calc.SetNameAndLabel("trkcostheta_trkmom_mc_stat_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
       if (_event_histo_dirt) _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"], _event_histo_dirt->hmap_trktheta_trkmom_poly);
       else                   _xsec_bs_poly_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_poly_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom_poly["total"], _event_histo_extbnb->hmap_trktheta_trkmom_poly["total"]);
-      _xsec_bs_poly_calc.SetTruthHistograms(*_event_histo_mc->bs_mc_stat_multisim_eff_poly_muangle_mumom_num, *_event_histo_mc->bs_mc_stat_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_mc_stat_multisim_poly_reco_per_true);
+      _xsec_bs_poly_calc.SetTruthHistograms(_event_histo_mc->bs_mc_stat_multisim_eff_poly_muangle_mumom_num, _event_histo_mc->bs_mc_stat_multisim_eff_poly_muangle_mumom_den, _event_histo_mc->bs_mc_stat_multisim_poly_reco_per_true);
       _xsec_bs_poly_calc.SetBkgToSubtract(bkg_names);
       _xsec_bs_poly_calc.SetSavePrefix("mc_stat_multisim_muangle_mumom");
       _xsec_bs_poly_calc.SetUpperLabel("GENIE Re-Weighting Only");
@@ -1783,8 +1785,15 @@ namespace Main {
     UBTH2Poly * xsec_muangle_mumom_poly = xsec_calc_poly.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
     UBTH2Poly * xsec_muangle_mumom_poly_mc = xsec_calc_poly.GetMCCrossSection();
 
+    std::vector<TH1D> xsec_data_histos = xsec_calc_poly.GetUnpackedDataCrossSection();
+    std::vector<TH1D> xsec_mc_histos = xsec_calc_poly.GetUnpackedMCCrossSection();
+    std::vector<TH1D> xsec_data_unc_histos = xsec_calc_poly.GetUnpackedDataCrossSectionUncertainty();
+    std::vector<TH1D> xsec_mc_alt_histos = xsec_calc_poly.GetUnpackedMCAlternativeCrossSection();
+
 
     file_out->cd();
+    save_name = "smearing_matrix_muangle_mumom_poly_" + _prefix;
+    S.Write(save_name.c_str());
     save_name = "xsec_poly_muangle_mumom_" + _prefix;
     xsec_muangle_mumom_poly->Write(save_name.c_str());
     save_name = "xsec_poly_muangle_mumom_mc_" + _prefix;
@@ -1792,6 +1801,10 @@ namespace Main {
     save_name = "covariance_matrix_poly_muangle_mumom_" + _prefix;
     frac_covariance_matrix_poly_muangle_mumom.Write(save_name.c_str());
   
+    for (int i = 0; i < xsec_data_histos.size(); i++) {
+      save_name = "xsec_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
+      xsec_data_histos.at(i).Write(save_name.c_str());
+    }
 
   }
 
@@ -2064,6 +2077,7 @@ namespace Main {
 
 TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 800, 700);
 
+  h_poly_binnumber->SetMarkerSize(1.2);
   h_poly_binnumber->Draw("text");
 
   name = outdir + "binnumber_poly_signal";
