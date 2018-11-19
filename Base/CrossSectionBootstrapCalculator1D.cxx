@@ -208,6 +208,8 @@ namespace Base {
 
     // n_universe = 30;
 
+    // this->set_verbosity(Base::msg::kDEBUG);
+
     for (size_t s = 0; s < n_universe; s++) { 
 
       PlottingTools::DrawProgressBar((double)s/(double)n_universe, 70);
@@ -404,7 +406,7 @@ namespace Base {
           it.second->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}");
           it.second->SetMinimum(0.4);
           it.second->SetMaximum(1.2);
-        }else {
+        } else {
           it.second->GetXaxis()->SetTitle("cos(#theta_{#mu})");
           it.second->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
           it.second->SetMaximum(2.2);

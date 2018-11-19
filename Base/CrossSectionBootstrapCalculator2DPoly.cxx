@@ -78,19 +78,18 @@ namespace Base {
     }
   }
 
-  void CrossSectionBootstrapCalculator2DPoly::SetTruthHistograms(BootstrapTH2DPoly num, BootstrapTH2DPoly den, std::map<std::string,std::vector<std::vector<double>>> bs_reco_per_true)
+  void CrossSectionBootstrapCalculator2DPoly::SetTruthHistograms(BootstrapTH2DPoly* num, BootstrapTH2DPoly* den, std::map<std::string,std::vector<std::vector<double>>> bs_reco_per_true)
   {
     _h_eff_mumom_num = num;
     _h_eff_mumom_den = den;
 
-    // _t_true_reco = t;
     _bs_reco_per_true = bs_reco_per_true;
 
     _true_to_reco_is_set = true;
 
   }
 
-  void CrossSectionBootstrapCalculator2DPoly::SetTruthHistograms(BootstrapTH2DPoly num, BootstrapTH2DPoly den)
+  void CrossSectionBootstrapCalculator2DPoly::SetTruthHistograms(BootstrapTH2DPoly* num, BootstrapTH2DPoly* den)
   {
     _h_eff_mumom_num = num;
     _h_eff_mumom_den = den;
@@ -195,8 +194,8 @@ namespace Base {
     _xsec_calc.SetVerbosity(false);
 
 
-    size_t n_universe = _h_eff_mumom_num.GetNWeights();
-    std::vector<std::string> universe_names = _h_eff_mumom_num.GetUniverseNames();
+    size_t n_universe = _h_eff_mumom_num->GetNWeights();
+    std::vector<std::string> universe_names = _h_eff_mumom_num->GetUniverseNames();
 
     LOG_NORMAL() << "Number of Universes: " << n_universe << std::endl;
 
@@ -245,9 +244,9 @@ namespace Base {
       // Construct the hmap for the efficiency numerator and denominator
       //
       hname = "this_eff_num" + universe_names.at(s);
-      this_eff_num = _h_eff_mumom_num.GetUniverseHisto(universe_names.at(s));
+      this_eff_num = _h_eff_mumom_num->GetUniverseHisto(universe_names.at(s));
       hname = "this_eff_den" + universe_names.at(s);
-      this_eff_den = _h_eff_mumom_den.GetUniverseHisto(universe_names.at(s));
+      this_eff_den = _h_eff_mumom_den->GetUniverseHisto(universe_names.at(s));
 
 
       //
