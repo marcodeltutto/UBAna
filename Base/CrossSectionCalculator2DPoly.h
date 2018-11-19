@@ -131,12 +131,24 @@ namespace Base {
     void MakeAllCrossSectionPlots(std::string, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
-    UBTH2Poly* GetMCCrossSection() {return _h_mc;}
+    UBTH2Poly* GetMCCrossSection() { return _h_mc; }
 
-    ///
+    /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the data cross section
+    std::vector<TH1D> GetUnpackedDataCrossSection() { return _xsec_data_histos; }
+
+    /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the MC cross section
+    std::vector<TH1D> GetUnpackedMCCrossSection() { return _xsec_mc_histos; }
+
+    /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the data cross section uncertainties
+    std::vector<TH1D> GetUnpackedDataCrossSectionUncertainty() { return _xsec_data_unc_histos; }
+
+    /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the MC alternative cross section
+    std::vector<TH1D> GetUnpackedMCAlternativeCrossSection() { return _xsec_mc_alt_histos; }
+
+    /// Sets the smearing matrix
     void SetSmearingMatrix(TMatrix);
-
-    ///
+ 
+    /// Sets the covariance matrix
     void SetCovarianceMatrix(TH2D);
 
     ///
@@ -237,6 +249,11 @@ namespace Base {
 
     bool _add_alt_mc_xsec = false; ///< If true draws an alternative MC cross section from ImportAlternativeMC
     UBTH2Poly* _h_alt_mc_xsec; ///< Stores an alternative MC cross section (from Tune3, or theory, in the latter has to be smeared)
+
+    std::vector<TH1D> _xsec_data_histos; ///< Data extracted cross section unpacked per every cos(theta) bin
+    std::vector<TH1D> _xsec_mc_histos; ///< MC cross section unpacked per every cos(theta) bin
+    std::vector<TH1D> _xsec_mc_alt_histos; ///< MC alternative cross section unpacked per every cos(theta) bin
+    std::vector<TH1D> _xsec_data_unc_histos; ///< Data cross section uncertainties unpacked per every cos(theta) bin
 
   };
 }
