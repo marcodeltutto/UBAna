@@ -1366,7 +1366,12 @@ void Main::Maker::MakeFile()
     std::vector<double> wgts_genie_multisim;
     if (!isdata && _fill_bootstrap_genie) {
       for (size_t i = 0; i < fname_genie_multisim.size(); i++) {
-        wgts_genie_multisim.push_back(t->evtwgt_genie_multisim_weight.at(0).at(i));
+        double wgt = t->evtwgt_genie_multisim_weight.at(0).at(i);
+        if (wgt > 100 || wgt < 0) {
+          // LOG_WARNING() << "GENIE multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
+          wgt = 1.;
+        }
+        wgts_genie_multisim.push_back(wgt);
       }
     }
 
@@ -1508,9 +1513,15 @@ void Main::Maker::MakeFile()
 
         for (size_t i_wgt = 0; i_wgt < fname_extra_syst.size(); i_wgt++) {
 
+          double wgt = t->evtwgt_extra_syst_multisim_weight.at(0).at(i);
+          if (wgt > 100 || wgt < 0) {
+            // LOG_WARNING() << "EXTRA SYST multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
+            wgt = 1.;
+          }
+
           // std::cout << "weight number " << i_wgt << " = " << t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt) << std::endl;
 
-          wgts_extra_syst.at(i_wgt) *= t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt);
+          wgts_extra_syst.at(i_wgt) *= wgt;
         }
       }
     }
@@ -1663,7 +1674,13 @@ void Main::Maker::MakeFile()
 
         for (size_t i_wgt = 0; i_wgt < fname_flux_multisim.size(); i_wgt++) {
 
-          wgts_flux_multisim.at(i_wgt) *= t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt);
+          double wgt = t->evtwgt_flux_multisim_weight.at(0).at(i);
+          if (wgt > 100 || wgt < 0) {
+            // LOG_WARNING() << "FLUX multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
+            wgt = 1.;
+          }
+
+          wgts_flux_multisim.at(i_wgt) *= wgt;
 
           if (_reweigh_kaons
              && (t->evtwgt_flux_multisim_funcname.at(i_func) == "kminus_PrimaryHadronNormalization" 
