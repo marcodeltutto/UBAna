@@ -483,22 +483,21 @@ void Main::Maker::MakeFile()
   
   if (evalPOT) {
     
-    cout << " ----- " << endl;
-    cout << "| Calculating POT" << endl;
-    cout << "| " << endl;
-    
+    LOG_NORMAL() << " ~~~~~~~~~~~~~~ " << endl;
+    LOG_NORMAL() << " |   Calculating POT" << endl;
+    LOG_NORMAL() << " |" << endl;
     TChain *cpot;
     cpot = new TChain("UBXSec/pottree");
     cpot->Add(pattern.c_str());
-    cout << "| Number of entries in the pot tree: " << cpot->GetEntries() << endl;
+    LOG_NORMAL() << " | Number of entries in the pot tree: " << cpot->GetEntries() << endl;
     Double_t pot;
     cpot->SetBranchAddress("pot", &pot);
     for (int potEntry = 0; potEntry < cpot->GetEntries(); potEntry++) {
       cpot->GetEntry(potEntry);
       totalPOT += pot;
     } // end loop entries
-    cout << "| Total POT: " << totalPOT << endl;
-    cout << " ----- " << endl << endl;
+    LOG_NORMAL() << " | Total POT: " << totalPOT << endl;
+    LOG_NORMAL() << " ~~~~~~~~~~~~~~ " << endl << endl;
   } // end if evalPOT
   else
     totalPOT = -1.;
@@ -1365,8 +1364,8 @@ void Main::Maker::MakeFile()
     // Prepare the vector of weights to be used for bootstraps
     std::vector<double> wgts_genie_multisim;
     if (!isdata && _fill_bootstrap_genie) {
-      for (size_t i = 0; i < fname_genie_multisim.size(); i++) {
-        double wgt = t->evtwgt_genie_multisim_weight.at(0).at(i);
+      for (size_t i_wgt = 0; i_wgt < fname_genie_multisim.size(); i_wgt++) {
+        double wgt = t->evtwgt_genie_multisim_weight.at(0).at(i_wgt);
         if (wgt > 100 || wgt < 0) {
           // LOG_WARNING() << "GENIE multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
           wgt = 1.;
@@ -1513,7 +1512,7 @@ void Main::Maker::MakeFile()
 
         for (size_t i_wgt = 0; i_wgt < fname_extra_syst.size(); i_wgt++) {
 
-          double wgt = t->evtwgt_extra_syst_multisim_weight.at(0).at(i);
+          double wgt = t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt);
           if (wgt > 100 || wgt < 0) {
             // LOG_WARNING() << "EXTRA SYST multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
             wgt = 1.;
@@ -1672,9 +1671,11 @@ void Main::Maker::MakeFile()
           continue;
         }
 
+        if (i == _initial_entry) LOG_NORMAL() << "Filling bootstraps for flux systematic " << func_name << std::endl;
+
         for (size_t i_wgt = 0; i_wgt < fname_flux_multisim.size(); i_wgt++) {
 
-          double wgt = t->evtwgt_flux_multisim_weight.at(0).at(i);
+          double wgt = t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt);
           if (wgt > 100 || wgt < 0) {
             // LOG_WARNING() << "FLUX multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
             wgt = 1.;
