@@ -57,52 +57,61 @@ namespace Base {
 
     //TMatrix S;
     _S.Clear();
-    _S.ResizeTo(_n, _m);
+    _S.ResizeTo(_n + 1, _m + 1);
 
+    // this->set_verbosity(Base::msg::kDEBUG);
 
+    for (int j = 0; j < _m + 2; j++) {    // True bin
 
-    for (int j = 1; j < _m + 1; j++) {    // True bin
+      int true_idx = j-1;
+      if (j == 0)    true_idx = _m;
+      if (j == _m+1) true_idx = _m;
 
-      if(_verbose) std::cout << "\tThis is true bin " << j << std::endl;
+      LOG_DEBUG() << "\tThis is true bin " << j << " with true index " << true_idx << std::endl;
 
       std::vector<double> p_v;
-      p_v.resize(_n + 1);
+      p_v.resize(_n + 2);
 
       double sum = 0;
 
-      for (int i = 1; i < _n + 1; i++) {      // Reco bin
+      for (int i = 0; i < _n + 2; i++) {      // Reco bin
 
-        if(_verbose) std::cout << "This is reco bin " << i << std::endl;
+        LOG_DEBUG() << "This is reco bin " << i << std::endl;
 
         p_v.at(i) = _h_true_reco_mom->GetBinContent(j, i);
         sum += p_v.at(i);
 
-        if(_verbose) std::cout << "\tValue is " << p_v.at(i) << std::endl;
+        LOG_DEBUG() << "\tValue is " << p_v.at(i) << std::endl;
 
 
       } // reco bin
 
-      if(_verbose) std::cout << "\t>>> Sum is " << sum << std::endl;
+      LOG_DEBUG() << "\t>>> Sum is " << sum << std::endl;
 
       double tot_prob = 0;
 
       for (int i = 1; i < _n + 1; i++) {
-        p_v.at(i) /= sum;
 
-        if(_verbose) std::cout << "\t\tProbability at " << i << " is " << p_v.at(i) << std::endl;
+        if (sum == 0 || std::isnan(sum))
+          p_v.at(i) = 0;
+        else
+          p_v.at(i) /= sum;
+
+        LOG_DEBUG() << "\t\tProbability at " << i << " is " << p_v.at(i) << std::endl;
         tot_prob += p_v.at(i);
 
-        //int row_offset = (i-1)*n;
-        //data_v.at(row_offset + j-1) = p_v.at(j);
-        _S[i - 1][j - 1] = p_v.at(i);
+        _S[i - 1][true_idx] += p_v.at(i);
       }
-      if(_verbose) std::cout << "\t\t> Total Probability is " << tot_prob << std::endl;
+      // Add over/under-flow
+      _S[_n][true_idx] = p_v.at(0) / sum + p_v.at(_n + 1) / sum;
+
+      LOG_DEBUG() << "\t\t> Total Probability is " << tot_prob << std::endl;
 
     } // true bin
     
 
-    if(_verbose) std::cout << _name << "Migration Matrix: " << std::endl;
-    if(_verbose) _S.Print();
+    LOG_DEBUG() << _name << "Migration Matrix: " << std::endl;
+    /*if(_verbose)*/ _S.Print();
 
     return _S;
 
@@ -118,6 +127,9 @@ namespace Base {
         smearing_matrix_histo->SetBinContent(j+1, i+1, _S[i][j]);
       }
     } 
+
+    // double overlow = 0;
+    // overflow += 
 
     gStyle->SetPaintTextFormat("4.2f");
 

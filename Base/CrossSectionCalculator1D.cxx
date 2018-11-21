@@ -385,16 +385,24 @@ namespace Base {
     // Do the smearing
     //
 
-    TMatrix eff_num_true; eff_num_true.Clear(); eff_num_true.ResizeTo(m, 1);
-    TMatrix eff_den_true; eff_den_true.Clear(); eff_den_true.ResizeTo(m, 1);
+    TMatrix eff_num_true; eff_num_true.Clear(); eff_num_true.ResizeTo(m + 1, 1); // Last entry for over/under-flows
+    TMatrix eff_den_true; eff_den_true.Clear(); eff_den_true.ResizeTo(m + 1, 1); // Last entry for over/under-flows
 
     for (int bin = 1; bin < m+1; bin++) {
       eff_num_true[bin-1][0] = _h_eff_mumom_num->GetBinContent(bin);
       eff_den_true[bin-1][0] = _h_eff_mumom_den->GetBinContent(bin);
     }
 
+    eff_num_true[m] = _h_eff_mumom_num->GetBinContent(0) + _h_eff_mumom_num->GetBinContent(m+1);
+    eff_den_true[m] = _h_eff_mumom_den->GetBinContent(0) + _h_eff_mumom_den->GetBinContent(m+1);
+
+
+
+    // Smearing
     TMatrix eff_num_smear = _S * eff_num_true;
     TMatrix eff_den_smear = _S * eff_den_true;
+
+
 
     TH1D* h_eff_mumom_num_smear = (TH1D*) _h_eff_mumom_num->Clone("h_eff_mumom_num_smear");
     TH1D* h_eff_mumom_den_smear = (TH1D*) _h_eff_mumom_den->Clone("h_eff_mumom_den_smear");

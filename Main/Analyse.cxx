@@ -398,6 +398,7 @@ namespace Main {
     hmap_mctruth_mucostheta_gen_mc_dirt = *temp_map;
     mc_dirt_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
     hmap_mctruth_muphi_gen_mc_dirt = *temp_map;
+    h_flsPe_wcut_dirt = (TH1D*)mc_dirt_file->Get("h_flsPe_wcut");
 
   } else {
     
@@ -977,7 +978,7 @@ namespace Main {
     //
     // Muon Momentum Cross Section
     //
-    TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(n_bins_mumom, n_bins_mumom);
+    TMatrix S_2d; S_2d.Clear(); S_2d.ResizeTo(n_bins_mumom + 1, n_bins_mumom + 1);
     MigrationMatrix2D migrationmatrix2d;
     migrationmatrix2d.SetOutDir("migration_matrix_2d_trkmom");
     migrationmatrix2d.SetNBins(n_bins_mumom, n_bins_mumom);
@@ -1251,7 +1252,7 @@ namespace Main {
     //
     // Muon CosTheta Cross Section
     // 
-    S_2d.Clear(); S_2d.ResizeTo(n_bins_mucostheta, n_bins_mucostheta);
+    S_2d.Clear(); S_2d.ResizeTo(n_bins_mucostheta + 1, n_bins_mucostheta + 1);
     migrationmatrix2d.SetOutDir("migration_matrix_2d_trkcostheta");
     migrationmatrix2d.SetVerbosity(false);
     migrationmatrix2d.SetNBins(n_bins_mucostheta, n_bins_mucostheta);
@@ -2532,10 +2533,40 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   canvas_dqdx_trunc_length_data->SaveAs(name + ".C","C");
 
 
+  //
+  // Flash PE Plot
+  //
+
   TCanvas* canvas_flsPe_wcut_data = new TCanvas();
+
+  h_flsPe_wcut_mc->Rebin(2);
+  if (mc_dirt_file) h_flsPe_wcut_dirt->Rebin(2);
+  h_flsPe_wcut_data->Rebin(2);
+
+  if (mc_dirt_file) h_flsPe_wcut_dirt->Scale(scale_factor_mc_dirt);
   h_flsPe_wcut_mc->Scale(scale_factor_mc_bnbcosmic);
-  h_flsPe_wcut_mc->Draw("histo");
+
+  if (mc_dirt_file) h_flsPe_wcut_dirt->SetLineColor(kGreen + 1);
+  if (mc_dirt_file) h_flsPe_wcut_dirt->SetFillColor(kGreen + 1);
+  h_flsPe_wcut_mc->SetLineColor(kOrange + 1);
+  h_flsPe_wcut_mc->SetFillColor(kOrange + 1);
+
+  THStack *hs_flsPe_wcut_mc = new THStack("hs_flsPe_wcut_mc",";Flash PE; Flashes (> 50PE)");
+  hs_flsPe_wcut_mc->Add(h_flsPe_wcut_mc);
+  if (mc_dirt_file) hs_flsPe_wcut_mc->Add(h_flsPe_wcut_dirt);
+
+
+  // h_flsPe_wcut_mc->Draw("histo");
+  hs_flsPe_wcut_mc->Draw("histo");
   h_flsPe_wcut_data->Draw("E1 same");
+
+  TLegend* leg_flspe;
+  leg_flspe = new TLegend(0.13,0.69,0.45,0.87,NULL,"brNDC");
+  leg_flspe->AddEntry(h_flsPe_wcut_mc,"MC BNB+Cosmic");
+  if (mc_dirt_file) leg_flspe->AddEntry(h_flsPe_wcut_dirt,"MC Dirt");
+  leg_flspe->AddEntry(h_flsPe_wcut_data,"Data (Beam-on - Beam-off)","lep");
+  leg_flspe->Draw();
+  PlottingTools::DrawPOT(bnbon_pot_meas);
 
   name = outdir + "flsPe_wcut";
   canvas_flsPe_wcut_data->SaveAs(name + ".pdf");
@@ -2546,42 +2577,75 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   // *************************************
   // Other data/MC distributions
   // *************************************
+
+  //
+  // Flash Time Plot
+  //
+
   TH1D* h_flsTime_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsTime_wcut");
+  TH1D* h_flsTime_dirt = (TH1D*)mc_dirt_file->Get("h_flsTime_wcut");
   TH1D* h_flsTime_bnbon = (TH1D*)bnbon_file->Get("h_flsTime_wcut");
   TH1D* h_flsTime_extbnb = (TH1D*)extbnb_file->Get("h_flsTime_wcut");
   h_flsTime_extbnb->Scale(scale_factor_extbnb);
   h_flsTime_bnbon->Scale(scale_factor_bnbon);
   h_flsTime_mc->Scale(scale_factor_mc_bnbcosmic);
+  if (mc_dirt_file) h_flsTime_dirt->Scale(scale_factor_mc_dirt);
+
+  h_flsTime_extbnb->Rebin(4);
+  h_flsTime_bnbon->Rebin(4);
+  h_flsTime_mc->Rebin(4);
+  if (mc_dirt_file) h_flsTime_dirt->Rebin(4);
+
+  h_flsTime_extbnb->SetLineColor(kBlue+1);
+  h_flsTime_extbnb->SetFillColor(kBlue+1);
+  h_flsTime_mc->SetLineColor(kOrange+1);
+  h_flsTime_mc->SetFillColor(kOrange+1);
+  if (mc_dirt_file) h_flsTime_dirt->SetLineColor(kGreen+1);
+  if (mc_dirt_file) h_flsTime_dirt->SetFillColor(kGreen+1);
+
+  THStack *hs_flsTime_mc = new THStack("hs_flsTime_mc",";Flash Time w.r.t. Trigger [#mus]; Flashes (> 50PE)");
+  hs_flsTime_mc->Add(h_flsTime_extbnb);
+  hs_flsTime_mc->Add(h_flsTime_mc);
+  if (mc_dirt_file) hs_flsTime_mc->Add(h_flsTime_dirt);
+
   TH1D* h_flsTime_data = (TH1D*)h_flsTime_bnbon->Clone("h_flsTime_data");
   h_flsTime_data->Sumw2();
   h_flsTime_data->Add(h_flsTime_extbnb, -1.);
   
-  new TCanvas();
-  h_flsTime_mc->Draw("histo");
-  h_flsTime_data->SetLineColor(kRed);
-  h_flsTime_data->SetMarkerColor(kRed);
-  PlottingTools::DrawDataHisto(h_flsTime_data);
+  TCanvas* canvas_flsTime_data = new TCanvas();
+  // h_flsTime_mc->Draw("histo");
+  hs_flsTime_mc->Draw("histo");
+  // h_flsTime_data->SetLineColor(kRed);
+  // h_flsTime_data->SetMarkerColor(kRed);
+  // PlottingTools::DrawDataHisto(h_flsTime_data);
+  PlottingTools::DrawDataHisto(h_flsTime_bnbon);
   TLegend* leg2;
   leg2 = new TLegend(0.13,0.69,0.45,0.87,NULL,"brNDC");
-  leg2->AddEntry(h_flsTime_mc,"MC BNB+COSMIC","l");
-  leg2->AddEntry(h_flsTime_data,"Data (Beam-on - Beam-off)","lep");
+  leg2->AddEntry(h_flsTime_extbnb,"Data Beam-Off");
+  leg2->AddEntry(h_flsTime_mc,"MC BNB+Cosmic");
+  if (mc_dirt_file) leg2->AddEntry(h_flsTime_dirt,"MC Dirt");
+  leg2->AddEntry(h_flsTime_bnbon,"Data Beam-On","lep");
   leg2->Draw();
   PlottingTools::DrawPOT(bnbon_pot_meas);
 
-  new TCanvas();
-  h_flsTime_mc->SetLineColor(kBlack);
-  h_flsTime_bnbon->SetLineColor(kRed);
-  h_flsTime_extbnb->SetLineColor(kBlue);
-  h_flsTime_mc->Draw("histo");
-  h_flsTime_bnbon->Draw("histo same");
-  h_flsTime_extbnb->Draw("histo same");
-  TLegend* leg3;
-  leg3 = new TLegend(0.13,0.69,0.45,0.87,NULL,"brNDC");
-  leg3->AddEntry(h_flsTime_mc,"MC BNB+COSMIC","l");
-  leg3->AddEntry(h_flsTime_bnbon,"DATA BNBON","l");
-  leg3->AddEntry(h_flsTime_extbnb,"DATA EXTBNB","l");
-  leg3->Draw();
-  PlottingTools::DrawPOT(bnbon_pot_meas);
+  name = outdir + "flsTime";
+  canvas_flsTime_data->SaveAs(name + ".pdf");
+  canvas_flsTime_data->SaveAs(name + ".C","C");
+
+  // new TCanvas();
+  // h_flsTime_mc->SetLineColor(kBlack);
+  // h_flsTime_bnbon->SetLineColor(kBlack);
+  // h_flsTime_extbnb->SetLineColor(kBlue);
+  // h_flsTime_mc->Draw("histo");
+  // h_flsTime_bnbon->Draw("histo same");
+  // h_flsTime_extbnb->Draw("histo same");
+  // TLegend* leg3;
+  // leg3 = new TLegend(0.13,0.69,0.45,0.87,NULL,"brNDC");
+  // leg3->AddEntry(h_flsTime_mc,"MC BNB+COSMIC","l");
+  // leg3->AddEntry(h_flsTime_bnbon,"DATA BNBON","l");
+  // leg3->AddEntry(h_flsTime_extbnb,"DATA EXTBNB","l");
+  // leg3->Draw();
+  // PlottingTools::DrawPOT(bnbon_pot_meas);
 
   
   new TCanvas();

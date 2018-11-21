@@ -189,8 +189,8 @@ namespace Base {
     _xsec_calc.SetPOT(_pot);
     _xsec_calc.SetOutDir("output_data_mc_multisim");
     _xsec_calc.SetFluxCorrectionWeight(_flux_correction_weight);
-    std::cout << _prefix << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
-    std::cout << _prefix << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
+    LOG_NORMAL() << "Flux Correction Weight Set to: " << _flux_correction_weight << std::endl;
+    LOG_NORMAL() << "FLUX: " << _xsec_calc.EstimateFlux() << std::endl;
     _xsec_calc.SetVerbosity(false);
 
 
@@ -199,11 +199,11 @@ namespace Base {
 
     LOG_NORMAL() << "Number of Universes: " << n_universe << std::endl;
 
-    LOG_NORMAL() << "Universes Names: ";
-    for (auto s : universe_names) {
-    	std::cout << s << ", ";
-    }
-    std::cout << std::endl;
+    // LOG_NORMAL() << "Universes Names: ";
+    // for (auto s : universe_names) {
+    // 	std::cout << s << ", ";
+    // }
+    // std::cout << std::endl;
 
     
     UBTH2Poly * this_eff_num;
@@ -304,7 +304,7 @@ namespace Base {
         migrationmatrix4d.SetTemplateHisto(input_map_mc["total"]);
         migrationmatrix4d.SetBins(input_map_mc["total"]->GetNumberOfBins());
 
-        S.ResizeTo(input_map_mc["total"]->GetNumberOfBins(), input_map_mc["total"]->GetNumberOfBins());
+        S.ResizeTo(input_map_mc["total"]->GetNumberOfBins() + 1, input_map_mc["total"]->GetNumberOfBins() + 1);
 
         S = migrationmatrix4d.CalculateMigrationMatrix();
       }

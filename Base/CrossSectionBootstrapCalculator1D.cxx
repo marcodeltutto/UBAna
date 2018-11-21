@@ -193,11 +193,11 @@ namespace Base {
     std::vector<std::string> universe_names = _h_eff_mumom_num.GetUniverseNames();
 
     LOG_NORMAL() << "Number of universes: " << n_universe << std::endl;
-    LOG_NORMAL() << "Universes names: "; 
-    for (auto s : universe_names) {
-    	std::cout << s << ", ";
-    }
-    std::cout << std::endl;
+    // LOG_NORMAL() << "Universes names: "; 
+    // for (auto s : universe_names) {
+    // 	std::cout << s << ", ";
+    // }
+    // std::cout << std::endl;
 
     
     TH1D this_h;
@@ -317,7 +317,7 @@ namespace Base {
 
       // Calculate the migration matrix for this universe
       if (_true_to_reco_is_set) {
-        S_2d.Clear(); S_2d.ResizeTo(_n, _m);
+        S_2d.Clear(); S_2d.ResizeTo(_n + 1, _m + 1);
         MigrationMatrix2D migrationmatrix2d;
         migrationmatrix2d.SetNBins(_n, _m);
         migrationmatrix2d.SetTrueRecoHistogram(&this_reco_true);
