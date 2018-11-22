@@ -111,7 +111,7 @@ namespace Base {
     
 
     LOG_DEBUG() << _name << "Migration Matrix: " << std::endl;
-    /*if(_verbose)*/ _S.Print();
+    if(_verbose) _S.Print();
 
     return _S;
 
@@ -120,13 +120,51 @@ namespace Base {
   void MigrationMatrix2D::PlotMatrix()
   {
 
-    TH2D * smearing_matrix_histo = new TH2D("smearing_matrix_histo", "", _m, 0, _m, _n, 0, _n);
+    int bins_x = _m + 1;
+    int bins_y = _n + 1;
 
-    for (int i = 0; i < _n; i++) { 
-      for (int j = 0; j < _m; j++) {
+    // Do not show overlflow for cos(theta) (they are zero)
+    std::size_t found = _outdir.find("trkcostheta");
+    if (found != std::string::npos) {
+      std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+      bins_x = _m;
+      bins_y = _n;
+    } 
+
+    TH2D * smearing_matrix_histo = new TH2D("smearing_matrix_histo", "", bins_x, 0, bins_x, bins_y, 0, bins_y);
+
+    for (int i = 0; i < _n + 1; i++) { 
+      for (int j = 0; j < _m + 1; j++) {
         smearing_matrix_histo->SetBinContent(j+1, i+1, _S[i][j]);
       }
     } 
+
+    TH2F *h = new TH2F("h", "", smearing_matrix_histo->GetNbinsX(), 0, smearing_matrix_histo->GetNbinsX(),
+      smearing_matrix_histo->GetNbinsY(), 0, smearing_matrix_histo->GetNbinsY());
+    
+
+    for (int i = 0; i < smearing_matrix_histo->GetNbinsX(); i++) {
+      std::ostringstream oss;
+      if (i == smearing_matrix_histo->GetNbinsX() - 1 && found == std::string::npos) 
+        oss << "OF";
+      else
+        oss << i + 1;
+      std::string label = oss.str();
+      h->GetXaxis()->SetBinLabel(i+1,label.c_str());
+      h->GetYaxis()->SetBinLabel(i+1,label.c_str());
+    }
+
+    h->GetXaxis()->SetLabelOffset(0.004);
+    h->GetXaxis()->SetLabelSize(0.07);
+    h->GetYaxis()->SetLabelOffset(0.004);
+    h->GetYaxis()->SetLabelSize(0.07);
+    h->GetXaxis()->SetTitle("True Bin");
+    h->GetYaxis()->SetTitle("Reco Bin");
+    h->GetXaxis()->CenterTitle();
+    h->GetYaxis()->CenterTitle();
+
+    
+
 
     // double overlow = 0;
     // overflow += 
@@ -141,9 +179,11 @@ namespace Base {
     smearing_matrix_histo->GetXaxis()->SetTitle("True Bin j");
     smearing_matrix_histo->GetYaxis()->SetTitle("Reco Bin i");
 
-    smearing_matrix_histo->Draw("col TEXT");
+    h->Draw();
+    smearing_matrix_histo->Draw("col same TEXT");
     TString name = _folder + "migration_matrix_2d";
     c_smatrix->SaveAs(name + ".pdf");
+    c_smatrix->SaveAs(name + ".C");
 
   }
 
@@ -158,12 +198,13 @@ namespace Base {
       return;
     }
 
+    _f_out << "Last entry is the overflow bin." << std::endl;
     _f_out << "\\begin{equation}" << std::endl;
     _f_out << "S_{ij} =" << std::endl;
     _f_out << "\\begin{bmatrix}" << std::endl;
 
-    for (int i = 0; i < _n; i++) {
-      for (int j = 0; j < _m; j++) {
+    for (int i = 0; i < _n + 1; i++) {
+      for (int j = 0; j < _m + 1; j++) {
 
         _f_out << std::setprecision(3) << _S[i][j] << "  &  ";
 

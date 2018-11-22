@@ -84,6 +84,9 @@ namespace Base {
     static void DrawSimulationXSec();
 
     ///
+    static void DrawSimulationCovariance();
+
+    ///
     static void DrawPreliminaryXSecCentered();
 
 

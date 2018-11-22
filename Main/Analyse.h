@@ -290,7 +290,7 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_mctruth_mumom_gen_mc_dirt;
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc_dirt;
   std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc_dirt;
-    
+  TH1D* h_flsPe_wcut_dirt = 0;
   };
 }
 

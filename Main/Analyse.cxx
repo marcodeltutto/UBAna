@@ -1717,7 +1717,7 @@ namespace Main {
     if (_import_cosmic_systs) {
 
       TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_syst_poly_muangle_mumom");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_poly_cosmic_muangle_mumom");
       frac_covariance_matrix_cosmic = *m;
 
       unc_plotter.AddFracCovarianceMatrix("COSMIC MC BKG", frac_covariance_matrix_cosmic);
@@ -1993,6 +1993,7 @@ namespace Main {
   // *************************************
   // Plotting data and MC distribution
   // *************************************
+  LOG_CRITICAL() << "bs 1" << std::endl;
   
   TLegend* leg;
   TString name;
@@ -2041,8 +2042,8 @@ namespace Main {
   hmap_trklen_mc["nc"]->Integral(0, nbins+1) +
   hmap_trklen_mc["anumu"]->Integral(0, nbins+1) +
   hmap_trklen_mc["nue"]->Integral(0, nbins+1) +
-  hmap_trklen_mc["dirt"]->Integral(0, nbins+1) +
   hmap_trklen_mc["beam-off"]->Integral(0, nbins+1);
+  if (mc_dirt_file) den += hmap_trklen_mc["dirt"]->Integral(0, nbins+1);
 
   std::cout << "signal: " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) / den << std::endl;
   std::cout << "cosmic: " << hmap_trklen_mc["cosmic"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["cosmic"]->Integral(0, nbins+1) / den << std::endl;
@@ -2050,8 +2051,10 @@ namespace Main {
   std::cout << "nc: " << hmap_trklen_mc["nc"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["nc"]->Integral(0, nbins+1) / den << std::endl;
   std::cout << "anumu: " << hmap_trklen_mc["anumu"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["anumu"]->Integral(0, nbins+1) / den << std::endl;
   std::cout << "nue: " << hmap_trklen_mc["nue"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["nue"]->Integral(0, nbins+1) / den << std::endl;
-  std::cout << "dirt: " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) / den << std::endl;
+  if (mc_dirt_file) std::cout << "dirt: " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) / den << std::endl;
   std::cout << "beam-off: " << hmap_trklen_mc["beam-off"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["beam-off"]->Integral(0, nbins+1) / den << std::endl;
+  std::cout << std::endl;
+  std::cout << "beam-on: " << h_trklen_total_bnbon->Integral(0, nbins+1) << std::endl;
   std::cout << std::endl;
   std::cout << "PURITY: " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) / den << std::endl;
   
@@ -2136,6 +2139,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
     hmap_trkphi_mc["dirt_outfv"] = hmap_trkphi_mc_dirt["outfv"];
   }
   if (!_beamoff_sub) hmap_trkphi_mc["beam-off"] = h_trkphi_total_extbnb;
+  // h_trkphi_total_bnbon->Scale(1.02);
   if (_fake_data_mode || _overlay_mode) h_trkphi_total_bnbon->Add(h_trkphi_total_extbnb);
   if (_beamoff_sub) this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_data, bnbon_pot_meas);
   else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
@@ -2583,9 +2587,11 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   //
 
   TH1D* h_flsTime_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsTime_wcut");
-  TH1D* h_flsTime_dirt = (TH1D*)mc_dirt_file->Get("h_flsTime_wcut");
   TH1D* h_flsTime_bnbon = (TH1D*)bnbon_file->Get("h_flsTime_wcut");
   TH1D* h_flsTime_extbnb = (TH1D*)extbnb_file->Get("h_flsTime_wcut");
+  TH1D* h_flsTime_dirt;
+  if (mc_dirt_file) h_flsTime_dirt = (TH1D*)mc_dirt_file->Get("h_flsTime_wcut");
+
   h_flsTime_extbnb->Scale(scale_factor_extbnb);
   h_flsTime_bnbon->Scale(scale_factor_bnbon);
   h_flsTime_mc->Scale(scale_factor_mc_bnbcosmic);

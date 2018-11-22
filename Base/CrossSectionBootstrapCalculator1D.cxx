@@ -354,6 +354,7 @@ namespace Base {
 
 
     } // endl loop over universes
+    std::cout << std::endl;
 
 
     
@@ -366,7 +367,7 @@ namespace Base {
     BootstrapTH1D xsec_mumom_bs;
     xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
 
-    LOG_NORMAL() << "xsec_mumom_bs.GetNbinsX() " << xsec_mumom_bs.GetNbinsX() << std::endl;
+    LOG_NORMAL() << "Number of bins: " << xsec_mumom_bs.GetNbinsX() << std::endl;
 
     //genie_rw_plotter.SetXSecBootstrap(xsec_mumom_bs);
     //genie_rw_plotter.MakeXsecDiffPlots(true);
@@ -446,6 +447,8 @@ namespace Base {
 
     // Make the fancy plot
     int n_bins_y = 240; // was 60, 120, 240
+    if (xsec_mumom_per_universe.size() == 101) n_bins_y = 120; // 100 universes (GENIE)
+    if (xsec_mumom_per_universe.size() == 1001) n_bins_y = 240; // 1000 universes (flux)
     double bins_y[241];
     for (int i = 0; i < n_bins_y+1; i++) { 
       if(_save_prefix.find("mumom") != std::string::npos) {
@@ -478,12 +481,15 @@ namespace Base {
     gStyle->SetPalette(kBlueGreenYellow);
 
     TCanvas * multisim_xsec_fancy_canvas = new TCanvas();
+    multisim_xsec_fancy_canvas->SetBottomMargin(0.11);
 
     if (_save_prefix.find("mumom") != std::string::npos) {
-      h_2d_all_xsec->GetXaxis()->SetTitle("p_{#mu} [GeV]");
+      h_2d_all_xsec->GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-      h_2d_all_xsec->SetMaximum(200); // should be 50 or 20
+      h_2d_all_xsec->SetMaximum(100); // should be 50 or 20
+      if (xsec_mumom_per_universe.size() == 101) h_2d_all_xsec->SetMaximum(50); // 100 universes (GENIE)
+      if (xsec_mumom_per_universe.size() == 1001) h_2d_all_xsec->SetMaximum(200); // 1000 universes (flux)
     } else if (_save_prefix.find("onebin") != std::string::npos) {
       h_2d_all_xsec->GetXaxis()->SetTitle("");
       h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}]");
@@ -491,10 +497,12 @@ namespace Base {
       h_2d_all_xsec->GetXaxis()->SetTickLength(0);
       h_2d_all_xsec->GetXaxis()->SetLabelSize(0);
     } else {
-      h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu})");
+      h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-      h_2d_all_xsec->SetMaximum(200);
+      h_2d_all_xsec->SetMaximum(100); // should be 50 or 20
+      if (xsec_mumom_per_universe.size() == 101) h_2d_all_xsec->SetMaximum(50); // 100 universes (GENIE)
+      if (xsec_mumom_per_universe.size() == 1001) h_2d_all_xsec->SetMaximum(200); // 1000 universes (flux)
     }
 
     h_2d_all_xsec->Draw("colz");

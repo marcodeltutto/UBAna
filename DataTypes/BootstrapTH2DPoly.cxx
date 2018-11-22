@@ -132,13 +132,13 @@ namespace DataTypes {
 
   size_t BootstrapTH2DPoly::GetNWeights()
   {
-    std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
+    // std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
     return _n_weights;
   }
 
   std::vector<std::string> BootstrapTH2DPoly::GetUniverseNames()
   {
-    std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
+    // std::cout << "This is Bootstrap " << _hname << "::" << _title << std::endl;
     return _name_v;
   }
 

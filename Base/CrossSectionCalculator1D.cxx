@@ -347,7 +347,7 @@ namespace Base {
 
     // Settings for true distributions
     _h_eff_mumom_den->SetTitle("");
-    _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");//->SetTitle("p_{#mu}^{truth} [GeV]");
+    _h_eff_mumom_den->GetXaxis()->SetTitle("p_{#mu}^{truth} [GeV]"); //->SetTitle("cos(#theta_{#mu}^{truth})");
     _h_eff_mumom_den->GetYaxis()->SetTitle("Events");
     _h_eff_mumom_den->SetFillColorAlpha(30, 0.35);
     _h_eff_mumom_den->SetLineColor(30);
@@ -365,7 +365,7 @@ namespace Base {
     TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
 
     TCanvas * c_eff_true = new TCanvas;
-    teff_true->SetTitle(";True Muon cos(#theta) [GeV];Efficiency");
+    teff_true->SetTitle(";p_{#mu}^{truth};Efficiency");//->SetTitle(";cos(#theta_{#mu}^{truth});Efficiency");
     teff_true->SetLineColor(kGreen+3);
     teff_true->SetMarkerColor(kGreen+3);
     teff_true->SetMarkerStyle(20);
@@ -424,7 +424,7 @@ namespace Base {
 
     TCanvas * c = new TCanvas;
     _h_eff_mumom_den->SetTitle("");
-    _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");//->SetTitle("p_{#mu}^{truth} [GeV]");
+    _h_eff_mumom_den->GetXaxis()->SetTitle("p_{#mu}^{truth} [GeV]");//->SetTitle("cos(#theta_{#mu}^{truth})");
     _h_eff_mumom_den->GetYaxis()->SetTitle("Events");
     _h_eff_mumom_den->SetFillColorAlpha(30, 0.35);
     _h_eff_mumom_den->SetLineColor(30);
@@ -460,7 +460,7 @@ namespace Base {
 
     TCanvas * c_smear = new TCanvas;
     h_eff_mumom_den_smear->SetTitle("");
-    h_eff_mumom_den_smear->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");//->SetTitle("p_{#mu}^{reco} [GeV]");
+    h_eff_mumom_den_smear->GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");//->SetTitle("cos(#theta_{#mu}^{reco})");
     h_eff_mumom_den_smear->GetYaxis()->SetTitle("Events");
     h_eff_mumom_den_smear->Draw("histo");
     h_eff_mumom_num_smear->Draw("histo same");
@@ -481,7 +481,7 @@ namespace Base {
     TEfficiency* teff_reco = new TEfficiency(*h_eff_mumom_num_smear,*h_eff_mumom_den_smear);
 
     TCanvas * c_eff_reco = new TCanvas;
-    teff_reco->SetTitle(";Reco Muon cos(#theta);Efficiency");//->SetTitle(";Reco Muon Momentum [GeV];Efficiency");
+    teff_reco->SetTitle(";p_{#mu}^{reco} [GeV];Efficiency");//->SetTitle(";cos(#theta_{#mu}^{reco});Efficiency");
     teff_reco->SetLineColor(kGreen+3);
     teff_reco->SetMarkerColor(kGreen+3);
     teff_reco->SetMarkerStyle(20);
@@ -561,6 +561,11 @@ namespace Base {
 
 
     if (_dirt_is_set) {
+
+      if (bin_width_scale) {
+        for (auto iter : _hmap_dirt) iter.second->Scale(1, "width");
+      }
+
       // Save dirt in the MC backgrounds ...
       _hmap_bnbcosmic["dirt"] = _hmap_dirt["total"];
       _hmap_bnbcosmic["dirt_outfv"] = _hmap_dirt["outfv"];
@@ -634,11 +639,11 @@ namespace Base {
     f_out << "\\caption{My caption}" << std::endl;
     f_out << "\\label{tab:mylabel}" << std::endl;
     f_out << "\\centering" << std::endl;
-    f_out << "\\begin{tabular}{c|cc|cccccc}" << std::endl;
+    f_out << "\\begin{tabular}{c|cc|ccccccc}" << std::endl;
     f_out << "\\toprule" << std::endl;
     f_out << "    & \\multicolumn{2}{c}{Data}    & \\multicolumn{6}{c}{MC} \\\\" << std::endl;
-    f_out << "Bin & Selected & Cosmic & $\\nu_\\mu$ CC & Cosmic  & OUTFV & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
-    f_out << "    & Events   & Only   & Signal       & in BNB  &       &    &                           &                 \\\\" << std::endl;
+    f_out << "Bin & Selected & Cosmic & $\\nu_\\mu$ CC & Cosmic  & OUTFV & DIRT & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
+    f_out << "    & Events   & Only   & Signal         & in BNB  &       &      &    &                           &                 \\\\" << std::endl;
     f_out << "\\midrule" << std::endl;
     for (int i = 1; i < _h_bnbon->GetNbinsX()+1; i++) {
       f_out << std::setprecision(4) 
@@ -648,6 +653,7 @@ namespace Base {
             << _hmap_bnbcosmic["signal"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["signal"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["cosmic"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["cosmic"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["outfv"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["outfv"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["dirt"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["dirt"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["nc"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nc"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["nue"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nue"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["anumu"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["anumu"]->GetBinError(i) << " \\\\ " << std::endl;
@@ -1016,6 +1022,14 @@ namespace Base {
       // TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
       // gStyle->SetNumberContours(NCont);
 
+      // const int NRGBs = 3; 
+      // int NCont = 512; 
+      // gStyle->SetNumberContours(NCont); 
+      // Double_t stops[NRGBs] = { 0.00, 0.50, 1.00 }; 
+      // Double_t red[NRGBs]   = { 0.20, 1.00, 1.00 }; 
+      // Double_t green[NRGBs] = { 0.20, 1.00, 0.20 }; 
+      // Double_t blue[NRGBs]  = { 0.20, 1.00, 0.20 }; 
+      // TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
 
       const Int_t Number = 9;
       Double_t Red[Number]    = { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
@@ -1063,7 +1077,7 @@ namespace Base {
       h->Draw();
       _cov_matrix_total->Draw("colz text same");
       // _cov_matrix_total->Draw("colz same");
-      PlottingTools::DrawSimulationXSec();
+      PlottingTools::DrawSimulationCovariance();
       name = _folder +_name + "_tot_covariance";
       cov_c->SaveAs(name + ".pdf");
       cov_c->SaveAs(name + ".C","C");
@@ -1082,7 +1096,7 @@ namespace Base {
       h->Draw();
       _frac_cov_matrix_total->Draw("colz text same");
       // _frac_cov_matrix_total->Draw("colz same");
-      PlottingTools::DrawSimulationXSec();
+      PlottingTools::DrawSimulationCovariance();
       name = _folder +_name + "_tot_fractional_covariance";
       cov_frac_c->SaveAs(name + ".pdf");
       cov_frac_c->SaveAs(name + ".C","C");
@@ -1101,7 +1115,7 @@ namespace Base {
       h->Draw();
       _corr_matrix_total->Draw("colz text same");
       // _corr_matrix_total->Draw("colz same");
-      PlottingTools::DrawSimulationXSec();
+      PlottingTools::DrawSimulationCovariance();
       name = _folder +_name + "_tot_correlation";
       corr_c->SaveAs(name + ".pdf");
       corr_c->SaveAs(name + ".C","C");
@@ -1141,7 +1155,7 @@ namespace Base {
     if (_name.find("costheta") != std::string::npos) {
       leg = new TLegend(0.1733524,0.3936842,0.4340974,0.8442105,NULL,"brNDC");
     } else {
-      leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
+      leg = new TLegend(0.56,0.57,0.82,0.82,NULL,"brNDC");
     }
 
     TCanvas* canvas = new TCanvas();
@@ -1161,6 +1175,7 @@ namespace Base {
     data->Draw("E1 same");
 
     leg->AddEntry(data, "Data (Background subtracted)", "lep");
+    leg->AddEntry(_hmap_bnbcosmic["total"], "Stat. Unc.");
     leg->Draw();
 
 
@@ -1169,7 +1184,7 @@ namespace Base {
 
     TString name = _folder +_name + "_selectedevents_bkgsubtracted";
     canvas->SaveAs(name + ".pdf");
-    canvas->SaveAs(name + ".C","C");
+    canvas->SaveAs(name + ".C");
 
 
   }
@@ -1189,12 +1204,7 @@ namespace Base {
 
     TCanvas* canvas = new TCanvas("canvas", "canvas", 800, 700);
 
-    std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
-    THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
-
     TH1D* data = ProcessDataHisto(_h_bnbon);
-
-    this->DrawDataMC(canvas, hs_mc, data, leg);
 
     if (bin_width_scale) {
       for (auto it : _hmap_bnbcosmic) {
@@ -1202,6 +1212,15 @@ namespace Base {
       }
       data->Scale(1, "width");
     } 
+
+    std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
+    THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
+
+    
+
+    this->DrawDataMC(canvas, hs_mc, data, leg);
+
+    
 
     // hs_mc->Draw("hist");
     // _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
@@ -1340,11 +1359,12 @@ namespace Base {
 
     bool _breakdownPlots = false;
 
-    bool _draw_beamoff = true, _draw_cosmic = true, _draw_outfv = true, _draw_nue = true, _draw_nc = true, _draw_anumu = true;
+    bool _draw_beamoff = true, _draw_dirt = true, _draw_cosmic = true, _draw_outfv = true, _draw_nue = true, _draw_nc = true, _draw_anumu = true;
 
     for (auto name: histos_to_subtract)
     {
       if (name == "beam-off") _draw_beamoff = false;
+      if (name == "dirt") _draw_dirt = false;
       if (name == "cosmic") _draw_cosmic = false;
       if (name == "outfv") _draw_outfv = false;
       if (name == "nue") _draw_nue = false;
@@ -1358,6 +1378,12 @@ namespace Base {
       themap["beam-off"]->SetFillColor(kBlue+2);
       themap["beam-off"]->SetFillStyle(3004);
       hs_trklen->Add(themap["beam-off"]);
+    }
+
+    if (themap["dirt"] != NULL && _draw_dirt) {
+      themap["dirt"]->SetLineColor(kOrange+3);
+      themap["dirt"]->SetFillColor(kOrange+3);
+      hs_trklen->Add(themap["dirt"]);
     }
 
     if (themap["intimecosmic"] != NULL) {
@@ -1445,7 +1471,7 @@ namespace Base {
 
 
 
-
+    std::string int_option = "width";
 
     if (_breakdownPlots){
       //leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
@@ -1455,63 +1481,63 @@ namespace Base {
     std::stringstream sstm;
   // numu
     if (_breakdownPlots) {
-      sstm << "#nu_{#mu} CC (stopping #mu), " << std::setprecision(2)  << themap["signal_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "#nu_{#mu} CC (stopping #mu), " << std::setprecision(2)  << themap["signal_stopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       leg->AddEntry(themap["signal_stopmu"],sstm.str().c_str(),"f");
       sstm.str("");
-      sstm << "#nu_{#mu} CC (other), " << std::setprecision(2)  << themap["signal_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "#nu_{#mu} CC (other), " << std::setprecision(2)  << themap["signal_nostopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       leg->AddEntry(themap["signal_nostopmu"],sstm.str().c_str(),"f");
       sstm.str("");
       // leg->AddEntry(themap["signal_stopmu"],"#nu_{#mu} CC (stopping #mu)","f");
       // leg->AddEntry(themap["signal_nostopmu"],"#nu_{#mu} CC (other)","f");
     } else {
-      sstm << "#nu_{#mu} CC (signal), " << std::setprecision(2)  << themap["signal"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "#nu_{#mu} CC (signal), " << std::setprecision(2)  << themap["signal"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       leg->AddEntry(themap["signal"],sstm.str().c_str(),"f");
       sstm.str("");
     }
 
   // nue
-    sstm << "#nu_{e}, #bar{#nu}_{e} CC, " << std::setprecision(2)  << themap["nue"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "#nu_{e}, #bar{#nu}_{e} CC, " << std::setprecision(2)  << themap["nue"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     if (_draw_nue) leg->AddEntry(themap["nue"],sstm.str().c_str(),"f");
     sstm.str("");
 
   // anumu
-    sstm << "#bar{#nu}_{#mu} CC, " << std::setprecision(2)  << themap["anumu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "#bar{#nu}_{#mu} CC, " << std::setprecision(2)  << themap["anumu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     if (_draw_anumu)leg->AddEntry(themap["anumu"],sstm.str().c_str(),"f");
     sstm.str("");
 
   // nc, outfv, cosmic
     if (_breakdownPlots) {
-      sstm << "NC (other), " << std::setprecision(2)  << themap["nc_other"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "NC (other), " << std::setprecision(2)  << themap["nc_other"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["nc_other"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["nc_other"],"NC (other)","f");
 
-    sstm << "NC (pion), " << std::setprecision(2)  << themap["nc_pion"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "NC (pion), " << std::setprecision(2)  << themap["nc_pion"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["nc_pion"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["nc_pion"],"NC (pion)","f");
 
-    sstm << "NC (proton), " << std::setprecision(2)  << themap["nc_proton"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "NC (proton), " << std::setprecision(2)  << themap["nc_proton"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["nc_proton"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["nc_proton"],"NC (proton)","f");
 
-    sstm << "OUTFV (stopping #mu), " << std::setprecision(2)  << themap["outfv_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "OUTFV (stopping #mu), " << std::setprecision(2)  << themap["outfv_stopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["outfv_stopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["outfv_stopmu"],"OUTFV (stopping #mu)","f");
 
-    sstm << "OUTFV (other), " << std::setprecision(2)  << themap["outfv_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "OUTFV (other), " << std::setprecision(2)  << themap["outfv_nostopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["outfv_nostopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["outfv_nostopmu"],"OUTFV (other)","f");
 
-    sstm << "Cosmic (stopping #mu), " << std::setprecision(2)  << themap["cosmic_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "Cosmic (stopping #mu), " << std::setprecision(2)  << themap["cosmic_stopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["cosmic_stopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
 
-    sstm << "Cosmic (other), " << std::setprecision(2)  << themap["cosmic_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "Cosmic (other), " << std::setprecision(2)  << themap["cosmic_nostopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["cosmic_nostopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["cosmic_nostopmu"],"Cosmic (other)","f");
@@ -1519,22 +1545,30 @@ namespace Base {
         leg->AddEntry(themap["intimecosmic"],"In-time cosmics","f");
       }
     } else {
-      sstm << "NC, " << std::setprecision(2)  << themap["nc"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "NC, " << std::setprecision(2)  << themap["nc"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       if (_draw_nc) leg->AddEntry(themap["nc"],sstm.str().c_str(),"f");
       sstm.str("");
 
-      sstm << "OUTFV, " << std::setprecision(2)  << themap["outfv"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "OUTFV, " << std::setprecision(2)  << themap["outfv"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       if (_draw_outfv) leg->AddEntry(themap["outfv"],sstm.str().c_str(),"f");
       sstm.str("");
 
-      sstm << "Cosmic, " << std::setprecision(2)  << themap["cosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "Cosmic, " << std::setprecision(2)  << themap["cosmic"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       if (_draw_cosmic) leg->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
       sstm.str("");
     }
     //leg->AddEntry(themap["total"],"Stat Unc.","f");
 
+
+    if (themap["dirt"] != NULL && _draw_dirt){
+      sstm << "Dirt, " << std::setprecision(2)  << themap["dirt"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
+      leg->AddEntry(themap["dirt"],sstm.str().c_str(),"f");
+      sstm.str("");
+      // leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
+    }
+
     if (themap["beam-off"] != NULL && _draw_beamoff){
-      sstm << "Data (Beam-off), " << std::setprecision(2)  << themap["beam-off"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "Data (Beam-off), " << std::setprecision(2)  << themap["beam-off"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       leg->AddEntry(themap["beam-off"],sstm.str().c_str(),"f");
       sstm.str("");
       // leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");

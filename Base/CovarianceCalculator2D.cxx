@@ -155,35 +155,76 @@ namespace Base {
 
     
 
-    gStyle->SetPalette(kDeepSea);
+    // gStyle->SetPalette(kDeepSea);
+    const Int_t Number = 9;
+    Double_t Red[Number]    = { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
+    Double_t Green[Number]  = { 1.00, 0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20 };
+    Double_t Blue[Number]   = { 1.00, 0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20 };
+    Double_t Stops[Number] =  { 0.00, 0.15, 0.30, 0.40, 0.50, 0.60, 0.70, 0.85, 1.00 };
+    Int_t nb=100;
+    TColor::CreateGradientColorTable(Number,Stops,Red,Green,Blue,nb);
 
     gStyle->SetPaintTextFormat("4.5f");
+
+    TH2F *h = new TH2F("h", "", cov_matrix_histo->GetNbinsX(), 0, cov_matrix_histo->GetNbinsX(),
+      cov_matrix_histo->GetNbinsY(), 0, cov_matrix_histo->GetNbinsY());
+
+    h->SetMaximum(1);
+
+    for (int i = 0; i <  cov_matrix_histo->GetNbinsX()+1; i++) {
+      std::ostringstream oss;
+      oss << i;
+      std::string label = oss.str();
+      if (i == 0) continue;
+      h->GetXaxis()->SetBinLabel(i,label.c_str());
+      h->GetYaxis()->SetBinLabel(i,label.c_str());
+    }
+
+    h->GetXaxis()->SetLabelOffset(0.004);
+    h->GetXaxis()->SetLabelSize(0.06);
+    h->GetYaxis()->SetLabelOffset(0.004);
+    h->GetYaxis()->SetLabelSize(0.06);
+    h->GetXaxis()->SetTitle("Bin i");
+    h->GetYaxis()->SetTitle("Bin j");
+    h->GetXaxis()->CenterTitle();
+    h->GetYaxis()->CenterTitle();
+
+
+
 
     TString name;
 
     TCanvas * cov_matrix = new TCanvas;
-    cov_matrix_histo->SetMarkerColor(kWhite);
+    cov_matrix_histo->SetMarkerColor(kBlack);
     cov_matrix_histo->SetMarkerSize(1.6);
     cov_matrix_histo->GetXaxis()->CenterTitle();
     cov_matrix_histo->GetYaxis()->CenterTitle();
     cov_matrix_histo->GetXaxis()->SetTitle("Bin i");
     cov_matrix_histo->GetYaxis()->SetTitle("Bin j");
+    cov_matrix_histo->GetXaxis()->SetTickLength(0);
+    cov_matrix_histo->GetYaxis()->SetTickLength(0);
 
-    cov_matrix_histo->Draw("colz TEXT");
+    h->Draw();
+    cov_matrix_histo->Draw("colz TEXT same");
+    PlottingTools::DrawSimulationCovariance();
     cov_matrix->SetRightMargin(0.13);
     name = _prefix + "_cov_matrix_2d";
     cov_matrix->SaveAs(name + ".pdf");
     cov_matrix->SaveAs(name + ".C");
 
     TCanvas * frac_cov_matrix = new TCanvas;
-    frac_cov_matrix_histo->SetMarkerColor(kWhite);
+    frac_cov_matrix_histo->SetMarkerColor(kBlack);
     frac_cov_matrix_histo->SetMarkerSize(1.6);
     frac_cov_matrix_histo->GetXaxis()->CenterTitle();
     frac_cov_matrix_histo->GetYaxis()->CenterTitle();
     frac_cov_matrix_histo->GetXaxis()->SetTitle("Bin i");
     frac_cov_matrix_histo->GetYaxis()->SetTitle("Bin j");
+    frac_cov_matrix_histo->GetXaxis()->SetTickLength(0);
+    frac_cov_matrix_histo->GetYaxis()->SetTickLength(0);
 
-    frac_cov_matrix_histo->Draw("colz TEXT");
+    h->Draw();
+    frac_cov_matrix_histo->Draw("colz TEXT same");
+    PlottingTools::DrawSimulationCovariance();
     frac_cov_matrix->SetRightMargin(0.13);
     name = _prefix + "_cov_frac_matrix_2d";
     frac_cov_matrix->SaveAs(name + ".pdf");
@@ -192,14 +233,18 @@ namespace Base {
     gStyle->SetPaintTextFormat("4.2f");
 
     TCanvas * corr_matrix = new TCanvas;
-    corr_matrix_histo->SetMarkerColor(kWhite);
+    corr_matrix_histo->SetMarkerColor(kBlack);
     corr_matrix_histo->SetMarkerSize(1.6);
     corr_matrix_histo->GetXaxis()->CenterTitle();
     corr_matrix_histo->GetYaxis()->CenterTitle();
     corr_matrix_histo->GetXaxis()->SetTitle("Bin i");
     corr_matrix_histo->GetYaxis()->SetTitle("Bin j");
+    corr_matrix_histo->GetXaxis()->SetTickLength(0);
+    corr_matrix_histo->GetYaxis()->SetTickLength(0);
 
-    corr_matrix_histo->Draw("colz TEXT");
+    h->Draw();
+    corr_matrix_histo->Draw("colz TEXT same");
+    PlottingTools::DrawSimulationCovariance();
     corr_matrix->SetRightMargin(0.13);
     name = _prefix + "_corr_matrix_2d";
     corr_matrix->SaveAs(name + ".pdf");
