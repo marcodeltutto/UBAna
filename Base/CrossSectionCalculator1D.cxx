@@ -671,6 +671,7 @@ namespace Base {
     fout << name << " & " << _hmap_bnbcosmic["signal"]->Integral()
                  << " & " << _hmap_bnbcosmic["cosmic"]->Integral() 
                  << " & " << _hmap_bnbcosmic["outfv"]->Integral()
+                 << " & " << _hmap_bnbcosmic["dirt"]->Integral()
                  << " & " << _hmap_bnbcosmic["nc"]->Integral()
                  << " & " << _hmap_bnbcosmic["nue"]->Integral()
                  << " & " << _hmap_bnbcosmic["anumu"]->Integral()
