@@ -546,7 +546,7 @@ namespace Base {
       prelim2->Draw();
     }
 
-    PlottingTools::DrawSimulationXSec();
+    PlottingTools::DrawSimulationCovariance();
     name = _prefix + "_cov_matrix_2d";
     cov_c->SaveAs(name + ".pdf");
     cov_c->SaveAs(name + ".C","C");
@@ -575,7 +575,7 @@ namespace Base {
       prelim2->Draw();
     }
 
-    PlottingTools::DrawSimulationXSec();
+    PlottingTools::DrawSimulationCovariance();
     name = _prefix + "_cov_frac_matrix_2d";
     cov_frac_c->SaveAs(name + ".pdf");
     cov_frac_c->SaveAs(name + ".C","C");
@@ -604,7 +604,7 @@ namespace Base {
       prelim2->Draw();
     }
 
-    PlottingTools::DrawSimulationXSec();
+    PlottingTools::DrawSimulationCovariance();
     name = _prefix + "_corr_matrix_2d";
     corr_c->SaveAs(name + ".pdf");
     corr_c->SaveAs(name + ".C","C");

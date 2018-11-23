@@ -1040,7 +1040,7 @@ namespace Base {
       double max = std::max(_xsec_data_histos.at(i).GetMaximum(), _xsec_mc_histos.at(i).GetMaximum());
 
       _xsec_mc_histos.at(i).SetMinimum(min - std::abs(min) * 0.4);
-      _xsec_mc_histos.at(i).SetMaximum(max * 1.5);
+      _xsec_mc_histos.at(i).SetMaximum(max * 1.6);
 
 
       // The alternative cross section
@@ -1115,183 +1115,179 @@ namespace Base {
 
 
 
-    // //
-    // // Now plot the covariance matrices
-    // //
+    //
+    // Now plot the covariance matrices
+    //
 
-    // if (_covariance_matrix_is_set) {
+    if (_covariance_matrix_is_set) {
 
-    //   gStyle->SetPalette(kDeepSea);
-    //   gStyle->SetPaintTextFormat("4.2f");
+      gStyle->SetPalette(kDeepSea);
+      gStyle->SetPaintTextFormat("4.2f");
 
-    //   const Int_t NCont = 100;
-    //   const Int_t NRGBs = 5;
-    //   Double_t mainColour[NRGBs]   = { 1.00, 1.00, 1.00, 1.00, 1.00 };
-    //   Double_t otherColour[NRGBs]   = { 0.99,0.80, 0.60, 0.40, 0.20 };
-    //   //Double_t otherOtherColour[NRGBs]   = { 0.9,0.80, 0.80, 0.80, 0.80 };
-    //   Double_t stops[NRGBs] = { 0.00, 0.05, 0.1, 0.4, 1.00 };
-
-    //   TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
-    //   gStyle->SetNumberContours(NCont);
+      const Int_t Number = 9;
+      Double_t Red[Number]    = { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
+      Double_t Green[Number]  = { 1.00, 0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20 };
+      Double_t Blue[Number]   = { 1.00, 0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20 };
+      Double_t Stops[Number] =  { 0.00, 0.15, 0.30, 0.40, 0.50, 0.60, 0.70, 0.85, 1.00 };
+      Int_t nb=100;
+      TColor::CreateGradientColorTable(Number,Stops,Red,Green,Blue,nb);
 
 
-    //   TH2F *h = new TH2F("h", "", _covariance_matrix.GetNbinsX(), 0, _covariance_matrix.GetNbinsX(),
-    //     _covariance_matrix.GetNbinsY(), 0, _covariance_matrix.GetNbinsY());
+      TH2F *h = new TH2F("h", "", _covariance_matrix.GetNbinsX(), 0, _covariance_matrix.GetNbinsX(),
+        _covariance_matrix.GetNbinsY(), 0, _covariance_matrix.GetNbinsY());
 
-    //   // h->SetMaximum(1);
+      // h->SetMaximum(1);
 
-    //   int i_label_number = 0;
-    //   int j_label_number = 0;
-    //   for (int i = 0; i <  _covariance_matrix.GetNbinsX()+1; i++) {
-    //     std::ostringstream oss;
-    //     oss << i_label_number << "," << j_label_number;
-    //     if (j_label_number % h_data->GetNbinsY() == 0) {
-    //       i_label_number ++;
-    //       j_label_number = 0;
-    //     }
-    //     j_label_number++;
-    //     std::string label = oss.str();
-    //     if (i == 0) continue;
-    //     h->GetXaxis()->SetBinLabel(i,label.c_str());
-    //     h->GetYaxis()->SetBinLabel(i,label.c_str());
-    //   }
 
-    //   h->GetXaxis()->SetLabelOffset(0.004);
-    //   h->GetXaxis()->SetLabelSize(0.03);
-    //   h->GetYaxis()->SetLabelOffset(0.004);
-    //   h->GetYaxis()->SetLabelSize(0.03);
-    //   h->GetXaxis()->SetTitle("Bin i,j");
-    //   h->GetYaxis()->SetTitle("Bin m,n");
-    //   h->GetXaxis()->CenterTitle();
-    //   h->GetYaxis()->CenterTitle();
+      for (int i = 1; i <  _covariance_matrix.GetNbinsX()+1; i++) {
+        std::ostringstream oss;
+        oss << i;
+        std::string label = oss.str();
+        h->GetXaxis()->SetBinLabel(i,label.c_str());
+        h->GetYaxis()->SetBinLabel(i,label.c_str());
+      }
 
-    //   //
-    //   // Create lines to divide primary bins
-    //   //
+      h->GetXaxis()->SetLabelOffset(0.004);
+      h->GetXaxis()->SetLabelSize(0.03);
+      h->GetYaxis()->SetLabelOffset(0.004);
+      h->GetYaxis()->SetLabelSize(0.03);
+      h->GetXaxis()->SetTitle("Bin i");
+      h->GetYaxis()->SetTitle("Bin j");
+      h->GetXaxis()->CenterTitle();
+      h->GetYaxis()->CenterTitle();
 
-    //   std::vector<TLine*> lines;
+      //
+      // Create lines to divide primary bins
+      //
 
-    //   for (int i = 1; i < _h_data->GetNbinsX(); i++) {
-    //     TLine *line = new TLine(_h_data->GetNbinsY()  * i, 0, _h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX());
-    //     line->SetLineColor(kGreen+2);
-    //     line->SetLineWidth(2);
-    //     lines.emplace_back(line);
-    //   }
+      std::vector<TLine*> lines;
 
-    //   for (int i = 1; i < _h_data->GetNbinsX(); i++) {
-    //     TLine *line = new TLine(0, _h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX(), _h_data->GetNbinsY() * i);
-    //     line->SetLineColor(kGreen+2);
-    //     line->SetLineWidth(2);
-    //     lines.emplace_back(line);
-    //   }
+      for (int i = 1; i < _h_data->GetNbinsX(); i++) {
+        TLine *line = new TLine(_h_data->GetNbinsY()  * i, 0, _h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX());
+        line->SetLineColor(kGreen+2);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+      }
 
-    //   //
-    //   // Create TLatex lables
-    //   //
+      for (int i = 1; i < _h_data->GetNbinsX(); i++) {
+        TLine *line = new TLine(0, _h_data->GetNbinsY() * i, _covariance_matrix.GetNbinsX(), _h_data->GetNbinsY() * i);
+        line->SetLineColor(kGreen+2);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+      }
 
-    //   TLatex* tl1 = new TLatex(0.10,0.97, "i, m = cos(#theta_{#mu}) bins");
-    //   tl1->SetTextColor(kBlack);
-    //   tl1->SetTextFont(42);
-    //   tl1->SetNDC();
-    //   tl1->SetTextSize(1/30.);
-    //   tl1->SetTextAlign(12);
+      Int_t * separators = _h_data->GetSeparators();
+      Int_t separators_length = _h_data->GetSeparatorsLength();
 
-    //   TLatex* tl2 = new TLatex(0.10,0.93, "j, n = p_{#mu} bins");
-    //   tl2->SetTextColor(kBlack);
-    //   tl2->SetTextFont(42);
-    //   tl2->SetNDC();
-    //   tl2->SetTextSize(1/30.);
-    //   tl2->SetTextAlign(12);
+      int n_bins = h->GetNbinsX();
+
+      // Vertical lines
+      Int_t sum = 0;
+      for (Int_t s = 0; s < separators_length - 1; s++) {
+        TLine *line = new TLine(separators[s] + sum, 0, separators[s] + sum, n_bins);
+        line->SetLineColor(kRed);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+        sum += separators[s];
+      }
+
+      // Horizontal lines
+      sum = 0;
+      for (Int_t s = 0; s < separators_length - 1; s++) {
+        TLine *line = new TLine(0, separators[s] + sum, n_bins, separators[s] + sum);
+        line->SetLineColor(kRed);
+        line->SetLineWidth(2);
+        lines.emplace_back(line);
+        sum += separators[s];
+      }
 
 
 
-    //   // 
-    //   // Draw the proper matrices
-    //   //
-
-    //   float text_size = 0.9;
-
-    //   TCanvas * cov_c = new TCanvas();
-    //   cov_c->SetRightMargin(0.13);
-    //   cov_c->SetFixedAspectRatio();
-    //   _cov_matrix_total->SetMarkerColor(kBlack);
-    //   _cov_matrix_total->SetMarkerSize(text_size);
-    //   _cov_matrix_total->GetXaxis()->CenterTitle();
-    //   _cov_matrix_total->GetYaxis()->CenterTitle();
-    //   _cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-    //   _cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-    //   _cov_matrix_total->GetXaxis()->SetTickLength(0);
-    //   _cov_matrix_total->GetYaxis()->SetTickLength(0);
-    //   h->Draw();
-    //   _cov_matrix_total->Draw("colz text same");
-    //   // _cov_matrix_total->Draw("colz same");
-
-    //   for (auto l : lines)
-    //     l->Draw();
-
-    //   tl1->Draw();
-    //   tl2->Draw();
-
-    //   PlottingTools::DrawSimulationXSec();
-    //   name = _folder +_prefix + "_tot_covariance";
-    //   cov_c->SaveAs(name + ".pdf");
-    //   cov_c->SaveAs(name + ".C","C");
 
 
-    //   TCanvas * cov_frac_c = new TCanvas();
-    //   cov_frac_c->SetRightMargin(0.13);
-    //   cov_frac_c->SetFixedAspectRatio();
-    //   _frac_cov_matrix_total->SetMarkerColor(kBlack);
-    //   _frac_cov_matrix_total->SetMarkerSize(text_size);
-    //   _frac_cov_matrix_total->GetXaxis()->CenterTitle();
-    //   _frac_cov_matrix_total->GetYaxis()->CenterTitle();
-    //   _frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-    //   _frac_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-    //   _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
-    //   _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
-    //   h->Draw();
-    //   _frac_cov_matrix_total->Draw("colz text same");
-    //   // _frac_cov_matrix_total->Draw("colz same");
+      // 
+      // Draw the proper matrices
+      //
 
-    //   for (auto l : lines)
-    //     l->Draw();
+      float text_size = 0.9;
 
-    //   tl1->Draw();
-    //   tl2->Draw();
+      TCanvas * cov_c = new TCanvas();
+      cov_c->SetRightMargin(0.13);
+      cov_c->SetFixedAspectRatio();
+      _cov_matrix_total->SetMarkerColor(kBlack);
+      _cov_matrix_total->SetMarkerSize(text_size);
+      _cov_matrix_total->GetXaxis()->CenterTitle();
+      _cov_matrix_total->GetYaxis()->CenterTitle();
+      _cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _cov_matrix_total->GetYaxis()->SetTickLength(0);
+      h->Draw();
+      // _cov_matrix_total->Draw("colz text same");
+      _cov_matrix_total->Draw("colz same");
 
-    //   PlottingTools::DrawSimulationXSec();
-    //   name = _folder +_prefix + "_tot_fractional_covariance";
-    //   cov_frac_c->SaveAs(name + ".pdf");
-    //   cov_frac_c->SaveAs(name + ".C","C");
+      for (auto l : lines)
+        l->Draw();
 
-    //   TCanvas * corr_c = new TCanvas();
-    //   corr_c->SetRightMargin(0.13);
-    //   corr_c->SetFixedAspectRatio();
-    //   _corr_matrix_total->SetMarkerColor(kBlack);
-    //   _corr_matrix_total->SetMarkerSize(text_size);
-    //   _corr_matrix_total->GetXaxis()->CenterTitle();
-    //   _corr_matrix_total->GetYaxis()->CenterTitle();
-    //   _corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-    //   _corr_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-    //   _corr_matrix_total->GetXaxis()->SetTickLength(0);
-    //   _corr_matrix_total->GetYaxis()->SetTickLength(0);
-    //   h->Draw();
-    //   _corr_matrix_total->Draw("colz text same");
-    //   // _corr_matrix_total->Draw("colz same");
+      PlottingTools::DrawSimulationCovariance();
+      name = _folder +_prefix + "_tot_covariance";
+      cov_c->SaveAs(name + ".pdf");
+      cov_c->SaveAs(name + ".C","C");
 
-    //   for (auto l : lines)
-    //     l->Draw();
 
-    //   tl1->Draw();
-    //   tl2->Draw();
 
-    //   PlottingTools::DrawSimulationXSec();
-    //   name = _folder +_prefix + "_tot_correlation";
-    //   corr_c->SaveAs(name + ".pdf");
-    //   corr_c->SaveAs(name + ".C","C");
+      TCanvas * cov_frac_c = new TCanvas();
+      cov_frac_c->SetRightMargin(0.13);
+      cov_frac_c->SetFixedAspectRatio();
+      _frac_cov_matrix_total->SetMarkerColor(kBlack);
+      _frac_cov_matrix_total->SetMarkerSize(text_size);
+      _frac_cov_matrix_total->GetXaxis()->CenterTitle();
+      _frac_cov_matrix_total->GetYaxis()->CenterTitle();
+      _frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _frac_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
+      // _frac_cov_matrix_total->SetMinimum(-5);
+      // _frac_cov_matrix_total->SetMaximum(5);
+      h->Draw();
+      // _frac_cov_matrix_total->Draw("colz text same");
+      _frac_cov_matrix_total->Draw("colz same");
 
-    //   gStyle->SetPalette(kRainBow);
-    // }
+      for (auto l : lines)
+        l->Draw();
+
+      PlottingTools::DrawSimulationCovariance();
+      name = _folder +_prefix + "_tot_fractional_covariance";
+      cov_frac_c->SaveAs(name + ".pdf");
+      cov_frac_c->SaveAs(name + ".C","C");
+
+
+
+      TCanvas * corr_c = new TCanvas();
+      corr_c->SetRightMargin(0.13);
+      corr_c->SetFixedAspectRatio();
+      _corr_matrix_total->SetMarkerColor(kBlack);
+      _corr_matrix_total->SetMarkerSize(text_size);
+      _corr_matrix_total->GetXaxis()->CenterTitle();
+      _corr_matrix_total->GetYaxis()->CenterTitle();
+      _corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _corr_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _corr_matrix_total->GetXaxis()->SetTickLength(0);
+      _corr_matrix_total->GetYaxis()->SetTickLength(0);
+      h->Draw();
+      // _corr_matrix_total->Draw("colz text same");
+      _corr_matrix_total->Draw("colz same");
+
+      for (auto l : lines)
+        l->Draw();
+
+      PlottingTools::DrawSimulationCovariance();
+      name = _folder +_prefix + "_tot_correlation";
+      corr_c->SaveAs(name + ".pdf");
+      corr_c->SaveAs(name + ".C","C");
+
+      gStyle->SetPalette(kRainBow);
+    }
 
 
 

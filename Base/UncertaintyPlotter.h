@@ -21,6 +21,8 @@
 #include <TLegend.h>
 #include <TH1D.h>
 #include <TH2D.h>
+#include "PlottingTools.h"
+#include "LoggerFeature.h"
 
 
 namespace Base {
@@ -30,12 +32,12 @@ namespace Base {
      User defined class UncertaintyPlotter ... these comments are used to generate
      doxygen documentation!
   */
-  class UncertaintyPlotter{
+  class UncertaintyPlotter : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    UncertaintyPlotter(){}
+    UncertaintyPlotter(){_cov_names.clear(); _frac_cov_v.clear();}
     
     /// Default destructor
     ~UncertaintyPlotter(){}
@@ -63,8 +65,8 @@ namespace Base {
     std::vector<TH2D> _frac_cov_v; ///< The fractional covariance matrices
     TH1D _xsec_1d; ///< The cross section
 
-    std::vector<Int_t> _line_colors = {kRed+1, kBlue+1, kGreen+1, 10, 11, 12, 13, 14, 15, 16, 17};
-    std::string _xaxis_title;
+    std::vector<Int_t> _line_colors = {46, 9, 30, 44, 40, 41, 38, 1, 1, 1, 1, 1}; ///< The colors used to draw the lines
+    std::string _xaxis_title; ///< Will store the x axis title
     
   };
 }

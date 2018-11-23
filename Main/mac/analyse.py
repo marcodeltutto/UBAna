@@ -9,11 +9,17 @@ analyser = Main.Analyse()
 
 
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_nosyst.root") # Tune 1
-analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_new.root") # Tune 1 - full stat - full syst
+analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_all.root") # Tune 1 - full stat - full syst
+
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_ccqe_ccmec.root") # Tune 1 - ccqe & ccmec syst only
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_reint.root") # Tune 1 - reinteraction syst only
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v5.root") # Tune 1 - dev - full syst
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v5_kaonup.root") # Tune 1 - dev - Kaon Scaled Up
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v5_kaondown.root") # Tune 1 - dev - Kaon Scaled Down
+
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root") # Tune 3 (full)
+
+# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_cosmicscaled.root") # Tune 1 - full - Cosmics scaled by 0.6
 
 analyser.SetDirtFile          ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root")
 
@@ -27,9 +33,10 @@ analyser.SetEXTBNBTriggers(72299264.0)
 analyser.SetPrefix("cv")
 # analyser.SetPrefix("cv_tune3")
 # analyser.SetPrefix("cv_cosmicscaled_overlay")
+# analyser.SetPrefix("cv_nodirt")
 analyser.SetFluxCorrectionWeight(1.028)
 
-# analyser.ImportAlternativeMC("xsec_file_cv_tune3.root")
+analyser.ImportAlternativeMC("xsec_file_cv_tune3.root")
 
 analyser.SetBeamOffSubtraction(False)
 analyser.SetBreakdownPlots(True)
@@ -37,13 +44,13 @@ analyser.SetBreakdownPlots(True)
 extra_unc = math.sqrt(0.02*0.02) # POT counting
 # analyser.SetExtraUncertainty(extra_unc)
 
-analyser.ImportDetectorSystematics(False)
+analyser.ImportDetectorSystematics(True)
 
 analyser.ImportCosmicSystematics(False)
 
-analyser.ImportDirtSystematics(False)
+analyser.ImportDirtSystematics(True)
 
-analyser.DoGenieSystematics(True)
+analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)
 
 analyser.DoExtraSystematics(False)

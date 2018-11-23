@@ -19,17 +19,7 @@ analyser.SetEXTBNBTriggers(72299264.0)
 
 analyser.SetFluxCorrectionWeight(1.028)
 
-analyser.DoFluxSystematics(False)
-analyser.ImportFluxSystematics(False)
-analyser.DoGenieSystematics(False)
-analyser.DoExtraSystematics(False)
-analyser.ImportExtraSystematics(False)
-analyser.ImportFluxSystematics(False)
-analyser.SetExtraFluxUncertainty(0.)
-
-
-det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "stretchResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp", "enhancedexttpcvis", "birksrecomb" ,"deadSaturatedChannels", "altDeadChannels"]
-det_syst_list = ["deadSaturatedChannels", "altDeadChannels"]
+det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "stretchResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp", "enhancedexttpcvis", "lifetime10ms", "birksrecomb" ,"deadSaturatedChannels", "altDeadChannels"]
 
 
 for systname in det_syst_list:

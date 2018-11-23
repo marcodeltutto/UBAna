@@ -793,6 +793,7 @@ namespace Main {
       _xsec_bs_calc.SetBkgToSubtract(bkg_names);
 
       if (_do_genie_systs) {
+        LOG_NORMAL() << "Evaluating GENIE systematics." << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
         if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkmom_genie_multisim_bs, _event_histo_1d_bnbon->hmap_trkmom["total"], _event_histo_1d_extbnb->hmap_trkmom["total"], _event_histo_1d_dirt->hmap_trkmom);
@@ -816,6 +817,8 @@ namespace Main {
 
       if (_import_genie_systs) {
 
+        LOG_NORMAL() << "Importing GENIE systematics." << std::endl;
+
         TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_mumom");
         frac_covariance_matrix_genie = *m;
@@ -824,6 +827,7 @@ namespace Main {
       }
 
       if (_do_extra_syst_systs) {
+        LOG_NORMAL() << "Evaluating EXTRA SYST systematics." << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
         if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkmom_extra_syst_multisim_bs, _event_histo_1d_bnbon->hmap_trkmom["total"], _event_histo_1d_extbnb->hmap_trkmom["total"], _event_histo_1d_dirt->hmap_trkmom);
@@ -847,6 +851,8 @@ namespace Main {
 
       if (_import_extra_syst_systs) {
 
+        LOG_NORMAL() << "Importing EXTRA SYST systematics." << std::endl;
+
         TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_mumom");
         frac_covariance_matrix_extra_syst = *m;
@@ -860,6 +866,7 @@ namespace Main {
       // FLUX Multisim Systematics
       //
       if (_do_flux_systs) {
+        LOG_NORMAL() << "Evaluating FLUX systematics." << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetNameAndLabel("trkmom_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
         if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkmom_flux_multisim_bs, _event_histo_1d_bnbon->hmap_trkmom["total"], _event_histo_1d_extbnb->hmap_trkmom["total"], _event_histo_1d_dirt->hmap_trkmom);
@@ -888,6 +895,8 @@ namespace Main {
 
       if (_import_flux_systs) {
 
+        LOG_NORMAL() << "Importing FLUX systematics." << std::endl;
+
         TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_mumom");
         frac_covariance_matrix_flux = *m;
@@ -895,7 +904,11 @@ namespace Main {
         unc_plotter.AddFracCovarianceMatrix("FLUX", frac_covariance_matrix_flux);
       }
 
+      //
+      // FLUX Multisim Systematics
+      //
       if (_do_mc_stat_systs) {
+        LOG_NORMAL() << "Evaluating MC STAT systematics." << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetNameAndLabel("trkmom_mc_stat_bs", ";p_{#mu}^{reco} [GeV]; Selected Events");
         if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkmom_mc_stat_multisim_bs, _event_histo_1d_bnbon->hmap_trkmom["total"], _event_histo_1d_extbnb->hmap_trkmom["total"], _event_histo_1d_dirt->hmap_trkmom);
@@ -905,8 +918,8 @@ namespace Main {
         _xsec_bs_calc.SetUpperLabel("MC Stats. Re-Weighting Only");
         _xsec_bs_calc.Run();
 
-        _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_mumom");
-        _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_genie.root", "frac_covariance_matrix_genie_mumom");
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_mc_stat.root", "covariance_matrix_mc_stat_mumom");
+        _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_mc_stat.root", "frac_covariance_matrix_mc_stat_mumom");
         _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_mc_stat);
         _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_mc_stat);
 
@@ -918,6 +931,8 @@ namespace Main {
       }
 
       if (_import_mc_stat_systs) {
+
+        LOG_NORMAL() << "Importing MC STAT systematics." << std::endl;
 
         TFile* cov_file = TFile::Open("covariance_mc_stat.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_mc_stat_mumom");
@@ -931,6 +946,8 @@ namespace Main {
 
     if (_import_detector_systs) {
 
+      LOG_NORMAL() << "Importing DETECTOR systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_detector.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_mumom");
       frac_covariance_matrix_detector = *m;
@@ -940,6 +957,8 @@ namespace Main {
 
     if (_import_cosmic_systs) {
 
+      LOG_NORMAL() << "Importing COSMIC systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_mumom");
       frac_covariance_matrix_cosmic = *m;
@@ -948,6 +967,8 @@ namespace Main {
     }
 
     if (_import_dirt_systs) {
+
+      LOG_NORMAL() << "Importing DIRT systematics." << std::endl;
 
       TFile* cov_file = TFile::Open("covariance_dirt.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_mumom");
@@ -1030,7 +1051,7 @@ namespace Main {
     
 
     unc_plotter.SetCrossSection(*xsec_mumom);
-    unc_plotter.MakePlot("relative_uncertainty_mumom.pdf");
+    unc_plotter.MakePlot("relative_uncertainty_mumom");
 
 
 
@@ -1048,6 +1069,7 @@ namespace Main {
 
 
     unc_plotter.Reset();
+    unc_plotter.SetXaxisTitle("cos(#theta_{#mu}^{reco})");
 
     // 
     // Muon CosTheta: Cross section reweighting
@@ -1068,8 +1090,8 @@ namespace Main {
       _xsec_bs_calc.SetBkgToSubtract(bkg_names);
 
       if (_do_genie_systs) {
+        LOG_NORMAL() << "Evaluating GENIE systematics." << std::endl;
         _xsec_bs_calc.Reset();
-        
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_genie_multisim", ";cos(#theta_{#mu}^{reco}); Selected Events");
         if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkangle_genie_multisim_bs, _event_histo_1d_bnbon->hmap_trktheta["total"], _event_histo_1d_extbnb->hmap_trktheta["total"], _event_histo_1d_dirt->hmap_trktheta);
         else                      _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkangle_genie_multisim_bs, _event_histo_1d_bnbon->hmap_trktheta["total"], _event_histo_1d_extbnb->hmap_trktheta["total"]);
@@ -1092,6 +1114,8 @@ namespace Main {
 
       if (_import_genie_systs) {
 
+        LOG_NORMAL() << "Importing GENIE systematics." << std::endl;
+
         TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_muangle");
         frac_covariance_matrix_genie = *m;
@@ -1100,6 +1124,7 @@ namespace Main {
       }
 
       if (_do_extra_syst_systs) {
+        LOG_NORMAL() << "Evaluating EXTRA SYST systematics." << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_extra_syst", ";cos(#theta_{#mu}^{reco}); Selected Events");
         if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkangle_extra_syst_multisim_bs, _event_histo_1d_bnbon->hmap_trktheta["total"], _event_histo_1d_extbnb->hmap_trktheta["total"], _event_histo_1d_dirt->hmap_trktheta);
@@ -1123,6 +1148,8 @@ namespace Main {
 
       if (_import_extra_syst_systs) {
 
+        LOG_NORMAL() << "Importing EXTRA SYST systematics." << std::endl;
+
         TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_muangle");
         frac_covariance_matrix_extra_syst = *m;
@@ -1135,6 +1162,7 @@ namespace Main {
       // FLUX Multisim Systematics
       //
       if (_do_flux_systs) {
+        LOG_NORMAL() << "Evaluating FLUX systematics." << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_flux_multisim", ";Candidate Track cos(#theta_{#mu}^{reco}) [GeV]; Selected Events");
         if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkangle_flux_multisim_bs, _event_histo_1d_bnbon->hmap_trktheta["total"], _event_histo_1d_extbnb->hmap_trktheta["total"], _event_histo_1d_dirt->hmap_trktheta);
@@ -1163,6 +1191,8 @@ namespace Main {
 
       if (_import_flux_systs) {
 
+        LOG_NORMAL() << "Importing FLUX systematics." << std::endl;
+
         TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_muangle");
         frac_covariance_matrix_flux = *m;
@@ -1170,8 +1200,11 @@ namespace Main {
         unc_plotter.AddFracCovarianceMatrix("FLUX", frac_covariance_matrix_flux);
       }
 
-
+      //
+      // MC STAT Multisim Systematics
+      //
       if (_do_mc_stat_systs) {
+        LOG_NORMAL() << "Evaluating MC STAT systematics." << std::endl;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetNameAndLabel("trkcostheta_mc_stat_multisim", ";cos(#theta_{#mu}^{reco}); Selected Events");
         if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_1d_mc->hmap_trkangle_mc_stat_multisim_bs, _event_histo_1d_bnbon->hmap_trktheta["total"], _event_histo_1d_extbnb->hmap_trktheta["total"], _event_histo_1d_dirt->hmap_trktheta);
@@ -1195,6 +1228,8 @@ namespace Main {
 
       if (_import_mc_stat_systs) {
 
+        LOG_NORMAL() << "Importing MC STAT systematics." << std::endl;
+
         TFile* cov_file = TFile::Open("covariance_mc_stat.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_mc_stat_muangle");
         frac_covariance_matrix_mc_stat = *m;
@@ -1206,6 +1241,8 @@ namespace Main {
 
     if (_import_detector_systs) {
 
+      LOG_NORMAL() << "Importing DETECTOR systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_detector.root", "WRITE");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_muangle");
       frac_covariance_matrix_detector = *m;
@@ -1216,6 +1253,8 @@ namespace Main {
 
     if (_import_cosmic_systs) {
 
+      LOG_NORMAL() << "Importing COSMIC systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_cosmic.root", "WRITE");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_muangle");
       frac_covariance_matrix_cosmic = *m; 
@@ -1225,6 +1264,8 @@ namespace Main {
 
 
     if (_import_dirt_systs) {
+
+      LOG_NORMAL() << "Importing DIRT systematics." << std::endl;
 
       TFile* cov_file = TFile::Open("covariance_dirt.root", "WRITE");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_muangle");
@@ -1302,6 +1343,7 @@ namespace Main {
 
     unc_plotter.SetCrossSection(*xsec_muangle);
     unc_plotter.MakePlot("relative_uncertainty_muangle.pdf");
+    unc_plotter.MakePlot("relative_uncertainty_muangle.C");
 
 
 
@@ -1311,238 +1353,238 @@ namespace Main {
 
 
 
-    std::cout << "***************" << std::endl;
-    std::cout << "* Double differential cross section" << std::endl;
-    std::cout << "***************" << std::endl;
+    // std::cout << "***************" << std::endl;
+    // std::cout << "* Double differential cross section" << std::endl;
+    // std::cout << "***************" << std::endl;
 
 
-    //
-    // Double Differential Cross Section
-    //
+    // //
+    // // Double Differential Cross Section
+    // //
 
-    CrossSectionBootstrapCalculator2D _xsec_bs_calc;
-    _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
-    _xsec_bs_calc.set_verbosity(Base::msg::kWARNING);
+    // CrossSectionBootstrapCalculator2D _xsec_bs_calc;
+    // _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
+    // _xsec_bs_calc.set_verbosity(Base::msg::kWARNING);
 
-    if (_do_genie_systs) {
-      _xsec_bs_calc.Reset();
-      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
-      else                   _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
-      _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_genie_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_genie_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_genie_multisim_reco_per_true);
-      _xsec_bs_calc.SetBkgToSubtract(bkg_names);
-      _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle_mumom");
-      _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
-      _xsec_bs_calc.Run();
+    // if (_do_genie_systs) {
+    //   _xsec_bs_calc.Reset();
+    //   _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+    //   _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+    //   _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_genie_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
+    //   if (_event_histo_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
+    //   else                   _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_genie_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
+    //   _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_genie_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_genie_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_genie_multisim_reco_per_true);
+    //   _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+    //   _xsec_bs_calc.SetSavePrefix("genie_multisim_muangle_mumom");
+    //   _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
+    //   _xsec_bs_calc.Run();
 
-      _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle_mumom");
-      _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_genie.root", "frac_covariance_matrix_genie_muangle_mumom");
-      _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
-      _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_genie);
+    //   _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_muangle_mumom");
+    //   _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_genie.root", "frac_covariance_matrix_genie_muangle_mumom");
+    //   _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
+    //   _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_genie);
 
-      for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
-        std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
+    //   for (int i = 0; i < covariance_matrix_genie.GetNbinsX(); i++) {
+    //     std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
+    //   }
+    // }
 
-    if (_import_genie_systs) {
+    // if (_import_genie_systs) {
 
-      TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_muangle_mumom");
-      frac_covariance_matrix_genie = *m;
+    //   TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
+    //   TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_muangle_mumom");
+    //   frac_covariance_matrix_genie = *m;
         
-    }
+    // }
 
-    if (_do_extra_syst_systs) {
-      _xsec_bs_calc.Reset();
-      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_extra_syst_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
-      else                      _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
-      _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_extra_syst_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_extra_syst_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_extra_syst_multisim_reco_per_true);
-      _xsec_bs_calc.SetBkgToSubtract(bkg_names);
-      _xsec_bs_calc.SetSavePrefix("extra_syst_muangle_mumom");
-      _xsec_bs_calc.SetUpperLabel("EXTRA SYSTS Re-Weighting Only");
-      _xsec_bs_calc.Run();
+    // if (_do_extra_syst_systs) {
+    //   _xsec_bs_calc.Reset();
+    //   _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+    //   _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+    //   _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_extra_syst_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
+    //   if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
+    //   else                      _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_extra_syst_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
+    //   _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_extra_syst_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_extra_syst_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_extra_syst_multisim_reco_per_true);
+    //   _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+    //   _xsec_bs_calc.SetSavePrefix("extra_syst_muangle_mumom");
+    //   _xsec_bs_calc.SetUpperLabel("EXTRA SYSTS Re-Weighting Only");
+    //   _xsec_bs_calc.Run();
 
-      _xsec_bs_calc.SaveCovarianceMatrix("covariance_extra_syst.root", "covariance_matrix_extra_syst_muangle_mumom");
-      _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_extra_syst.root", "frac_covariance_matrix_extra_syst_muangle_mumom");
-      _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_extra_syst);
-      _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_extra_syst);
+    //   _xsec_bs_calc.SaveCovarianceMatrix("covariance_extra_syst.root", "covariance_matrix_extra_syst_muangle_mumom");
+    //   _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_extra_syst.root", "frac_covariance_matrix_extra_syst_muangle_mumom");
+    //   _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_extra_syst);
+    //   _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_extra_syst);
 
-      for (int i = 0; i < covariance_matrix_extra_syst.GetNbinsX(); i++) {
-        std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
+    //   for (int i = 0; i < covariance_matrix_extra_syst.GetNbinsX(); i++) {
+    //     std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
+    //   }
+    // }
 
-    if (_import_extra_syst_systs) {
+    // if (_import_extra_syst_systs) {
 
-      TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_muangle_mumom");
-      frac_covariance_matrix_extra_syst = *m;
+    //   TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
+    //   TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_muangle_mumom");
+    //   frac_covariance_matrix_extra_syst = *m;
         
-    }
+    // }
 
-    if (_do_flux_systs) {
-      _xsec_bs_calc.Reset();
-      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
-      else                   _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
-      _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_flux_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_flux_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_flux_multisim_reco_per_true);
-      _xsec_bs_calc.SetBkgToSubtract(bkg_names);
-      _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle_mumom");
-      _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
-      _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
-      _xsec_bs_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
-      _xsec_bs_calc.Run();
+    // if (_do_flux_systs) {
+    //   _xsec_bs_calc.Reset();
+    //   _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+    //   _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+    //   _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_flux_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
+    //   if (_event_histo_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
+    //   else                   _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_flux_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
+    //   _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_flux_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_flux_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_flux_multisim_reco_per_true);
+    //   _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+    //   _xsec_bs_calc.SetSavePrefix("flux_multisim_muangle_mumom");
+    //   _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
+    //   _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
+    //   _xsec_bs_calc.AddExtraDiagonalUncertainty(_extra_flux_fractional_uncertainty); // For POT uncertainty
+    //   _xsec_bs_calc.Run();
 
-      _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_muangle_mumom");
-      _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_flux.root", "frac_covariance_matrix_flux_muangle_mumom");
-      _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
-      _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_flux);
+    //   _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_muangle_mumom");
+    //   _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_flux.root", "frac_covariance_matrix_flux_muangle_mumom");
+    //   _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
+    //   _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_flux);
 
-      for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
-        std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
+    //   for (int i = 0; i < covariance_matrix_flux.GetNbinsX(); i++) {
+    //     std::cout << "FLUX Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_flux.GetBinContent(i+1, i+1) << std::endl;
+    //   }
+    // }
 
-    if (_import_flux_systs) {
+    // if (_import_flux_systs) {
 
-      TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_muangle_mumom");
-      frac_covariance_matrix_flux = *m;
+    //   TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
+    //   TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_muangle_mumom");
+    //   frac_covariance_matrix_flux = *m;
 
-    }
-
-
-    if (_do_mc_stat_systs) {
-      _xsec_bs_calc.Reset();
-      _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-      _xsec_bs_calc.SetPOT(bnbon_pot_meas);
-      _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_mc_stat_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
-      if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
-      else                      _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
-      _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_mc_stat_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_mc_stat_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_mc_stat_multisim_reco_per_true);
-      _xsec_bs_calc.SetBkgToSubtract(bkg_names);
-      _xsec_bs_calc.SetSavePrefix("mc_stat_multisim_muangle_mumom");
-      _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
-      _xsec_bs_calc.Run();
-
-      _xsec_bs_calc.SaveCovarianceMatrix("covariance_mc_stat.root", "covariance_matrix_mc_stat_muangle_mumom");
-      _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_mc_stat.root", "frac_covariance_matrix_mc_stat_muangle_mumom");
-      _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_mc_stat);
-      _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_mc_stat);
-
-      for (int i = 0; i < covariance_matrix_mc_stat.GetNbinsX(); i++) {
-        std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_mc_stat.GetBinContent(i+1, i+1) << std::endl;
-      }
-    }
-
-    if (_import_mc_stat_systs) {
-
-      TFile* cov_file = TFile::Open("covariance_mc_stat.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_mc_stat_muangle_mumom");
-      frac_covariance_matrix_mc_stat = *m;
-        
-    }
-
-
-    if (_import_detector_systs) {
-
-      TFile* cov_file = TFile::Open("covariance_detector.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_muangle_mumom");
-      frac_covariance_matrix_detector = *m;
-    }
-
-
-    if (_import_cosmic_systs) {
-
-      TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_muangle_mumom");
-      frac_covariance_matrix_cosmic = *m;
-    }
-
-
-    if (_import_dirt_systs) {
-
-      TFile* cov_file = TFile::Open("covariance_dirt.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_muangle_mumom");
-      frac_covariance_matrix_dirt = *m;
-    }
-
-    TH2D frac_covariance_matrix_muangle_mumom = * ((TH2D*)frac_covariance_matrix_genie.Clone("frac_covariance_matrix_muangle_mumom"));
-    frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_extra_syst);
-    frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_flux);
-    frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_mc_stat);
-    frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_detector);
-    frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_cosmic);
-    frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_dirt);
-
-    // for (int i = 0; i < covariance_matrix_muangle_mumom.GetNbinsX(); i++) {
-    //   std::cout << "TOTAL - Angle - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_muangle_mumom.GetBinContent(i+1, i+1) << std::endl;
     // }
 
 
+    // if (_do_mc_stat_systs) {
+    //   _xsec_bs_calc.Reset();
+    //   _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+    //   _xsec_bs_calc.SetPOT(bnbon_pot_meas);
+    //   _xsec_bs_calc.SetNameAndLabel("trkcostheta_trkmom_mc_stat_multisim", ";cos(#theta_{#mu}^{reco});p_{#mu} [GeV]");
+    //   if (_event_histo_1d_dirt) _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
+    //   else                      _xsec_bs_calc.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom_mc_stat_multisim_bs, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
+    //   _xsec_bs_calc.SetTruthHistograms(*_event_histo_mc->bs_mc_stat_multisim_eff_muangle_mumom_num, *_event_histo_mc->bs_mc_stat_multisim_eff_muangle_mumom_den, _event_histo_mc->bs_mc_stat_multisim_reco_per_true);
+    //   _xsec_bs_calc.SetBkgToSubtract(bkg_names);
+    //   _xsec_bs_calc.SetSavePrefix("mc_stat_multisim_muangle_mumom");
+    //   _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
+    //   _xsec_bs_calc.Run();
 
-    //
-    // Double diff cross section
-    //
+    //   _xsec_bs_calc.SaveCovarianceMatrix("covariance_mc_stat.root", "covariance_matrix_mc_stat_muangle_mumom");
+    //   _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_mc_stat.root", "frac_covariance_matrix_mc_stat_muangle_mumom");
+    //   _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_mc_stat);
+    //   _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_mc_stat);
 
-    // Get the bins first
-    int n_bins_double_mucostheta = _event_histo_mc->hmap_trktheta_trkmom["total"]->GetNbinsX();
-    const double *bins_double_mucostheta = _event_histo_mc->hmap_trktheta_trkmom["total"]->GetXaxis()->GetXbins()->GetArray();
-    int n_bins_double_mumom = _event_histo_mc->hmap_trktheta_trkmom["total"]->GetNbinsY();
-    const double *bins_double_mumom = _event_histo_mc->hmap_trktheta_trkmom["total"]->GetYaxis()->GetXbins()->GetArray();
+    //   for (int i = 0; i < covariance_matrix_mc_stat.GetNbinsX(); i++) {
+    //     std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_mc_stat.GetBinContent(i+1, i+1) << std::endl;
+    //   }
+    // }
 
-    MigrationMatrix4D migrationmatrix4d;
-    migrationmatrix4d.SetRecoPerTrueHistos(_event_histo_mc->h_reco_per_true);
-    migrationmatrix4d.SetOutDir();
-    migrationmatrix4d.SetBins(bins_double_mucostheta, n_bins_double_mucostheta, bins_double_mumom, n_bins_double_mumom);
-    Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
+    // if (_import_mc_stat_systs) {
+
+    //   TFile* cov_file = TFile::Open("covariance_mc_stat.root", "READ");
+    //   TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_mc_stat_muangle_mumom");
+    //   frac_covariance_matrix_mc_stat = *m;
+        
+    // }
+
+
+    // if (_import_detector_systs) {
+
+    //   TFile* cov_file = TFile::Open("covariance_detector.root", "READ");
+    //   TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_muangle_mumom");
+    //   frac_covariance_matrix_detector = *m;
+    // }
+
+
+    // if (_import_cosmic_systs) {
+
+    //   TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
+    //   TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_muangle_mumom");
+    //   frac_covariance_matrix_cosmic = *m;
+    // }
+
+
+    // if (_import_dirt_systs) {
+
+    //   TFile* cov_file = TFile::Open("covariance_dirt.root", "READ");
+    //   TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_muangle_mumom");
+    //   frac_covariance_matrix_dirt = *m;
+    // }
+
+    // TH2D frac_covariance_matrix_muangle_mumom = * ((TH2D*)frac_covariance_matrix_genie.Clone("frac_covariance_matrix_muangle_mumom"));
+    // frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_extra_syst);
+    // frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_flux);
+    // frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_mc_stat);
+    // frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_detector);
+    // frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_cosmic);
+    // frac_covariance_matrix_muangle_mumom.Add(&frac_covariance_matrix_dirt);
+
+    // // for (int i = 0; i < covariance_matrix_muangle_mumom.GetNbinsX(); i++) {
+    // //   std::cout << "TOTAL - Angle - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_muangle_mumom.GetBinContent(i+1, i+1) << std::endl;
+    // // }
+
+
+
+    // //
+    // // Double diff cross section
+    // //
+
+    // // Get the bins first
+    // int n_bins_double_mucostheta = _event_histo_mc->hmap_trktheta_trkmom["total"]->GetNbinsX();
+    // const double *bins_double_mucostheta = _event_histo_mc->hmap_trktheta_trkmom["total"]->GetXaxis()->GetXbins()->GetArray();
+    // int n_bins_double_mumom = _event_histo_mc->hmap_trktheta_trkmom["total"]->GetNbinsY();
+    // const double *bins_double_mumom = _event_histo_mc->hmap_trktheta_trkmom["total"]->GetYaxis()->GetXbins()->GetArray();
+
+    // MigrationMatrix4D migrationmatrix4d;
+    // migrationmatrix4d.SetRecoPerTrueHistos(_event_histo_mc->h_reco_per_true);
+    // migrationmatrix4d.SetOutDir();
+    // migrationmatrix4d.SetBins(bins_double_mucostheta, n_bins_double_mucostheta, bins_double_mumom, n_bins_double_mumom);
+    // Mat4D S_4d = migrationmatrix4d.CalculateMigrationMatrix();
     
-    migrationmatrix4d.SetOutputFileName("migration_matrix_4d_trkangle_trkmom.tex");
-    migrationmatrix4d.PrintSmearingMatrixLatex();
-    migrationmatrix4d.PlotMatrix();
+    // migrationmatrix4d.SetOutputFileName("migration_matrix_4d_trkangle_trkmom.tex");
+    // migrationmatrix4d.PrintSmearingMatrixLatex();
+    // migrationmatrix4d.PlotMatrix();
 
-    CrossSectionCalculator2D xseccalc2d;
-    xseccalc2d.set_verbosity(Base::msg::kINFO);
-    xseccalc2d.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
-    xseccalc2d.SetPOT(bnbon_pot_meas);
-    xseccalc2d.SetOutDir("output_data_mc_xsec2d");
-    xseccalc2d.SetFluxCorrectionWeight(_flux_correction_weight);
-    std::cout << "FLUX: " << xseccalc2d.EstimateFlux() << std::endl;
+    // CrossSectionCalculator2D xseccalc2d;
+    // xseccalc2d.set_verbosity(Base::msg::kINFO);
+    // xseccalc2d.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
+    // xseccalc2d.SetPOT(bnbon_pot_meas);
+    // xseccalc2d.SetOutDir("output_data_mc_xsec2d");
+    // xseccalc2d.SetFluxCorrectionWeight(_flux_correction_weight);
+    // std::cout << "FLUX: " << xseccalc2d.EstimateFlux() << std::endl;
 
-    if (_event_histo_1d_dirt) xseccalc2d.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
-    else                      xseccalc2d.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
-    xseccalc2d.SetTruthHistograms(_event_histo_mc->h_eff_muangle_mumom_num, _event_histo_mc->h_eff_muangle_mumom_den);
-    xseccalc2d.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
-    xseccalc2d.ProcessPlots();
-    xseccalc2d.SetSmearingMatrix(S_4d);
-    xseccalc2d.Smear();
-    xseccalc2d.Draw();
+    // if (_event_histo_1d_dirt) xseccalc2d.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"], _event_histo_dirt->hmap_trktheta_trkmom);
+    // else                      xseccalc2d.SetHistograms(_event_histo_mc->hmap_trktheta_trkmom, _event_histo_bnbon->hmap_trktheta_trkmom["total"], _event_histo_extbnb->hmap_trktheta_trkmom["total"]);
+    // xseccalc2d.SetTruthHistograms(_event_histo_mc->h_eff_muangle_mumom_num, _event_histo_mc->h_eff_muangle_mumom_den);
+    // xseccalc2d.SetNameAndLabel("trkcostheta_trkmumom_", ";Candidate Track cos(#theta) [GeV];Candidate Track Momentum (MCS) [GeV]");
+    // xseccalc2d.ProcessPlots();
+    // xseccalc2d.SetSmearingMatrix(S_4d);
+    // xseccalc2d.Smear();
+    // xseccalc2d.Draw();
 
-    if (frac_covariance_matrix_muangle_mumom.GetNbinsX() > 1) {
-      xseccalc2d.SetFractionalCovarianceMatrix(frac_covariance_matrix_muangle_mumom);
-    }
-    xseccalc2d.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
-
-
-    TH2D * xsec_muangle_mumom = xseccalc2d.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
-    TH2D * xsec_muangle_mumom_mc = xseccalc2d.GetMCCrossSection();
+    // if (frac_covariance_matrix_muangle_mumom.GetNbinsX() > 1) {
+    //   xseccalc2d.SetFractionalCovarianceMatrix(frac_covariance_matrix_muangle_mumom);
+    // }
+    // xseccalc2d.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
 
 
-    file_out->cd();
-    save_name = "xsec_muangle_mumom_" + _prefix;
-    xsec_muangle_mumom->Write(save_name.c_str());
-    save_name = "xsec_muangle_mumom_mc_" + _prefix;
-    xsec_muangle_mumom_mc->Write(save_name.c_str());
-    save_name = "frac_covariance_matrix_muangle_mumom_" + _prefix;
-    frac_covariance_matrix_muangle_mumom.Write(save_name.c_str());
+    // TH2D * xsec_muangle_mumom = xseccalc2d.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+    // TH2D * xsec_muangle_mumom_mc = xseccalc2d.GetMCCrossSection();
+
+
+    // file_out->cd();
+    // save_name = "xsec_muangle_mumom_" + _prefix;
+    // xsec_muangle_mumom->Write(save_name.c_str());
+    // save_name = "xsec_muangle_mumom_mc_" + _prefix;
+    // xsec_muangle_mumom_mc->Write(save_name.c_str());
+    // save_name = "frac_covariance_matrix_muangle_mumom_" + _prefix;
+    // frac_covariance_matrix_muangle_mumom.Write(save_name.c_str());
 
 
 
@@ -1562,7 +1604,12 @@ namespace Main {
     _xsec_bs_poly_calc.SetFluxCorrectionWeight(_flux_correction_weight);
     _xsec_bs_poly_calc.set_verbosity(Base::msg::kNORMAL);
 
+
+    //
+    // GENIE Multisim Systematics
+    //
     if (_do_genie_systs) {
+      LOG_NORMAL() << "Evaluating GENIE systematics." << std::endl;
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
@@ -1589,6 +1636,8 @@ namespace Main {
 
     if (_import_genie_systs) {
 
+      LOG_NORMAL() << "Importing GENIE systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_poly_muangle_mumom");
       frac_covariance_matrix_genie = *m;
@@ -1596,8 +1645,11 @@ namespace Main {
       unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
     }
 
-
+    //
+    // EXTRA SYST Multisim Systematics
+    //
     if (_do_extra_syst_systs) {
+      LOG_NORMAL() << "Evaluating EXTRA SYST systematics." << std::endl;
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
@@ -1624,6 +1676,8 @@ namespace Main {
 
     if (_import_extra_syst_systs) {
 
+      LOG_NORMAL() << "Importing EXTRA SYST systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_poly_muangle_mumom");
       frac_covariance_matrix_extra_syst = *m;
@@ -1632,7 +1686,11 @@ namespace Main {
     }
 
 
+    //
+    // FLUX Multisim Systematics
+    //
     if (_do_flux_systs) {
+      LOG_NORMAL() << "Evaluating FLUX systematics." << std::endl;
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
@@ -1661,6 +1719,8 @@ namespace Main {
 
     if (_import_flux_systs) {
 
+      LOG_NORMAL() << "Importing FLUX systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_poly_muangle_mumom");
       frac_covariance_matrix_flux = *m;
@@ -1669,7 +1729,11 @@ namespace Main {
     }
 
 
+    //
+    // MC STAT Multisim Systematics
+    //
     if (_do_mc_stat_systs) {
+      LOG_NORMAL() << "Evaluating MC STAT systematics." << std::endl;
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
       _xsec_bs_poly_calc.SetPOT(bnbon_pot_meas);
@@ -1696,6 +1760,8 @@ namespace Main {
 
     if (_import_mc_stat_systs) {
 
+      LOG_NORMAL() << "Importing MC STAT systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_mc_stat.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_mc_stat_poly_muangle_mumom");
       frac_covariance_matrix_mc_stat = *m;
@@ -1705,6 +1771,8 @@ namespace Main {
 
 
     if (_import_detector_systs) {
+
+      LOG_NORMAL() << "Importing DETECTOR systematics." << std::endl;
 
       TFile* cov_file = TFile::Open("covariance_detector.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_poly_detector_muangle_mumom");
@@ -1716,6 +1784,8 @@ namespace Main {
 
     if (_import_cosmic_systs) {
 
+      LOG_NORMAL() << "Importing COSMIC systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_poly_cosmic_muangle_mumom");
       frac_covariance_matrix_cosmic = *m;
@@ -1726,8 +1796,10 @@ namespace Main {
 
     if (_import_dirt_systs) {
 
+      LOG_NORMAL() << "Importing DIRT systematics." << std::endl;
+
       TFile* cov_file = TFile::Open("covariance_dirt.root", "READ");
-      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_syst_poly_muangle_mumom");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_poly_dirt_muangle_mumom");
       frac_covariance_matrix_dirt = *m;
 
       unc_plotter.AddFracCovarianceMatrix("DIRT BKG", frac_covariance_matrix_dirt);
@@ -1745,6 +1817,7 @@ namespace Main {
     //
     // Double diff cross section (polybin)
     //
+    LOG_NORMAL() << "Now extracting double differential cross section." << std::endl;
     
     MigrationMatrix4DPoly migrationmatrix4dpoly;
     migrationmatrix4dpoly.SetRecoPerTrueHistos(_event_histo_mc->h_poly_reco_per_true);

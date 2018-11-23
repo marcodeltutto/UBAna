@@ -8,7 +8,7 @@ from ROOT import Main
 maker = Main.Maker()
 
 
-det_syst_list = ["CV", "withDIC", "dataSCE", "squeezeResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp", "enhancedexttpcvis", "altDeadChannels", "birksrecomb", "deadSaturatedChannels", "lifetime10ms"]
+det_syst_list = ["CV", "withDIC", "dataSCE", "squeezeResp", "stretchResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp", "enhancedexttpcvis", "altDeadChannels", "birksrecomb", "deadSaturatedChannels", "lifetime10ms"]
 
 
 for systname in det_syst_list:
