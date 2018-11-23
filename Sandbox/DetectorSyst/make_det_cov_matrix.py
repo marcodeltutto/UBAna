@@ -87,6 +87,7 @@ for i in xrange(0, n_bins_poly):
 
 
 det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "stretchResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp", "enhancedexttpcvis", "lifetime10ms", "birksrecomb" ,"deadSaturatedChannels", "altDeadChannels"]
+det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "DLdown", "DTdown", "LArG4BugFix", "downPEnoise", "noiseAmpDown", "enhancedexttpcvis", "lifetime10ms", "birksrecomb" ,"deadSaturatedChannels", "altDeadChannels"]
 
 
 stat_err_perbin_mumom = [0.0041, 0.013, 0.010, 0.0048, 0.0028, 0.00067]
