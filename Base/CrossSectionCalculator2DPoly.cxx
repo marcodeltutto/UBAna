@@ -761,14 +761,18 @@ namespace Base {
     //
 
     TCanvas * c_xsec_mc = new TCanvas();
+    c_xsec_mc->SetRightMargin(0.15);
+    c_xsec_mc->SetBottomMargin(0.13);
     _h_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
     _h_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
+    _h_mc->GetZaxis()->SetTitle(zaxis_label.c_str());
     _h_mc->GetYaxis()->SetTitleOffset(0.77);
-    _h_mc->Draw("lego1");
+    _h_mc->Draw("colz");
 
-    sim->Draw();
+    // sim->Draw();
 
-    xsec_label->Draw();
+    // xsec_label->Draw();
+    PlottingTools::DrawSimulation();
 
     TString name = _folder +_prefix + "_xsec_mc";
     c_xsec_mc->SaveAs(name + ".pdf");
@@ -777,132 +781,14 @@ namespace Base {
 
 
 
-    double central_size = 0.02;
-    UBTH2Poly* h_mc_empty_bottom = (UBTH2Poly*)_h_mc->Clone("h_mc_empty_bottom");
-    UBTH2Poly* h_mc_error_low = (UBTH2Poly*)_h_mc->Clone("h_mc_error_low");
-    UBTH2Poly* h_mc_error_up = (UBTH2Poly*)_h_mc->Clone("h_mc_error_up");
-    UBTH2Poly* h_mc_central = (UBTH2Poly*)_h_mc->Clone("h_mc_central");
-
-    for (int i = 1; i < _h_mc->GetNumberOfBins()+1; i++) {
-
-      double content = _h_mc->GetBinContent(i);
-      double unc = _h_mc->GetBinError(i);
-
-      //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
-
-      if (content != 0) {
-        h_mc_empty_bottom->SetBinContent(i, content - unc);
-        h_mc_error_low->SetBinContent(i, unc);
-        h_mc_error_up->SetBinContent(i, unc);
-        h_mc_central->SetBinContent(i, central_size);
-      } else {
-        h_mc_empty_bottom->SetBinContent(i, 0.);
-        h_mc_error_low->SetBinContent(i, 0.);
-        h_mc_error_up->SetBinContent(i, 0.);
-        h_mc_central->SetBinContent(i, 0.);
-      }
-    }
-
-
-
-    h_mc_empty_bottom->SetFillColor(kWhite);
-    h_mc_empty_bottom->SetLineWidth(1);
-    h_mc_error_low->SetFillColor(29);
-    h_mc_error_low->SetLineWidth(1);
-    h_mc_central->SetFillColor(kGreen+2);
-    h_mc_central->SetLineWidth(1);
-    h_mc_error_up->SetFillColor(29);
-    h_mc_error_up->SetLineWidth(1);
-
-    THStack *hs_mc = new THStack("hs_mc", "");
-    hs_mc->Add(h_mc_empty_bottom);
-    hs_mc->Add(h_mc_error_low);
-    hs_mc->Add(h_mc_central);
-    hs_mc->Add(h_mc_error_up);
-
-    TCanvas * c_xsec_mc2 = new TCanvas();
-    //hs_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
-    //hs_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
-    //hs_mc->GetYaxis()->SetTitleOffset(0.77);
-    
-    hs_mc->Draw("lego4");
-    hs_mc->GetXaxis()->SetTitle(xaxis_label.c_str());
-    hs_mc->GetXaxis()->SetTitleOffset(1.45);
-    hs_mc->GetYaxis()->SetTitleOffset(1.45);
-    hs_mc->GetYaxis()->SetTitle(yaxis_label.c_str());
-    c_xsec_mc2->Modified();
-
-    sim->Draw();
-
-    xsec_label->Draw();
-
-    TLegend *ll = new TLegend(0.722063,0.8210526,0.9971347,0.92,NULL,"brNDC");
-    TH1D * dummymc = new TH1D("dummymc", "dummymc", 1, 0, 1);
-    dummymc->SetLineColor(kGreen+2);
-    ll->AddEntry(dummymc, "MC", "l");
-    ll->AddEntry(h_mc_error_low, "Stat. Uncertainty", "f");
-    ll->Draw();
-
-    name = _folder +_prefix + "_xsec_mc2";
-    c_xsec_mc2->SaveAs(name + ".pdf");
-    c_xsec_mc2->SaveAs(name + ".C","C");
-
-
-
-    
-    
 
     //
     // Plot the cross section for DATA
     //
 
-    // Prepare 2d hist with error bars
-    UBTH2Poly* h_data_empty_bottom = (UBTH2Poly*)_h_data->Clone("h_data_empty_bottom");
-    UBTH2Poly* h_data_error_low = (UBTH2Poly*)_h_data->Clone("h_data_error_low");
-    UBTH2Poly* h_data_error_up = (UBTH2Poly*)_h_data->Clone("h_data_error_up");
-    UBTH2Poly* h_data_central = (UBTH2Poly*)_h_data->Clone("h_data_central");
-
-    for (int i = 1; i < _h_data->GetNumberOfBins()+1; i++) {
-
-      double content = _h_data->GetBinContent(i);
-      double unc = _h_data->GetBinError(i);
-
-      //std::cout << "bin (" << i << ", " << j << "): content is " << content  << ", unc is " << unc << std::endl;
-
-      if (content != 0) {
-        h_data_empty_bottom->SetBinContent(i, content - unc);
-        h_data_error_low->SetBinContent(i, unc);
-        h_data_error_up->SetBinContent(i, unc);
-        h_data_central->SetBinContent(i, central_size);
-      } else {
-        h_data_empty_bottom->SetBinContent(i, 0.);
-        h_data_error_low->SetBinContent(i, 0.);
-        h_data_error_up->SetBinContent(i, 0.);
-        h_data_central->SetBinContent(i, 0.);
-      }
-    }
-
-    h_data_empty_bottom->GetXaxis()->SetTitle(xaxis_label.c_str());
-    h_data_empty_bottom->GetYaxis()->SetTitle(yaxis_label.c_str());
-    h_data_empty_bottom->GetZaxis()->SetTitle(zaxis_label.c_str());
-
-    h_data_empty_bottom->SetFillColor(kWhite);
-    h_data_empty_bottom->SetLineWidth(1);
-    h_data_error_low->SetFillColor(kRed-10);
-    h_data_error_low->SetLineWidth(1);
-    h_data_central->SetFillColor(kRed);
-    h_data_central->SetLineWidth(1);
-    h_data_error_up->SetFillColor(kRed-10);
-    h_data_error_up->SetLineWidth(1);
-
-    THStack *hs_data = new THStack("hs_data", "");
-    hs_data->Add(h_data_empty_bottom);
-    hs_data->Add(h_data_error_low);
-    hs_data->Add(h_data_central);
-    hs_data->Add(h_data_error_up);
-
-
     TCanvas * c_xsec_data = new TCanvas();
+    c_xsec_data->SetRightMargin(0.15);
+    c_xsec_data->SetBottomMargin(0.13);
     //h_data->SetMarkerStyle(kFullCircle);
     //h_data->SetMarkerSize(0.6);
     _h_data->SetFillColor(kGreen+2);
@@ -912,40 +798,18 @@ namespace Base {
     _h_data->GetZaxis()->SetTitle(zaxis_label.c_str());
     _h_data->GetYaxis()->SetTitleOffset(0.77);
 
-    xsec_label->Draw();
+    // xsec_label->Draw();
     prelim->Draw();
 
-    _h_data->Draw("e2");
+    _h_data->Draw("colz");
     
-
+    PlottingTools::DrawPreliminary();
+ 
     name = _folder +_prefix + "_xsec_data";
     c_xsec_data->SaveAs(name + ".pdf");
     c_xsec_data->SaveAs(name + ".C","C");
 
 
-    TCanvas * c_xsec_data2 = new TCanvas();
-
-    //hs_data->GetYaxis()->SetTitleOffset(0.77);
-    hs_data->Draw("lego4");
-    hs_data->GetXaxis()->SetTitle(xaxis_label.c_str());
-    hs_data->GetXaxis()->SetTitleOffset(1.45);
-    hs_data->GetYaxis()->SetTitleOffset(1.45);
-    hs_data->GetYaxis()->SetTitle(yaxis_label.c_str());
-    c_xsec_data2->Modified();
-
-    xsec_label->Draw();
-    prelim->Draw();
-
-    TLegend *l = new TLegend(0.722063,0.8210526,0.9971347,0.92,NULL,"brNDC");
-    TH1D * dummy = new TH1D("dummy", "dummy", 1, 0, 1);
-    dummy->SetLineColor(kRed);
-    l->AddEntry(dummy, "Data", "l");
-    l->AddEntry(h_data_error_low, "Stat. Uncertainty", "f");
-    l->Draw();
-
-    name = _folder +_prefix + "_xsec_dat2";
-    c_xsec_data2->SaveAs(name + ".pdf");
-    c_xsec_data2->SaveAs(name + ".C","C");
 
 
 
@@ -986,11 +850,8 @@ namespace Base {
     LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
     LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
 
-    // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
-    TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
-    c_test->SetBottomMargin(0.15);
-    // gStyle->SetOptStat(0);
-    c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
+    TCanvas *c_xsec_split = new TCanvas("c_xsec_split", "multipads",0,45,1006,1150);
+    c_xsec_split->Divide(horizontal_division, vertical_division, 0.02, 0.01);
 
     std::vector<int> bin_numbers;
 
@@ -1006,11 +867,12 @@ namespace Base {
 
     for (size_t i = 0; i < _xsec_mc_histos.size(); i++) {
 
-      c_test->cd(i+1);
+      c_xsec_split->cd(i+1);
 
       gPad->SetBottomMargin(0.15);
-      gPad->SetLeftMargin(0.15);
-      gPad->SetTopMargin(0.1128947);
+      gPad->SetLeftMargin(0.18);
+      gPad->SetRightMargin(0.14);
+      gPad->SetTopMargin(0.13);
 
       _xsec_mc_histos.at(i).SetTitle(costhetamu_ranges.at(i).c_str());
       _xsec_mc_histos.at(i).GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
@@ -1019,8 +881,18 @@ namespace Base {
       _xsec_mc_histos.at(i).GetYaxis()->CenterTitle();
       _xsec_mc_histos.at(i).SetLineColor(kGreen+2);
       _xsec_mc_histos.at(i).SetFillColor(29);
+
       _xsec_mc_histos.at(i).GetXaxis()->SetTitleOffset(0.92);
-      _xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(1.11);
+      _xsec_mc_histos.at(i).GetXaxis()->SetTitleSize(0.07);
+      _xsec_mc_histos.at(i).GetXaxis()->SetLabelSize(0.06);
+
+      _xsec_mc_histos.at(i).GetYaxis()->SetTitleOffset(0.90);
+      _xsec_mc_histos.at(i).GetYaxis()->SetTitleSize(0.06);
+      _xsec_mc_histos.at(i).GetYaxis()->SetLabelSize(0.06);
+
+      gStyle->SetTitleFontSize(0.07);
+      gStyle->SetTitleStyle(0);
+
       _xsec_mc_histos.at(i).Draw("E2");
       TH1D* h_main = (TH1D*) _xsec_mc_histos.at(i).Clone("h_main");
       h_main->SetLineColor(kGreen+2);
@@ -1049,7 +921,7 @@ namespace Base {
         _xsec_mc_alt_histos.at(i).SetFillColor(38);
         _xsec_mc_alt_histos.at(i).Draw("E2 same");
 
-        UBTH2Poly* h_alt_mc_xsec_main = (UBTH2Poly*) _xsec_mc_alt_histos.at(i).Clone("h_alt_mc_xsec_main");
+        TH1D* h_alt_mc_xsec_main = (TH1D*) _xsec_mc_alt_histos.at(i).Clone("h_alt_mc_xsec_main");
         h_alt_mc_xsec_main->SetLineColor(kBlue+1);
         h_alt_mc_xsec_main->SetFillColor(0); // fully transparent
         h_alt_mc_xsec_main->Draw("histo same");
@@ -1083,8 +955,8 @@ namespace Base {
     if (x_bins / 2. != floor(x_bins / 2.)) legend_pad = horizontal_division * vertical_division; // Last empty pad
     else legend_pad = 1; // First pad
 
-    c_test->cd(legend_pad);
-    TLegend *leg = new TLegend(0.15,0.44,0.82,0.670,NULL,"brNDC");
+    c_xsec_split->cd(legend_pad);
+    TLegend *leg = new TLegend(0.1275766,0.3250297,0.7966395,0.6759589,NULL,"brNDC");
     leg->SetBorderSize(0);
     // leg->SetTextAlign(22);
     leg->SetTextSize(0.08402531);
@@ -1105,9 +977,33 @@ namespace Base {
     leg->Draw();
 
 
+
+
+
+    TLatex* ub_label = new TLatex(0.154,0.73,"MicroBooNE");
+    ub_label->SetNDC();
+    ub_label->SetTextColor(kGray+2);
+    ub_label->SetTextSize(0.10);
+    ub_label->SetLineWidth(2);
+    ub_label->SetTextFont(62);
+    ub_label->Draw();
+
+    std::stringstream sstm2;
+    // sstm2 << _pot << " POT";
+    sstm2 << "  Preliminary";
+    std::string str = sstm2.str();
+
+    TLatex* ub_label2 = new TLatex(0.40,0.73, str.c_str());
+    ub_label2->SetNDC();
+    ub_label2->SetTextColor(kGray+2);
+    ub_label2->SetTextSize(0.08);
+    ub_label2->SetLineWidth(2);
+    ub_label2->Draw();
+
+
     name = _folder +_prefix + "_xsec_anglesplit";
-    c_test->SaveAs(name + ".pdf");
-    c_test->SaveAs(name + ".C","C");
+    c_xsec_split->SaveAs(name + ".pdf");
+    c_xsec_split->SaveAs(name + ".C","C");
 
 
 
@@ -1408,11 +1304,11 @@ namespace Base {
     // LOG_INFO() << "Horizontal divisions " << horizontal_division << std::endl;
     // LOG_INFO() << "Vertical divisions " << vertical_division << std::endl;
 
-    // // TCanvas *c_test = new TCanvas("c_test","multipads",900,700);
-    // TCanvas *c_test = new TCanvas("c_test", "multipads",0,45,1006,1150);
-    // c_test->SetBottomMargin(0.15);
+    // // TCanvas *c_xsec_split = new TCanvas("c_xsec_split","multipads",900,700);
+    // TCanvas *c_xsec_split = new TCanvas("c_xsec_split", "multipads",0,45,1006,1150);
+    // c_xsec_split->SetBottomMargin(0.15);
     // // gStyle->SetOptStat(0);
-    // c_test->Divide(horizontal_division, vertical_division, 0.01, 0.01);
+    // c_xsec_split->Divide(horizontal_division, vertical_division, 0.01, 0.01);
 
 
     // xsec_mc_hs.resize(h_data->GetNbinsX());
@@ -1435,7 +1331,7 @@ namespace Base {
 
     // for (size_t i = 0; i < _xsec_data_histos.size(); i++) {
 
-    //   c_test->cd(i+1);
+    //   c_xsec_split->cd(i+1);
 
     //   gPad->SetBottomMargin(0.15);
     //   gPad->SetLeftMargin(0.15);
@@ -1504,8 +1400,8 @@ namespace Base {
 
     // }
     
-    // c_test->SaveAs(save_path + ".pdf");
-    // c_test->SaveAs(save_path + ".C","C");
+    // c_xsec_split->SaveAs(save_path + ".pdf");
+    // c_xsec_split->SaveAs(save_path + ".C","C");
 
   }
 

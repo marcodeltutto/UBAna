@@ -44,11 +44,11 @@ analyser.SetBreakdownPlots(True)
 extra_unc = math.sqrt(0.02*0.02) # POT counting
 # analyser.SetExtraUncertainty(extra_unc)
 
-analyser.ImportDetectorSystematics(True)
+analyser.ImportDetectorSystematics(False)
 
 analyser.ImportCosmicSystematics(False)
 
-analyser.ImportDirtSystematics(True)
+analyser.ImportDirtSystematics(False)
 
 analyser.DoGenieSystematics(False)
 analyser.ImportGenieSystematics(False)

@@ -1689,7 +1689,7 @@ namespace Main {
     //
     // FLUX Multisim Systematics
     //
-    if (_do_flux_systs) {
+    // if (_do_flux_systs) {
       LOG_NORMAL() << "Evaluating FLUX systematics." << std::endl;
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
@@ -1715,7 +1715,7 @@ namespace Main {
       }
 
       unc_plotter.AddFracCovarianceMatrix("FLUX", frac_covariance_matrix_flux);
-    }
+    // }
 
     if (_import_flux_systs) {
 
@@ -1856,7 +1856,7 @@ namespace Main {
       xsec_calc_poly.ImportAlternativeMC(h);
     }
 
-    UBTH2Poly * xsec_muangle_mumom_poly = xsec_calc_poly.ExtractCrossSection(bkg_names, "cos(#theta_{#mu})", "p_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu}dp_{#mu}) [10^{-38} cm^{2}/GeV]");
+    UBTH2Poly * xsec_muangle_mumom_poly = xsec_calc_poly.ExtractCrossSection(bkg_names, "cos(#theta^{reco}_{#mu})", "p^{reco}_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu})dp_{#mu} [10^{-38} cm^{2}/GeV]");
     UBTH2Poly * xsec_muangle_mumom_poly_mc = xsec_calc_poly.GetMCCrossSection();
 
     std::vector<TH1D> xsec_data_histos = xsec_calc_poly.GetUnpackedDataCrossSection();
@@ -2066,7 +2066,6 @@ namespace Main {
   // *************************************
   // Plotting data and MC distribution
   // *************************************
-  LOG_CRITICAL() << "bs 1" << std::endl;
   
   TLegend* leg;
   TString name;
