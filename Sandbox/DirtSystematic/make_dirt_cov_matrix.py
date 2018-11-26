@@ -18,6 +18,8 @@ xsec_poly_muangle_mumom_cv = file_cv.Get("xsec_poly_muangle_mumom_cv")
 print "Number of muon momentum bins", xsec_mumom_cv.GetNbinsX()
 print "Number of muon angle bins", xsec_muangle_cv.GetNbinsX()
 
+cov_matrix_onebin = TH2D("cov_matrix_onebin", "", 1, 0, 1, 1, 0, 1)
+cov_matrix_onebin_frac = TH2D("cov_matrix_onebin_frac", "", 1, 0, 1, 1, 0, 1)
 
 n_bins_mumom = xsec_mumom_cv.GetNbinsX()
 n_bins_muangle = xsec_muangle_cv.GetNbinsX()
@@ -54,6 +56,9 @@ print "cv & ", xsec_onebin_cv.GetBinContent(1), " &  0.0  \\\\"
 #
 # Reset matrices to zero
 #
+
+cov_matrix_onebin.SetBinContent(1, 0)
+cov_matrix_onebin_frac.SetBinContent(1, 0)
 
 for i in xrange(0, xsec_mumom_cv.GetNbinsX()):
 	for j in xrange(0, xsec_mumom_cv.GetNbinsX()):
@@ -105,7 +110,8 @@ print "Total onebin syst err:", math.sqrt(syst_total_xsec)
 print "Total onebin syst err (relative):", math.sqrt(syst_total_xsec) / xsec_onebin_cv.GetBinContent(1) 
 
 
-
+cov_matrix_onebin.SetBinContent(1, syst_total_xsec)
+cov_matrix_onebin_frac.SetBinContent(1, syst_total_xsec / (xsec_onebin_cv.GetBinContent(1))**2 )
 
 
 
@@ -185,10 +191,12 @@ gStyle.SetPaintTextFormat("4.3f");
 
 cov_file = TFile("covariance_dirt.root", "RECREATE");
 cov_file.cd();
+cov_matrix_onebin.Write("covariance_matrix_dirt_onebin");
 cov_matrix_mumom.Write("covariance_matrix_dirt_mumom");
 cov_matrix_muangle.Write("covariance_matrix_dirt_muangle");
 cov_matrix_muangle_mumom.Write("covariance_matrix_dirt_muangle_mumom");
 cov_matrix_poly_muangle_mumom.Write("covariance_matrix_poly_dirt_muangle_mumom");
+cov_matrix_onebin_frac.Write("frac_covariance_matrix_dirt_onebin");
 cov_matrix_mumom_frac.Write("frac_covariance_matrix_dirt_mumom");
 cov_matrix_muangle_frac.Write("frac_covariance_matrix_dirt_muangle");
 cov_matrix_muangle_mumom_frac.Write("frac_covariance_matrix_dirt_muangle_mumom");
