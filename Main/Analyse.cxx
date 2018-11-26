@@ -272,13 +272,11 @@ namespace Main {
   BootstrapTH1D * temp_bs;
 
 
-  LOG_NORMAL() << "Checkpoint 1" << std::endl;
 
   mc_bnbcosmic_file->GetObject("hmap_trkmom_genie_pm1_bs", temp_map_bs);
   std::map<std::string,std::map<std::string,TH1D*>> map_bs = *temp_map_bs;
 
 
-  LOG_NORMAL() << "Checkpoint 2" << std::endl;
 
 
   // Bootstrap efficiency - GENIE pm1sigma
@@ -291,7 +289,6 @@ namespace Main {
   std::map<std::string,TH2D*>* temp_map_bs2;
   mc_bnbcosmic_file->GetObject("bs_genie_pm1_true_reco_mom", temp_map_bs2);
   std::map<std::string,TH2D*> bs_true_reco_mom_mc = *temp_map_bs2;
-  LOG_NORMAL() << "Checkpoint 7" << std::endl;
 
 
 
@@ -315,7 +312,6 @@ namespace Main {
     genie_rw_plotter.MakeBackgroundPlots(0, false, true);  
   }
 
-  LOG_NORMAL() << "Checkpoint 8" << std::endl;
 
   // Currently not used
   std::map<std::string,std::map<std::string,TH1D*>> hmap_onebin_genie_multisim_bs_mc_dirt;
@@ -403,7 +399,6 @@ namespace Main {
   } else {
     
   }
-  LOG_NORMAL() << "Checkpoint 13" << std::endl;
 
 
 
@@ -626,33 +621,31 @@ namespace Main {
       bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu", "dirt"};
     }
 
+    // Covariance matrices
+    TH2D covariance_matrix_genie;
+    TH2D covariance_matrix_extra_syst;
+    TH2D covariance_matrix_flux;
+    TH2D covariance_matrix_mc_stat;
+    TH2D covariance_matrix_detector;
+    TH2D covariance_matrix_cosmic;
+    TH2D covariance_matrix_dirt;
+
+    // Fractional covariance matrices
+    TH2D frac_covariance_matrix_genie;
+    TH2D frac_covariance_matrix_extra_syst;
+    TH2D frac_covariance_matrix_flux;
+    TH2D frac_covariance_matrix_mc_stat;
+    TH2D frac_covariance_matrix_detector;
+    TH2D frac_covariance_matrix_cosmic;
+    TH2D frac_covariance_matrix_dirt;
+
 
     std::cout << "***************" << std::endl;
     std::cout << "* Total cross section" << std::endl;
     std::cout << "***************" << std::endl;
 
 
-    //
-    // Total cross section
-    //
-
-    _xsec_calc.Reset();
-    _xsec_calc.SetVerbose(true);
-    if (_event_histo_1d_dirt) _xsec_calc.SetHistograms(_event_histo_1d_mc->hmap_onebin, _event_histo_1d_bnbon->hmap_onebin["total"], _event_histo_1d_extbnb->hmap_onebin["total"], _event_histo_1d_dirt->hmap_onebin);  
-    else                      _xsec_calc.SetHistograms(_event_histo_1d_mc->hmap_onebin, _event_histo_1d_bnbon->hmap_onebin["total"], _event_histo_1d_extbnb->hmap_onebin["total"]);
-    _xsec_calc.SetTruthHistograms(_event_histo_1d_mc->h_eff_onebin_num, _event_histo_1d_mc->h_eff_onebin_den);
-    _xsec_calc.SetTruthXSec(h_truth_xsec_mumom); // placeholder
-    _xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
-    _xsec_calc.ProcessPlots();
-    _xsec_calc.Draw();
-    _xsec_calc.Draw(bkg_names);
-    _xsec_calc.DoNotSmear(); // No smearing for total cross section
-    _xsec_calc.PrintOnFile(_prefix);
-    TH1D * xsec = _xsec_calc.ExtractCrossSection(bkg_names, "One Bin", "#LT#sigma#GT_{#phi} [10^{-38} cm^{2}]");
-
-    save_name = "xsec_onebin_" + _prefix;
-    file_out->cd();
-    xsec->Write(save_name.c_str());
+    
 
 
 
@@ -684,7 +677,24 @@ namespace Main {
         _xsec_bs_calc.SetSavePrefix("genie_multisim_onebin");
         _xsec_bs_calc.SetUpperLabel("GENIE Re-Weighting Only");
         _xsec_bs_calc.Run();
+
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_genie.root", "covariance_matrix_genie_onebin");
+        _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_genie.root", "frac_covariance_matrix_genie_onebin");
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_genie);
+        _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_genie);
       }
+      if (_import_genie_systs) {
+
+        LOG_NORMAL() << "Importing GENIE systematics." << std::endl;
+
+        TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
+        TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_onebin");
+        frac_covariance_matrix_genie = *m;
+      }
+
+      //
+      // EXTRA SYST Multisim Systematics
+      //
 
       if (_do_extra_syst_systs) {
         _xsec_bs_calc.Reset();
@@ -699,6 +709,19 @@ namespace Main {
         _xsec_bs_calc.SetSavePrefix("extra_syst_onebin");
         _xsec_bs_calc.SetUpperLabel("EXTRA SYSTS Re-Weighting Only");
         _xsec_bs_calc.Run();
+
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_extra_syst.root", "covariance_matrix_extra_syst_onebin");
+        _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_extra_syst.root", "frac_covariance_matrix_extra_syst_onebin");
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_extra_syst);
+        _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_extra_syst);
+      }
+      if (_import_extra_syst_systs) {
+
+        LOG_NORMAL() << "Importing EXTRA SYST systematics." << std::endl;
+
+        TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
+        TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_onebin");
+        frac_covariance_matrix_extra_syst = *m;
       }
 
       //
@@ -719,6 +742,19 @@ namespace Main {
         _xsec_bs_calc.SetUpperLabel("FLUX Re-Weighting Only");
         _xsec_bs_calc.SetFluxHistogramType(true, _target_flux_syst); // Also reweight the flux
         _xsec_bs_calc.Run();
+
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_flux.root", "covariance_matrix_flux_onebin");
+        _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_flux.root", "frac_covariance_matrix_flux_onebin");
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_flux);
+        _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_flux);
+      }
+      if (_import_flux_systs) {
+
+        LOG_NORMAL() << "Importing FLUX systematics." << std::endl;
+
+        TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
+        TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_onebin");
+        frac_covariance_matrix_flux = *m;
       }
 
       //
@@ -738,29 +774,92 @@ namespace Main {
         _xsec_bs_calc.SetSavePrefix("mc_stat_multisim_onebin");
         _xsec_bs_calc.SetUpperLabel("MC Stats. Re-Weighting Only");
         _xsec_bs_calc.Run();
+
+        _xsec_bs_calc.SaveCovarianceMatrix("covariance_mc_stat.root", "covariance_matrix_mc_stat_onebin");
+        _xsec_bs_calc.SaveFractionalCovarianceMatrix("covariance_mc_stat.root", "frac_covariance_matrix_mc_stat_onebin");
+        _xsec_bs_calc.GetCovarianceMatrix(covariance_matrix_mc_stat);
+        _xsec_bs_calc.GetFractionalCovarianceMatrix(frac_covariance_matrix_mc_stat);
       }
-      
+      if (_import_mc_stat_systs) {
+
+        LOG_NORMAL() << "Importing MC STAT systematics." << std::endl;
+
+        TFile* cov_file = TFile::Open("covariance_mc_stat.root", "READ");
+        TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_mc_stat_onebin");
+        frac_covariance_matrix_mc_stat = *m;
+      }
+
 
     } // _do_reweighting_plots
 
 
-    // Covariance matrices
-    TH2D covariance_matrix_genie;
-    TH2D covariance_matrix_extra_syst;
-    TH2D covariance_matrix_flux;
-    TH2D covariance_matrix_mc_stat;
-    TH2D covariance_matrix_detector;
-    TH2D covariance_matrix_cosmic;
-    TH2D covariance_matrix_dirt;
+    if (_import_detector_systs) {
 
-    // Fractional covariance matrices
-    TH2D frac_covariance_matrix_genie;
-    TH2D frac_covariance_matrix_extra_syst;
-    TH2D frac_covariance_matrix_flux;
-    TH2D frac_covariance_matrix_mc_stat;
-    TH2D frac_covariance_matrix_detector;
-    TH2D frac_covariance_matrix_cosmic;
-    TH2D frac_covariance_matrix_dirt;
+      LOG_NORMAL() << "Importing DETECTOR systematics." << std::endl;
+
+      TFile* cov_file = TFile::Open("covariance_detector.root", "READ");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_onebin");
+      frac_covariance_matrix_detector = *m;
+    }
+
+    if (_import_cosmic_systs) {
+
+      LOG_NORMAL() << "Importing COSMIC systematics." << std::endl;
+
+      TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_onebin");
+      frac_covariance_matrix_cosmic = *m;
+    }
+
+    if (_import_dirt_systs) {
+
+      LOG_NORMAL() << "Importing DIRT systematics." << std::endl;
+
+      TFile* cov_file = TFile::Open("covariance_dirt.root", "READ");
+      TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_onebin");
+      frac_covariance_matrix_dirt = *m;
+    }
+
+
+    TH2D frac_covariance_matrix_onebin = * ((TH2D*)frac_covariance_matrix_genie.Clone("frac_covariance_matrix_onebin"));
+    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_extra_syst);
+    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_flux);
+    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_mc_stat);
+    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_detector);
+    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_cosmic);
+    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_dirt);
+
+
+
+
+    //
+    // Total cross section
+    //
+
+    _xsec_calc.Reset();
+    _xsec_calc.SetVerbose(true);
+    if (_event_histo_1d_dirt) _xsec_calc.SetHistograms(_event_histo_1d_mc->hmap_onebin, _event_histo_1d_bnbon->hmap_onebin["total"], _event_histo_1d_extbnb->hmap_onebin["total"], _event_histo_1d_dirt->hmap_onebin);  
+    else                      _xsec_calc.SetHistograms(_event_histo_1d_mc->hmap_onebin, _event_histo_1d_bnbon->hmap_onebin["total"], _event_histo_1d_extbnb->hmap_onebin["total"]);
+    _xsec_calc.SetTruthHistograms(_event_histo_1d_mc->h_eff_onebin_num, _event_histo_1d_mc->h_eff_onebin_den);
+    _xsec_calc.SetTruthXSec(h_truth_xsec_mumom); // placeholder
+    _xsec_calc.SetNameAndLabel("onebin", ";One Bin; Selected Events");
+    _xsec_calc.ProcessPlots();
+    _xsec_calc.Draw();
+    _xsec_calc.Draw(bkg_names);
+    _xsec_calc.DoNotSmear(); // No smearing for total cross section
+    _xsec_calc.PrintOnFile(_prefix);
+    if (frac_covariance_matrix_onebin.GetNbinsX() > 0) {
+      _xsec_calc.SetFractionalCovarianceMatrix(frac_covariance_matrix_onebin);
+    }
+    _xsec_calc.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
+    TH1D * xsec = _xsec_calc.ExtractCrossSection(bkg_names, "One Bin", "#LT#sigma#GT_{#phi} [10^{-38} cm^{2}]");
+
+    save_name = "xsec_onebin_" + _prefix;
+    file_out->cd();
+    xsec->Write(save_name.c_str());
+
+
+    
 
     // Utility to make unc plot
     UncertaintyPlotter unc_plotter;
@@ -905,7 +1004,7 @@ namespace Main {
       }
 
       //
-      // FLUX Multisim Systematics
+      // MC Stat Multisim Systematics
       //
       if (_do_mc_stat_systs) {
         LOG_NORMAL() << "Evaluating MC STAT systematics." << std::endl;
@@ -1689,7 +1788,7 @@ namespace Main {
     //
     // FLUX Multisim Systematics
     //
-    // if (_do_flux_systs) {
+    if (_do_flux_systs) {
       LOG_NORMAL() << "Evaluating FLUX systematics." << std::endl;
       _xsec_bs_poly_calc.Reset();
       _xsec_bs_poly_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
@@ -1715,7 +1814,7 @@ namespace Main {
       }
 
       unc_plotter.AddFracCovarianceMatrix("FLUX", frac_covariance_matrix_flux);
-    // }
+    }
 
     if (_import_flux_systs) {
 
