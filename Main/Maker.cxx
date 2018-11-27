@@ -3879,15 +3879,16 @@ void Main::Maker::MakeFile()
   // TH1D * generated_percut = new TH1D("generated_percut", "generated_percut", 8, 0, 7);
   TH1D * generated_signal_percut = new TH1D("generated_signal_percut", "generated_percut", 9, 0, 9);
 
-  selected_percut->SetBinContent(1, selected_events_percut["initial"]); // + 1280310);
-  selected_percut->SetBinContent(2, selected_events_percut["beamflash"]); // + 821708);
-  selected_percut->SetBinContent(3, selected_events_percut["flash_match"]); // + 194732);
-  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"]); // + 154544);
-  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"]); // + 106802);
-  selected_percut->SetBinContent(6, selected_events_percut["quality"]); // + 76023);
-  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"]); // + 72577);
-  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"]); // + 69692);
-  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"]); // + 22657);
+  double pot_scale = 35388924/72299264;
+  selected_percut->SetBinContent(1, selected_events_percut["initial"] * pot_scale); // + 1280310);
+  selected_percut->SetBinContent(2, selected_events_percut["beamflash"] * pot_scale); // + 821708);
+  selected_percut->SetBinContent(3, selected_events_percut["flash_match"] * pot_scale); // + 194732);
+  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"] * pot_scale); // + 154544);
+  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"] * pot_scale); // + 106802);
+  selected_percut->SetBinContent(6, selected_events_percut["quality"] * pot_scale); // + 76023);
+  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"] * pot_scale); // + 72577);
+  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"] * pot_scale); // + 69692);
+  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"] * pot_scale); // + 22657);
 
   selected_signal_percut->SetBinContent(1, selected_signal_events_percut["initial"]);
   selected_signal_percut->SetBinContent(2, selected_signal_events_percut["beamflash"]);

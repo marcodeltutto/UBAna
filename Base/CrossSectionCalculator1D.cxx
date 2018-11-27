@@ -91,6 +91,8 @@ namespace Base {
     _frac_covariance_matrix = h;
     _frac_covariance_matrix_is_set = true;
 
+    LOG_INFO() << "Setting fractional covariance matrix. GetNbinsX = " << _frac_covariance_matrix.GetNbinsX() << ", content of bin 1 = " << _frac_covariance_matrix.GetBinContent(1) << std::endl;
+
     if (_covariance_matrix_is_set) {
       LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
       throw std::exception();
@@ -783,7 +785,7 @@ namespace Base {
 
     TCanvas * c;
 
-    if (_name.find("onebin") != std::string::npos) c = new TCanvas("c", "c", 0, 45, 400, 888);
+    if (_name.find("onebin") != std::string::npos) c = new TCanvas("c", "c", 0, 45, 500, 888);
     else c = new TCanvas();
 
     c->SetBottomMargin(0.15);
@@ -854,7 +856,7 @@ namespace Base {
     //
 
     if (_extra_fractional_uncertainty != 0) {
-      if (_verbose) std::cout << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
+      LOG_INFO() << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
     }
 
     TH1D * h_syst_unc = (TH1D*) _h_data->Clone("h_syst_unc");
@@ -906,7 +908,7 @@ namespace Base {
           double unc_tot = std::sqrt(unc_stat_2 + unc_syst_2 + extra_unc_2);
 
           if (i == j) {
-            if (_verbose) std::cout << "Bin " << i << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
+            LOG_INFO() << "Bin " << i << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
             h_syst_unc->SetBinError(i+1, unc_tot); 
           }
 
@@ -950,8 +952,8 @@ namespace Base {
       l->SetTextSize(0.03578947);
     }
     else if (_name.find("onebin") != std::string::npos) {
-      l = new TLegend(0.2960373,0.8042986,0.7832168,0.8642534,NULL,"brNDC");
-      l->SetTextSize(0.04298643);
+      l = new TLegend(0.25,0.7717265,0.4623288,0.8308227,NULL,"brNDC");
+      l->SetTextSize(0.035);
     } else {
       l = new TLegend(0.3825215,0.7178947,0.7363897,0.8547368,NULL,"brNDC");
       l->SetTextSize(0.03578947);
@@ -966,11 +968,11 @@ namespace Base {
       l->AddEntry(&_h_alt_mc_xsec, "GENIE Alternative (Stat. Unc.)");
     }
     if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
-      l->AddEntry(_h_data, "Measured (Stat. #oplus Syst. Unc.)", "ep");
+      l->AddEntry(_h_data, "Data (Stat. #oplus Syst. Unc.)", "ep");
       ///l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
       if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     } else {
-      l->AddEntry(_h_data, "Measured (Stat. Unc.)", "lep");
+      l->AddEntry(_h_data, "Data (Stat. Unc.)", "lep");
       if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     }
     l->Draw();

@@ -653,6 +653,8 @@ namespace Main {
     // 
     // Total cross section: Cross section reweighting
     //
+
+    bool cov_mat = false;
     
 
     if (_do_reweighting_plots) {
@@ -665,6 +667,7 @@ namespace Main {
       _xsec_bs_calc.SetFluxCorrectionWeight(_flux_correction_weight);
 
       if (_do_genie_systs) {
+        cov_mat = true;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -687,6 +690,7 @@ namespace Main {
 
         LOG_NORMAL() << "Importing GENIE systematics." << std::endl;
 
+        cov_mat = true;
         TFile* cov_file = TFile::Open("covariance_genie.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_onebin");
         frac_covariance_matrix_genie = *m;
@@ -697,6 +701,7 @@ namespace Main {
       //
 
       if (_do_extra_syst_systs) {
+        cov_mat = true;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -719,6 +724,7 @@ namespace Main {
 
         LOG_NORMAL() << "Importing EXTRA SYST systematics." << std::endl;
 
+        cov_mat = true;
         TFile* cov_file = TFile::Open("covariance_extra_syst.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_onebin");
         frac_covariance_matrix_extra_syst = *m;
@@ -729,6 +735,7 @@ namespace Main {
       //
 
       if (_do_flux_systs) {
+        cov_mat = true;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -752,6 +759,7 @@ namespace Main {
 
         LOG_NORMAL() << "Importing FLUX systematics." << std::endl;
 
+        cov_mat = true;
         TFile* cov_file = TFile::Open("covariance_flux.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_flux_onebin");
         frac_covariance_matrix_flux = *m;
@@ -762,6 +770,7 @@ namespace Main {
       //
 
       if (_do_mc_stat_systs) {
+        cov_mat = true;
         _xsec_bs_calc.Reset();
         _xsec_bs_calc.SetScaleFactors(scale_factor_mc_bnbcosmic, scale_factor_bnbon, scale_factor_extbnb, scale_factor_mc_dirt);
         _xsec_bs_calc.SetPOT(bnbon_pot_meas);
@@ -784,6 +793,7 @@ namespace Main {
 
         LOG_NORMAL() << "Importing MC STAT systematics." << std::endl;
 
+        cov_mat = true;
         TFile* cov_file = TFile::Open("covariance_mc_stat.root", "READ");
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_mc_stat_onebin");
         frac_covariance_matrix_mc_stat = *m;
@@ -797,6 +807,7 @@ namespace Main {
 
       LOG_NORMAL() << "Importing DETECTOR systematics." << std::endl;
 
+      cov_mat = true;
       TFile* cov_file = TFile::Open("covariance_detector.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_detector_onebin");
       frac_covariance_matrix_detector = *m;
@@ -806,6 +817,7 @@ namespace Main {
 
       LOG_NORMAL() << "Importing COSMIC systematics." << std::endl;
 
+      cov_mat = true;
       TFile* cov_file = TFile::Open("covariance_cosmic.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_cosmic_onebin");
       frac_covariance_matrix_cosmic = *m;
@@ -815,19 +827,57 @@ namespace Main {
 
       LOG_NORMAL() << "Importing DIRT systematics." << std::endl;
 
+      cov_mat = true;
       TFile* cov_file = TFile::Open("covariance_dirt.root", "READ");
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_dirt_onebin");
       frac_covariance_matrix_dirt = *m;
     }
 
 
-    TH2D frac_covariance_matrix_onebin = * ((TH2D*)frac_covariance_matrix_genie.Clone("frac_covariance_matrix_onebin"));
-    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_extra_syst);
-    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_flux);
-    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_mc_stat);
-    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_detector);
-    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_cosmic);
-    frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_dirt);
+    if (cov_mat) {
+      LOG_NORMAL() << " Fraction uncertainty GENIE:    " << frac_covariance_matrix_genie.GetBinContent(1) << std::endl;
+      LOG_NORMAL() << " Fraction uncertainty EXTRA:    " << frac_covariance_matrix_extra_syst.GetBinContent(1) << std::endl;
+      LOG_NORMAL() << " Fraction uncertainty FLUX:     " << frac_covariance_matrix_flux.GetBinContent(1) << std::endl;
+      LOG_NORMAL() << " Fraction uncertainty MCSTAT:   " << frac_covariance_matrix_mc_stat.GetBinContent(1) << std::endl;
+      LOG_NORMAL() << " Fraction uncertainty DETECTOR: " << frac_covariance_matrix_detector.GetBinContent(1) << std::endl;
+      LOG_NORMAL() << " Fraction uncertainty COSMIC:   " << frac_covariance_matrix_cosmic.GetBinContent(1) << std::endl;
+      LOG_NORMAL() << " Fraction uncertainty DIRT:     " << frac_covariance_matrix_dirt.GetBinContent(1) << std::endl;
+    }
+    // if (cov_mat) {
+    //   LOG_WARNING() << "Overriding errors! Change this!!!" << std::endl;
+    //   frac_covariance_matrix_genie = *(TH2D*)frac_covariance_matrix_detector.Clone("bs1");
+    //   frac_covariance_matrix_extra_syst = *(TH2D*)frac_covariance_matrix_detector.Clone("bs2");
+    //   frac_covariance_matrix_flux = *(TH2D*)frac_covariance_matrix_detector.Clone("bs3");
+    //   frac_covariance_matrix_mc_stat = *(TH2D*)frac_covariance_matrix_detector.Clone("bs4");
+    //   frac_covariance_matrix_genie.SetBinContent(1, 0.00126025);
+    //   frac_covariance_matrix_extra_syst.SetBinContent(1, 0.0002448144);
+    //   frac_covariance_matrix_flux.SetBinContent(1, 0.014884);
+    //   frac_covariance_matrix_mc_stat.SetBinContent(1, 0.0000046225);
+    //   frac_covariance_matrix_detector.SetBinContent(1, 0.0262249);
+    //   frac_covariance_matrix_cosmic.SetBinContent(1, 0.00164288);
+    //   frac_covariance_matrix_dirt.SetBinContent(1, 0.0119435);
+    //   LOG_NORMAL() << " Fraction uncertainty GENIE:    " << frac_covariance_matrix_genie.GetBinContent(1) << std::endl;
+    //   LOG_NORMAL() << " Fraction uncertainty EXTRA:    " << frac_covariance_matrix_extra_syst.GetBinContent(1) << std::endl;
+    //   LOG_NORMAL() << " Fraction uncertainty FLUX:     " << frac_covariance_matrix_flux.GetBinContent(1) << std::endl;
+    //   LOG_NORMAL() << " Fraction uncertainty MCSTAT:   " << frac_covariance_matrix_mc_stat.GetBinContent(1) << std::endl;
+    //   LOG_NORMAL() << " Fraction uncertainty DETECTOR: " << frac_covariance_matrix_detector.GetBinContent(1) << std::endl;
+    //   LOG_NORMAL() << " Fraction uncertainty COSMIC:   " << frac_covariance_matrix_cosmic.GetBinContent(1) << std::endl;
+    //   LOG_NORMAL() << " Fraction uncertainty DIRT:     " << frac_covariance_matrix_dirt.GetBinContent(1) << std::endl;
+    // }
+
+    LOG_WARNING() << "Overriding errors! Change this!!!" << std::endl;
+    // TH2D frac_covariance_matrix_onebin = * ((TH2D*)frac_covariance_matrix_genie.Clone("frac_covariance_matrix_onebin"));
+    // frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_extra_syst);
+    // frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_flux);
+    // frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_mc_stat);
+    // frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_detector);
+    // frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_cosmic);
+    // frac_covariance_matrix_onebin.Add(&frac_covariance_matrix_dirt);
+    TH2D frac_covariance_matrix_onebin ("bs", "bs", 1, 0, 1, 1, 0, 1);
+    frac_covariance_matrix_onebin.SetBinContent(1, 1, 0.056205);
+    if (cov_mat) {
+      LOG_NORMAL() << " Total Fraction uncertainty: " << frac_covariance_matrix_onebin.GetBinContent(1) << std::endl;
+    }
 
 
 
@@ -848,17 +898,25 @@ namespace Main {
     _xsec_calc.Draw(bkg_names);
     _xsec_calc.DoNotSmear(); // No smearing for total cross section
     _xsec_calc.PrintOnFile(_prefix);
-    if (frac_covariance_matrix_onebin.GetNbinsX() > 0) {
+    if (cov_mat) {
       _xsec_calc.SetFractionalCovarianceMatrix(frac_covariance_matrix_onebin);
     }
     _xsec_calc.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
-    TH1D * xsec = _xsec_calc.ExtractCrossSection(bkg_names, "One Bin", "#LT#sigma#GT_{#phi} [10^{-38} cm^{2}]");
+    if (_import_alternative_mc) {
+      TH1D* h = (TH1D*)file_alt_mc->Get("xsec_onebin_mc_cv_tune3");
+      _xsec_calc.ImportAlternativeMC(*h);
+    }
 
-    save_name = "xsec_onebin_" + _prefix;
+    TH1D * xsec_onebin = _xsec_calc.ExtractCrossSection(bkg_names, "One Bin", "#LT#sigma#GT_{#phi} [10^{-38} cm^{2}]");
+    TH1D * xsec_onebin_mc = _xsec_calc.GetMCCrossSection();
+
     file_out->cd();
-    xsec->Write(save_name.c_str());
-
-
+    save_name = "xsec_onebin_" + _prefix;
+    xsec_onebin->Write(save_name.c_str());
+    save_name = "xsec_onebin_mc_" + _prefix;
+    xsec_onebin_mc->Write(save_name.c_str());
+    save_name = "frac_covariance_matrix_onebin_" + _prefix;
+    frac_covariance_matrix_onebin.Write(save_name.c_str());
     
 
     // Utility to make unc plot
@@ -911,7 +969,7 @@ namespace Main {
           std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
 
-        unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - GENIE", frac_covariance_matrix_genie);
       }
 
       if (_import_genie_systs) {
@@ -922,7 +980,7 @@ namespace Main {
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_mumom");
         frac_covariance_matrix_genie = *m;
 
-        unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - GENIE", frac_covariance_matrix_genie);
       }
 
       if (_do_extra_syst_systs) {
@@ -945,7 +1003,7 @@ namespace Main {
           std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
         }
 
-        unc_plotter.AddFracCovarianceMatrix("EXTRA", frac_covariance_matrix_extra_syst);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
       }
 
       if (_import_extra_syst_systs) {
@@ -956,7 +1014,7 @@ namespace Main {
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_mumom");
         frac_covariance_matrix_extra_syst = *m;
 
-        unc_plotter.AddFracCovarianceMatrix("EXTRA", frac_covariance_matrix_extra_syst);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
       }
 
 
@@ -1208,7 +1266,7 @@ namespace Main {
           std::cout << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
         }
 
-        unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - GENIE", frac_covariance_matrix_genie);
       }
 
       if (_import_genie_systs) {
@@ -1219,7 +1277,7 @@ namespace Main {
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_muangle");
         frac_covariance_matrix_genie = *m;
         
-        unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - GENIE", frac_covariance_matrix_genie);
       }
 
       if (_do_extra_syst_systs) {
@@ -1242,7 +1300,7 @@ namespace Main {
           std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
         }
 
-        unc_plotter.AddFracCovarianceMatrix("EXTRA SYST", frac_covariance_matrix_extra_syst);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
       }
 
       if (_import_extra_syst_systs) {
@@ -1253,7 +1311,7 @@ namespace Main {
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_muangle");
         frac_covariance_matrix_extra_syst = *m;
         
-        unc_plotter.AddFracCovarianceMatrix("EXTRA SYST", frac_covariance_matrix_extra_syst);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
       }
 
 
@@ -1441,8 +1499,7 @@ namespace Main {
 
 
     unc_plotter.SetCrossSection(*xsec_muangle);
-    unc_plotter.MakePlot("relative_uncertainty_muangle.pdf");
-    unc_plotter.MakePlot("relative_uncertainty_muangle.C");
+    unc_plotter.MakePlot("relative_uncertainty_muangle");
 
 
 
@@ -1697,6 +1754,7 @@ namespace Main {
     std::cout << "***************" << std::endl;
 
     unc_plotter.Reset();
+    unc_plotter.SetXaxisTitle("p_{#mu}^{reco} [GeV]");
 
 
     CrossSectionBootstrapCalculator2DPoly _xsec_bs_poly_calc;
@@ -1730,7 +1788,7 @@ namespace Main {
         LOG_NORMAL() << "GENIE Multisim - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_genie.GetBinContent(i+1, i+1) << std::endl;
       }
 
-      unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
+      unc_plotter.AddFracCovarianceMatrix("XSEC - GENIE", frac_covariance_matrix_genie);
     }
 
     if (_import_genie_systs) {
@@ -1741,7 +1799,7 @@ namespace Main {
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_genie_poly_muangle_mumom");
       frac_covariance_matrix_genie = *m;
         
-      unc_plotter.AddFracCovarianceMatrix("XSEC", frac_covariance_matrix_genie);
+      unc_plotter.AddFracCovarianceMatrix("XSEC - GENIE", frac_covariance_matrix_genie);
     }
 
     //
@@ -1770,7 +1828,7 @@ namespace Main {
         std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
       }
 
-      unc_plotter.AddFracCovarianceMatrix("EXTRA SYST", frac_covariance_matrix_extra_syst);
+      unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
     }
 
     if (_import_extra_syst_systs) {
@@ -1781,7 +1839,7 @@ namespace Main {
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_poly_muangle_mumom");
       frac_covariance_matrix_extra_syst = *m;
         
-      unc_plotter.AddFracCovarianceMatrix("EXTRA SYST", frac_covariance_matrix_extra_syst);
+      unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
     }
 
 
@@ -1977,7 +2035,16 @@ namespace Main {
     for (int i = 0; i < xsec_data_histos.size(); i++) {
       save_name = "xsec_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
       xsec_data_histos.at(i).Write(save_name.c_str());
+
+      save_name = "xsec_unc_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
+      xsec_data_unc_histos.at(i).Write(save_name.c_str());
+
+      save_name = "xsec_mc_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
+      xsec_mc_histos.at(i).Write(save_name.c_str());
     }
+
+    unc_plotter.SetCrossSection(xsec_muangle_mumom_poly);
+    unc_plotter.MakePlot("relative_uncertainty_muangle_mumom");
 
   }
 

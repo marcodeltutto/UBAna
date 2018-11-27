@@ -542,7 +542,7 @@ namespace Base {
 
 
 
-    LOG_NORMAL() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+    LOG_NORMAL() << "Finished." << std::endl;
 
 	}
 }

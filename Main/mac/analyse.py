@@ -34,6 +34,8 @@ analyser.SetPrefix("cv")
 # analyser.SetPrefix("cv_tune3")
 # analyser.SetPrefix("cv_cosmicscaled_overlay")
 # analyser.SetPrefix("cv_nodirt")
+# analyser.SetPrefix("kaonup")
+# analyser.SetPrefix("kaondown")
 analyser.SetFluxCorrectionWeight(1.028)
 
 analyser.ImportAlternativeMC("xsec_file_cv_tune3.root")
@@ -42,7 +44,7 @@ analyser.SetBeamOffSubtraction(False)
 analyser.SetBreakdownPlots(True)
 
 extra_unc = math.sqrt(0.02*0.02) # POT counting
-analyser.SetExtraUncertainty(extra_unc)
+# analyser.SetExtraUncertainty(extra_unc)
 
 analyser.ImportDetectorSystematics(True)
 
