@@ -1965,10 +1965,19 @@ namespace Main {
     TH2D frac_covariance_matrix_poly_muangle_mumom = * ((TH2D*)frac_covariance_matrix_genie.Clone("frac_covariance_matrix_poly_muangle_mumom"));
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_extra_syst);
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_flux);
+    frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_mc_stat);
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_detector);
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_cosmic);
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_dirt);
 
+    LOG_CRITICAL() << "genie = " << std::sqrt(frac_covariance_matrix_genie.GetBinContent(40, 40)) << std::endl;
+    LOG_CRITICAL() << "extra = " << std::sqrt(frac_covariance_matrix_extra_syst.GetBinContent(40, 40)) << std::endl;
+    LOG_CRITICAL() << "flux = " << std::sqrt(frac_covariance_matrix_flux.GetBinContent(40, 40)) << std::endl;
+    LOG_CRITICAL() << "mcstat = " << std::sqrt(frac_covariance_matrix_mc_stat.GetBinContent(40, 40)) << std::endl;
+    LOG_CRITICAL() << "detector = " << std::sqrt(frac_covariance_matrix_detector.GetBinContent(40, 40)) << std::endl;
+    LOG_CRITICAL() << "cosmic = " << std::sqrt(frac_covariance_matrix_cosmic.GetBinContent(40, 40)) << std::endl;
+    LOG_CRITICAL() << "dirt = " << std::sqrt(frac_covariance_matrix_dirt.GetBinContent(40, 40)) << std::endl;
+    LOG_CRITICAL() << "total = " << std::sqrt(frac_covariance_matrix_poly_muangle_mumom.GetBinContent(40, 40)) << std::endl;
 
 
     //
@@ -2005,6 +2014,7 @@ namespace Main {
 
     if (frac_covariance_matrix_poly_muangle_mumom.GetNbinsX() > 1) {
       xsec_calc_poly.SetFractionalCovarianceMatrix(frac_covariance_matrix_poly_muangle_mumom);
+      xsec_calc_poly.DoChi2(); 
     }
     xsec_calc_poly.AddExtraDiagonalUncertainty(_extra_fractional_uncertainty);
 

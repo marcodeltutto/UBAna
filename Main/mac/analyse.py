@@ -11,7 +11,7 @@ analyser = Main.Analyse()
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v2_nosyst.root") # Tune 1
 analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_all.root") # Tune 1 - full stat - full syst
 
-# analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_ccqe_ccmec.root") # Tune 1 - ccqe & ccmec syst only
+analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_ccqe_ccmec.root") # Tune 1 - ccqe & ccmec syst only
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_reint.root") # Tune 1 - reinteraction syst only
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v5.root") # Tune 1 - dev - full syst
 # analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v5_kaonup.root") # Tune 1 - dev - Kaon Scaled Up
@@ -44,7 +44,7 @@ analyser.SetBeamOffSubtraction(False)
 analyser.SetBreakdownPlots(True)
 
 extra_unc = math.sqrt(0.02*0.02) # POT counting
-# analyser.SetExtraUncertainty(extra_unc)
+analyser.SetExtraUncertainty(extra_unc)
 
 analyser.ImportDetectorSystematics(True)
 

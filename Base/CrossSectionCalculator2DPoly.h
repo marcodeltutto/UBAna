@@ -49,6 +49,7 @@
 #include <TMath.h>
 #include "Math/SMatrix.h"
 #include "TMatrix.h"
+#include "TMatrixD.h"
 #include "TGraphAsymmErrors.h"
 #include "TLine.h"
 #include "Math/DistFunc.h" // for quantile
@@ -184,7 +185,13 @@ namespace Base {
     ///
     void SetNTargetMC(double n = 2.634653975573033e31) {_n_target_mc = n;}
 
+    ///
+    void DoChi2(bool option = true) {_do_chi2 = option;}
+
   private:
+
+    /// Calculates the chi2 between data and MC cross sections
+    void CalculateChi2(); 
 
     std::string _prefixbase = "[CrossSectionCalculator2DPoly] ";
     
@@ -234,6 +241,7 @@ namespace Base {
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
     bool _verbose = true;
+    bool _do_chi2 = false; ///< If true calculated the chi2 between data and MC cross section
 
     double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
 
@@ -243,9 +251,16 @@ namespace Base {
     TH2D _frac_covariance_matrix; ///< 2D Histogram representing the fractional covariance matrix (to be set externally)
     bool _frac_covariance_matrix_is_set = false; ///< Flag that remembers if the fractional covariance matrix was set for this cross section calculation (if not, no syst will be added)
 
-    TH2D *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
-    TH2D *_cov_matrix_total = NULL; ///< Total  covariance matrix
-    TH2D *_corr_matrix_total = NULL; ///< Total correlation matrix
+    TH2D *_syst_frac_cov_matrix_total = NULL; ///< Systematics fractional covariance matrix
+    TH2D *_syst_cov_matrix_total = NULL; ///< Systematics covariance matrix
+    TH2D *_syst_corr_matrix_total = NULL; ///< Systematics correlation matrix
+
+    TH2D *_stat_frac_cov_matrix_total = NULL; ///< Statistics fractional covariance matrix
+    TH2D *_stat_cov_matrix_total = NULL; ///< Statistics covariance matrix
+
+    TH2D *_tot_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    TH2D *_tot_cov_matrix_total = NULL; ///< Total covariance matrix
+    TH2D *_tot_corr_matrix_total = NULL; ///< Total correlation matrix
 
     bool _add_alt_mc_xsec = false; ///< If true draws an alternative MC cross section from ImportAlternativeMC
     UBTH2Poly* _h_alt_mc_xsec; ///< Stores an alternative MC cross section (from Tune3, or theory, in the latter has to be smeared)

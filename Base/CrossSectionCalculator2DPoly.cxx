@@ -632,7 +632,7 @@ namespace Base {
       LOG_INFO() << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
     }
 
-    UBTH2Poly * h_syst_unc = (UBTH2Poly*) h_data->Clone("h_syst_unc");
+    _h_syst_unc = (UBTH2Poly*) h_data->Clone("h_syst_unc");
 
     if (_frac_covariance_matrix_is_set) {
 
@@ -647,6 +647,13 @@ namespace Base {
 
           _covariance_matrix.SetBinContent(a+1, b+1, _frac_covariance_matrix.GetBinContent(a+1, b+1) * (h_data->GetBinContent(a+1) * h_data->GetBinContent(b+1)) );
 
+          if (a+1 == 40 && b+1 == 40) { 
+            LOG_CRITICAL() << "frac = " <<  std::sqrt(_frac_covariance_matrix.GetBinContent(a+1, b+1)) << std::endl;
+            LOG_CRITICAL() << "xsec a = " << h_data->GetBinContent(a+1) << std::endl;
+            LOG_CRITICAL() << "xsec b = " << h_data->GetBinContent(b+1) << std::endl;
+            LOG_CRITICAL() << "cov = " << std::sqrt(_covariance_matrix.GetBinContent(a+1, b+1)) << std::endl;
+          }
+
         }
       }
 
@@ -657,17 +664,27 @@ namespace Base {
     if (_covariance_matrix_is_set) {
 
       // Just to set the right bins:
-      _cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");
-      _frac_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_frac_cov_matrix_total");
-      _corr_matrix_total = (TH2D*)_covariance_matrix.Clone("_corr_matrix_total");
+      _syst_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");
+      _syst_frac_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_frac_cov_matrix_total");
+      _syst_corr_matrix_total = (TH2D*)_covariance_matrix.Clone("_corr_matrix_total");
+
+      _stat_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");
+      _stat_frac_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_frac_cov_matrix_total");
+      _stat_cov_matrix_total->Reset(); _stat_frac_cov_matrix_total->Reset();
+
+      _tot_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_cov_matrix_total");
+      _tot_frac_cov_matrix_total = (TH2D*)_covariance_matrix.Clone("_frac_cov_matrix_total");
+      _tot_corr_matrix_total = (TH2D*)_covariance_matrix.Clone("_corr_matrix_total");
+      _tot_cov_matrix_total->Reset(); _tot_frac_cov_matrix_total->Reset(); _tot_corr_matrix_total->Reset();
 
  
       for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {
 
         for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
 
-          // The statictial uncertainty squared
+          // The statistical uncertainty squared
           double unc_stat_2 = h_data->GetBinError(a+1) * h_data->GetBinError(b+1);
+          if (a != b) unc_stat_2 = 0.;
 
           // The systematic uncertainty squared
           double unc_syst_2 = _covariance_matrix.GetBinContent(a+1, b+1);
@@ -677,20 +694,43 @@ namespace Base {
 
           // The total uncertainty (quadrature sum)
           double unc_tot = std::sqrt(unc_stat_2 + unc_syst_2 + extra_unc_2);
+          double unc_tot2 = unc_stat_2 + unc_syst_2 + extra_unc_2;
 
           if (a == b) {
-            LOG_INFO() << "Bin " << a << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
-            h_syst_unc->SetBinError(a+1, unc_tot); 
+            LOG_INFO() << "Bin " << a + 1 << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
+            _h_syst_unc->SetBinError(a+1, unc_tot); 
+
+            _stat_cov_matrix_total->SetBinContent(a+1, b+1, unc_stat_2);
+            _stat_frac_cov_matrix_total->SetBinContent(a+1, b+1, unc_stat_2 / (h_data->GetBinContent(a+1) * h_data->GetBinContent(a+1)));
           }
 
           // Also construct the total syst covariance matrix
           double total_syst_unc_2 = unc_syst_2 + extra_unc_2;
 
-          _cov_matrix_total->SetBinContent(a+1, b+1, total_syst_unc_2);
+          _syst_cov_matrix_total->SetBinContent(a+1, b+1, total_syst_unc_2);
           if (h_data->GetBinContent(a+1) != 0. && h_data->GetBinContent(b+1) != 0.) {
-            _frac_cov_matrix_total->SetBinContent(a+1, b+1, (total_syst_unc_2) / (h_data->GetBinContent(a+1) * h_data->GetBinContent(b+1)));
+            _syst_frac_cov_matrix_total->SetBinContent(a+1, b+1, (total_syst_unc_2) / (h_data->GetBinContent(a+1) * h_data->GetBinContent(b+1)));
           } else {
-            _frac_cov_matrix_total->SetBinContent(a+1, b+1, 0.);
+            _syst_frac_cov_matrix_total->SetBinContent(a+1, b+1, 0.);
+          }
+
+          // Also construct the total covariance matrix
+          _tot_cov_matrix_total->SetBinContent(a+1, b+1, unc_tot2);
+          if (h_data->GetBinContent(a+1) != 0. && h_data->GetBinContent(b+1) != 0.) {
+            _tot_frac_cov_matrix_total->SetBinContent(a+1, b+1, (unc_tot2) / (h_data->GetBinContent(a+1) * h_data->GetBinContent(b+1)));
+          } else {
+            _tot_frac_cov_matrix_total->SetBinContent(a+1, b+1, 0.);
+          }
+
+          if (a+1 == 40 && b+1 == 40) { 
+            LOG_CRITICAL() << "frac syst = " <<  std::sqrt(_syst_frac_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
+            LOG_CRITICAL() << "frac stat = " <<  std::sqrt(_stat_frac_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
+            LOG_CRITICAL() << "frac tota = " <<  std::sqrt(_tot_frac_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
+            LOG_CRITICAL() << "xsec a = " << h_data->GetBinContent(a+1) << std::endl;
+            LOG_CRITICAL() << "xsec b = " << h_data->GetBinContent(b+1) << std::endl;
+            LOG_CRITICAL() << "cov syst = " << std::sqrt(_syst_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
+            LOG_CRITICAL() << "cov stat = " << std::sqrt(_stat_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
+            LOG_CRITICAL() << "cov tota = " << std::sqrt(_tot_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
           }
 
         } // j
@@ -699,10 +739,17 @@ namespace Base {
       // And also the correlation matrix
       for (int a = 0; a < _covariance_matrix.GetNbinsX(); a++) {
         for (int b = 0; b < _covariance_matrix.GetNbinsX(); b++) {
-          if (_cov_matrix_total->GetBinContent(a+1, a+1) != 0. && _cov_matrix_total->GetBinContent(b+1, b+1) != 0.) {
-            _corr_matrix_total->SetBinContent(a+1, b+1, _cov_matrix_total->GetBinContent(a+1, b+1) / (std::sqrt(_cov_matrix_total->GetBinContent(a+1, a+1)) * std::sqrt(_cov_matrix_total->GetBinContent(b+1, b+1))));
+
+          if (_syst_cov_matrix_total->GetBinContent(a+1, a+1) != 0. && _syst_cov_matrix_total->GetBinContent(b+1, b+1) != 0.) {
+            _syst_corr_matrix_total->SetBinContent(a+1, b+1, _syst_cov_matrix_total->GetBinContent(a+1, b+1) / (std::sqrt(_syst_cov_matrix_total->GetBinContent(a+1, a+1)) * std::sqrt(_syst_cov_matrix_total->GetBinContent(b+1, b+1))));
           } else {
-            _corr_matrix_total->SetBinContent(a+1, b+1, 0.);
+            _syst_corr_matrix_total->SetBinContent(a+1, b+1, 0.);
+          }
+
+          if (_tot_cov_matrix_total->GetBinContent(a+1, a+1) != 0. && _tot_cov_matrix_total->GetBinContent(b+1, b+1) != 0.) {
+            _tot_corr_matrix_total->SetBinContent(a+1, b+1, _tot_cov_matrix_total->GetBinContent(a+1, b+1) / (std::sqrt(_tot_cov_matrix_total->GetBinContent(a+1, a+1)) * std::sqrt(_tot_cov_matrix_total->GetBinContent(b+1, b+1))));
+          } else {
+            _tot_corr_matrix_total->SetBinContent(a+1, b+1, 0.);
           }
         }
       }
@@ -712,9 +759,9 @@ namespace Base {
  
     _h_data = h_data;
     _h_mc = h_mc;
-    _h_syst_unc = h_syst_unc;
 
     if (make_plots) MakeAllCrossSectionPlots(xaxis_label, yaxis_label, zaxis_label);
+    if (_do_chi2) CalculateChi2();
 
     return _h_data;
   }
@@ -1110,17 +1157,17 @@ namespace Base {
       TCanvas * cov_c = new TCanvas();
       cov_c->SetRightMargin(0.13);
       cov_c->SetFixedAspectRatio();
-      _cov_matrix_total->SetMarkerColor(kBlack);
-      _cov_matrix_total->SetMarkerSize(text_size);
-      _cov_matrix_total->GetXaxis()->CenterTitle();
-      _cov_matrix_total->GetYaxis()->CenterTitle();
-      _cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-      _cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-      _cov_matrix_total->GetXaxis()->SetTickLength(0);
-      _cov_matrix_total->GetYaxis()->SetTickLength(0);
+      _syst_cov_matrix_total->SetMarkerColor(kBlack);
+      _syst_cov_matrix_total->SetMarkerSize(text_size);
+      _syst_cov_matrix_total->GetXaxis()->CenterTitle();
+      _syst_cov_matrix_total->GetYaxis()->CenterTitle();
+      _syst_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _syst_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _syst_cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _syst_cov_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
       // _cov_matrix_total->Draw("colz text same");
-      _cov_matrix_total->Draw("colz same");
+      _syst_cov_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();
@@ -1135,19 +1182,19 @@ namespace Base {
       TCanvas * cov_frac_c = new TCanvas();
       cov_frac_c->SetRightMargin(0.13);
       cov_frac_c->SetFixedAspectRatio();
-      _frac_cov_matrix_total->SetMarkerColor(kBlack);
-      _frac_cov_matrix_total->SetMarkerSize(text_size);
-      _frac_cov_matrix_total->GetXaxis()->CenterTitle();
-      _frac_cov_matrix_total->GetYaxis()->CenterTitle();
-      _frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-      _frac_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-      _frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
-      _frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
+      _syst_frac_cov_matrix_total->SetMarkerColor(kBlack);
+      _syst_frac_cov_matrix_total->SetMarkerSize(text_size);
+      _syst_frac_cov_matrix_total->GetXaxis()->CenterTitle();
+      _syst_frac_cov_matrix_total->GetYaxis()->CenterTitle();
+      _syst_frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _syst_frac_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _syst_frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _syst_frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
       // _frac_cov_matrix_total->SetMinimum(-5);
       // _frac_cov_matrix_total->SetMaximum(5);
       h->Draw();
       // _frac_cov_matrix_total->Draw("colz text same");
-      _frac_cov_matrix_total->Draw("colz same");
+      _syst_frac_cov_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();
@@ -1162,17 +1209,17 @@ namespace Base {
       TCanvas * corr_c = new TCanvas();
       corr_c->SetRightMargin(0.13);
       corr_c->SetFixedAspectRatio();
-      _corr_matrix_total->SetMarkerColor(kBlack);
-      _corr_matrix_total->SetMarkerSize(text_size);
-      _corr_matrix_total->GetXaxis()->CenterTitle();
-      _corr_matrix_total->GetYaxis()->CenterTitle();
-      _corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-      _corr_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-      _corr_matrix_total->GetXaxis()->SetTickLength(0);
-      _corr_matrix_total->GetYaxis()->SetTickLength(0);
+      _syst_corr_matrix_total->SetMarkerColor(kBlack);
+      _syst_corr_matrix_total->SetMarkerSize(text_size);
+      _syst_corr_matrix_total->GetXaxis()->CenterTitle();
+      _syst_corr_matrix_total->GetYaxis()->CenterTitle();
+      _syst_corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _syst_corr_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _syst_corr_matrix_total->GetXaxis()->SetTickLength(0);
+      _syst_corr_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
       // _corr_matrix_total->Draw("colz text same");
-      _corr_matrix_total->Draw("colz same");
+      _syst_corr_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();
@@ -1185,10 +1232,82 @@ namespace Base {
       gStyle->SetPalette(kRainBow);
     }
 
+  }
 
+
+
+
+
+  void CrossSectionCalculator2DPoly::CalculateChi2() {
+
+    // _tot_cov_matrix_total is the total covariance matrix. 
+    // Need to invert this first.
+
+    LOG_NORMAL() << "Calculating Chi2." << std::endl;
+
+    int n_entries = _tot_cov_matrix_total->GetNbinsX();
+
+    LOG_NORMAL() << "Number of entries in covariance matrix = " << n_entries << std::endl;
+
+    TMatrix V; // Covariance matrix
+    V.Clear(); 
+    V.ResizeTo(n_entries, n_entries);
+
+    for (int a = 0; a < n_entries; a ++) {
+      for (int b = 0; b < n_entries; b ++) {
+        V[a][b] = _tot_cov_matrix_total->GetBinContent(a+1, b+1);
+        // std::cout << "a = " << a << ", b = " << b << " => " << _tot_cov_matrix_total->GetBinContent(a+1, b+1) << " => V = " << V[a][b] << std::endl;
+        // if (a!= b) V[a][b] = 0;
+      }
+    }
+
+    // std::cout << "Printing V = " << std::endl;
+    // V.Print();
+
+    TMatrix Vm1 = V.Invert();
+
+    // std::cout << "Printing Vm1 = " << std::endl;
+    // Vm1.Print();
+
+
+    // Calculate chi2
+    double chi2 = 0.;
+    for (int i = 0; i < n_entries; i++) {
+      for (int j = 0; j < n_entries; j++) {
+
+        double data_i = _h_data->GetBinContent(i+1);
+        double mc_i = _h_mc->GetBinContent(i+1);
+
+        double data_j = _h_data->GetBinContent(j+1);
+        double mc_j = _h_mc->GetBinContent(j+1);
+
+        chi2 += (data_i - mc_i) * Vm1[i][j] * (data_j - mc_j);
+      }
+    }
+
+    // Calculate chi2
+    double chi2_alt = 0.;
+    if (_import_alternative_mc) {
+      for (int i = 0; i < n_entries; i++) {
+        for (int j = 0; j < n_entries; j++) {
+
+          double data_i = _h_data->GetBinContent(i+1);
+          double mc_i = _h_alt_mc_xsec->GetBinContent(i+1);
+
+          double data_j = _h_data->GetBinContent(j+1);
+          double mc_j = _h_alt_mc_xsec->GetBinContent(j+1);
+
+          chi2_alt += (data_i - mc_i) * Vm1[i][j] * (data_j - mc_j);
+        }
+      }
+    }
+
+    LOG_NORMAL() << "(Tune 1) Chi2 is " << chi2 << std::endl;
+    if (_import_alternative_mc) LOG_NORMAL() << "(Tune 3) Chi2 is " << chi2_alt << std::endl;
 
 
   }
+
 
 
   void CrossSectionCalculator2DPoly::DrawMC(TCanvas * c, int c_number, TH1D h)
