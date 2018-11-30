@@ -2031,6 +2031,8 @@ namespace Main {
     std::vector<TH1D> xsec_data_unc_histos = xsec_calc_poly.GetUnpackedDataCrossSectionUncertainty();
     std::vector<TH1D> xsec_mc_alt_histos = xsec_calc_poly.GetUnpackedMCAlternativeCrossSection();
 
+    TH2D tot_cov_muangle_mumom = xsec_calc_poly.GetTotalCovarianceMatrix();
+
 
     file_out->cd();
     save_name = "smearing_matrix_muangle_mumom_poly_" + _prefix;
@@ -2039,8 +2041,10 @@ namespace Main {
     xsec_muangle_mumom_poly->Write(save_name.c_str());
     save_name = "xsec_poly_muangle_mumom_mc_" + _prefix;
     xsec_muangle_mumom_poly_mc->Write(save_name.c_str());
-    save_name = "covariance_matrix_poly_muangle_mumom_" + _prefix;
+    save_name = "frac_covariance_matrix_poly_muangle_mumom_" + _prefix;
     frac_covariance_matrix_poly_muangle_mumom.Write(save_name.c_str());
+    save_name = "tot_covariance_matrix_poly_muangle_mumom_" + _prefix;
+    tot_cov_muangle_mumom.Write(save_name.c_str());
   
     for (int i = 0; i < xsec_data_histos.size(); i++) {
       save_name = "xsec_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);

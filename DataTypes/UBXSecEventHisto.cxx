@@ -387,6 +387,7 @@ namespace DataTypes {
             if (y == it->second.first) {
               separator_counter++;
               h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
+              // std::cout << "h->AddBin(" << _bins_double_mucostheta[it->first] << ", " << _bins_double_mumom[it->second.first] << ", " <<  _bins_double_mucostheta[it->first+1] << ", " << _bins_double_mumom[it->second.second+1] << ")" << std::endl;
               continue;
             } else if (y == it->second.second) {
               continue;
@@ -398,6 +399,7 @@ namespace DataTypes {
             if (y == it->second.first) {
               separator_counter++;
               h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
+              // std::cout << "h->AddBin(" << _bins_double_mucostheta[it->first] << ", " << _bins_double_mumom[it->second.first] << ", " <<  _bins_double_mucostheta[it->first+1] << ", " << _bins_double_mumom[it->second.second+1] << ")" << std::endl;
               continue;
             } else if (y == it->second.second) {
               continue;
@@ -406,6 +408,7 @@ namespace DataTypes {
 
           separator_counter++;
           h->AddBin(_bins_double_mucostheta[x], _bins_double_mumom[y], _bins_double_mucostheta[x+1], _bins_double_mumom[y+1]);
+          // std::cout << "h->AddBin(" << _bins_double_mucostheta[x] << ", " << _bins_double_mumom[y] << ", " <<  _bins_double_mucostheta[x+1] << ", " << _bins_double_mumom[y+1] << ")" << std::endl;
         }
         separators.emplace_back(separator_counter);
         separator_counter = 0;

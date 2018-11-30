@@ -146,6 +146,9 @@ namespace Base {
     /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the MC alternative cross section
     std::vector<TH1D> GetUnpackedMCAlternativeCrossSection() { return _xsec_mc_alt_histos; }
 
+    /// Returns the total covariance matrix (stat + syst)
+    TH2D GetTotalCovarianceMatrix() {return *_tot_cov_matrix_total;}
+
     /// Sets the smearing matrix
     void SetSmearingMatrix(TMatrix);
  

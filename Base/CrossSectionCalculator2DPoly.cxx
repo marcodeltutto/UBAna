@@ -1270,6 +1270,16 @@ namespace Base {
     // Vm1.Print();
 
 
+    // Plot the inverse
+    TH2D * h_cov_inverse = (TH2D*) _tot_cov_matrix_total->Clone("h_cov_inverse");
+    for (int a = 0; a < n_entries; a ++) {
+      for (int b = 0; b < n_entries; b ++) {
+        h_cov_inverse->SetBinContent(a+1, b+1, Vm1[a][b]);
+      }
+    }
+
+
+
     // Calculate chi2
     double chi2 = 0.;
     for (int i = 0; i < n_entries; i++) {
@@ -1282,12 +1292,14 @@ namespace Base {
         double mc_j = _h_mc->GetBinContent(j+1);
 
         chi2 += (data_i - mc_i) * Vm1[i][j] * (data_j - mc_j);
+
+        // std::cout << "i = " << i << ", j = " << j << " => chi2 entry is " << (data_i - mc_i) * Vm1[i][j] * (data_j - mc_j) << std::endl;
       }
     }
 
     // Calculate chi2
     double chi2_alt = 0.;
-    if (_import_alternative_mc) {
+    if (_add_alt_mc_xsec) {
       for (int i = 0; i < n_entries; i++) {
         for (int j = 0; j < n_entries; j++) {
 
@@ -1303,7 +1315,7 @@ namespace Base {
     }
 
     LOG_NORMAL() << "(Tune 1) Chi2 is " << chi2 << std::endl;
-    if (_import_alternative_mc) LOG_NORMAL() << "(Tune 3) Chi2 is " << chi2_alt << std::endl;
+    if (_add_alt_mc_xsec) LOG_NORMAL() << "(Tune 3) Chi2 is " << chi2_alt << std::endl;
 
 
   }
