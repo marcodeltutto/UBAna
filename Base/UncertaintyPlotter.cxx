@@ -76,7 +76,8 @@ namespace Base {
         TH1D h = *(TH1D*)_xsec_data_histos.at(i).Clone(s);
         int counter = 1;
         for (int j = bin_numbers.at(i).front(); j <= bin_numbers.at(i).back(); j++) {
-          h.SetBinContent(counter, std::sqrt(_frac_cov_v.at(c).GetBinContent(j, j) * 100.) );
+          // if (_cov_names.at(c) == "DETECTOR") std::cout << "bin number = " << j << ", " <<  << std::endl;
+          h.SetBinContent(counter, std::sqrt(_frac_cov_v.at(c).GetBinContent(j, j)) * 100. );
           counter++;
         }
         _xsec_unc_histos.at(c).emplace_back(h);
@@ -119,7 +120,10 @@ namespace Base {
 
         _xsec_unc_histos.at(c).at(i).SetMinimum(0);
         _xsec_unc_histos.at(c).at(i).SetMaximum(40);
-
+        if (i < 5) {
+          _xsec_unc_histos.at(c).at(i).SetMinimum(0);
+          _xsec_unc_histos.at(c).at(i).SetMaximum(100);
+        }
         _xsec_unc_histos.at(c).at(i).Draw("histo same");
       }
 

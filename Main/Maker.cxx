@@ -424,7 +424,7 @@ void Main::Maker::MakeFile()
   
   // CSV file for dqdx and track lenght values
   std::ofstream _csvfile;
-  _csvfile.open ("output/dqdx_trklen.csv", std::ofstream::out | std::ofstream::trunc);
+  _csvfile.open ("./dqdx_trklen.csv", std::ofstream::out | std::ofstream::trunc);
   _csvfile << "dqdx,trklen,y" << std::endl;
 
    

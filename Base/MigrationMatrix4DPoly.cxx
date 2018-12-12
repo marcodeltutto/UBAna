@@ -53,6 +53,21 @@ namespace Base {
     _n_bins = n_bins;    
   }
 
+  void MigrationMatrix4DPoly::CheckEntries(UBTH2Poly* h, int bin_number) 
+  {
+    if (h->GetEntries() < 5) {
+      LOG_WARNING() << "Few events simulated in true bin " << bin_number << ", migration matrix will be frced to be diagonal for this bin." << std::endl;
+
+      for (int a = -9; a < h->GetNumberOfBins() + 1; a++) {
+        h->SetBinContent(a, 0.);
+        if (a == bin_number) {
+          h->SetBinContent(a, 1.);
+        }
+      }
+
+    }
+
+  }
 
   TMatrix MigrationMatrix4DPoly::CalculateMigrationMatrix() 
   {
@@ -68,6 +83,7 @@ namespace Base {
       if (_h_reco_per_true.size()) {
         // Case 1, we have set a set of UBTH2Poly per every true bin
         _reco_per_true = (UBTH2Poly*) _h_reco_per_true[m]->Clone("_reco_per_true");
+        // if (true_idx == 10) LOG_CRITICAL() << "entries = " <<_h_reco_per_true[m]->GetEntries() << ", integral = " << _h_reco_per_true[m]->Integral() << std::endl;
       } else {
         // Case 2, we have set a set a vector of lenght _n_bins (reco bins) per every true bin
         _reco_per_true = (UBTH2Poly*) _th2poly_template->Clone("_reco_per_true");
@@ -77,6 +93,8 @@ namespace Base {
         _reco_per_true->SetBinContent(-2, _v_reco_per_true[m][0]); // Set overflows to bin number -2 (just convention)
       }
 
+      // Put diagonal only if small events in this true bin
+      CheckEntries(_reco_per_true, m);
 
       // Normalize to get a probability
       _reco_per_true->Scale(1./_reco_per_true->Integral());
@@ -88,7 +106,7 @@ namespace Base {
 
       // Set values to matrix
       TCanvas *c = new TCanvas();
-       _reco_per_true->Draw("colz text");
+      _reco_per_true->Draw("colz text");
       for (int i = 0; i < _n_bins; i++) {
 
         double value = _reco_per_true->GetBinContent(i+1);

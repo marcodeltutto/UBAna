@@ -1318,6 +1318,69 @@ namespace Base {
     if (_add_alt_mc_xsec) LOG_NORMAL() << "(Tune 3) Chi2 is " << chi2_alt << std::endl;
 
 
+
+    // Get cov matrix for Tune1 and Tune3 MCs
+    if (_add_alt_mc_xsec) {
+      TMatrix V_tune1; // Covariance matrix
+      V_tune1.Clear(); 
+      V_tune1.ResizeTo(n_entries, n_entries);
+
+      TMatrix V_tune3; // Covariance matrix
+      V_tune3.Clear(); 
+      V_tune3.ResizeTo(n_entries, n_entries);
+
+      for (int a = 0; a < n_entries; a ++) {
+        for (int b = 0; b < n_entries; b ++) {
+          V_tune1[a][b] = _tot_frac_cov_matrix_total->GetBinContent(a+1, b+1) * _h_mc->GetBinContent(a+1) * _h_mc->GetBinContent(b+1);
+          V_tune3[a][b] = _tot_frac_cov_matrix_total->GetBinContent(a+1, b+1) * _h_alt_mc_xsec->GetBinContent(a+1) * _h_alt_mc_xsec->GetBinContent(b+1);
+        }
+      }
+
+      // std::cout << "Printing V = " << std::endl;
+      // V.Print();
+  
+      TMatrix V_tune1_m1 = V_tune1.Invert();
+      TMatrix V_tune3_m1 = V_tune3.Invert();
+
+
+      // Calculate DeltaT_H0 
+      double DeltaT_H0 = 0.;
+      for (int i = 0; i < n_entries; i++) {
+        for (int j = 0; j < n_entries; j++) {
+
+          double tune1_i = _h_mc->GetBinContent(i+1);
+          double tune3_i = _h_alt_mc_xsec->GetBinContent(i+1);
+
+          double tune1_j = _h_mc->GetBinContent(j+1);
+          double tune3_j = _h_alt_mc_xsec->GetBinContent(j+1);
+
+          DeltaT_H0 += (tune3_i - tune1_i) * V_tune3_m1[i][j] * (tune3_j - tune1_j);
+        }
+      }
+
+      // Calculate DeltaT_H1
+      double DeltaT_H1 = 0.;
+      for (int i = 0; i < n_entries; i++) {
+        for (int j = 0; j < n_entries; j++) {
+
+          double tune1_i = _h_mc->GetBinContent(i+1);
+          double tune3_i = _h_alt_mc_xsec->GetBinContent(i+1);
+
+          double tune1_j = _h_mc->GetBinContent(j+1);
+          double tune3_j = _h_alt_mc_xsec->GetBinContent(j+1);
+
+          DeltaT_H1 += (tune1_i - tune3_i) * V_tune1_m1[i][j] * (tune1_j - tune3_j);
+        }
+      }
+
+      LOG_NORMAL() << "DeltaT_H0 is " << DeltaT_H0 << ", 2*sqrt is " << 2*std::sqrt(DeltaT_H0) << std::endl;
+      LOG_NORMAL() << "DeltaT_H1 is " << DeltaT_H1 << ", 2*sqrt is " << 2*std::sqrt(DeltaT_H1) << std::endl;
+
+    }
+
+    
+
+
   }
 
 
