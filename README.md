@@ -3,7 +3,13 @@
 Based on https://github.com/drinkingkazu/LiteFMWK.
 
 
-## How to use it?
+## How to use it
+Clone the repository:
+```
+git clone https://github.com/marcodeltutto/UBAna.git
+cd UBAna
+```
+
 Just try:
 ```
 source setup.sh
@@ -13,15 +19,21 @@ You need to have `ROOT6` (if not, you get an error message from `setup.sh`).
 There's a support to detect `numpy` and provide a few handy compiler directives as well. Although `numpy` is not required to run the basic functionalities of this code.
 This software is compatible with both macOS and linux operative systems.
 
-## How to run the CCInclusive analysis?
+To build:
+```
+make
+```
+Then you are good to go. In a new session, just source the setup script.
+
+## How to run the CCInclusive analysis
 
 The code is logically divided into two parts:
 * the `Maker`, that loops over the events in the ubxsec file, and makes all the necessary histograms needed for the analysis. The `Maker` needs to be run over MC, and data files.
 * the `Analyser`, that takes the files produced by the `Maker` as input , produces all the relevant plots, and extracts the cross section.
 
-The python script `Main/mac/run_maker.py` allows to run the `Maker` over the BNBCosmic MC file, and the EXTBNB and BNBON data files. You need to modify the Maker so that it will take as input that UBXSec files that you have produced.
+The python script `Main/mac/run_maker.py` allows to run the `Maker` over the BNBCosmic MC file, and the EXTBNB and BNBON data files. You need to modify `run_maker.py` so that it will take as input the UBXSec files that you have produced.
 
-The python script `Main/mac/analyse.py` or `Main/mac/analyse_run1.py` allows to run the `Analyser` and extract the cross section. You need to modify the script so that it will take the files produced by the `Maker` as input. You also need to set the right number of BNBON and EXTBNB triggers. To retrive the number of trigger events from a UBXSec file, you can use this script: `https://github.com/marcodeltutto/UBXSec/blob/master/Utils/countPOT.py`.
+The python script `Main/mac/analyse.py` allows to run the `Analyser` and extract the cross section. You need to modify the script so that it will take the files produced by the `Maker` as input. You also need to set the right number of BNBON and EXTBNB triggers. To retrive the number of trigger events from a UBXSec file, you can use this script: `https://github.com/marcodeltutto/UBXSec/blob/master/Utils/countPOT.py`.
 
 ## More information for developers
 
