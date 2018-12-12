@@ -51,6 +51,7 @@
 
 #include "ubana/DataTypes/UBXSecEventHisto1D.h"
 #include "ubana/DataTypes/UBXSecEventHisto.h"
+#include "ubana/DataTypes/UBXSecMiscHisto.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/DataTypes/BootstrapTH1D.h"

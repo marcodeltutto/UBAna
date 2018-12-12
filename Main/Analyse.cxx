@@ -243,22 +243,22 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_perc_used_hits_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mom_mcs_length", temp_map);
   std::map<std::string,TH1D*> hmap_mom_mcs_length_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy", temp_map);
-  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom", temp_map);
-  std::map<std::string,TH1D*> hmap_mctruth_mumom_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta", temp_map);
-  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi", temp_map);
-  std::map<std::string,TH1D*> hmap_mctruth_muphi_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
-  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
-  std::map<std::string,TH1D*> hmap_mctruth_mumom_gen_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_gen", temp_map);
-  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
-  std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_nuenergy_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_mumom_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_mucostheta_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_muphi_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_mumom_gen_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_gen", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc = *temp_map;
   TH1D* h_flsPe_wcut_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsPe_wcut");
 
   
@@ -378,22 +378,22 @@ namespace Main {
     hmap_perc_used_hits_mc_dirt = *temp_map;
     mc_dirt_file->GetObject("hmap_mom_mcs_length", temp_map);
     hmap_mom_mcs_length_mc_dirt = *temp_map;
-    mc_dirt_file->GetObject("hmap_mctruth_nuenergy", temp_map);
-    hmap_mctruth_nuenergy_mc_dirt = *temp_map;
-    mc_dirt_file->GetObject("hmap_mctruth_mumom", temp_map);
-    hmap_mctruth_mumom_mc_dirt = *temp_map;
-    mc_dirt_file->GetObject("hmap_mctruth_mucostheta", temp_map);
-    hmap_mctruth_mucostheta_mc_dirt = *temp_map;
-    mc_dirt_file->GetObject("hmap_mctruth_muphi", temp_map);
-    hmap_mctruth_muphi_mc_dirt = *temp_map;
-    mc_dirt_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
-    hmap_mctruth_nuenergy_gen_mc_dirt = *temp_map;
-    mc_dirt_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
-    hmap_mctruth_mumom_gen_mc_dirt = *temp_map;
-    mc_dirt_file->GetObject("hmap_mctruth_mucostheta_gen", temp_map);
-    hmap_mctruth_mucostheta_gen_mc_dirt = *temp_map;
-    mc_dirt_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
-    hmap_mctruth_muphi_gen_mc_dirt = *temp_map;
+    // mc_dirt_file->GetObject("hmap_mctruth_nuenergy", temp_map);
+    // hmap_mctruth_nuenergy_mc_dirt = *temp_map;
+    // mc_dirt_file->GetObject("hmap_mctruth_mumom", temp_map);
+    // hmap_mctruth_mumom_mc_dirt = *temp_map;
+    // mc_dirt_file->GetObject("hmap_mctruth_mucostheta", temp_map);
+    // hmap_mctruth_mucostheta_mc_dirt = *temp_map;
+    // mc_dirt_file->GetObject("hmap_mctruth_muphi", temp_map);
+    // hmap_mctruth_muphi_mc_dirt = *temp_map;
+    // mc_dirt_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
+    // hmap_mctruth_nuenergy_gen_mc_dirt = *temp_map;
+    // mc_dirt_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
+    // hmap_mctruth_mumom_gen_mc_dirt = *temp_map;
+    // mc_dirt_file->GetObject("hmap_mctruth_mucostheta_gen", temp_map);
+    // hmap_mctruth_mucostheta_gen_mc_dirt = *temp_map;
+    // mc_dirt_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
+    // hmap_mctruth_muphi_gen_mc_dirt = *temp_map;
     h_flsPe_wcut_dirt = (TH1D*)mc_dirt_file->Get("h_flsPe_wcut");
 
   } else {
@@ -489,6 +489,8 @@ namespace Main {
   mc_bnbcosmic_file->GetObject("UBXSecEventHisto1D", _event_histo_1d_mc);
   UBXSecEventHisto * _event_histo_mc = 0;
   mc_bnbcosmic_file->GetObject("UBXSecEventHisto", _event_histo_mc);
+  UBXSecMiscHisto * _event_histo_misc_mc = 0;
+  mc_bnbcosmic_file->GetObject("UBXSecMiscHisto", _event_histo_misc_mc);
 
   LOG_NORMAL() << "Event Histo correclty loaded from BNBCosmic file." << std::endl;
 
@@ -500,6 +502,9 @@ namespace Main {
   bnbon_file->GetObject("UBXSecEventHisto1D", _event_histo_1d_bnbon);
   UBXSecEventHisto * _event_histo_bnbon = 0;
   bnbon_file->GetObject("UBXSecEventHisto", _event_histo_bnbon);
+  UBXSecMiscHisto * _event_histo_misc_bnbon = 0;
+  bnbon_file->GetObject("UBXSecMiscHisto", _event_histo_misc_bnbon);
+
   LOG_NORMAL() << "Event Histo correclty loaded from BNBON file." << std::endl;
 
 
@@ -510,6 +515,8 @@ namespace Main {
   extbnb_file->GetObject("UBXSecEventHisto1D", _event_histo_1d_extbnb);
   UBXSecEventHisto * _event_histo_extbnb = 0;
   extbnb_file->GetObject("UBXSecEventHisto", _event_histo_extbnb);
+  UBXSecMiscHisto * _event_histo_misc_extbnb = 0;
+  extbnb_file->GetObject("UBXSecMiscHisto", _event_histo_misc_extbnb);
 
   LOG_NORMAL() << "Event Histo correclty loaded from EXTBNB file." << std::endl;
 
@@ -2921,7 +2928,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TCanvas* canvas_mctruth_nuenergy = new TCanvas();
   THStack *hs_mctruth_nuenergy = new THStack("hs_mctruth_nuenergy",";True Neutrino Energy [GeV];Selected Signal Events");
-  this->PlotMCTHStack(hs_mctruth_nuenergy, hmap_mctruth_nuenergy_mc, scale_factor_mc_bnbcosmic);
+  this->PlotMCTHStack(hs_mctruth_nuenergy, _event_histo_misc_mc->hmap_mctruth_nuenergy, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_nuenergy_sel";
   canvas_mctruth_nuenergy->SaveAs(name + ".pdf");
@@ -2929,7 +2936,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TCanvas* canvas_mctruth_mumom = new TCanvas();
   THStack *hs_mctruth_mumom = new THStack("hs_mctruth_mumom",";True Muon Momentum [GeV];Selected Signal Events");
-  this->PlotMCTHStack(hs_mctruth_mumom, hmap_mctruth_mumom_mc, scale_factor_mc_bnbcosmic);
+  this->PlotMCTHStack(hs_mctruth_mumom, _event_histo_misc_mc->hmap_mctruth_mumom, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_mumom_sel";
   canvas_mctruth_mumom->SaveAs(name + ".pdf");
@@ -2937,7 +2944,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TCanvas* canvas_mctruth_mucostheta = new TCanvas();
   THStack *hs_mctruth_mucostheta = new THStack("hs_mctruth_mucostheta",";True Muon cos(#theta);Selected Signal Events");
-  this->PlotMCTHStack(hs_mctruth_mucostheta, hmap_mctruth_mucostheta_mc, scale_factor_mc_bnbcosmic);
+  this->PlotMCTHStack(hs_mctruth_mucostheta, _event_histo_misc_mc->hmap_mctruth_mucostheta, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_mucostheta_sel";
   canvas_mctruth_mucostheta->SaveAs(name + ".pdf");
@@ -2945,7 +2952,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TCanvas* canvas_mctruth_muphi = new TCanvas();
   THStack *hs_mctruth_muphi = new THStack("hs_mctruth_muphi",";True Muon #phi;Selected Signal Events");
-  this->PlotMCTHStack(hs_mctruth_muphi, hmap_mctruth_muphi_mc, scale_factor_mc_bnbcosmic);
+  this->PlotMCTHStack(hs_mctruth_muphi, _event_histo_misc_mc->hmap_mctruth_muphi, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_muphi_sel";
   canvas_mctruth_muphi->SaveAs(name + ".pdf");
@@ -2955,7 +2962,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TCanvas* canvas_mctruth_nuenergy_gen = new TCanvas();
   THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Generated Signal Events");
-  this->PlotMCTHStack(hs_mctruth_nuenergy_gen, hmap_mctruth_nuenergy_gen_mc, scale_factor_mc_bnbcosmic);
+  this->PlotMCTHStack(hs_mctruth_nuenergy_gen, _event_histo_misc_mc->hmap_mctruth_nuenergy_gen, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_nuenergy_gen";
   canvas_mctruth_nuenergy_gen->SaveAs(name + ".pdf");
@@ -2963,7 +2970,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TCanvas* canvas_mctruth_mumom_gen = new TCanvas();
   THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Generated Signal Events");
-  this->PlotMCTHStack(hs_mctruth_mumom_gen, hmap_mctruth_mumom_gen_mc, scale_factor_mc_bnbcosmic);
+  this->PlotMCTHStack(hs_mctruth_mumom_gen, _event_histo_misc_mc->hmap_mctruth_mumom_gen, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_mumom_gen";
   canvas_mctruth_mumom_gen->SaveAs(name + ".pdf");
@@ -2971,7 +2978,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TCanvas* canvas_mctruth_mucostheta_gen = new TCanvas();
   THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Generated Signal Events");
-  this->PlotMCTHStack(hs_mctruth_mucostheta_gen, hmap_mctruth_mucostheta_gen_mc, scale_factor_mc_bnbcosmic);
+  this->PlotMCTHStack(hs_mctruth_mucostheta_gen, _event_histo_misc_mc->hmap_mctruth_mucostheta_gen, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_mucostheta_gen";
   canvas_mctruth_mucostheta_gen->SaveAs(name + ".pdf");
@@ -2979,7 +2986,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   TCanvas* canvas_mctruth_muphi_gen = new TCanvas();
   THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Generated Signal Events");
-  this->PlotMCTHStack(hs_mctruth_muphi_gen, hmap_mctruth_muphi_gen_mc, scale_factor_mc_bnbcosmic);
+  this->PlotMCTHStack(hs_mctruth_muphi_gen, _event_histo_misc_mc->hmap_mctruth_muphi_gen, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
   name = outdir + "mctruth_muphi_gen";
   canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");

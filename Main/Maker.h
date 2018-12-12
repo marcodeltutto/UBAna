@@ -52,6 +52,7 @@
 #include "ubana/DataTypes/BootstrapTH2DPoly.h"
 #include "ubana/DataTypes/UBXSecEventHisto.h"
 #include "ubana/DataTypes/UBXSecEventHisto1D.h"
+#include "ubana/DataTypes/UBXSecMiscHisto.h"
 
 #include "UBXSecEvent.h"
 #include "ubana/DataTypes/BootstrapTH1D.h"
@@ -236,8 +237,9 @@ namespace Main{
 
     void AddPolyBins(BootstrapTH2DPoly h);
 
-    UBXSecEventHisto1D * _event_histo_1d;
-    UBXSecEventHisto   * _event_histo;
+    UBXSecEventHisto1D * _event_histo_1d; ///< Contains histograms for 1D cross section
+    UBXSecEventHisto   * _event_histo; ///< Contains histograms for 2D cross section
+    UBXSecMiscHisto    * _event_histo_misc; ///< Contains all other histograms
 
 
 
