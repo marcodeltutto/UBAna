@@ -2055,6 +2055,9 @@ namespace Main {
 
       save_name = "xsec_mc_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
       xsec_mc_histos.at(i).Write(save_name.c_str());
+
+      save_name = "xsec_mc_alt_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
+      xsec_mc_alt_histos.at(i).Write(save_name.c_str());
     }
 
     unc_plotter.SetCrossSection(xsec_muangle_mumom_poly);
