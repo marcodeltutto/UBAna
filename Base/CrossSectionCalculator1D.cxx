@@ -806,7 +806,7 @@ namespace Base {
       c->SetRightMargin(0.1239669);
       c->SetBottomMargin(0.1515789);
       _h_mc->SetMinimum(0.2);
-      _h_mc->SetMaximum(1.5);
+      _h_mc->SetMaximum(1.2);
       _h_mc->GetXaxis()->SetTitle("");
       _h_mc->GetYaxis()->CenterTitle(true);
       _h_mc->GetXaxis()->SetLabelSize(0);
@@ -940,7 +940,7 @@ namespace Base {
 
     // Draw the statistic error bars
     _h_data->SetMarkerStyle(kFullCircle);
-    _h_data->SetMarkerSize(0.6);
+    _h_data->SetMarkerSize(1.2);
     _h_data->Draw("E1 X0 same");
 
 
@@ -975,7 +975,8 @@ namespace Base {
       l->AddEntry(_h_data, "Data (Stat. Unc.)", "lep");
       if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     }
-    l->Draw();
+
+    if (_name.find("onebin") == std::string::npos) l->Draw();
 
     // TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
     // prelim->SetTextColor(kGray+1);
@@ -987,8 +988,8 @@ namespace Base {
 
     if (_fake_data_mode) PlottingTools::DrawSimulation();
     else if (_overlay_mode) PlottingTools::DrawOverlay();
-    else if (_name.find("onebin") != std::string::npos) PlottingTools::DrawPreliminaryXSecCentered();
-    else PlottingTools::DrawPreliminaryXSec();
+    // else if (_name.find("onebin") != std::string::npos) PlottingTools::DrawPreliminaryXSecCentered();
+    else if (_name.find("onebin") == std::string::npos) PlottingTools::DrawPreliminaryXSec();
 
     if (_fake_data_mode) {
       TLatex* tex = new TLatex(0.5773639,0.6547368, "FAKE DATA");

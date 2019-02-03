@@ -41,7 +41,7 @@ analyser.SetFluxCorrectionWeight(1.028)
 analyser.ImportAlternativeMC("xsec_file_cv_tune3.root")
 
 analyser.SetBeamOffSubtraction(False)
-analyser.SetBreakdownPlots(True)
+analyser.SetBreakdownPlots(False)
 
 extra_unc = math.sqrt(0.02*0.02) # POT counting
 analyser.SetExtraUncertainty(extra_unc)

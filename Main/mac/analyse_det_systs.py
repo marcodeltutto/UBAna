@@ -20,6 +20,7 @@ analyser.SetEXTBNBTriggers(72299264.0)
 analyser.SetFluxCorrectionWeight(1.028)
 
 det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "stretchResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp", "enhancedexttpcvis", "lifetime10ms", "birksrecomb" ,"deadSaturatedChannels", "altDeadChannels"]
+det_syst_list = ["withDIC"]
 
 
 for systname in det_syst_list:

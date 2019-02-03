@@ -158,7 +158,7 @@ namespace Main {
     void ImportDirtSystematics(bool option, std::string file = "file.root") {_import_dirt_systs = option; _dirt_syst_file = file;}
 
     ///
-    void DrawDataMC(TCanvas *c, THStack *hs_mc, double scale_factor_mc_bnbcosmic, bool breakdown_plots, std::map<std::string,TH1D*> hmap_mc, TH1D* h_data_bnbon, double bnbon_pot_meas);
+    void DrawDataMC(TCanvas *c, THStack *hs_mc, double scale_factor_mc_bnbcosmic, bool breakdown_plots, std::map<std::string,TH1D*> hmap_mc, TH1D* h_data_bnbon, double bnbon_pot_meas, bool do_chi2 = false);
 
     ///
     void PlotMCTHStack(THStack *hs_trklen, std::map<std::string,TH1D*> themap, double scale_factor_mc_bnbcosmic);

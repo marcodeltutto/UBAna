@@ -2425,7 +2425,7 @@ void Main::Maker::MakeFile()
     // if (t->slc_muoncandidate_mom_mcs.at(scl_ll_max) > 2.5) continue;
 
     // Remove flipped tracks (truth cut)
-    if (isSignal && (t->lep_costheta * t->slc_longesttrack_theta.at(scl_ll_max) < 0) ) continue;
+    // if (isSignal && (t->lep_costheta * t->slc_longesttrack_theta.at(scl_ll_max) < 0) ) continue;
 
 
     

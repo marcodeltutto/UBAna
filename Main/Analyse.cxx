@@ -907,7 +907,7 @@ namespace Main {
       _xsec_calc.ImportAlternativeMC(*h);
     }
 
-    TH1D * xsec_onebin = _xsec_calc.ExtractCrossSection(bkg_names, "One Bin", "#LT#sigma#GT_{#phi} [10^{-38} cm^{2}]");
+    TH1D * xsec_onebin = _xsec_calc.ExtractCrossSection(bkg_names, "One Bin", "#sigma [10^{-38} cm^{2}]");
     TH1D * xsec_onebin_mc = _xsec_calc.GetMCCrossSection();
 
     file_out->cd();
@@ -1984,7 +1984,7 @@ namespace Main {
     // Double diff cross section (polybin)
     //
     LOG_NORMAL() << "Now extracting double differential cross section." << std::endl;
-    
+
     MigrationMatrix4DPoly migrationmatrix4dpoly;
     migrationmatrix4dpoly.SetRecoPerTrueHistos(_event_histo_mc->h_poly_reco_per_true);
     migrationmatrix4dpoly.SetBins(_event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetNumberOfBins());
@@ -2012,7 +2012,12 @@ namespace Main {
     xsec_calc_poly.Smear();
     xsec_calc_poly.Draw();
 
+    bool do_uncertainties = false;
     if (frac_covariance_matrix_poly_muangle_mumom.GetNbinsX() > 1) {
+      do_uncertainties = true;
+    }
+
+    if (do_uncertainties) {
       xsec_calc_poly.SetFractionalCovarianceMatrix(frac_covariance_matrix_poly_muangle_mumom);
       xsec_calc_poly.DoChi2(); 
     }
@@ -2029,9 +2034,12 @@ namespace Main {
     std::vector<TH1D> xsec_data_histos = xsec_calc_poly.GetUnpackedDataCrossSection();
     std::vector<TH1D> xsec_mc_histos = xsec_calc_poly.GetUnpackedMCCrossSection();
     std::vector<TH1D> xsec_data_unc_histos = xsec_calc_poly.GetUnpackedDataCrossSectionUncertainty();
-    std::vector<TH1D> xsec_mc_alt_histos = xsec_calc_poly.GetUnpackedMCAlternativeCrossSection();
+    std::vector<TH1D> xsec_mc_alt_histos;
+    if (_import_alternative_mc) xsec_mc_alt_histos = xsec_calc_poly.GetUnpackedMCAlternativeCrossSection();
 
-    TH2D tot_cov_muangle_mumom = xsec_calc_poly.GetTotalCovarianceMatrix();
+    TH2D tot_cov_muangle_mumom;
+    if (do_uncertainties)
+      tot_cov_muangle_mumom = xsec_calc_poly.GetTotalCovarianceMatrix();
 
 
     file_out->cd();
@@ -2051,17 +2059,20 @@ namespace Main {
       xsec_data_histos.at(i).Write(save_name.c_str());
 
       save_name = "xsec_unc_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
-      xsec_data_unc_histos.at(i).Write(save_name.c_str());
+      if (do_uncertainties) xsec_data_unc_histos.at(i).Write(save_name.c_str());
 
       save_name = "xsec_mc_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
       xsec_mc_histos.at(i).Write(save_name.c_str());
 
       save_name = "xsec_mc_alt_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
-      xsec_mc_alt_histos.at(i).Write(save_name.c_str());
+      if (_import_alternative_mc) xsec_mc_alt_histos.at(i).Write(save_name.c_str());
     }
 
-    unc_plotter.SetCrossSection(xsec_muangle_mumom_poly);
-    unc_plotter.MakePlot("relative_uncertainty_muangle_mumom");
+    
+    if (do_uncertainties) {
+      unc_plotter.SetCrossSection(xsec_muangle_mumom_poly); 
+      unc_plotter.MakePlot("relative_uncertainty_muangle_mumom");
+    }
 
   }
 
@@ -2397,7 +2408,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   // h_trkphi_total_bnbon->Scale(1.02);
   if (_fake_data_mode || _overlay_mode) h_trkphi_total_bnbon->Add(h_trkphi_total_extbnb);
   if (_beamoff_sub) this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_data, bnbon_pot_meas);
-  else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
+  else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas, true);
   
   name = outdir + "trkphi";
   canvas_trkphi->SaveAs(name + ".pdf");
@@ -3009,7 +3020,8 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
                            bool breakdown_plots, 
                            std::map<std::string,TH1D*> hmap_mc, 
                            TH1D* h_data_bnbon,
-                           double bnbon_pot_meas) 
+                           double bnbon_pot_meas,
+                           bool do_chi2) 
   {
     // Define the Canvas
     //TCanvas *c = new TCanvas("c", "canvas", 800, 800);
@@ -3030,6 +3042,12 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
       leg = PlottingTools::DrawTHStack2(hs_mc, scale_factor_mc_bnbcosmic, breakdown_plots, hmap_mc);
     }
     PlottingTools::DrawDataHisto(h_data_bnbon);
+
+    if (do_chi2) {
+      double res[100];
+      LOG_NORMAL() << "chi2: " << std::endl;
+      h_data_bnbon->Chi2Test(hmap_mc["total"],"UW NORM P",res);
+    }
 
     leg->AddEntry(hmap_mc["total"],"Stat. Unc.","f");
     if (hmap_mc["beam-off"] != NULL) {

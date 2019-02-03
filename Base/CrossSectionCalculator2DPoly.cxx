@@ -977,12 +977,15 @@ namespace Base {
       // The outer uncertainty bar
       _xsec_data_unc_histos.at(i).SetMarkerStyle(20);
       _xsec_data_unc_histos.at(i).SetMarkerSize(0.1);
+      _xsec_data_unc_histos.at(i).SetFillColor(0); // fully transparent
       _xsec_data_unc_histos.at(i).Draw("E1 X0 same");
 
       // The proper data points
       _xsec_data_histos.at(i).SetMarkerStyle(20);
       _xsec_data_histos.at(i).SetMarkerSize(0.5);
+      _xsec_data_histos.at(i).SetFillColor(0); // fully transparent
       _xsec_data_histos.at(i).Draw("E1 X0 same");
+      // _xsec_data_histos.at(i).Draw("histo same");
 
       // if (i == 0) {
       //   TLegend *l;
@@ -1013,11 +1016,13 @@ namespace Base {
     leg->SetFillColor(0);
     leg->SetFillStyle(0);
     leg->AddEntry(&_xsec_mc_histos.at(0), "GENIE Default + Emp. MEC (Stat. Unc.)");
+    // leg->AddEntry(&_xsec_mc_histos.at(0), "Tune 1 (Stat. Unc.)");
     if (_add_alt_mc_xsec) {
       leg->AddEntry(&_xsec_mc_alt_histos.at(0), "GENIE Alternative (Stat. Unc.)");
     }
     if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
       leg->AddEntry(&_xsec_data_histos.at(0), "Measured (Stat. #oplus Syst. Unc.)", "ep");
+      // leg->AddEntry(&_xsec_data_histos.at(0), "Tune 1 (No Flipped Tracks) (Stat #oplus Syst.)", "ep");
     } else {
       leg->AddEntry(&_xsec_data_histos.at(0), "Measured (Stat. Unc.)", "ep");
     }
@@ -1038,6 +1043,7 @@ namespace Base {
     std::stringstream sstm2;
     // sstm2 << _pot << " POT";
     sstm2 << "  Preliminary";
+    // sstm2 << "  Internal";
     std::string str = sstm2.str();
 
     TLatex* ub_label2 = new TLatex(0.40,0.73, str.c_str());
@@ -1338,48 +1344,52 @@ namespace Base {
 
       // std::cout << "Printing V = " << std::endl;
       // V.Print();
+
+      if (_add_alt_mc_xsec) {
   
-      TMatrix V_tune1_m1 = V_tune1.Invert();
-      TMatrix V_tune3_m1 = V_tune3.Invert();
+        TMatrix V_tune1_m1 = V_tune1.Invert();
+        TMatrix V_tune3_m1 = V_tune3.Invert();
 
 
-      // Calculate DeltaT_H0 
-      double DeltaT_H0 = 0.;
-      for (int i = 0; i < n_entries; i++) {
-        for (int j = 0; j < n_entries; j++) {
+        // Calculate DeltaT_H0 
+        double DeltaT_H0 = 0.;
+        for (int i = 0; i < n_entries; i++) {
+          for (int j = 0; j < n_entries; j++) {
 
-          double tune1_i = _h_mc->GetBinContent(i+1);
-          double tune3_i = _h_alt_mc_xsec->GetBinContent(i+1);
+            double tune1_i = _h_mc->GetBinContent(i+1);
+            double tune3_i = _h_alt_mc_xsec->GetBinContent(i+1);
 
-          double tune1_j = _h_mc->GetBinContent(j+1);
-          double tune3_j = _h_alt_mc_xsec->GetBinContent(j+1);
+            double tune1_j = _h_mc->GetBinContent(j+1);
+            double tune3_j = _h_alt_mc_xsec->GetBinContent(j+1);
 
-          DeltaT_H0 += (tune3_i - tune1_i) * V_tune3_m1[i][j] * (tune3_j - tune1_j);
+            DeltaT_H0 += (tune3_i - tune1_i) * V_tune3_m1[i][j] * (tune3_j - tune1_j);
+          }
         }
-      }
 
-      // Calculate DeltaT_H1
-      double DeltaT_H1 = 0.;
-      for (int i = 0; i < n_entries; i++) {
-        for (int j = 0; j < n_entries; j++) {
+        // Calculate DeltaT_H1
+        double DeltaT_H1 = 0.;
+        for (int i = 0; i < n_entries; i++) {
+          for (int j = 0; j < n_entries; j++) {
 
-          double tune1_i = _h_mc->GetBinContent(i+1);
-          double tune3_i = _h_alt_mc_xsec->GetBinContent(i+1);
+            double tune1_i = _h_mc->GetBinContent(i+1);
+            double tune3_i = _h_alt_mc_xsec->GetBinContent(i+1);
 
-          double tune1_j = _h_mc->GetBinContent(j+1);
-          double tune3_j = _h_alt_mc_xsec->GetBinContent(j+1);
+            double tune1_j = _h_mc->GetBinContent(j+1);
+            double tune3_j = _h_alt_mc_xsec->GetBinContent(j+1);
 
-          DeltaT_H1 += (tune1_i - tune3_i) * V_tune1_m1[i][j] * (tune1_j - tune3_j);
+            DeltaT_H1 += (tune1_i - tune3_i) * V_tune1_m1[i][j] * (tune1_j - tune3_j);
+          }
         }
-      }
 
-      LOG_NORMAL() << "DeltaT_H0 is " << DeltaT_H0 << ", 2*sqrt is " << 2*std::sqrt(DeltaT_H0) << std::endl;
-      LOG_NORMAL() << "DeltaT_H1 is " << DeltaT_H1 << ", 2*sqrt is " << 2*std::sqrt(DeltaT_H1) << std::endl;
+        LOG_NORMAL() << "DeltaT_H0 is " << DeltaT_H0 << ", 2*sqrt is " << 2*std::sqrt(DeltaT_H0) << std::endl;
+        LOG_NORMAL() << "DeltaT_H1 is " << DeltaT_H1 << ", 2*sqrt is " << 2*std::sqrt(DeltaT_H1) << std::endl;
+
+      }
 
     }
 
     
-
+    LOG_NORMAL() << "Chi2 calculation done." << std::endl;
 
   }
 
