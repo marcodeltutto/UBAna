@@ -260,6 +260,19 @@ namespace Base {
     TString name = _folder + "_flux";
     c_flux->SaveAs(name + ".pdf");
     c_flux->SaveAs(name + ".C","C");
+
+
+    // Save on latex file too
+    std::ofstream flux_latex;
+    flux_latex.open (_folder + "_flux.tex", std::ofstream::out | std::ofstream::trunc);
+    for (int i = 0; i < 34; i++) {
+      flux_latex << "$[" << h_flux_numu->GetBinLowEdge(i+1) << ", " << h_flux_numu->GetBinLowEdge(i+1) + h_flux_numu->GetBinWidth(i+1) << ")$ & " << h_flux_numu->GetBinContent(i+1) 
+      << " & $[" << h_flux_numu->GetBinLowEdge(i+1+34) << ", " << h_flux_numu->GetBinLowEdge(i+1+34) + h_flux_numu->GetBinWidth(i+1+34) << ")$ & " << h_flux_numu->GetBinContent(i+1+34) 
+      << " & $[" << h_flux_numu->GetBinLowEdge(i+1+34*2) << ", " << h_flux_numu->GetBinLowEdge(i+1+34*2) + h_flux_numu->GetBinWidth(i+1+34*2) << ")$ & " << h_flux_numu->GetBinContent(i+1+34*2)
+      << " & $[" << h_flux_numu->GetBinLowEdge(i+1+34*3) << ", " << h_flux_numu->GetBinLowEdge(i+1+34*3) + h_flux_numu->GetBinWidth(i+1+34*3) << ")$ & " << h_flux_numu->GetBinContent(i+1+34*3) << "\\\\" << std::endl;
+    }
+    flux_latex.close();
+
     
     _flux = h_flux_numu->Integral();
 
@@ -1163,17 +1176,17 @@ namespace Base {
       TCanvas * cov_c = new TCanvas();
       cov_c->SetRightMargin(0.13);
       cov_c->SetFixedAspectRatio();
-      _syst_cov_matrix_total->SetMarkerColor(kBlack);
-      _syst_cov_matrix_total->SetMarkerSize(text_size);
-      _syst_cov_matrix_total->GetXaxis()->CenterTitle();
-      _syst_cov_matrix_total->GetYaxis()->CenterTitle();
-      _syst_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-      _syst_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-      _syst_cov_matrix_total->GetXaxis()->SetTickLength(0);
-      _syst_cov_matrix_total->GetYaxis()->SetTickLength(0);
+      _tot_cov_matrix_total->SetMarkerColor(kBlack);
+      _tot_cov_matrix_total->SetMarkerSize(text_size);
+      _tot_cov_matrix_total->GetXaxis()->CenterTitle();
+      _tot_cov_matrix_total->GetYaxis()->CenterTitle();
+      _tot_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _tot_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _tot_cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _tot_cov_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
       // _cov_matrix_total->Draw("colz text same");
-      _syst_cov_matrix_total->Draw("colz same");
+      _tot_cov_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();
@@ -1188,19 +1201,21 @@ namespace Base {
       TCanvas * cov_frac_c = new TCanvas();
       cov_frac_c->SetRightMargin(0.13);
       cov_frac_c->SetFixedAspectRatio();
-      _syst_frac_cov_matrix_total->SetMarkerColor(kBlack);
-      _syst_frac_cov_matrix_total->SetMarkerSize(text_size);
-      _syst_frac_cov_matrix_total->GetXaxis()->CenterTitle();
-      _syst_frac_cov_matrix_total->GetYaxis()->CenterTitle();
-      _syst_frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-      _syst_frac_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-      _syst_frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
-      _syst_frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
+      _tot_frac_cov_matrix_total->SetMarkerColor(kBlack);
+      _tot_frac_cov_matrix_total->SetMarkerSize(text_size);
+      _tot_frac_cov_matrix_total->GetXaxis()->CenterTitle();
+      _tot_frac_cov_matrix_total->GetYaxis()->CenterTitle();
+      _tot_frac_cov_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _tot_frac_cov_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _tot_frac_cov_matrix_total->GetXaxis()->SetTickLength(0);
+      _tot_frac_cov_matrix_total->GetYaxis()->SetTickLength(0);
+      // _tot_frac_cov_matrix_total->SetBinContent(10, 10, 10);
       // _frac_cov_matrix_total->SetMinimum(-5);
       // _frac_cov_matrix_total->SetMaximum(5);
+      gPad->SetLogz(1);
       h->Draw();
       // _frac_cov_matrix_total->Draw("colz text same");
-      _syst_frac_cov_matrix_total->Draw("colz same");
+      _tot_frac_cov_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();
@@ -1210,22 +1225,23 @@ namespace Base {
       cov_frac_c->SaveAs(name + ".pdf");
       cov_frac_c->SaveAs(name + ".C","C");
 
+      gPad->SetLogz(0);
 
 
       TCanvas * corr_c = new TCanvas();
       corr_c->SetRightMargin(0.13);
       corr_c->SetFixedAspectRatio();
-      _syst_corr_matrix_total->SetMarkerColor(kBlack);
-      _syst_corr_matrix_total->SetMarkerSize(text_size);
-      _syst_corr_matrix_total->GetXaxis()->CenterTitle();
-      _syst_corr_matrix_total->GetYaxis()->CenterTitle();
-      _syst_corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
-      _syst_corr_matrix_total->GetYaxis()->SetTitle("Bin m,n");
-      _syst_corr_matrix_total->GetXaxis()->SetTickLength(0);
-      _syst_corr_matrix_total->GetYaxis()->SetTickLength(0);
+      _tot_corr_matrix_total->SetMarkerColor(kBlack);
+      _tot_corr_matrix_total->SetMarkerSize(text_size);
+      _tot_corr_matrix_total->GetXaxis()->CenterTitle();
+      _tot_corr_matrix_total->GetYaxis()->CenterTitle();
+      _tot_corr_matrix_total->GetXaxis()->SetTitle("Bin i,j");
+      _tot_corr_matrix_total->GetYaxis()->SetTitle("Bin m,n");
+      _tot_corr_matrix_total->GetXaxis()->SetTickLength(0);
+      _tot_corr_matrix_total->GetYaxis()->SetTickLength(0);
       h->Draw();
       // _corr_matrix_total->Draw("colz text same");
-      _syst_corr_matrix_total->Draw("colz same");
+      _tot_corr_matrix_total->Draw("colz same");
 
       for (auto l : lines)
         l->Draw();
@@ -1810,6 +1826,70 @@ namespace Base {
 
     return pot_latex_2;
   
+  }
+
+  void CrossSectionCalculator2DPoly::SaveToLatexFile() {
+    // Save on latex file too
+    std::ofstream file_latex;
+    file_latex.open (_folder + "xsec.tex", std::ofstream::out | std::ofstream::trunc);
+    for (int i = 0; i < _h_data->GetNumberOfBins(); i++) {
+      file_latex << _h_data->GetBinContent(i+1) << " & " << std::sqrt(_tot_cov_matrix_total->GetBinContent(i+1, i+1)) << "\\\\" << std::endl;
+    }
+
+    file_latex << std::endl;
+
+    file_latex << "\\begin{equation}" << std::endl;
+    file_latex << "E_{ij} =" << std::endl;
+    file_latex << "\\begin{bmatrix}" << std::endl;
+
+    for (int i = 0; i < _h_data->GetNumberOfBins(); i++) {
+      for (int j = 0; j < _h_data->GetNumberOfBins(); j++) {
+
+        file_latex << std::setprecision(3) << std::scientific << "$" << _tot_cov_matrix_total->GetBinContent(i+1, j+1) << "$  &  ";
+
+      }
+
+      file_latex << " \\\\" << std::endl;
+    }
+
+    file_latex << "\\end{bmatrix}" << std::endl;
+    file_latex << "\\end{equation}" << std::endl << std::endl;
+
+
+    file_latex.close();
+  }
+
+  void CrossSectionCalculator2DPoly::SaveEventNumbers(std::string file_name)
+  {
+    std::ofstream f_out;
+    f_out.open(_folder+file_name, std::ios::out | std::ios::trunc);
+
+    f_out << "\\begin{table}[]" << std::endl;
+    f_out << "\\caption{My caption}" << std::endl;
+    f_out << "\\label{tab:mylabel}" << std::endl;
+    f_out << "\\centering" << std::endl;
+    f_out << "\\begin{tabular}{c|cc|ccccccc}" << std::endl;
+    f_out << "\\toprule" << std::endl;
+    f_out << "    & \\multicolumn{2}{c}{Data}    & \\multicolumn{6}{c}{MC} \\\\" << std::endl;
+    f_out << "Bin & Selected & Cosmic & $\\nu_\\mu$ CC & Cosmic  & OUTFV & DIRT & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
+    f_out << "    & Events   & Only   & Signal         & in BNB  &       &      &    &                           &                 \\\\" << std::endl;
+    f_out << "\\midrule" << std::endl;
+    for (int i = 1; i < _h_bnbon->GetNumberOfBins()+1; i++) {
+      f_out << std::setprecision(4) 
+            << i << " & "
+            << _h_bnbon->GetBinContent(i) << " $\\pm$ " << _h_bnbon->GetBinError(i) << " & " 
+            << _hmap_bnbcosmic["beam-off"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["beam-off"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["signal"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["signal"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["cosmic"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["cosmic"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["outfv"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["outfv"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["dirt"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["dirt"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["nc"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nc"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["nue"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nue"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["anumu"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["anumu"]->GetBinError(i) << " \\\\ " << std::endl;
+    }
+    f_out << "\\bottomrule" << std::endl;
+    f_out << "\\end{tabular}" << std::endl;
+    f_out << "\\end{table}" << std::endl;
   }
   
 }

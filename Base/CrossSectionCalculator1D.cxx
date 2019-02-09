@@ -799,7 +799,7 @@ namespace Base {
     _h_mc->SetFillColor(29);
 
     if (_name.find("mom") != std::string::npos) {
-      _h_mc->SetMinimum(0.);
+      _h_mc->SetMinimum(-0.05);
       _h_mc->SetMaximum(1.6);
     } else if (_name.find("onebin") != std::string::npos) {
       c->SetLeftMargin(0.2438017);
@@ -913,10 +913,10 @@ namespace Base {
           }
 
           // Also construct the total covariance matrix
-          double total_syst_unc_2 = unc_syst_2 + extra_unc_2;
+          double total_unc_2 = unc_syst_2 + extra_unc_2 + unc_stat_2;
 
-          _cov_matrix_total->SetBinContent(i+1, j+1, total_syst_unc_2);
-          _frac_cov_matrix_total->SetBinContent(i+1, j+1, (total_syst_unc_2) / (_h_data->GetBinContent(i+1) * _h_data->GetBinContent(j+1)));
+          _cov_matrix_total->SetBinContent(i+1, j+1, total_unc_2);
+          _frac_cov_matrix_total->SetBinContent(i+1, j+1, (total_unc_2) / (_h_data->GetBinContent(i+1) * _h_data->GetBinContent(j+1)));
 
         } // j
       } // i
@@ -1591,6 +1591,37 @@ namespace Base {
 
     return histo;
 
+  }
+
+  void CrossSectionCalculator1D::SaveToLatexFile() {
+    // Save on latex file too
+    std::ofstream file_latex;
+    file_latex.open (_folder + _name + ".tex", std::ofstream::out | std::ofstream::trunc);
+    for (int i = 0; i < _h_data->GetNbinsX(); i++) {
+      file_latex << _h_data->GetBinContent(i+1) << " & " << std::sqrt(_cov_matrix_total->GetBinContent(i+1, i+1)) << "\\\\" << std::endl;
+    }
+
+    file_latex << std::endl;
+
+    file_latex << "\\begin{equation}" << std::endl;
+    file_latex << "E_{ij} =" << std::endl;
+    file_latex << "\\begin{bmatrix}" << std::endl;
+
+    for (int i = 0; i < _h_data->GetNbinsX(); i++) {
+      for (int j = 0; j < _h_data->GetNbinsX(); j++) {
+
+        file_latex << std::setprecision(3) << std::scientific << "$" << _cov_matrix_total->GetBinContent(i+1, j+1) << "$  &  ";
+
+      }
+
+      file_latex << " \\\\" << std::endl;
+    }
+
+    file_latex << "\\end{bmatrix}" << std::endl;
+    file_latex << "\\end{equation}" << std::endl << std::endl;
+
+
+    file_latex.close();
   }
 
 

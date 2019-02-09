@@ -1191,25 +1191,44 @@ namespace Main {
       _xsec_calc.ImportAlternativeMC(*h);
     }
 
+    LOG_CRITICAL() << std::endl;
     TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection(bkg_names, "p_{#mu}^{reco} [GeV]", "d#sigma/dp_{#mu}^{reco} [10^{-38} cm^{2}/GeV]");
+    LOG_CRITICAL() << std::endl;
+    if (frac_covariance_matrix_mumom.GetNbinsX() > 1) _xsec_calc.SaveToLatexFile();
 
+    LOG_CRITICAL() << std::endl;
     TH1D * xsec_mumom_mc = _xsec_calc.GetMCCrossSection();
+    LOG_CRITICAL() << std::endl;
     file_out->cd();
+    LOG_CRITICAL() << std::endl;
     save_name = "smearing_matrix_mumom_" + _prefix;
+    LOG_CRITICAL() << std::endl;
     S_2d.Write(save_name.c_str());
+    LOG_CRITICAL() << std::endl;
     save_name = "xsec_mumom_" + _prefix;
+    LOG_CRITICAL() << std::endl;
     xsec_mumom->Write(save_name.c_str());
+    LOG_CRITICAL() << std::endl;
     save_name = "xsec_mumom_mc_" + _prefix;
+    LOG_CRITICAL() << std::endl;
     xsec_mumom_mc->Write(save_name.c_str());
+    LOG_CRITICAL() << std::endl;
     save_name = "frac_covariance_matrix_mumom_" + _prefix;
-    frac_covariance_matrix_mumom.Write(save_name.c_str());
+    LOG_CRITICAL() << std::endl;
+    if (frac_covariance_matrix_mumom.GetNbinsX() > 1) {
+    LOG_CRITICAL() << std::endl;
+      frac_covariance_matrix_mumom.Write(save_name.c_str());
+    LOG_CRITICAL() << std::endl;
+    }
 
 
     
 
+    LOG_CRITICAL() << std::endl;
     unc_plotter.SetCrossSection(*xsec_mumom);
     unc_plotter.MakePlot("relative_uncertainty_mumom");
 
+    LOG_CRITICAL() << std::endl;
 
 
 
@@ -1486,6 +1505,7 @@ namespace Main {
     }
     TH1D * xsec_muangle = _xsec_calc.ExtractCrossSection(bkg_names, "cos(#theta_{#mu}^{reco})", "d#sigma/dcos(#theta_{#mu}^{reco}) [10^{-38} cm^{2}]");
     TH1D * xsec_muangle_mc = _xsec_calc.GetMCCrossSection();
+    if (frac_covariance_matrix_mumom.GetNbinsX() > 1) _xsec_calc.SaveToLatexFile();
 
     file_out->cd();
     save_name = "smearing_matrix_muangle_" + _prefix;
@@ -1495,7 +1515,9 @@ namespace Main {
     save_name = "xsec_muangle_mc_" + _prefix;
     xsec_muangle_mc->Write(save_name.c_str());
     save_name = "frac_covariance_matrix_muangle_" + _prefix;
-    frac_covariance_matrix_muangle.Write(save_name.c_str());
+    if (frac_covariance_matrix_muangle.GetNbinsX() > 1) {
+      frac_covariance_matrix_muangle.Write(save_name.c_str());
+    }
 
 
     unc_plotter.SetCrossSection(*xsec_muangle);
@@ -2011,6 +2033,7 @@ namespace Main {
     xsec_calc_poly.SetSmearingMatrix(S);
     xsec_calc_poly.Smear();
     xsec_calc_poly.Draw();
+    xsec_calc_poly.SaveEventNumbers("trkcostheta_trkmumom_eventsperbin_table.tex");
 
     bool do_uncertainties = false;
     if (frac_covariance_matrix_poly_muangle_mumom.GetNbinsX() > 1) {
@@ -2041,6 +2064,7 @@ namespace Main {
     if (do_uncertainties)
       tot_cov_muangle_mumom = xsec_calc_poly.GetTotalCovarianceMatrix();
 
+    if (frac_covariance_matrix_poly_muangle_mumom.GetNbinsX() > 1) xsec_calc_poly.SaveToLatexFile();
 
     file_out->cd();
     save_name = "smearing_matrix_muangle_mumom_poly_" + _prefix;

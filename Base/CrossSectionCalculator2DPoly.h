@@ -120,6 +120,12 @@ namespace Base {
     double EstimateFlux(std::string flux_file_prefix = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_prefix = "numu/numu_CV_AV_TPC");
 
     ///
+    void SaveEventNumbers(std::string);
+
+    ///
+    void SaveToLatexFile();
+    
+    ///
     THStack * ProcessTHStack(std::map<std::string,UBTH2Poly*> themap, TLegend*, std::vector<std::string>);
 
     ///
