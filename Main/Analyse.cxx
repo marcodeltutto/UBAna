@@ -1191,44 +1191,28 @@ namespace Main {
       _xsec_calc.ImportAlternativeMC(*h);
     }
 
-    LOG_CRITICAL() << std::endl;
     TH1D * xsec_mumom = _xsec_calc.ExtractCrossSection(bkg_names, "p_{#mu}^{reco} [GeV]", "d#sigma/dp_{#mu}^{reco} [10^{-38} cm^{2}/GeV]");
-    LOG_CRITICAL() << std::endl;
     if (frac_covariance_matrix_mumom.GetNbinsX() > 1) _xsec_calc.SaveToLatexFile();
 
-    LOG_CRITICAL() << std::endl;
     TH1D * xsec_mumom_mc = _xsec_calc.GetMCCrossSection();
-    LOG_CRITICAL() << std::endl;
     file_out->cd();
-    LOG_CRITICAL() << std::endl;
     save_name = "smearing_matrix_mumom_" + _prefix;
-    LOG_CRITICAL() << std::endl;
     S_2d.Write(save_name.c_str());
-    LOG_CRITICAL() << std::endl;
     save_name = "xsec_mumom_" + _prefix;
-    LOG_CRITICAL() << std::endl;
     xsec_mumom->Write(save_name.c_str());
-    LOG_CRITICAL() << std::endl;
     save_name = "xsec_mumom_mc_" + _prefix;
-    LOG_CRITICAL() << std::endl;
     xsec_mumom_mc->Write(save_name.c_str());
-    LOG_CRITICAL() << std::endl;
     save_name = "frac_covariance_matrix_mumom_" + _prefix;
-    LOG_CRITICAL() << std::endl;
     if (frac_covariance_matrix_mumom.GetNbinsX() > 1) {
-    LOG_CRITICAL() << std::endl;
       frac_covariance_matrix_mumom.Write(save_name.c_str());
-    LOG_CRITICAL() << std::endl;
     }
 
 
     
 
-    LOG_CRITICAL() << std::endl;
     unc_plotter.SetCrossSection(*xsec_mumom);
     unc_plotter.MakePlot("relative_uncertainty_mumom");
 
-    LOG_CRITICAL() << std::endl;
 
 
 

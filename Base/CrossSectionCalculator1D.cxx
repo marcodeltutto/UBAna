@@ -913,7 +913,7 @@ namespace Base {
           }
 
           // Also construct the total covariance matrix
-          double total_unc_2 = unc_syst_2 + extra_unc_2 + unc_stat_2;
+          double total_unc_2 = unc_syst_2 + extra_unc_2;// + unc_stat_2;
 
           _cov_matrix_total->SetBinContent(i+1, j+1, total_unc_2);
           _frac_cov_matrix_total->SetBinContent(i+1, j+1, (total_unc_2) / (_h_data->GetBinContent(i+1) * _h_data->GetBinContent(j+1)));

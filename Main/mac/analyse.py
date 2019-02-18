@@ -44,26 +44,26 @@ analyser.SetBeamOffSubtraction(False)
 analyser.SetBreakdownPlots(False)
 
 extra_unc = math.sqrt(0.02*0.02) # POT counting
-# analyser.SetExtraUncertainty(extra_unc)
+analyser.SetExtraUncertainty(extra_unc)
 
-# analyser.ImportDetectorSystematics(True)
+analyser.ImportDetectorSystematics(True)
 
-# analyser.ImportCosmicSystematics(True)
+analyser.ImportCosmicSystematics(True)
 
-# analyser.ImportDirtSystematics(True)
+analyser.ImportDirtSystematics(True)
 
 analyser.DoGenieSystematics(False)
-# analyser.ImportGenieSystematics(True)
+analyser.ImportGenieSystematics(True)
 
 analyser.DoExtraSystematics(False)
-# analyser.ImportExtraSystematics(True)
+analyser.ImportExtraSystematics(True)
 
 analyser.DoMCStatSystematics(False)
-# analyser.ImportMCStatSystematics(True)
+analyser.ImportMCStatSystematics(True)
 
 
 analyser.DoFluxSystematics(False)
-# analyser.ImportFluxSystematics(True)
+analyser.ImportFluxSystematics(True)
 analyser.SetExtraFluxUncertainty(0.)
 analyser.SetTargetFluxSystematic("total"); # Other options: "FluxUnisim", "kminus", "kplus", "kzero", "piminus", "piplus"
 

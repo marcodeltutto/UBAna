@@ -51,9 +51,9 @@ xsec_tune3.append(f_ubana.Get("xsec_mc_alt_poly_muangle_mumom_cv_bin_8"))
 
 
 # c_xsec_split = TCanvas("c_xsec_split", "multipads", 0, 0, 2800, 2000)
-c_xsec_split = TCanvas("c_xsec_split", "multipads", 0, 0, 1144,746)
-# c_xsec_split = TCanvas()
-c_xsec_split.Divide(3, 3, 0.01, 0.01)
+# c_xsec_split = TCanvas("c_xsec_split", "multipads", 0, 0, 1144,746)
+c_xsec_split = TCanvas()
+# c_xsec_split.Divide(3, 3, 0.01, 0.01)
 
 x_bins = 9
 costhetamu_ranges = ["-1.00 #leq cos(#theta_{#mu}^{reco}) < -0.50", "-0.50 #leq cos(#theta_{#mu}^{reco}) < 0.00", "0.00 #leq cos(#theta_{#mu}^{reco}) < 0.27",  "0.27 #leq cos(#theta_{#mu}^{reco}) < 0.45", "0.45 #leq cos(#theta_{#mu}^{reco}) < 0.62", "0.62 #leq cos(#theta_{#mu}^{reco}) < 0.76", "0.76 #leq cos(#theta_{#mu}^{reco}) < 0.86", "0.86 #leq cos(#theta_{#mu}^{reco}) < 0.94", "0.94 #leq cos(#theta_{#mu}^{reco}) #leq 1.00"]
@@ -62,7 +62,7 @@ labels = []
 
 for i in xrange(1, x_bins+1):
 # for i in xrange(1, 2):
-  c_xsec_split.cd(i)
+  # c_xsec_split.cd(i)
   gPad.SetBottomMargin(0.16);
   gPad.SetLeftMargin(0.18);
   gPad.SetRightMargin(0.03);
@@ -104,10 +104,11 @@ for i in xrange(1, x_bins+1):
   xsec_tune1[i-1].SetFillColor(0)
   xsec_tune3[i-1].SetLineColor(ROOT.kBlue+1)
   xsec_tune3[i-1].SetFillColor(0)
+  xsec_tune3[i-1].SetLineStyle(9)
 
   xsec_data[i-1].SetMarkerStyle(20)
   # xsec_data[i-1].SetMarkerSize(1.3)
-  xsec_data[i-1].SetMarkerSize(0.6)
+  xsec_data[i-1].SetMarkerSize(1.2)
   xsec_data[i-1].SetLineWidth(2)
   xsec_data_unc[i-1].SetMarkerStyle(20)
   xsec_data_unc[i-1].SetMarkerSize(0.1)
@@ -165,10 +166,10 @@ for i in xrange(1, x_bins+1):
     ub_label.SetTextFont(62);
     ub_label.Draw();
 
-  # c_xsec_split.Modified();
-  # c_xsec_split.cd();
-  # c_xsec_split.Draw()
-  # c_xsec_split.SaveAs('double_diff_prl' + str(i) +'.pdf')
+  c_xsec_split.Modified();
+  c_xsec_split.cd();
+  c_xsec_split.Draw()
+  c_xsec_split.SaveAs('double_diff_prl' + str(i) +'.pdf')
   
   # l = TLatex(0.1,0.4,"C(x) = d #sqrt{#frac{2}{#lambdaD}}  #int^{x}_{0}cos(#frac{#pi}{2}t^{2})dt");
   # l.SetTextSize(0.15);
