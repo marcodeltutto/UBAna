@@ -1207,62 +1207,62 @@ void Main::Maker::MakeFile()
       }
     }
 
-    // if (!isdata) {
-    //   LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! CONFIG 1" << std::endl;
-    //   if (t->mode == 0) { // QE
-    //     event_weight *= 0.95; 
-    //   }
-    //   if (t->mode == 1) { // RES
-    //     event_weight *= 0.75; 
-    //   }
-    //   if (t->mode == 2) { // DIS
-    //     event_weight *= 0.85; 
-    //   }
-    //   if (t->mode == 3) { // COH
-    //     event_weight *= 1.00; 
-    //   }
-    //   if (t->mode == 10) { // MEC
-    //     event_weight *= 0.85; 
-    //   }
-    // }
+    if (!isdata && false) {
+      LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! MODEL 0" << std::endl;
+      if (t->mode == 0) { // QE
+        event_weight *= 0.95; 
+      }
+      if (t->mode == 1) { // RES
+        event_weight *= 0.75; 
+      }
+      if (t->mode == 2) { // DIS
+        event_weight *= 0.85; 
+      }
+      if (t->mode == 3) { // COH
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 10) { // MEC
+        event_weight *= 0.85; 
+      }
+    }
 
-    // if (!isdata) {
-    //   LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! CONFIG 2" << std::endl;
-    //   if (t->mode == 0) { // QE
-    //     event_weight *= 0.90; 
-    //   }
-    //   if (t->mode == 1) { // RES
-    //     event_weight *= 0.00; 
-    //   }
-    //   if (t->mode == 2) { // DIS
-    //     event_weight *= 3.00; 
-    //   }
-    //   if (t->mode == 3) { // COH
-    //     event_weight *= 1.00; 
-    //   }
-    //   if (t->mode == 10) { // MEC
-    //     event_weight *= 1.10; 
-    //   }
-    // }
+    if (!isdata && false) {
+      LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! MODEL 1" << std::endl;
+      if (t->mode == 0) { // QE
+        event_weight *= 0.90; 
+      }
+      if (t->mode == 1) { // RES
+        event_weight *= 0.00; 
+      }
+      if (t->mode == 2) { // DIS
+        event_weight *= 3.00; 
+      }
+      if (t->mode == 3) { // COH
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 10) { // MEC
+        event_weight *= 1.10; 
+      }
+    }
 
-    // if (!isdata) {
-    //   LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! CONFIG 3" << std::endl;
-    //   if (t->mode == 0) { // QE
-    //     event_weight *= 1.00; 
-    //   }
-    //   if (t->mode == 1) { // RES
-    //     event_weight *= 1.50; 
-    //   }
-    //   if (t->mode == 2) { // DIS
-    //     event_weight *= 1.00; 
-    //   }
-    //   if (t->mode == 3) { // COH
-    //     event_weight *= 1.00; 
-    //   }
-    //   if (t->mode == 10) { // MEC
-    //     event_weight *= 0.00; 
-    //   }
-    // }
+    if (!isdata && false) {
+      LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! MODEL 2" << std::endl;
+      if (t->mode == 0) { // QE
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 1) { // RES
+        event_weight *= 1.50; 
+      }
+      if (t->mode == 2) { // DIS
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 3) { // COH
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 10) { // MEC
+        event_weight *= 0.00; 
+      }
+    }
 
 
 
