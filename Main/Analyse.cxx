@@ -1941,6 +1941,12 @@ namespace Main {
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_poly_detector_muangle_mumom");
       frac_covariance_matrix_detector = *m;
 
+      // for (int a = 0; a < frac_covariance_matrix_detector.GetNbinsX(); a++) {
+      //   for (int b = 0; b < frac_covariance_matrix_detector.GetNbinsX(); b++) {
+      //     if (a != b) frac_covariance_matrix_detector.SetBinContent(a+1, b+1, 0);
+      //   }
+      // }
+
       unc_plotter.AddFracCovarianceMatrix("DETECTOR", frac_covariance_matrix_detector);
     }
 
@@ -2037,6 +2043,8 @@ namespace Main {
 
     UBTH2Poly * xsec_muangle_mumom_poly = xsec_calc_poly.ExtractCrossSection(bkg_names, "cos(#theta^{reco}_{#mu})", "p^{reco}_{#mu} [GeV]", "d^{2}#sigma/dcos(#theta_{#mu})dp_{#mu} [10^{-38} cm^{2}/GeV]");
     UBTH2Poly * xsec_muangle_mumom_poly_mc = xsec_calc_poly.GetMCCrossSection();
+    UBTH2Poly * xsec_muangle_mumom_poly_alt_mc = nullptr;
+    if (_import_alternative_mc) xsec_muangle_mumom_poly_alt_mc = xsec_calc_poly.GetAlternativeMCCrossSection();
 
     std::vector<TH1D> xsec_data_histos = xsec_calc_poly.GetUnpackedDataCrossSection();
     std::vector<TH1D> xsec_mc_histos = xsec_calc_poly.GetUnpackedMCCrossSection();
@@ -2057,6 +2065,8 @@ namespace Main {
     xsec_muangle_mumom_poly->Write(save_name.c_str());
     save_name = "xsec_poly_muangle_mumom_mc_" + _prefix;
     xsec_muangle_mumom_poly_mc->Write(save_name.c_str());
+    save_name = "xsec_poly_muangle_mumom_alt_mc_" + _prefix;
+    if (_import_alternative_mc) xsec_muangle_mumom_poly_alt_mc->Write(save_name.c_str());
     save_name = "frac_covariance_matrix_poly_muangle_mumom_" + _prefix;
     frac_covariance_matrix_poly_muangle_mumom.Write(save_name.c_str());
     save_name = "tot_covariance_matrix_poly_muangle_mumom_" + _prefix;
@@ -2075,6 +2085,21 @@ namespace Main {
       save_name = "xsec_mc_alt_poly_muangle_mumom_" + _prefix + "_bin_" + std::to_string(i);
       if (_import_alternative_mc) xsec_mc_alt_histos.at(i).Write(save_name.c_str());
     }
+
+    save_name = "frac_cov_matrix_poly_muangle_mumom_genie_" + _prefix;
+    frac_covariance_matrix_genie.Write(save_name.c_str());
+    save_name = "frac_cov_matrix_poly_muangle_mumom_mec_ccqe_reint_" + _prefix;
+    frac_covariance_matrix_extra_syst.Write(save_name.c_str());
+    save_name = "frac_cov_matrix_poly_muangle_mumom_flux_" + _prefix;
+    frac_covariance_matrix_flux.Write(save_name.c_str());
+    save_name = "frac_cov_matrix_poly_muangle_mumom_mc_stat_" + _prefix;
+    frac_covariance_matrix_mc_stat.Write(save_name.c_str());
+    save_name = "frac_cov_matrix_poly_muangle_mumom_det_" + _prefix;
+    frac_covariance_matrix_detector.Write(save_name.c_str());
+    save_name = "frac_cov_matrix_poly_muangle_mumom_cosmic_" + _prefix;
+    frac_covariance_matrix_cosmic.Write(save_name.c_str());
+    save_name = "frac_cov_matrix_poly_muangle_mumom_dirt_" + _prefix;
+    frac_covariance_matrix_dirt.Write(save_name.c_str());
 
     
     if (do_uncertainties) {

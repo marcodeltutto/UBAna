@@ -140,6 +140,9 @@ namespace Base {
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
     UBTH2Poly* GetMCCrossSection() { return _h_mc; }
 
+    /// Returns the extracted alternative MC cross section (must be called after ExtractCrossSection)
+    UBTH2Poly* GetAlternativeMCCrossSection() { return _h_alt_mc_xsec; }
+
     /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the data cross section
     std::vector<TH1D> GetUnpackedDataCrossSection() { return _xsec_data_histos; }
 

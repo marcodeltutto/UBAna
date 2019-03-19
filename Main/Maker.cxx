@@ -668,6 +668,15 @@ void Main::Maker::MakeFile()
   hmap_mctruth_muphi["mec"] = new TH1D("h_mctruth_muphi_mec", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
   hmap_mctruth_muphi["other"] = new TH1D("h_mctruth_muphi_other", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
 
+  std::map<std::string,TH2D*> hmap_mctruth_mucostheta_mumom;
+  hmap_mctruth_mucostheta_mumom["total"] = new TH2D("hmap_mctruth_mucostheta_mumom_total", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["qe"] = new TH2D("hmap_mctruth_mucostheta_mumom_qe", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["res"] = new TH2D("hmap_mctruth_mucostheta_mumom_res", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["dis"] = new TH2D("hmap_mctruth_mucostheta_mumom_dis", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_coh", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_mec", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_other", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+
   //
   // Truth histograms stacked in interaction type - Generated
   //
@@ -707,6 +716,14 @@ void Main::Maker::MakeFile()
   hmap_mctruth_muphi_gen["mec"] = new TH1D("h_mctruth_muphi_gen_mec", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
   hmap_mctruth_muphi_gen["other"] = new TH1D("h_mctruth_muphi_gen_other", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
 
+  std::map<std::string,TH2D*> hmap_mctruth_mucostheta_mumom_gen;
+  hmap_mctruth_mucostheta_mumom_gen["total"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_total", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["qe"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_qe", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["res"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_res", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["dis"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_dis", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_coh", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_mec", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_other", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
 
 
   //
@@ -1189,6 +1206,63 @@ void Main::Maker::MakeFile()
         }
       }
     }
+
+    // if (!isdata) {
+    //   LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! CONFIG 1" << std::endl;
+    //   if (t->mode == 0) { // QE
+    //     event_weight *= 0.95; 
+    //   }
+    //   if (t->mode == 1) { // RES
+    //     event_weight *= 0.75; 
+    //   }
+    //   if (t->mode == 2) { // DIS
+    //     event_weight *= 0.85; 
+    //   }
+    //   if (t->mode == 3) { // COH
+    //     event_weight *= 1.00; 
+    //   }
+    //   if (t->mode == 10) { // MEC
+    //     event_weight *= 0.85; 
+    //   }
+    // }
+
+    // if (!isdata) {
+    //   LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! CONFIG 2" << std::endl;
+    //   if (t->mode == 0) { // QE
+    //     event_weight *= 0.90; 
+    //   }
+    //   if (t->mode == 1) { // RES
+    //     event_weight *= 0.00; 
+    //   }
+    //   if (t->mode == 2) { // DIS
+    //     event_weight *= 3.00; 
+    //   }
+    //   if (t->mode == 3) { // COH
+    //     event_weight *= 1.00; 
+    //   }
+    //   if (t->mode == 10) { // MEC
+    //     event_weight *= 1.10; 
+    //   }
+    // }
+
+    // if (!isdata) {
+    //   LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! CONFIG 3" << std::endl;
+    //   if (t->mode == 0) { // QE
+    //     event_weight *= 1.00; 
+    //   }
+    //   if (t->mode == 1) { // RES
+    //     event_weight *= 1.50; 
+    //   }
+    //   if (t->mode == 2) { // DIS
+    //     event_weight *= 1.00; 
+    //   }
+    //   if (t->mode == 3) { // COH
+    //     event_weight *= 1.00; 
+    //   }
+    //   if (t->mode == 10) { // MEC
+    //     event_weight *= 0.00; 
+    //   }
+    // }
 
 
 
@@ -1969,35 +2043,41 @@ void Main::Maker::MakeFile()
       hmap_mctruth_mumom_gen["total"]->Fill(t->true_muon_mom, event_weight);
       hmap_mctruth_mucostheta_gen["total"]->Fill(t->lep_costheta, event_weight);
       hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi, event_weight);
+      hmap_mctruth_mucostheta_mumom_gen["total"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       if (t->mode == 0) {
         hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["qe"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["qe"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 1) {
         hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["res"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["res"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["res"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 2) {
         hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["dis"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["dis"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["dis"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 3) {
         hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["coh"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["coh"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["coh"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 10) {
         hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["mec"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["mec"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
     } // if is signal
 
@@ -2401,14 +2481,15 @@ void Main::Maker::MakeFile()
     // if(t->slc_longesttrack_theta.at(scl_ll_max) > -0.6) continue; // cos(theta) < -0.6
 
 
-    
+    // if(t->slc_nuvtx_x.at(scl_ll_max) > 128.175) continue; // anode_vtx
+    // if(t->slc_nuvtx_x.at(scl_ll_max) <= 128.175) continue; // cathode_vtx
     
 
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi()/4)) continue; // cathode
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < (3./4.)*TMath::Pi())) continue; // up
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -(3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -TMath::Pi()/4)) continue; // down
     // if (!((t->slc_longesttrack_phi.at(scl_ll_max) > (3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi())
-            // || (t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -(3./4.)*TMath::Pi()))) continue; // anode
+    //         || (t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -(3./4.)*TMath::Pi()))) continue; // anode
 
 
     //if(t->slc_mult_track_tolerance.at(scl_ll_max) <= 1) continue;
@@ -2725,35 +2806,41 @@ void Main::Maker::MakeFile()
       hmap_mctruth_mumom["total"]->Fill(t->true_muon_mom, event_weight);
       hmap_mctruth_mucostheta["total"]->Fill(t->lep_costheta, event_weight);
       hmap_mctruth_muphi["total"]->Fill(t->lep_phi, event_weight);
+      hmap_mctruth_mucostheta_mumom["total"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       if (t->mode == 0) {
         hmap_mctruth_nuenergy["qe"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["qe"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["qe"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["qe"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom["qe"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 1) {
         hmap_mctruth_nuenergy["res"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["res"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["res"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["res"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom["res"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 2) {
         hmap_mctruth_nuenergy["dis"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["dis"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["dis"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["dis"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom["dis"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 3) {
         hmap_mctruth_nuenergy["coh"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["coh"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["coh"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["coh"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom["coh"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 10) {
         hmap_mctruth_nuenergy["mec"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["mec"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["mec"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["mec"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_mucostheta_mumom["mec"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
 
       pEff->Fill(true, t->nu_e);
@@ -4042,10 +4129,11 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_mctruth_mumom, "hmap_mctruth_mumom");
   file_out->WriteObject(&hmap_mctruth_mucostheta, "hmap_mctruth_mucostheta");
   file_out->WriteObject(&hmap_mctruth_muphi, "hmap_mctruth_muphi");
+  file_out->WriteObject(&hmap_mctruth_mucostheta_mumom, "hmap_mctruth_mucostheta_mumom");
   file_out->WriteObject(&hmap_mctruth_nuenergy_gen, "hmap_mctruth_nuenergy_gen");
   file_out->WriteObject(&hmap_mctruth_mumom_gen, "hmap_mctruth_mumom_gen");
   file_out->WriteObject(&hmap_mctruth_mucostheta_gen, "hmap_mctruth_mucostheta_gen");
-  file_out->WriteObject(&hmap_mctruth_muphi_gen, "hmap_mctruth_muphi_gen");
+  file_out->WriteObject(&hmap_mctruth_mucostheta_mumom_gen, "hmap_mctruth_mucostheta_mumom_gen");
 
 
 

@@ -11,59 +11,59 @@ maker = Main.Maker()
 
 # BNBComisc
 
-maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v4.root"); # After Neutrino (run on gpvm)
-maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4.root"); # After Neutrino (run on gpvm)
+# maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_ubcodev06_26_01_22__v4.root"); # After Neutrino (run on gpvm)
+# maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4.root"); # After Neutrino (run on gpvm)
 
-maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
-maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
+# maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
+# maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_dirt_ubcodev06_26_01_22__v3.root"); # After Neutrino - Dirt (run on gpvm)
 
-maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root"); # After Neutrino - Tune3 (run on gpvm)
-maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root"); # After Neutrino - Tune3 (run on gpvm)
+# maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsec_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root"); # After Neutrino - Tune3 (run on gpvm)
+# maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/ubxsecana_output_mc_bnbcosmic_tune3_full_ubcodev06_26_01_22__v3.root"); # After Neutrino - Tune3 (run on gpvm)
 
-maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_overlay_ubcodev06_26_01_22__v4.root"); # After Neutrino - Overlay
-maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_overlay_ubcodev06_26_01_22__v4.root"); # After Neutrino - Overlay
+# maker.SetInputFile("/Users/deltutto/CCInclusiveFiles/Input/ubxsec_output_data_overlay_ubcodev06_26_01_22__v4.root"); # After Neutrino - Overlay
+# maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_overlay_ubcodev06_26_01_22__v4.root"); # After Neutrino - Overlay
 
-maker.SetEntries(-1)
-maker.SetInitialEntry(0)
-maker.SetBeamSpillStart(3.1)    
-maker.SetBeamSpillEnd(4.9)
-maker.SetFlashShift(0.)    
-maker.SetGainCalibration(198)    
-maker.SetCalculatePOT(True)    
-maker.SetIsData(False)
-maker.SetExtraWeight(1.028); # Flux correction
+# maker.SetEntries(-1)
+# maker.SetInitialEntry(0)
+# maker.SetBeamSpillStart(3.1)    
+# maker.SetBeamSpillEnd(4.9)
+# maker.SetFlashShift(0.)    
+# maker.SetGainCalibration(198)    
+# maker.SetCalculatePOT(True)    
+# maker.SetIsData(False)
+# maker.SetExtraWeight(1.028); # Flux correction
 
 
-maker.SetMaUpMECOff(False)
-maker.ReweighKaons(False)
-# maker.ScaleCosmics(0.54548) # For overlay systematics
+# maker.SetMaUpMECOff(False)
+# maker.ReweighKaons(False)
+# # maker.ScaleCosmics(0.54548) # For overlay systematics
 
-maker.FillBootstrapGenie(False)
+# maker.FillBootstrapGenie(False)
 
-maker.FillBootstrapExtraSyst(False)
-maker.SetTargetExtraSystematic("model_q0q3_ccmec_HistogramWeight")
-# maker.SetTargetExtraSystematic("model_q0q3_ccqe_HistogramWeight")
-# maker.SetTargetExtraSystematic("model_q0q3")
-# maker.SetTargetExtraSystematic("reinteractions_proton")
-# maker.SetTargetExtraSystematic("reinteractions_piplus")
-# maker.SetTargetExtraSystematic("reinteractions_piminus")
-# maker.SetTargetExtraSystematic("total")
+# maker.FillBootstrapExtraSyst(False)
+# maker.SetTargetExtraSystematic("model_q0q3_ccmec_HistogramWeight")
+# # maker.SetTargetExtraSystematic("model_q0q3_ccqe_HistogramWeight")
+# # maker.SetTargetExtraSystematic("model_q0q3")
+# # maker.SetTargetExtraSystematic("reinteractions_proton")
+# # maker.SetTargetExtraSystematic("reinteractions_piplus")
+# # maker.SetTargetExtraSystematic("reinteractions_piminus")
+# # maker.SetTargetExtraSystematic("total")
 
-maker.FillBootstrapFlux(False)
-#maker.SetTargetFluxSystematic("FluxUnisim");
-#maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
-#maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
-#maker.SetTargetFluxSystematic("kzero_PrimaryHadronSanfordWang");
-#maker.SetTargetFluxSystematic("piminus_PrimaryHadronSWCentral");
-#maker.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
-maker.SetTargetFluxSystematic("total")
+# maker.FillBootstrapFlux(False)
+# #maker.SetTargetFluxSystematic("FluxUnisim");
+# #maker.SetTargetFluxSystematic("kminus_PrimaryHadronNormalizat");
+# #maker.SetTargetFluxSystematic("kplus_PrimaryHadronFeynmanScal");
+# #maker.SetTargetFluxSystematic("kzero_PrimaryHadronSanfordWang");
+# #maker.SetTargetFluxSystematic("piminus_PrimaryHadronSWCentral");
+# #maker.SetTargetFluxSystematic("piplus_PrimaryHadronSWCentralS");
+# maker.SetTargetFluxSystematic("total")
 
-maker.FillBootstrapMCStat(False)
-maker.SetNUniversesMCStat(1000)
+# maker.FillBootstrapMCStat(False)
+# maker.SetNUniversesMCStat(1000)
 
-maker.PrintConfig()
+# maker.PrintConfig()
 
-maker.MakeFile()
+# maker.MakeFile()
 
 
 

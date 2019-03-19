@@ -1279,7 +1279,7 @@ namespace Base {
       for (int b = 0; b < n_entries; b ++) {
         V[a][b] = _tot_cov_matrix_total->GetBinContent(a+1, b+1);
         // std::cout << "a = " << a << ", b = " << b << " => " << _tot_cov_matrix_total->GetBinContent(a+1, b+1) << " => V = " << V[a][b] << std::endl;
-        // if (a!= b) V[a][b] = 0;
+        // if (a != b) V[a][b] = 0;
       }
     }
 
@@ -1307,6 +1307,8 @@ namespace Base {
     for (int i = 0; i < n_entries; i++) {
       for (int j = 0; j < n_entries; j++) {
 
+        // if (i == 41 || j == 41 || i == 36 || j == 36) continue;
+
         double data_i = _h_data->GetBinContent(i+1);
         double mc_i = _h_mc->GetBinContent(i+1);
 
@@ -1324,6 +1326,8 @@ namespace Base {
     if (_add_alt_mc_xsec) {
       for (int i = 0; i < n_entries; i++) {
         for (int j = 0; j < n_entries; j++) {
+
+          // if (i == 41 || j == 41 || i == 36 || j == 36) continue;
 
           double data_i = _h_data->GetBinContent(i+1);
           double mc_i = _h_alt_mc_xsec->GetBinContent(i+1);
