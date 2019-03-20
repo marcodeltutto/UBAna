@@ -4133,7 +4133,7 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_mctruth_nuenergy_gen, "hmap_mctruth_nuenergy_gen");
   file_out->WriteObject(&hmap_mctruth_mumom_gen, "hmap_mctruth_mumom_gen");
   file_out->WriteObject(&hmap_mctruth_mucostheta_gen, "hmap_mctruth_mucostheta_gen");
-  file_out->WriteObject(&hmap_mctruth_muphi_gen, "hmap_mctruth_mucostheta_gen");
+  file_out->WriteObject(&hmap_mctruth_muphi_gen, "hmap_mctruth_muphi_gen");
   file_out->WriteObject(&hmap_mctruth_mucostheta_mumom_gen, "hmap_mctruth_mucostheta_mumom_gen");
 
 

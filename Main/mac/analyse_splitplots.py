@@ -19,17 +19,18 @@ samples = ['anode_anodevtx',  # Vertex in the anode side, pointing at the anode,
            'anodevtx', # Vertex in the anode side, 8
            'cathodevtx', # Vertex in the cathode side, 9
            'anode', # Pointing at the anode, 10
-           'cathode'] # Pointing at the cathode, 11
+           'cathode', # Pointing at the cathode, 11
+           ] 
 
-sample_id = 11
+sample_id = 9
 
-model0 = True
-model1 = False
+model0 = False
+model1 = True
 model2 = False
 
 
 
-analyser.SetPrefix('split_sample' + samples[sample_id])
+analyser.SetPrefix('split_sample_' + samples[sample_id])
 
 analyser.SetBNBCosmicFile     ('/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_' + samples[sample_id] + '.root') # Vertex in the anode side, pointing at the anode
 
