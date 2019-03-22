@@ -651,31 +651,31 @@ void Main::Maker::MakeFile()
   hmap_mctruth_mumom["other"] = new TH1D("h_mctruth_mumom_other", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
 
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta;
-  hmap_mctruth_mucostheta["total"] = new TH1D("h_mctruth_mucostheta_total", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["qe"] = new TH1D("h_mctruth_mucostheta_qe", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["res"] = new TH1D("h_mctruth_mucostheta_res", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["dis"] = new TH1D("h_mctruth_mucostheta_dis", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["coh"] = new TH1D("h_mctruth_mucostheta_coh", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["mec"] = new TH1D("h_mctruth_mucostheta_mec", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["other"] = new TH1D("h_mctruth_mucostheta_other", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["total"] = new TH1D("h_mctruth_mucostheta_total", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["qe"] = new TH1D("h_mctruth_mucostheta_qe", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["res"] = new TH1D("h_mctruth_mucostheta_res", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["dis"] = new TH1D("h_mctruth_mucostheta_dis", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["coh"] = new TH1D("h_mctruth_mucostheta_coh", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["mec"] = new TH1D("h_mctruth_mucostheta_mec", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["other"] = new TH1D("h_mctruth_mucostheta_other", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
 
   std::map<std::string,TH1D*> hmap_mctruth_muphi;
-  hmap_mctruth_muphi["total"] = new TH1D("h_mctruth_muphi_total", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["qe"] = new TH1D("h_mctruth_muphi_qe", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["res"] = new TH1D("h_mctruth_muphi_res", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["dis"] = new TH1D("h_mctruth_muphi_dis", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["coh"] = new TH1D("h_mctruth_muphi_coh", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["mec"] = new TH1D("h_mctruth_muphi_mec", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["other"] = new TH1D("h_mctruth_muphi_other", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["total"] = new TH1D("h_mctruth_muphi_total", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["qe"] = new TH1D("h_mctruth_muphi_qe", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["res"] = new TH1D("h_mctruth_muphi_res", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["dis"] = new TH1D("h_mctruth_muphi_dis", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["coh"] = new TH1D("h_mctruth_muphi_coh", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["mec"] = new TH1D("h_mctruth_muphi_mec", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["other"] = new TH1D("h_mctruth_muphi_other", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
 
   std::map<std::string,TH2D*> hmap_mctruth_mucostheta_mumom;
-  hmap_mctruth_mucostheta_mumom["total"] = new TH2D("hmap_mctruth_mucostheta_mumom_total", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom["qe"] = new TH2D("hmap_mctruth_mucostheta_mumom_qe", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom["res"] = new TH2D("hmap_mctruth_mucostheta_mumom_res", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom["dis"] = new TH2D("hmap_mctruth_mucostheta_mumom_dis", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_coh", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_mec", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_other", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["total"] = new TH2D("hmap_mctruth_mucostheta_mumom_total", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["qe"] = new TH2D("hmap_mctruth_mucostheta_mumom_qe", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["res"] = new TH2D("hmap_mctruth_mucostheta_mumom_res", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["dis"] = new TH2D("hmap_mctruth_mucostheta_mumom_dis", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_coh", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_mec", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_other", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
 
   //
   // Truth histograms stacked in interaction type - Generated

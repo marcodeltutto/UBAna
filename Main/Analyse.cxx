@@ -3037,39 +3037,61 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
   canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
 
-  
+
+  // // Efficiency plots - p_mu
+  // TCanvas* canvas_mc_eff_mumom_total = new TCanvas();
+  // TH2D* h_mc_eff_mumom_total = (TH2D*) hmap_mctruth_muangle_mumom_mc["total"]->Clone("h_mc_eff_total");
+  // h_mc_eff_total->Divide(hmap_mctruth_muangle_mumom_gen_mc["total"]);
+  // h_mc_eff_total->SetTitle("All Events");
+  // h_mc_eff_total->Draw("colz");
+  // name = outdir + "mctruth_efficiency_muangle_mumom_total";
+  // canvas_mc_eff_total->SaveAs(name + ".pdf");
+  // canvas_mc_eff_total->SaveAs(name + ".C","C");
+
+
+  // Efficiency plots - p_mu, cos(theta_mu)
   TCanvas* canvas_mc_eff_total = new TCanvas();
   TH2D* h_mc_eff_total = (TH2D*) hmap_mctruth_muangle_mumom_mc["total"]->Clone("h_mc_eff_total");
   h_mc_eff_total->Divide(hmap_mctruth_muangle_mumom_gen_mc["total"]);
+  h_mc_eff_total->SetTitle("All Events");
   h_mc_eff_total->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_total";
   canvas_mc_eff_total->SaveAs(name + ".pdf");
   canvas_mc_eff_total->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mc_eff_qe = new TCanvas();
   TH2D* h_mc_eff_qe = (TH2D*) hmap_mctruth_muangle_mumom_mc["qe"]->Clone("h_mc_eff_qe");
   h_mc_eff_qe->Divide(hmap_mctruth_muangle_mumom_gen_mc["qe"]);
+  h_mc_eff_qe->SetTitle("QE Events Only");
   h_mc_eff_qe->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_qe";
   canvas_mc_eff_qe->SaveAs(name + ".pdf");
   canvas_mc_eff_qe->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mc_eff_res = new TCanvas();
   TH2D* h_mc_eff_res = (TH2D*) hmap_mctruth_muangle_mumom_mc["res"]->Clone("h_mc_eff_res");
   h_mc_eff_res->Divide(hmap_mctruth_muangle_mumom_gen_mc["res"]);
+  h_mc_eff_res->SetTitle("RES Events Only");
   h_mc_eff_res->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_res";
   canvas_mc_eff_res->SaveAs(name + ".pdf");
   canvas_mc_eff_res->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mc_eff_dis = new TCanvas();
   TH2D* h_mc_eff_dis = (TH2D*) hmap_mctruth_muangle_mumom_mc["dis"]->Clone("h_mc_eff_dis");
   h_mc_eff_dis->Divide(hmap_mctruth_muangle_mumom_gen_mc["dis"]);
+  h_mc_eff_dis->SetTitle("DIS Events Only");
   h_mc_eff_dis->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_dis";
   canvas_mc_eff_dis->SaveAs(name + ".pdf");
   canvas_mc_eff_dis->SaveAs(name + ".C","C");
 
   TCanvas* canvas_mc_eff_mec = new TCanvas();
   TH2D* h_mc_eff_mec = (TH2D*) hmap_mctruth_muangle_mumom_mc["mec"]->Clone("h_mc_eff_mec");
   h_mc_eff_mec->Divide(hmap_mctruth_muangle_mumom_gen_mc["mec"]);
+  h_mc_eff_mec->SetTitle("MEC Events Only");
   h_mc_eff_mec->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_mec";
   canvas_mc_eff_mec->SaveAs(name + ".pdf");
   canvas_mc_eff_mec->SaveAs(name + ".C","C");
 
