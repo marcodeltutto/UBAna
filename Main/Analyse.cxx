@@ -3038,15 +3038,188 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
 
 
-  // // Efficiency plots - p_mu
-  // TCanvas* canvas_mc_eff_mumom_total = new TCanvas();
-  // TH2D* h_mc_eff_mumom_total = (TH2D*) hmap_mctruth_muangle_mumom_mc["total"]->Clone("h_mc_eff_total");
-  // h_mc_eff_total->Divide(hmap_mctruth_muangle_mumom_gen_mc["total"]);
-  // h_mc_eff_total->SetTitle("All Events");
-  // h_mc_eff_total->Draw("colz");
-  // name = outdir + "mctruth_efficiency_muangle_mumom_total";
-  // canvas_mc_eff_total->SaveAs(name + ".pdf");
-  // canvas_mc_eff_total->SaveAs(name + ".C","C");
+  //
+  // Efficiency plots - p_mu
+  //
+
+  TCanvas* canvas_mc_eff_mumom_total = new TCanvas();
+
+  TEfficiency* h_mc_eff_mumom_total = new TEfficiency(*hmap_mctruth_mumom_mc["total"],*hmap_mctruth_mumom_gen_mc["total"]);
+  h_mc_eff_mumom_total->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  h_mc_eff_mumom_total->SetLineColor(kBlack); 
+  h_mc_eff_mumom_total->SetMarkerColor(kBlack);
+  h_mc_eff_mumom_total->SetMarkerStyle(20);
+  h_mc_eff_mumom_total->SetMarkerSize(0.5);
+  h_mc_eff_mumom_total->Draw("ALP");
+  gPad->Update();
+  auto g_qe = h_mc_eff_mumom_total->GetPaintedGraph();
+  g_qe->SetMinimum(0);
+  g_qe->SetMaximum(1);
+  gPad->Update();
+
+  TEfficiency* h_mc_eff_mumom_qe = new TEfficiency(*hmap_mctruth_mumom_mc["qe"],*hmap_mctruth_mumom_gen_mc["qe"]);
+  h_mc_eff_mumom_qe->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  h_mc_eff_mumom_qe->SetLineColor(kGreen+2); 
+  h_mc_eff_mumom_qe->SetMarkerColor(kGreen+2);
+  h_mc_eff_mumom_qe->SetMarkerStyle(20);
+  h_mc_eff_mumom_qe->SetMarkerSize(0.5);
+  h_mc_eff_mumom_qe->Draw("LP same");
+
+  TEfficiency* h_mc_eff_mumom_mec = new TEfficiency(*hmap_mctruth_mumom_mc["mec"],*hmap_mctruth_mumom_gen_mc["mec"]);
+  h_mc_eff_mumom_mec->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  h_mc_eff_mumom_mec->SetLineColor(kOrange-3); 
+  h_mc_eff_mumom_mec->SetMarkerColor(kOrange-3);
+  h_mc_eff_mumom_mec->SetMarkerStyle(20);
+  h_mc_eff_mumom_mec->SetMarkerSize(0.5);
+  h_mc_eff_mumom_mec->Draw("LP same");
+
+  TEfficiency* h_mc_eff_mumom_res = new TEfficiency(*hmap_mctruth_mumom_mc["res"],*hmap_mctruth_mumom_gen_mc["res"]);
+  h_mc_eff_mumom_res->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  h_mc_eff_mumom_res->SetLineColor(kRed+1); 
+  h_mc_eff_mumom_res->SetMarkerColor(kRed+1);
+  h_mc_eff_mumom_res->SetMarkerStyle(20);
+  h_mc_eff_mumom_res->SetMarkerSize(0.5);
+  h_mc_eff_mumom_res->Draw("LP same");
+
+  TEfficiency* h_mc_eff_mumom_dis = new TEfficiency(*hmap_mctruth_mumom_mc["dis"],*hmap_mctruth_mumom_gen_mc["dis"]);
+  h_mc_eff_mumom_dis->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  h_mc_eff_mumom_dis->SetLineColor(kBlue+1); 
+  h_mc_eff_mumom_dis->SetMarkerColor(kBlue+1);
+  h_mc_eff_mumom_dis->SetMarkerStyle(20);
+  h_mc_eff_mumom_dis->SetMarkerSize(0.5);
+  h_mc_eff_mumom_dis->Draw("LP same");
+
+  TLegend* leg_mode = new TLegend(0.6475645,0.1368421,0.8968481,0.3368421,NULL,"brNDC");
+  leg_mode->AddEntry(h_mc_eff_mumom_total,"All Events","lep");
+  leg_mode->AddEntry(h_mc_eff_mumom_qe,"GENIE QE","lep");  
+  leg_mode->AddEntry(h_mc_eff_mumom_mec,"GENIE MEC","lep");  
+  leg_mode->AddEntry(h_mc_eff_mumom_res,"GENIE RES","lep");  
+  leg_mode->AddEntry(h_mc_eff_mumom_dis,"GENIE DIS","lep");  
+  leg_mode->Draw();
+
+  name = outdir + "mctruth_efficiency_mumom";
+  canvas_mc_eff_mumom_total->SaveAs(name + ".pdf");
+  canvas_mc_eff_mumom_total->SaveAs(name + ".C","C");
+
+
+
+  //
+  // Efficiency plots - cos(theta_mu)
+  //
+
+  TCanvas* canvas_mc_eff_muangle_total = new TCanvas();
+
+  TEfficiency* h_mc_eff_muangle_total = new TEfficiency(*hmap_mctruth_mucostheta_mc["total"],*hmap_mctruth_mucostheta_gen_mc["total"]);
+  h_mc_eff_muangle_total->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  h_mc_eff_muangle_total->SetLineColor(kBlack); 
+  h_mc_eff_muangle_total->SetMarkerColor(kBlack);
+  h_mc_eff_muangle_total->SetMarkerStyle(20);
+  h_mc_eff_muangle_total->SetMarkerSize(0.5);
+  h_mc_eff_muangle_total->Draw("ALP");
+  gPad->Update();
+  auto g_qe_muangle = h_mc_eff_muangle_total->GetPaintedGraph();
+  g_qe_muangle->SetMinimum(0);
+  g_qe_muangle->SetMaximum(1);
+  gPad->Update();
+
+  TEfficiency* h_mc_eff_muangle_qe = new TEfficiency(*hmap_mctruth_mucostheta_mc["qe"],*hmap_mctruth_mucostheta_gen_mc["qe"]);
+  h_mc_eff_muangle_qe->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  h_mc_eff_muangle_qe->SetLineColor(kGreen+2); 
+  h_mc_eff_muangle_qe->SetMarkerColor(kGreen+2);
+  h_mc_eff_muangle_qe->SetMarkerStyle(20);
+  h_mc_eff_muangle_qe->SetMarkerSize(0.5);
+  h_mc_eff_muangle_qe->Draw("LP same");
+
+  TEfficiency* h_mc_eff_muangle_mec = new TEfficiency(*hmap_mctruth_mucostheta_mc["mec"],*hmap_mctruth_mucostheta_gen_mc["mec"]);
+  h_mc_eff_muangle_mec->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  h_mc_eff_muangle_mec->SetLineColor(kOrange-3); 
+  h_mc_eff_muangle_mec->SetMarkerColor(kOrange-3);
+  h_mc_eff_muangle_mec->SetMarkerStyle(20);
+  h_mc_eff_muangle_mec->SetMarkerSize(0.5);
+  h_mc_eff_muangle_mec->Draw("LP same");
+
+  TEfficiency* h_mc_eff_muangle_res = new TEfficiency(*hmap_mctruth_mucostheta_mc["res"],*hmap_mctruth_mucostheta_gen_mc["res"]);
+  h_mc_eff_muangle_res->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  h_mc_eff_muangle_res->SetLineColor(kRed+1); 
+  h_mc_eff_muangle_res->SetMarkerColor(kRed+1);
+  h_mc_eff_muangle_res->SetMarkerStyle(20);
+  h_mc_eff_muangle_res->SetMarkerSize(0.5);
+  h_mc_eff_muangle_res->Draw("LP same");
+
+  TEfficiency* h_mc_eff_muangle_dis = new TEfficiency(*hmap_mctruth_mucostheta_mc["dis"],*hmap_mctruth_mucostheta_gen_mc["dis"]);
+  h_mc_eff_muangle_dis->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  h_mc_eff_muangle_dis->SetLineColor(kBlue+1); 
+  h_mc_eff_muangle_dis->SetMarkerColor(kBlue+1);
+  h_mc_eff_muangle_dis->SetMarkerStyle(20);
+  h_mc_eff_muangle_dis->SetMarkerSize(0.5);
+  h_mc_eff_muangle_dis->Draw("LP same");
+ 
+  leg_mode->Draw();
+
+  name = outdir + "mctruth_efficiency_muangle";
+  canvas_mc_eff_muangle_total->SaveAs(name + ".pdf");
+  canvas_mc_eff_muangle_total->SaveAs(name + ".C","C");
+
+
+
+  //
+  // Efficiency plots - phi
+  //
+
+  TCanvas* canvas_mc_eff_phi_total = new TCanvas();
+
+  TEfficiency* h_mc_eff_phi_total = new TEfficiency(*hmap_mctruth_muphi_mc["total"],*hmap_mctruth_muphi_gen_mc["total"]);
+  h_mc_eff_phi_total->SetTitle(";True Muon #phi;Efficiency");
+  h_mc_eff_phi_total->SetLineColor(kBlack); 
+  h_mc_eff_phi_total->SetMarkerColor(kBlack);
+  h_mc_eff_phi_total->SetMarkerStyle(20);
+  h_mc_eff_phi_total->SetMarkerSize(0.5);
+  h_mc_eff_phi_total->Draw("ALP");
+  gPad->Update();
+  auto g_qe_muphi = h_mc_eff_phi_total->GetPaintedGraph();
+  g_qe_muphi->SetMinimum(0);
+  g_qe_muphi->SetMaximum(1);
+  gPad->Update();
+
+  TEfficiency* h_mc_eff_phi_qe = new TEfficiency(*hmap_mctruth_muphi_mc["qe"],*hmap_mctruth_muphi_gen_mc["qe"]);
+  h_mc_eff_phi_qe->SetTitle(";True Muon #phi;Efficiency");
+  h_mc_eff_phi_qe->SetLineColor(kGreen+2); 
+  h_mc_eff_phi_qe->SetMarkerColor(kGreen+2);
+  h_mc_eff_phi_qe->SetMarkerStyle(20);
+  h_mc_eff_phi_qe->SetMarkerSize(0.5);
+  h_mc_eff_phi_qe->Draw("LP same");
+
+  TEfficiency* h_mc_eff_phi_mec = new TEfficiency(*hmap_mctruth_muphi_mc["mec"],*hmap_mctruth_muphi_gen_mc["mec"]);
+  h_mc_eff_phi_mec->SetTitle(";True Muon #phi;Efficiency");
+  h_mc_eff_phi_mec->SetLineColor(kOrange-3); 
+  h_mc_eff_phi_mec->SetMarkerColor(kOrange-3);
+  h_mc_eff_phi_mec->SetMarkerStyle(20);
+  h_mc_eff_phi_mec->SetMarkerSize(0.5);
+  h_mc_eff_phi_mec->Draw("LP same");
+
+  TEfficiency* h_mc_eff_phi_res = new TEfficiency(*hmap_mctruth_muphi_mc["res"],*hmap_mctruth_muphi_gen_mc["res"]);
+  h_mc_eff_phi_res->SetTitle(";True Muon #phi;Efficiency");
+  h_mc_eff_phi_res->SetLineColor(kRed+1); 
+  h_mc_eff_phi_res->SetMarkerColor(kRed+1);
+  h_mc_eff_phi_res->SetMarkerStyle(20);
+  h_mc_eff_phi_res->SetMarkerSize(0.5);
+  h_mc_eff_phi_res->Draw("LP same");
+
+  TEfficiency* h_mc_eff_phi_dis = new TEfficiency(*hmap_mctruth_muphi_mc["dis"],*hmap_mctruth_muphi_gen_mc["dis"]);
+  h_mc_eff_phi_dis->SetTitle(";True Muon #phi;Efficiency");
+  h_mc_eff_phi_dis->SetLineColor(kBlue+1); 
+  h_mc_eff_phi_dis->SetMarkerColor(kBlue+1);
+  h_mc_eff_phi_dis->SetMarkerStyle(20);
+  h_mc_eff_phi_dis->SetMarkerSize(0.5);
+  h_mc_eff_phi_dis->Draw("LP same");
+ 
+  leg_mode->Draw();
+
+  name = outdir + "mctruth_efficiency_phi";
+  canvas_mc_eff_phi_total->SaveAs(name + ".pdf");
+  canvas_mc_eff_phi_total->SaveAs(name + ".C","C");
+
+
 
 
   // Efficiency plots - p_mu, cos(theta_mu)
