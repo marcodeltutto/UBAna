@@ -699,31 +699,31 @@ void Main::Maker::MakeFile()
   hmap_mctruth_mumom_gen["other"] = new TH1D("h_mctruth_mumom_gen_other", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
 
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen;
-  hmap_mctruth_mucostheta_gen["total"] = new TH1D("h_mctruth_mucostheta_gen_total", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["qe"] = new TH1D("h_mctruth_mucostheta_gen_qe", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["res"] = new TH1D("h_mctruth_mucostheta_gen_res", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["dis"] = new TH1D("h_mctruth_mucostheta_gen_dis", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["coh"] = new TH1D("h_mctruth_mucostheta_gen_coh", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["mec"] = new TH1D("h_mctruth_mucostheta_gen_mec", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["other"] = new TH1D("h_mctruth_mucostheta_gen_other", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["total"] = new TH1D("h_mctruth_mucostheta_gen_total", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["qe"] = new TH1D("h_mctruth_mucostheta_gen_qe", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["res"] = new TH1D("h_mctruth_mucostheta_gen_res", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["dis"] = new TH1D("h_mctruth_mucostheta_gen_dis", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["coh"] = new TH1D("h_mctruth_mucostheta_gen_coh", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["mec"] = new TH1D("h_mctruth_mucostheta_gen_mec", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["other"] = new TH1D("h_mctruth_mucostheta_gen_other", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
 
   std::map<std::string,TH1D*> hmap_mctruth_muphi_gen;
-  hmap_mctruth_muphi_gen["total"] = new TH1D("h_mctruth_muphi_gen_total", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["qe"] = new TH1D("h_mctruth_muphi_gen_qe", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["res"] = new TH1D("h_mctruth_muphi_gen_res", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["dis"] = new TH1D("h_mctruth_muphi_gen_dis", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["coh"] = new TH1D("h_mctruth_muphi_gen_coh", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["mec"] = new TH1D("h_mctruth_muphi_gen_mec", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["other"] = new TH1D("h_mctruth_muphi_gen_other", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["total"] = new TH1D("h_mctruth_muphi_gen_total", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["qe"] = new TH1D("h_mctruth_muphi_gen_qe", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["res"] = new TH1D("h_mctruth_muphi_gen_res", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["dis"] = new TH1D("h_mctruth_muphi_gen_dis", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["coh"] = new TH1D("h_mctruth_muphi_gen_coh", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["mec"] = new TH1D("h_mctruth_muphi_gen_mec", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["other"] = new TH1D("h_mctruth_muphi_gen_other", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
 
   std::map<std::string,TH2D*> hmap_mctruth_mucostheta_mumom_gen;
-  hmap_mctruth_mucostheta_mumom_gen["total"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_total", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom_gen["qe"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_qe", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom_gen["res"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_res", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom_gen["dis"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_dis", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom_gen["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_coh", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom_gen["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_mec", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
-  hmap_mctruth_mucostheta_mumom_gen["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_other", ";True Muon #phi [GeV];Selected Events", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["total"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_total", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["qe"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_qe", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["res"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_res", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["dis"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_dis", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_coh", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_mec", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_other", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
 
 
   //
@@ -2484,6 +2484,8 @@ void Main::Maker::MakeFile()
     // if(t->slc_nuvtx_x.at(scl_ll_max) > 128.175) continue; // anode_vtx
     // if(t->slc_nuvtx_x.at(scl_ll_max) <= 128.175) continue; // cathode_vtx
     
+    if (abs(t->slc_longesttrack_phi.at(scl_ll_max)) < TMath::Pi()/2.) continue; // right (towards the anode)
+    // if (abs(t->slc_longesttrack_phi.at(scl_ll_max)) >= TMath::Pi()/2.) continue; // left (towards the cathode)
 
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi()/4)) continue; // cathode
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < (3./4.)*TMath::Pi())) continue; // up

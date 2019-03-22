@@ -195,6 +195,7 @@ namespace Main {
   // Getting the relevant histograms from MC file BNBCosmic
   // *************************************
   std::map<std::string,TH1D*>* temp_map;
+  std::map<std::string,TH2D*>* temp_map_2d;
   mc_bnbcosmic_file->GetObject("hmap_trklen", temp_map);
   std::map<std::string,TH1D*> hmap_trklen_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkmom_classic", temp_map);
@@ -251,6 +252,8 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi", temp_map);
   std::map<std::string,TH1D*> hmap_mctruth_muphi_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom", temp_map_2d);
+  std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_mc = *temp_map_2d;
   mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
   std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
@@ -259,6 +262,8 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
   std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom_gen", temp_map_2d);
+  std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_gen_mc = *temp_map_2d;
   TH1D* h_flsPe_wcut_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsPe_wcut");
 
   
@@ -3031,6 +3036,42 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   name = outdir + "mctruth_muphi_gen";
   canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
   canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
+
+  
+  TCanvas* canvas_mc_eff_total = new TCanvas();
+  TH2D* h_mc_eff_total = (TH2D*) hmap_mctruth_muangle_mumom_mc["total"]->Clone("h_mc_eff_total");
+  h_mc_eff_total->Divide(hmap_mctruth_muangle_mumom_gen_mc["total"]);
+  h_mc_eff_total->Draw("colz");
+  canvas_mc_eff_total->SaveAs(name + ".pdf");
+  canvas_mc_eff_total->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mc_eff_qe = new TCanvas();
+  TH2D* h_mc_eff_qe = (TH2D*) hmap_mctruth_muangle_mumom_mc["qe"]->Clone("h_mc_eff_qe");
+  h_mc_eff_qe->Divide(hmap_mctruth_muangle_mumom_gen_mc["qe"]);
+  h_mc_eff_qe->Draw("colz");
+  canvas_mc_eff_qe->SaveAs(name + ".pdf");
+  canvas_mc_eff_qe->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mc_eff_res = new TCanvas();
+  TH2D* h_mc_eff_res = (TH2D*) hmap_mctruth_muangle_mumom_mc["res"]->Clone("h_mc_eff_res");
+  h_mc_eff_res->Divide(hmap_mctruth_muangle_mumom_gen_mc["res"]);
+  h_mc_eff_res->Draw("colz");
+  canvas_mc_eff_res->SaveAs(name + ".pdf");
+  canvas_mc_eff_res->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mc_eff_dis = new TCanvas();
+  TH2D* h_mc_eff_dis = (TH2D*) hmap_mctruth_muangle_mumom_mc["dis"]->Clone("h_mc_eff_dis");
+  h_mc_eff_dis->Divide(hmap_mctruth_muangle_mumom_gen_mc["dis"]);
+  h_mc_eff_dis->Draw("colz");
+  canvas_mc_eff_dis->SaveAs(name + ".pdf");
+  canvas_mc_eff_dis->SaveAs(name + ".C","C");
+
+  TCanvas* canvas_mc_eff_mec = new TCanvas();
+  TH2D* h_mc_eff_mec = (TH2D*) hmap_mctruth_muangle_mumom_mc["mec"]->Clone("h_mc_eff_mec");
+  h_mc_eff_mec->Divide(hmap_mctruth_muangle_mumom_gen_mc["mec"]);
+  h_mc_eff_mec->Draw("colz");
+  canvas_mc_eff_mec->SaveAs(name + ".pdf");
+  canvas_mc_eff_mec->SaveAs(name + ".C","C");
 
 
 
