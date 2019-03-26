@@ -2508,7 +2508,7 @@ void Main::Maker::MakeFile()
     // if(t->slc_nuvtx_x.at(scl_ll_max) > 128.175) continue; // anode_vtx
     // if(t->slc_nuvtx_x.at(scl_ll_max) <= 128.175) continue; // cathode_vtx
     
-    if (abs(t->slc_longesttrack_phi.at(scl_ll_max)) < TMath::Pi()/2.) continue; // right (towards the anode)
+    // if (abs(t->slc_longesttrack_phi.at(scl_ll_max)) < TMath::Pi()/2.) continue; // right (towards the anode)
     // if (abs(t->slc_longesttrack_phi.at(scl_ll_max)) >= TMath::Pi()/2.) continue; // left (towards the cathode)
 
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi()/4)) continue; // cathode

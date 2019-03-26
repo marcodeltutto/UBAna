@@ -252,8 +252,10 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi", temp_map);
   std::map<std::string,TH1D*> hmap_mctruth_muphi_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom", temp_map_2d);
-  std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_mc = *temp_map_2d;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_chargedmult", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_chargedmult_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom", temp_map_2d);
+  // std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_mc = *temp_map_2d;
   mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
   std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
@@ -262,8 +264,10 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
   std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc = *temp_map;
-  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom_gen", temp_map_2d);
-  std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_gen_mc = *temp_map_2d;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_chargedmult_gen", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_chargedmult_gen_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom_gen", temp_map_2d);
+  // std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_gen_mc = *temp_map_2d;
   TH1D* h_flsPe_wcut_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsPe_wcut");
 
   
@@ -2815,8 +2819,14 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   
   TCanvas* canvas_dqdx_trunc = new TCanvas();
-  THStack *hs_dqdx_trunc_mc = new THStack("hs_dqdx_trunc",";Candidate Track <dQ/dx>_{trunc} [e^{-}/cm];");
-  leg = PlottingTools::DrawTHStack3(hs_dqdx_trunc_mc, scale_factor_mc_bnbcosmic, true, hmap_dqdx_trunc_mc);
+  // THStack *hs_dqdx_trunc_mc = new THStack("hs_dqdx_trunc",";Candidate Track <dQ/dx>_{trunc} [e^{-}/cm];");
+  // leg = PlottingTools::DrawTHStack3(hs_dqdx_trunc_mc, scale_factor_mc_bnbcosmic, true, hmap_dqdx_trunc_mc);
+  hmap_dqdx_trunc_mc["else"]->Scale(scale_factor_mc_bnbcosmic);
+  hmap_dqdx_trunc_mc["else"]->SetLineColor(30);
+  hmap_dqdx_trunc_mc["else"]->SetFillColor(30);
+  hmap_dqdx_trunc_mc["else"]->Draw("histo");
+  leg = new TLegend(0.4283668,0.4442105,0.8925501,0.8336842,NULL,"brNDC");
+  leg->AddEntry(hmap_dqdx_trunc_mc["else"], "withDIC MC","f");
   PlottingTools::DrawDataHisto(h_dqdx_trunc_data);
   leg->AddEntry(h_dqdx_trunc_data,"Data (Beam-on - Beam-off)","lep");
   PlottingTools::DrawPOT(bnbon_pot_meas);
@@ -3003,6 +3013,13 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   canvas_mctruth_muphi->SaveAs(name + ".pdf");
   canvas_mctruth_muphi->SaveAs(name + ".C","C");
 
+  // TCanvas* canvas_mctruth_chargedmult = new TCanvas();
+  // THStack *hs_mctruth_chargedmult = new THStack("hs_mctruth_chargedmult",";Charged Particle Multiplicity;Selected Signal Events");
+  // this->PlotMCTHStack(hs_mctruth_chargedmult, hmap_mctruth_chargedmult_mc, scale_factor_mc_bnbcosmic);
+  // PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  // name = outdir + "mctruth_chargedmult_sel";
+  // canvas_mctruth_chargedmult->SaveAs(name + ".pdf");
+  // canvas_mctruth_chargedmult->SaveAs(name + ".C","C");
 
 
   TCanvas* canvas_mctruth_nuenergy_gen = new TCanvas();
@@ -3037,236 +3054,310 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
   canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
 
-
-  //
-  // Efficiency plots - p_mu
-  //
-
-  TCanvas* canvas_mc_eff_mumom_total = new TCanvas();
-
-  TEfficiency* h_mc_eff_mumom_total = new TEfficiency(*hmap_mctruth_mumom_mc["total"],*hmap_mctruth_mumom_gen_mc["total"]);
-  h_mc_eff_mumom_total->SetTitle(";True Muon Momentum [GeV];Efficiency");
-  h_mc_eff_mumom_total->SetLineColor(kBlack); 
-  h_mc_eff_mumom_total->SetMarkerColor(kBlack);
-  h_mc_eff_mumom_total->SetMarkerStyle(20);
-  h_mc_eff_mumom_total->SetMarkerSize(0.5);
-  h_mc_eff_mumom_total->Draw("ALP");
-  gPad->Update();
-  auto g_qe = h_mc_eff_mumom_total->GetPaintedGraph();
-  g_qe->SetMinimum(0);
-  g_qe->SetMaximum(1);
-  gPad->Update();
-
-  TEfficiency* h_mc_eff_mumom_qe = new TEfficiency(*hmap_mctruth_mumom_mc["qe"],*hmap_mctruth_mumom_gen_mc["qe"]);
-  h_mc_eff_mumom_qe->SetTitle(";True Muon Momentum [GeV];Efficiency");
-  h_mc_eff_mumom_qe->SetLineColor(kGreen+2); 
-  h_mc_eff_mumom_qe->SetMarkerColor(kGreen+2);
-  h_mc_eff_mumom_qe->SetMarkerStyle(20);
-  h_mc_eff_mumom_qe->SetMarkerSize(0.5);
-  h_mc_eff_mumom_qe->Draw("LP same");
-
-  TEfficiency* h_mc_eff_mumom_mec = new TEfficiency(*hmap_mctruth_mumom_mc["mec"],*hmap_mctruth_mumom_gen_mc["mec"]);
-  h_mc_eff_mumom_mec->SetTitle(";True Muon Momentum [GeV];Efficiency");
-  h_mc_eff_mumom_mec->SetLineColor(kOrange-3); 
-  h_mc_eff_mumom_mec->SetMarkerColor(kOrange-3);
-  h_mc_eff_mumom_mec->SetMarkerStyle(20);
-  h_mc_eff_mumom_mec->SetMarkerSize(0.5);
-  h_mc_eff_mumom_mec->Draw("LP same");
-
-  TEfficiency* h_mc_eff_mumom_res = new TEfficiency(*hmap_mctruth_mumom_mc["res"],*hmap_mctruth_mumom_gen_mc["res"]);
-  h_mc_eff_mumom_res->SetTitle(";True Muon Momentum [GeV];Efficiency");
-  h_mc_eff_mumom_res->SetLineColor(kRed+1); 
-  h_mc_eff_mumom_res->SetMarkerColor(kRed+1);
-  h_mc_eff_mumom_res->SetMarkerStyle(20);
-  h_mc_eff_mumom_res->SetMarkerSize(0.5);
-  h_mc_eff_mumom_res->Draw("LP same");
-
-  TEfficiency* h_mc_eff_mumom_dis = new TEfficiency(*hmap_mctruth_mumom_mc["dis"],*hmap_mctruth_mumom_gen_mc["dis"]);
-  h_mc_eff_mumom_dis->SetTitle(";True Muon Momentum [GeV];Efficiency");
-  h_mc_eff_mumom_dis->SetLineColor(kBlue+1); 
-  h_mc_eff_mumom_dis->SetMarkerColor(kBlue+1);
-  h_mc_eff_mumom_dis->SetMarkerStyle(20);
-  h_mc_eff_mumom_dis->SetMarkerSize(0.5);
-  h_mc_eff_mumom_dis->Draw("LP same");
-
-  TLegend* leg_mode = new TLegend(0.6475645,0.1368421,0.8968481,0.3368421,NULL,"brNDC");
-  leg_mode->AddEntry(h_mc_eff_mumom_total,"All Events","lep");
-  leg_mode->AddEntry(h_mc_eff_mumom_qe,"GENIE QE","lep");  
-  leg_mode->AddEntry(h_mc_eff_mumom_mec,"GENIE MEC","lep");  
-  leg_mode->AddEntry(h_mc_eff_mumom_res,"GENIE RES","lep");  
-  leg_mode->AddEntry(h_mc_eff_mumom_dis,"GENIE DIS","lep");  
-  leg_mode->Draw();
-
-  name = outdir + "mctruth_efficiency_mumom";
-  canvas_mc_eff_mumom_total->SaveAs(name + ".pdf");
-  canvas_mc_eff_mumom_total->SaveAs(name + ".C","C");
+  // TCanvas* canvas_mctruth_chargedmult_gen = new TCanvas();
+  // THStack *hs_mctruth_chargedmult_gen = new THStack("hs_mctruth_chargedmult_gen",";Charged Particle Multiplicity;Generated Signal Events");
+  // this->PlotMCTHStack(hs_mctruth_chargedmult_gen, hmap_mctruth_chargedmult_gen_mc, scale_factor_mc_bnbcosmic);
+  // PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  // name = outdir + "mctruth_chargedmult_gen";
+  // canvas_mctruth_chargedmult_gen->SaveAs(name + ".pdf");
+  // canvas_mctruth_chargedmult_gen->SaveAs(name + ".C","C");
 
 
+  // //
+  // // Efficiency plots - p_mu
+  // //
 
-  //
-  // Efficiency plots - cos(theta_mu)
-  //
+  // TCanvas* canvas_mc_eff_mumom_total = new TCanvas();
 
-  TCanvas* canvas_mc_eff_muangle_total = new TCanvas();
+  // TEfficiency* h_mc_eff_mumom_total = new TEfficiency(*hmap_mctruth_mumom_mc["total"],*hmap_mctruth_mumom_gen_mc["total"]);
+  // h_mc_eff_mumom_total->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  // h_mc_eff_mumom_total->SetLineColor(kBlack); 
+  // h_mc_eff_mumom_total->SetMarkerColor(kBlack);
+  // h_mc_eff_mumom_total->SetMarkerStyle(20);
+  // h_mc_eff_mumom_total->SetMarkerSize(0.5);
+  // h_mc_eff_mumom_total->Draw("ALP");
+  // gPad->Update();
+  // auto g_qe = h_mc_eff_mumom_total->GetPaintedGraph();
+  // g_qe->SetMinimum(0);
+  // g_qe->SetMaximum(1);
+  // gPad->Update();
 
-  TEfficiency* h_mc_eff_muangle_total = new TEfficiency(*hmap_mctruth_mucostheta_mc["total"],*hmap_mctruth_mucostheta_gen_mc["total"]);
-  h_mc_eff_muangle_total->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
-  h_mc_eff_muangle_total->SetLineColor(kBlack); 
-  h_mc_eff_muangle_total->SetMarkerColor(kBlack);
-  h_mc_eff_muangle_total->SetMarkerStyle(20);
-  h_mc_eff_muangle_total->SetMarkerSize(0.5);
-  h_mc_eff_muangle_total->Draw("ALP");
-  gPad->Update();
-  auto g_qe_muangle = h_mc_eff_muangle_total->GetPaintedGraph();
-  g_qe_muangle->SetMinimum(0);
-  g_qe_muangle->SetMaximum(1);
-  gPad->Update();
+  // TEfficiency* h_mc_eff_mumom_qe = new TEfficiency(*hmap_mctruth_mumom_mc["qe"],*hmap_mctruth_mumom_gen_mc["qe"]);
+  // h_mc_eff_mumom_qe->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  // h_mc_eff_mumom_qe->SetLineColor(kGreen+2); 
+  // h_mc_eff_mumom_qe->SetMarkerColor(kGreen+2);
+  // h_mc_eff_mumom_qe->SetMarkerStyle(20);
+  // h_mc_eff_mumom_qe->SetMarkerSize(0.5);
+  // h_mc_eff_mumom_qe->Draw("LP same");
 
-  TEfficiency* h_mc_eff_muangle_qe = new TEfficiency(*hmap_mctruth_mucostheta_mc["qe"],*hmap_mctruth_mucostheta_gen_mc["qe"]);
-  h_mc_eff_muangle_qe->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
-  h_mc_eff_muangle_qe->SetLineColor(kGreen+2); 
-  h_mc_eff_muangle_qe->SetMarkerColor(kGreen+2);
-  h_mc_eff_muangle_qe->SetMarkerStyle(20);
-  h_mc_eff_muangle_qe->SetMarkerSize(0.5);
-  h_mc_eff_muangle_qe->Draw("LP same");
+  // TEfficiency* h_mc_eff_mumom_mec = new TEfficiency(*hmap_mctruth_mumom_mc["mec"],*hmap_mctruth_mumom_gen_mc["mec"]);
+  // h_mc_eff_mumom_mec->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  // h_mc_eff_mumom_mec->SetLineColor(kOrange-3); 
+  // h_mc_eff_mumom_mec->SetMarkerColor(kOrange-3);
+  // h_mc_eff_mumom_mec->SetMarkerStyle(20);
+  // h_mc_eff_mumom_mec->SetMarkerSize(0.5);
+  // h_mc_eff_mumom_mec->Draw("LP same");
 
-  TEfficiency* h_mc_eff_muangle_mec = new TEfficiency(*hmap_mctruth_mucostheta_mc["mec"],*hmap_mctruth_mucostheta_gen_mc["mec"]);
-  h_mc_eff_muangle_mec->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
-  h_mc_eff_muangle_mec->SetLineColor(kOrange-3); 
-  h_mc_eff_muangle_mec->SetMarkerColor(kOrange-3);
-  h_mc_eff_muangle_mec->SetMarkerStyle(20);
-  h_mc_eff_muangle_mec->SetMarkerSize(0.5);
-  h_mc_eff_muangle_mec->Draw("LP same");
+  // TEfficiency* h_mc_eff_mumom_res = new TEfficiency(*hmap_mctruth_mumom_mc["res"],*hmap_mctruth_mumom_gen_mc["res"]);
+  // h_mc_eff_mumom_res->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  // h_mc_eff_mumom_res->SetLineColor(kRed+1); 
+  // h_mc_eff_mumom_res->SetMarkerColor(kRed+1);
+  // h_mc_eff_mumom_res->SetMarkerStyle(20);
+  // h_mc_eff_mumom_res->SetMarkerSize(0.5);
+  // h_mc_eff_mumom_res->Draw("LP same");
 
-  TEfficiency* h_mc_eff_muangle_res = new TEfficiency(*hmap_mctruth_mucostheta_mc["res"],*hmap_mctruth_mucostheta_gen_mc["res"]);
-  h_mc_eff_muangle_res->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
-  h_mc_eff_muangle_res->SetLineColor(kRed+1); 
-  h_mc_eff_muangle_res->SetMarkerColor(kRed+1);
-  h_mc_eff_muangle_res->SetMarkerStyle(20);
-  h_mc_eff_muangle_res->SetMarkerSize(0.5);
-  h_mc_eff_muangle_res->Draw("LP same");
+  // TEfficiency* h_mc_eff_mumom_dis = new TEfficiency(*hmap_mctruth_mumom_mc["dis"],*hmap_mctruth_mumom_gen_mc["dis"]);
+  // h_mc_eff_mumom_dis->SetTitle(";True Muon Momentum [GeV];Efficiency");
+  // h_mc_eff_mumom_dis->SetLineColor(kBlue+1); 
+  // h_mc_eff_mumom_dis->SetMarkerColor(kBlue+1);
+  // h_mc_eff_mumom_dis->SetMarkerStyle(20);
+  // h_mc_eff_mumom_dis->SetMarkerSize(0.5);
+  // h_mc_eff_mumom_dis->Draw("LP same");
 
-  TEfficiency* h_mc_eff_muangle_dis = new TEfficiency(*hmap_mctruth_mucostheta_mc["dis"],*hmap_mctruth_mucostheta_gen_mc["dis"]);
-  h_mc_eff_muangle_dis->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
-  h_mc_eff_muangle_dis->SetLineColor(kBlue+1); 
-  h_mc_eff_muangle_dis->SetMarkerColor(kBlue+1);
-  h_mc_eff_muangle_dis->SetMarkerStyle(20);
-  h_mc_eff_muangle_dis->SetMarkerSize(0.5);
-  h_mc_eff_muangle_dis->Draw("LP same");
+  // TLegend* leg_mode = new TLegend(0.6719198,0.6589474,0.9971347,0.8821053,NULL,"brNDC");
+  // leg_mode->SetBorderSize(0);
+  // leg_mode->SetTextSize(0.03789474);
+  // leg_mode->SetLineColor(1);
+  // leg_mode->SetLineStyle(1);
+  // leg_mode->SetLineWidth(1);
+  // leg_mode->SetFillColor(0);
+  // leg_mode->SetFillStyle(0);
+  // leg_mode->AddEntry(h_mc_eff_mumom_total,"All Events","lep");
+  // leg_mode->AddEntry(h_mc_eff_mumom_qe,"GENIE QE","lep");  
+  // leg_mode->AddEntry(h_mc_eff_mumom_mec,"GENIE MEC","lep");  
+  // leg_mode->AddEntry(h_mc_eff_mumom_res,"GENIE RES","lep");  
+  // leg_mode->AddEntry(h_mc_eff_mumom_dis,"GENIE DIS","lep");  
+  // leg_mode->Draw();
+
+  // name = outdir + "mctruth_efficiency_mumom";
+  // canvas_mc_eff_mumom_total->SaveAs(name + ".pdf");
+  // canvas_mc_eff_mumom_total->SaveAs(name + ".C","C");
+
+
+
+  // //
+  // // Efficiency plots - cos(theta_mu)
+  // //
+
+  // TCanvas* canvas_mc_eff_muangle_total = new TCanvas();
+
+  // TEfficiency* h_mc_eff_muangle_total = new TEfficiency(*hmap_mctruth_mucostheta_mc["total"],*hmap_mctruth_mucostheta_gen_mc["total"]);
+  // h_mc_eff_muangle_total->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  // h_mc_eff_muangle_total->SetLineColor(kBlack); 
+  // h_mc_eff_muangle_total->SetMarkerColor(kBlack);
+  // h_mc_eff_muangle_total->SetMarkerStyle(20);
+  // h_mc_eff_muangle_total->SetMarkerSize(0.5);
+  // h_mc_eff_muangle_total->Draw("ALP");
+  // gPad->Update();
+  // auto g_qe_muangle = h_mc_eff_muangle_total->GetPaintedGraph();
+  // g_qe_muangle->SetMinimum(0);
+  // g_qe_muangle->SetMaximum(1);
+  // gPad->Update();
+
+  // TEfficiency* h_mc_eff_muangle_qe = new TEfficiency(*hmap_mctruth_mucostheta_mc["qe"],*hmap_mctruth_mucostheta_gen_mc["qe"]);
+  // h_mc_eff_muangle_qe->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  // h_mc_eff_muangle_qe->SetLineColor(kGreen+2); 
+  // h_mc_eff_muangle_qe->SetMarkerColor(kGreen+2);
+  // h_mc_eff_muangle_qe->SetMarkerStyle(20);
+  // h_mc_eff_muangle_qe->SetMarkerSize(0.5);
+  // h_mc_eff_muangle_qe->Draw("LP same");
+
+  // TEfficiency* h_mc_eff_muangle_mec = new TEfficiency(*hmap_mctruth_mucostheta_mc["mec"],*hmap_mctruth_mucostheta_gen_mc["mec"]);
+  // h_mc_eff_muangle_mec->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  // h_mc_eff_muangle_mec->SetLineColor(kOrange-3); 
+  // h_mc_eff_muangle_mec->SetMarkerColor(kOrange-3);
+  // h_mc_eff_muangle_mec->SetMarkerStyle(20);
+  // h_mc_eff_muangle_mec->SetMarkerSize(0.5);
+  // h_mc_eff_muangle_mec->Draw("LP same");
+
+  // TEfficiency* h_mc_eff_muangle_res = new TEfficiency(*hmap_mctruth_mucostheta_mc["res"],*hmap_mctruth_mucostheta_gen_mc["res"]);
+  // h_mc_eff_muangle_res->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  // h_mc_eff_muangle_res->SetLineColor(kRed+1); 
+  // h_mc_eff_muangle_res->SetMarkerColor(kRed+1);
+  // h_mc_eff_muangle_res->SetMarkerStyle(20);
+  // h_mc_eff_muangle_res->SetMarkerSize(0.5);
+  // h_mc_eff_muangle_res->Draw("LP same");
+
+  // TEfficiency* h_mc_eff_muangle_dis = new TEfficiency(*hmap_mctruth_mucostheta_mc["dis"],*hmap_mctruth_mucostheta_gen_mc["dis"]);
+  // h_mc_eff_muangle_dis->SetTitle(";True Muon cos(#theta_{#mu});Efficiency");
+  // h_mc_eff_muangle_dis->SetLineColor(kBlue+1); 
+  // h_mc_eff_muangle_dis->SetMarkerColor(kBlue+1);
+  // h_mc_eff_muangle_dis->SetMarkerStyle(20);
+  // h_mc_eff_muangle_dis->SetMarkerSize(0.5);
+  // h_mc_eff_muangle_dis->Draw("LP same");
  
-  leg_mode->Draw();
+  // leg_mode->Draw();
 
-  name = outdir + "mctruth_efficiency_muangle";
-  canvas_mc_eff_muangle_total->SaveAs(name + ".pdf");
-  canvas_mc_eff_muangle_total->SaveAs(name + ".C","C");
+  // name = outdir + "mctruth_efficiency_muangle";
+  // canvas_mc_eff_muangle_total->SaveAs(name + ".pdf");
+  // canvas_mc_eff_muangle_total->SaveAs(name + ".C","C");
 
 
 
-  //
-  // Efficiency plots - phi
-  //
+  // //
+  // // Efficiency plots - phi
+  // //
 
-  TCanvas* canvas_mc_eff_phi_total = new TCanvas();
+  // TCanvas* canvas_mc_eff_phi_total = new TCanvas();
 
-  TEfficiency* h_mc_eff_phi_total = new TEfficiency(*hmap_mctruth_muphi_mc["total"],*hmap_mctruth_muphi_gen_mc["total"]);
-  h_mc_eff_phi_total->SetTitle(";True Muon #phi;Efficiency");
-  h_mc_eff_phi_total->SetLineColor(kBlack); 
-  h_mc_eff_phi_total->SetMarkerColor(kBlack);
-  h_mc_eff_phi_total->SetMarkerStyle(20);
-  h_mc_eff_phi_total->SetMarkerSize(0.5);
-  h_mc_eff_phi_total->Draw("ALP");
-  gPad->Update();
-  auto g_qe_muphi = h_mc_eff_phi_total->GetPaintedGraph();
-  g_qe_muphi->SetMinimum(0);
-  g_qe_muphi->SetMaximum(1);
-  gPad->Update();
+  // TEfficiency* h_mc_eff_phi_total = new TEfficiency(*hmap_mctruth_muphi_mc["total"],*hmap_mctruth_muphi_gen_mc["total"]);
+  // h_mc_eff_phi_total->SetTitle(";True Muon #phi;Efficiency");
+  // h_mc_eff_phi_total->SetLineColor(kBlack); 
+  // h_mc_eff_phi_total->SetMarkerColor(kBlack);
+  // h_mc_eff_phi_total->SetMarkerStyle(20);
+  // h_mc_eff_phi_total->SetMarkerSize(0.5);
+  // h_mc_eff_phi_total->Draw("ALP");
+  // gPad->Update();
+  // auto g_qe_muphi = h_mc_eff_phi_total->GetPaintedGraph();
+  // g_qe_muphi->SetMinimum(0);
+  // g_qe_muphi->SetMaximum(1);
+  // gPad->Update();
 
-  TEfficiency* h_mc_eff_phi_qe = new TEfficiency(*hmap_mctruth_muphi_mc["qe"],*hmap_mctruth_muphi_gen_mc["qe"]);
-  h_mc_eff_phi_qe->SetTitle(";True Muon #phi;Efficiency");
-  h_mc_eff_phi_qe->SetLineColor(kGreen+2); 
-  h_mc_eff_phi_qe->SetMarkerColor(kGreen+2);
-  h_mc_eff_phi_qe->SetMarkerStyle(20);
-  h_mc_eff_phi_qe->SetMarkerSize(0.5);
-  h_mc_eff_phi_qe->Draw("LP same");
+  // TEfficiency* h_mc_eff_phi_qe = new TEfficiency(*hmap_mctruth_muphi_mc["qe"],*hmap_mctruth_muphi_gen_mc["qe"]);
+  // h_mc_eff_phi_qe->SetTitle(";True Muon #phi;Efficiency");
+  // h_mc_eff_phi_qe->SetLineColor(kGreen+2); 
+  // h_mc_eff_phi_qe->SetMarkerColor(kGreen+2);
+  // h_mc_eff_phi_qe->SetMarkerStyle(20);
+  // h_mc_eff_phi_qe->SetMarkerSize(0.5);
+  // h_mc_eff_phi_qe->Draw("LP same");
 
-  TEfficiency* h_mc_eff_phi_mec = new TEfficiency(*hmap_mctruth_muphi_mc["mec"],*hmap_mctruth_muphi_gen_mc["mec"]);
-  h_mc_eff_phi_mec->SetTitle(";True Muon #phi;Efficiency");
-  h_mc_eff_phi_mec->SetLineColor(kOrange-3); 
-  h_mc_eff_phi_mec->SetMarkerColor(kOrange-3);
-  h_mc_eff_phi_mec->SetMarkerStyle(20);
-  h_mc_eff_phi_mec->SetMarkerSize(0.5);
-  h_mc_eff_phi_mec->Draw("LP same");
+  // TEfficiency* h_mc_eff_phi_mec = new TEfficiency(*hmap_mctruth_muphi_mc["mec"],*hmap_mctruth_muphi_gen_mc["mec"]);
+  // h_mc_eff_phi_mec->SetTitle(";True Muon #phi;Efficiency");
+  // h_mc_eff_phi_mec->SetLineColor(kOrange-3); 
+  // h_mc_eff_phi_mec->SetMarkerColor(kOrange-3);
+  // h_mc_eff_phi_mec->SetMarkerStyle(20);
+  // h_mc_eff_phi_mec->SetMarkerSize(0.5);
+  // h_mc_eff_phi_mec->Draw("LP same");
 
-  TEfficiency* h_mc_eff_phi_res = new TEfficiency(*hmap_mctruth_muphi_mc["res"],*hmap_mctruth_muphi_gen_mc["res"]);
-  h_mc_eff_phi_res->SetTitle(";True Muon #phi;Efficiency");
-  h_mc_eff_phi_res->SetLineColor(kRed+1); 
-  h_mc_eff_phi_res->SetMarkerColor(kRed+1);
-  h_mc_eff_phi_res->SetMarkerStyle(20);
-  h_mc_eff_phi_res->SetMarkerSize(0.5);
-  h_mc_eff_phi_res->Draw("LP same");
+  // TEfficiency* h_mc_eff_phi_res = new TEfficiency(*hmap_mctruth_muphi_mc["res"],*hmap_mctruth_muphi_gen_mc["res"]);
+  // h_mc_eff_phi_res->SetTitle(";True Muon #phi;Efficiency");
+  // h_mc_eff_phi_res->SetLineColor(kRed+1); 
+  // h_mc_eff_phi_res->SetMarkerColor(kRed+1);
+  // h_mc_eff_phi_res->SetMarkerStyle(20);
+  // h_mc_eff_phi_res->SetMarkerSize(0.5);
+  // h_mc_eff_phi_res->Draw("LP same");
 
-  TEfficiency* h_mc_eff_phi_dis = new TEfficiency(*hmap_mctruth_muphi_mc["dis"],*hmap_mctruth_muphi_gen_mc["dis"]);
-  h_mc_eff_phi_dis->SetTitle(";True Muon #phi;Efficiency");
-  h_mc_eff_phi_dis->SetLineColor(kBlue+1); 
-  h_mc_eff_phi_dis->SetMarkerColor(kBlue+1);
-  h_mc_eff_phi_dis->SetMarkerStyle(20);
-  h_mc_eff_phi_dis->SetMarkerSize(0.5);
-  h_mc_eff_phi_dis->Draw("LP same");
+  // TEfficiency* h_mc_eff_phi_dis = new TEfficiency(*hmap_mctruth_muphi_mc["dis"],*hmap_mctruth_muphi_gen_mc["dis"]);
+  // h_mc_eff_phi_dis->SetTitle(";True Muon #phi;Efficiency");
+  // h_mc_eff_phi_dis->SetLineColor(kBlue+1); 
+  // h_mc_eff_phi_dis->SetMarkerColor(kBlue+1);
+  // h_mc_eff_phi_dis->SetMarkerStyle(20);
+  // h_mc_eff_phi_dis->SetMarkerSize(0.5);
+  // h_mc_eff_phi_dis->Draw("LP same");
  
-  leg_mode->Draw();
+  // leg_mode->Draw();
 
-  name = outdir + "mctruth_efficiency_phi";
-  canvas_mc_eff_phi_total->SaveAs(name + ".pdf");
-  canvas_mc_eff_phi_total->SaveAs(name + ".C","C");
-
-
+  // name = outdir + "mctruth_efficiency_phi";
+  // canvas_mc_eff_phi_total->SaveAs(name + ".pdf");
+  // canvas_mc_eff_phi_total->SaveAs(name + ".C","C");
 
 
-  // Efficiency plots - p_mu, cos(theta_mu)
-  TCanvas* canvas_mc_eff_total = new TCanvas();
-  TH2D* h_mc_eff_total = (TH2D*) hmap_mctruth_muangle_mumom_mc["total"]->Clone("h_mc_eff_total");
-  h_mc_eff_total->Divide(hmap_mctruth_muangle_mumom_gen_mc["total"]);
-  h_mc_eff_total->SetTitle("All Events");
-  h_mc_eff_total->Draw("colz");
-  name = outdir + "mctruth_efficiency_muangle_mumom_total";
-  canvas_mc_eff_total->SaveAs(name + ".pdf");
-  canvas_mc_eff_total->SaveAs(name + ".C","C");
+  // //
+  // // Efficiency plots - Charged particle multiplicity
+  // //
 
-  TCanvas* canvas_mc_eff_qe = new TCanvas();
-  TH2D* h_mc_eff_qe = (TH2D*) hmap_mctruth_muangle_mumom_mc["qe"]->Clone("h_mc_eff_qe");
-  h_mc_eff_qe->Divide(hmap_mctruth_muangle_mumom_gen_mc["qe"]);
-  h_mc_eff_qe->SetTitle("QE Events Only");
-  h_mc_eff_qe->Draw("colz");
-  name = outdir + "mctruth_efficiency_muangle_mumom_qe";
-  canvas_mc_eff_qe->SaveAs(name + ".pdf");
-  canvas_mc_eff_qe->SaveAs(name + ".C","C");
+  // TCanvas* canvas_mc_eff_chargedmult_total = new TCanvas();
 
-  TCanvas* canvas_mc_eff_res = new TCanvas();
-  TH2D* h_mc_eff_res = (TH2D*) hmap_mctruth_muangle_mumom_mc["res"]->Clone("h_mc_eff_res");
-  h_mc_eff_res->Divide(hmap_mctruth_muangle_mumom_gen_mc["res"]);
-  h_mc_eff_res->SetTitle("RES Events Only");
-  h_mc_eff_res->Draw("colz");
-  name = outdir + "mctruth_efficiency_muangle_mumom_res";
-  canvas_mc_eff_res->SaveAs(name + ".pdf");
-  canvas_mc_eff_res->SaveAs(name + ".C","C");
+  // TEfficiency* h_mc_eff_chargedmult_total = new TEfficiency(*hmap_mctruth_chargedmult_mc["total"],*hmap_mctruth_chargedmult_gen_mc["total"]);
+  // h_mc_eff_chargedmult_total->SetTitle(";True Charged Particle Multiplicity;Efficiency");
+  // h_mc_eff_chargedmult_total->SetLineColor(kBlack); 
+  // h_mc_eff_chargedmult_total->SetMarkerColor(kBlack);
+  // h_mc_eff_chargedmult_total->SetMarkerStyle(20);
+  // h_mc_eff_chargedmult_total->SetMarkerSize(0.5);
+  // h_mc_eff_chargedmult_total->Draw("ALP");
+  // gPad->Update();
+  // auto g_qe_chargedmult = h_mc_eff_chargedmult_total->GetPaintedGraph();
+  // g_qe_chargedmult->SetMinimum(0);
+  // g_qe_chargedmult->SetMaximum(1);
+  // gPad->Update();
 
-  TCanvas* canvas_mc_eff_dis = new TCanvas();
-  TH2D* h_mc_eff_dis = (TH2D*) hmap_mctruth_muangle_mumom_mc["dis"]->Clone("h_mc_eff_dis");
-  h_mc_eff_dis->Divide(hmap_mctruth_muangle_mumom_gen_mc["dis"]);
-  h_mc_eff_dis->SetTitle("DIS Events Only");
-  h_mc_eff_dis->Draw("colz");
-  name = outdir + "mctruth_efficiency_muangle_mumom_dis";
-  canvas_mc_eff_dis->SaveAs(name + ".pdf");
-  canvas_mc_eff_dis->SaveAs(name + ".C","C");
+  // TEfficiency* h_mc_eff_chargedmult_qe = new TEfficiency(*hmap_mctruth_chargedmult_mc["qe"],*hmap_mctruth_chargedmult_gen_mc["qe"]);
+  // h_mc_eff_chargedmult_qe->SetTitle(";True Charged Particle Multiplicity;Efficiency");
+  // h_mc_eff_chargedmult_qe->SetLineColor(kGreen+2); 
+  // h_mc_eff_chargedmult_qe->SetMarkerColor(kGreen+2);
+  // h_mc_eff_chargedmult_qe->SetMarkerStyle(20);
+  // h_mc_eff_chargedmult_qe->SetMarkerSize(0.5);
+  // h_mc_eff_chargedmult_qe->Draw("LP same");
 
-  TCanvas* canvas_mc_eff_mec = new TCanvas();
-  TH2D* h_mc_eff_mec = (TH2D*) hmap_mctruth_muangle_mumom_mc["mec"]->Clone("h_mc_eff_mec");
-  h_mc_eff_mec->Divide(hmap_mctruth_muangle_mumom_gen_mc["mec"]);
-  h_mc_eff_mec->SetTitle("MEC Events Only");
-  h_mc_eff_mec->Draw("colz");
-  name = outdir + "mctruth_efficiency_muangle_mumom_mec";
-  canvas_mc_eff_mec->SaveAs(name + ".pdf");
-  canvas_mc_eff_mec->SaveAs(name + ".C","C");
+  // TEfficiency* h_mc_eff_chargedmult_mec = new TEfficiency(*hmap_mctruth_chargedmult_mc["mec"],*hmap_mctruth_chargedmult_gen_mc["mec"]);
+  // h_mc_eff_chargedmult_mec->SetTitle(";True Charged Particle Multiplicity;Efficiency");
+  // h_mc_eff_chargedmult_mec->SetLineColor(kOrange-3); 
+  // h_mc_eff_chargedmult_mec->SetMarkerColor(kOrange-3);
+  // h_mc_eff_chargedmult_mec->SetMarkerStyle(20);
+  // h_mc_eff_chargedmult_mec->SetMarkerSize(0.5);
+  // h_mc_eff_chargedmult_mec->Draw("LP same");
+
+  // TEfficiency* h_mc_eff_chargedmult_res = new TEfficiency(*hmap_mctruth_chargedmult_mc["res"],*hmap_mctruth_chargedmult_gen_mc["res"]);
+  // h_mc_eff_chargedmult_res->SetTitle(";True Charged Particle Multiplicity;Efficiency");
+  // h_mc_eff_chargedmult_res->SetLineColor(kRed+1); 
+  // h_mc_eff_chargedmult_res->SetMarkerColor(kRed+1);
+  // h_mc_eff_chargedmult_res->SetMarkerStyle(20);
+  // h_mc_eff_chargedmult_res->SetMarkerSize(0.5);
+  // h_mc_eff_chargedmult_res->Draw("LP same");
+
+  // TEfficiency* h_mc_eff_chargedmult_dis = new TEfficiency(*hmap_mctruth_chargedmult_mc["dis"],*hmap_mctruth_chargedmult_gen_mc["dis"]);
+  // h_mc_eff_chargedmult_dis->SetTitle(";True Charged Particle Multiplicity;Efficiency");
+  // h_mc_eff_chargedmult_dis->SetLineColor(kBlue+1); 
+  // h_mc_eff_chargedmult_dis->SetMarkerColor(kBlue+1);
+  // h_mc_eff_chargedmult_dis->SetMarkerStyle(20);
+  // h_mc_eff_chargedmult_dis->SetMarkerSize(0.5);
+  // h_mc_eff_chargedmult_dis->Draw("LP same");
+ 
+  // leg_mode->Draw();
+
+  // name = outdir + "mctruth_efficiency_chargedmult";
+  // canvas_mc_eff_chargedmult_total->SaveAs(name + ".pdf");
+  // canvas_mc_eff_chargedmult_total->SaveAs(name + ".C","C");
+
+
+
+
+
+  // // Efficiency plots - p_mu, cos(theta_mu)
+  // TCanvas* canvas_mc_eff_total = new TCanvas();
+  // TH2D* h_mc_eff_total = (TH2D*) hmap_mctruth_muangle_mumom_mc["total"]->Clone("h_mc_eff_total");
+  // h_mc_eff_total->Divide(hmap_mctruth_muangle_mumom_gen_mc["total"]);
+  // h_mc_eff_total->SetTitle("All Events");
+  // h_mc_eff_total->Draw("colz");
+  // name = outdir + "mctruth_efficiency_muangle_mumom_total";
+  // canvas_mc_eff_total->SaveAs(name + ".pdf");
+  // canvas_mc_eff_total->SaveAs(name + ".C","C");
+
+  // TCanvas* canvas_mc_eff_qe = new TCanvas();
+  // TH2D* h_mc_eff_qe = (TH2D*) hmap_mctruth_muangle_mumom_mc["qe"]->Clone("h_mc_eff_qe");
+  // h_mc_eff_qe->Divide(hmap_mctruth_muangle_mumom_gen_mc["qe"]);
+  // h_mc_eff_qe->SetTitle("QE Events Only");
+  // h_mc_eff_qe->Draw("colz");
+  // name = outdir + "mctruth_efficiency_muangle_mumom_qe";
+  // canvas_mc_eff_qe->SaveAs(name + ".pdf");
+  // canvas_mc_eff_qe->SaveAs(name + ".C","C");
+
+  // TCanvas* canvas_mc_eff_res = new TCanvas();
+  // TH2D* h_mc_eff_res = (TH2D*) hmap_mctruth_muangle_mumom_mc["res"]->Clone("h_mc_eff_res");
+  // h_mc_eff_res->Divide(hmap_mctruth_muangle_mumom_gen_mc["res"]);
+  // h_mc_eff_res->SetTitle("RES Events Only");
+  // h_mc_eff_res->Draw("colz");
+  // name = outdir + "mctruth_efficiency_muangle_mumom_res";
+  // canvas_mc_eff_res->SaveAs(name + ".pdf");
+  // canvas_mc_eff_res->SaveAs(name + ".C","C");
+
+  // TCanvas* canvas_mc_eff_dis = new TCanvas();
+  // TH2D* h_mc_eff_dis = (TH2D*) hmap_mctruth_muangle_mumom_mc["dis"]->Clone("h_mc_eff_dis");
+  // h_mc_eff_dis->Divide(hmap_mctruth_muangle_mumom_gen_mc["dis"]);
+  // h_mc_eff_dis->SetTitle("DIS Events Only");
+  // h_mc_eff_dis->Draw("colz");
+  // name = outdir + "mctruth_efficiency_muangle_mumom_dis";
+  // canvas_mc_eff_dis->SaveAs(name + ".pdf");
+  // canvas_mc_eff_dis->SaveAs(name + ".C","C");
+
+  // TCanvas* canvas_mc_eff_mec = new TCanvas();
+  // TH2D* h_mc_eff_mec = (TH2D*) hmap_mctruth_muangle_mumom_mc["mec"]->Clone("h_mc_eff_mec");
+  // h_mc_eff_mec->Divide(hmap_mctruth_muangle_mumom_gen_mc["mec"]);
+  // h_mc_eff_mec->SetTitle("MEC Events Only");
+  // h_mc_eff_mec->Draw("colz");
+  // name = outdir + "mctruth_efficiency_muangle_mumom_mec";
+  // canvas_mc_eff_mec->SaveAs(name + ".pdf");
+  // canvas_mc_eff_mec->SaveAs(name + ".C","C");
 
 
 
