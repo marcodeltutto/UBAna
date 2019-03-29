@@ -3,6 +3,43 @@ import ROOT
 from ROOT import *
 # gROOT.ProcessLine(".x " + os.environ['MYSW_DIR'] + "/Utils/rootlogon.C")
 
+def smear_double(xsec_true_h, smearing_m):
+  # print 'nrows', smearing_m.GetNrows()
+  # print 'ncols', smearing_m.GetNcols()
+  # print 'NbinsX', xsec_true_h.GetNbinsX()
+  xsec_true_v = TMatrix()
+  xsec_true_v.Clear()
+  xsec_true_v.ResizeTo(xsec_true_h.GetNumberOfBins(), 1)
+
+  for i in xrange(1, xsec_true_h.GetNumberOfBins()+1):
+    xsec_true_h.SetBinContent(i, xsec_true_h.GetBinContent(i) * xsec_true_h.GetBinWidth(i))
+
+  for i in xrange(1, xsec_true_h.GetNumberOfBins()+1):
+    xsec_true_v[i-1][0] = xsec_true_h.GetBinContent(i);
+
+  xsec_reco_v  = TMatrix()
+  xsec_reco_v.Clear()
+  xsec_reco_v.ResizeTo(xsec_true_h.GetNumberOfBins(), 1)
+
+
+  for i in xrange(0, xsec_true_h.GetNumberOfBins()):
+    xsec_reco_v[i][0] = 0
+    for j in xrange(0, xsec_true_h.GetNumberOfBins()):
+      # print 'i =', i ,', j =', j, ' => S =', smearing_m[i][j]
+      xsec_reco_v[i][0] += smearing_m[i][j] * xsec_true_v[j][0]
+
+
+  xsec_reco_h = xsec_true_h.Clone("xsec_reco_h")
+  for i in xrange(1, xsec_true_h.GetNumberOfBins()+1):
+    xsec_reco_h.SetBinContent(i, xsec_reco_v[i-1][0])
+    xsec_reco_h.SetBinError(i, xsec_true_h.GetBinError(i) * xsec_true_h.GetBinWidth(i)) # FIXME just copy stat uncertainties for now
+
+  # Restore bin widths
+  xsec_true_h.Scale(1.0, "width");
+  xsec_reco_h.Scale(1.0, "width");
+
+  return xsec_reco_h
+
 f_ubana = ROOT.TFile("./xsec_file_cv.root")
 
 xsec_data = []
@@ -48,6 +85,23 @@ xsec_tune3.append(f_ubana.Get("xsec_mc_alt_poly_muangle_mumom_cv_bin_5"))
 xsec_tune3.append(f_ubana.Get("xsec_mc_alt_poly_muangle_mumom_cv_bin_6"))
 xsec_tune3.append(f_ubana.Get("xsec_mc_alt_poly_muangle_mumom_cv_bin_7"))
 xsec_tune3.append(f_ubana.Get("xsec_mc_alt_poly_muangle_mumom_cv_bin_8"))
+
+muangle_mumom_smearing_m = f_ubana.Get("smearing_matrix_muangle_mumom_poly_cv");
+
+# Get GENIE Tune 3 bug fixed true xsec
+f_genie_tune3f = ROOT.TFile("./genie_histograms_tune3_bugfix.root")
+xsec_muangle_mumom_true_tune3f_h = f_genie_tune3f.Get("xsec_muangle_mumom_true_genie_h")
+
+xsec_muangle_mumom_reco_tune3f_h = smear_double(xsec_muangle_mumom_true_tune3f_h, muangle_mumom_smearing_m)
+
+tune3f_xsec = []
+bin_numbers = ROOT.vector('int')()
+for i in xrange(1, xsec_muangle_mumom_true_tune3f_h.GetNBinsX()+1):
+  tune3f_xsec.append(xsec_muangle_mumom_reco_tune3f_h.ProjectionY("tune3f_bs" + str(i), i, bin_numbers))
+
+
+
+
 
 
 # c_xsec_split = TCanvas("c_xsec_split", "multipads", 0, 0, 2800, 2000)
@@ -106,6 +160,12 @@ for i in xrange(1, x_bins+1):
   xsec_tune3[i-1].SetFillColor(0)
   xsec_tune3[i-1].SetLineStyle(9)
 
+  tune3f_xsec[i-1].SetLineColor(ROOT.kGreen+2)
+  tune3f_xsec[i-1].SetFillColor(0)
+  tune3f_xsec[i-1].SetLineColor(ROOT.kBlue+1)
+  tune3f_xsec[i-1].SetFillColor(0)
+  tune3f_xsec[i-1].SetLineStyle(9)
+  
   xsec_data[i-1].SetMarkerStyle(20)
   # xsec_data[i-1].SetMarkerSize(1.3)
   xsec_data[i-1].SetMarkerSize(1.2)
@@ -114,15 +174,12 @@ for i in xrange(1, x_bins+1):
   xsec_data_unc[i-1].SetMarkerSize(0.1)
   xsec_data_unc[i-1].SetLineWidth(2)
 
-  # genie_xsec[i-1].Draw("E2");
-  # genie_xsec_main =  genie_xsec[i-1].Clone("genie_xsec_main");
-  # genie_xsec_main.SetLineColor(kGreen+2);
-  # genie_xsec_main.SetFillColor(0);
-  # genie_xsec_main.Draw("histo same");
+
 
   xsec_tune1[i-1].Draw("histo")
-  xsec_tune3[i-1].Draw("histo same")
-#   nuwro_xsec[i-1].Draw("histo same")
+  # xsec_tune3[i-1].Draw("histo same")
+  tune3f_xsec[i-1].Draw("histo same")
+
   xsec_data[i-1].Draw("E1 X0 same")
   xsec_data_unc[i-1].Draw("E1 X0 same")
 
@@ -170,19 +227,7 @@ for i in xrange(1, x_bins+1):
   c_xsec_split.cd();
   c_xsec_split.Draw()
   c_xsec_split.SaveAs('double_diff_prl' + str(i) +'.pdf')
-  
-  # l = TLatex(0.1,0.4,"C(x) = d #sqrt{#frac{2}{#lambdaD}}  #int^{x}_{0}cos(#frac{#pi}{2}t^{2})dt");
-  # l.SetTextSize(0.15);
-  # l.Draw()
-  # labels.append(l)
-  # pt = TPaveText(0.3739779,0.6860892,0.8386171,0.8016614,"blNDC");
-  # pt.SetName("title");
-  # pt.SetBorderSize(0);
-  # pt.SetFillColor(0);
-  # pt.SetFillStyle(0);
-  # pt.SetTextFont(42);
-  # pt.AddText(costhetamu_ranges[i-1]);
-  # pt.Draw();
+
 
 c_xsec_split.Modified();
 c_xsec_split.cd();

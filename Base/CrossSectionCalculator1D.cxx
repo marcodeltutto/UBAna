@@ -499,7 +499,7 @@ namespace Base {
     name = _folder +_name + "_efficiecy_reco";
     c_eff_reco->SaveAs(name + ".pdf");
 
-    LOG_INFO() << "Statistic option used for efficiency calculation: " << teff_reco->GetStatisticOption() << ", check https://root.cern.ch/doc/v608/classTEfficiency.html#af27fb4e93a1b16ed7a5b593398f86312." << std::endl;
+    // LOG_INFO() << "Statistic option used for efficiency calculation: " << teff_reco->GetStatisticOption() << ", check https://root.cern.ch/doc/v608/classTEfficiency.html#af27fb4e93a1b16ed7a5b593398f86312." << std::endl;
     LOG_INFO() << "Efficiency bin 1: " << teff_reco->GetEfficiency(1) << " - " << teff_reco->GetEfficiencyErrorLow(1) << " + " << teff_reco->GetEfficiencyErrorUp(1) << std::endl;
     LOG_INFO() << "Efficiency bin 2: " << teff_reco->GetEfficiency(2) << " - " << teff_reco->GetEfficiencyErrorLow(2) << " + " << teff_reco->GetEfficiencyErrorUp(2) << std::endl;
 

@@ -56,7 +56,7 @@ namespace Base {
   void MigrationMatrix4DPoly::CheckEntries(UBTH2Poly* h, int bin_number) 
   {
     if (h->GetEntries() < 5) {
-      LOG_WARNING() << "Few events simulated in true bin " << bin_number << ", migration matrix will be frced to be diagonal for this bin." << std::endl;
+      LOG_WARNING() << "Few events simulated in true bin " << bin_number << ", migration matrix will be forced to be diagonal for this bin." << std::endl;
 
       for (int a = -9; a < h->GetNumberOfBins() + 1; a++) {
         h->SetBinContent(a, 0.);

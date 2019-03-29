@@ -2819,14 +2819,14 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
   
   TCanvas* canvas_dqdx_trunc = new TCanvas();
-  // THStack *hs_dqdx_trunc_mc = new THStack("hs_dqdx_trunc",";Candidate Track <dQ/dx>_{trunc} [e^{-}/cm];");
-  // leg = PlottingTools::DrawTHStack3(hs_dqdx_trunc_mc, scale_factor_mc_bnbcosmic, true, hmap_dqdx_trunc_mc);
-  hmap_dqdx_trunc_mc["else"]->Scale(scale_factor_mc_bnbcosmic);
-  hmap_dqdx_trunc_mc["else"]->SetLineColor(30);
-  hmap_dqdx_trunc_mc["else"]->SetFillColor(30);
-  hmap_dqdx_trunc_mc["else"]->Draw("histo");
-  leg = new TLegend(0.4283668,0.4442105,0.8925501,0.8336842,NULL,"brNDC");
-  leg->AddEntry(hmap_dqdx_trunc_mc["else"], "withDIC MC","f");
+  THStack *hs_dqdx_trunc_mc = new THStack("hs_dqdx_trunc",";Candidate Track <dQ/dx>_{trunc} [e^{-}/cm];");
+  leg = PlottingTools::DrawTHStack3(hs_dqdx_trunc_mc, scale_factor_mc_bnbcosmic, true, hmap_dqdx_trunc_mc);
+  // hmap_dqdx_trunc_mc["else"]->Scale(scale_factor_mc_bnbcosmic);
+  // hmap_dqdx_trunc_mc["else"]->SetLineColor(30);
+  // hmap_dqdx_trunc_mc["else"]->SetFillColor(30);
+  // hmap_dqdx_trunc_mc["else"]->Draw("histo");
+  // leg = new TLegend(0.4283668,0.4442105,0.8925501,0.8336842,NULL,"brNDC");
+  // leg->AddEntry(hmap_dqdx_trunc_mc["else"], "withDIC MC","f");
   PlottingTools::DrawDataHisto(h_dqdx_trunc_data);
   leg->AddEntry(h_dqdx_trunc_data,"Data (Beam-on - Beam-off)","lep");
   PlottingTools::DrawPOT(bnbon_pot_meas);

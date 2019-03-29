@@ -24,9 +24,9 @@ samples = ['anode_anodevtx',  # Vertex in the anode side, pointing at the anode,
            'left', # poining left (to cathode), 13
            ] 
 
-sample_id = 13
+sample_id = 9
 
-model0 = False
+model0 = True
 model1 = False
 model2 = False
 

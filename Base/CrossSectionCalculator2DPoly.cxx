@@ -595,6 +595,10 @@ namespace Base {
     //
     UBTH2Poly * h_eff = _eff;
 
+    for (int i = 1; i < h_eff->GetNumberOfBins()+1; i++) {
+        LOG_CRITICAL() << "efficiency in bin " << i << " is " << h_eff->GetBinContent(i) << std::endl;
+    }
+
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
@@ -659,13 +663,6 @@ namespace Base {
         for (int b = 0; b < _frac_covariance_matrix.GetNbinsX(); b++) {
 
           _covariance_matrix.SetBinContent(a+1, b+1, _frac_covariance_matrix.GetBinContent(a+1, b+1) * (h_data->GetBinContent(a+1) * h_data->GetBinContent(b+1)) );
-
-          if (a+1 == 40 && b+1 == 40) { 
-            LOG_CRITICAL() << "frac = " <<  std::sqrt(_frac_covariance_matrix.GetBinContent(a+1, b+1)) << std::endl;
-            LOG_CRITICAL() << "xsec a = " << h_data->GetBinContent(a+1) << std::endl;
-            LOG_CRITICAL() << "xsec b = " << h_data->GetBinContent(b+1) << std::endl;
-            LOG_CRITICAL() << "cov = " << std::sqrt(_covariance_matrix.GetBinContent(a+1, b+1)) << std::endl;
-          }
 
         }
       }
@@ -733,17 +730,6 @@ namespace Base {
             _tot_frac_cov_matrix_total->SetBinContent(a+1, b+1, (unc_tot2) / (h_data->GetBinContent(a+1) * h_data->GetBinContent(b+1)));
           } else {
             _tot_frac_cov_matrix_total->SetBinContent(a+1, b+1, 0.);
-          }
-
-          if (a+1 == 40 && b+1 == 40) { 
-            LOG_CRITICAL() << "frac syst = " <<  std::sqrt(_syst_frac_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
-            LOG_CRITICAL() << "frac stat = " <<  std::sqrt(_stat_frac_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
-            LOG_CRITICAL() << "frac tota = " <<  std::sqrt(_tot_frac_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
-            LOG_CRITICAL() << "xsec a = " << h_data->GetBinContent(a+1) << std::endl;
-            LOG_CRITICAL() << "xsec b = " << h_data->GetBinContent(b+1) << std::endl;
-            LOG_CRITICAL() << "cov syst = " << std::sqrt(_syst_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
-            LOG_CRITICAL() << "cov stat = " << std::sqrt(_stat_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
-            LOG_CRITICAL() << "cov tota = " << std::sqrt(_tot_cov_matrix_total->GetBinContent(a+1, b+1)) << std::endl;
           }
 
         } // j
@@ -1282,6 +1268,14 @@ namespace Base {
         // if (a != b) V[a][b] = 0;
       }
     }
+
+    // Uncomment this block for stat only chi2
+    // for (int a = 0; a < n_entries; a ++) {
+    //   for (int b = 0; b < n_entries; b ++) {
+    //     if (a == b) V[a][b] = _h_data->GetBinError(a+1) * _h_data->GetBinError(b+1);
+    //     else V[a][b] = 0.;
+    //   }
+    // }
 
     // std::cout << "Printing V = " << std::endl;
     // V.Print();
