@@ -101,10 +101,10 @@ namespace Base{
     void SetHistograms(std::map<std::string,std::map<std::string,UBTH2Poly*>>/*std::map<std::string,BootstrapTH1D>*/ bnbcosmic, UBTH2Poly* bnbon, UBTH2Poly* extbnb, std::map<std::string,UBTH2Poly*> dirt = std::map<std::string,UBTH2Poly*>(), UBTH2Poly* intimecosmic = 0);
 
     /// Sets num and dem histograms for the efficiency and the reco per true 2D histos
-    void SetTruthHistograms(BootstrapTH2DPoly, BootstrapTH2DPoly, std::map<std::string,std::vector<std::vector<double>>>);
+    void SetTruthHistograms(BootstrapTH2DPoly*, BootstrapTH2DPoly*, std::map<std::string,std::vector<std::vector<double>>>);
 
     /// Sets num and dem histograms for the efficiency
-    void SetTruthHistograms(BootstrapTH2DPoly, BootstrapTH2DPoly);
+    void SetTruthHistograms(BootstrapTH2DPoly*, BootstrapTH2DPoly*);
 
     /// Sets truth XSec
     void SetTruthXSec(UBTH2Poly* xsec);
@@ -184,8 +184,8 @@ namespace Base{
     UBTH2Poly* _h_extbnb = nullptr;
     UBTH2Poly* _h_intimecosmic = nullptr;
 
-    BootstrapTH2DPoly _h_eff_mumom_num; ///< The efficiency numerator
-    BootstrapTH2DPoly _h_eff_mumom_den; ///< The efficiency denominator
+    BootstrapTH2DPoly* _h_eff_mumom_num; ///< The efficiency numerator
+    BootstrapTH2DPoly* _h_eff_mumom_den; ///< The efficiency denominator
 
     TTree * _t_true_reco; ///< The TTree containing the mapping true to reco (no longer used)
     std::map<std::string,std::vector<std::vector<double>>> _bs_reco_per_true; ///< The Bootstrap containing the reco per true histos for every universe (universe, true bin, reco bin)

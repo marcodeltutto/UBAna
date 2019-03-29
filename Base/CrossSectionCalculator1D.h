@@ -186,6 +186,9 @@ namespace Base {
     ///
     void SetVerbose(bool verbose) {_verbose = verbose;}
 
+    /// Saves cross section to latex file
+    void SaveToLatexFile();
+
   private:
     
     bool _configured = false;

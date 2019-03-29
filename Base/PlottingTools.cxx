@@ -74,6 +74,17 @@ namespace Base {
     prelim->Draw();
   }
 
+  void PlottingTools::DrawSimulationCovariance() {
+    TLatex* prelim = new TLatex(0.87,0.93, "MicroBooNE Simulation, Preliminary");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(32);
+    // prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
   void PlottingTools::DrawOverlay() {
     TLatex* prelim = new TLatex(0.94,0.93, "BNB#nu MC + Cosmic Data Overlay");
     prelim->SetTextFont(62);
@@ -197,12 +208,18 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     themap["total"]->Add(themap["dirt_cosmic"]);
     themap["total"]->Add(themap["dirt_outfv"]);
 
-    themap["dirt_cosmic"]->SetLineColor(kOrange+3);
-    themap["dirt_cosmic"]->SetFillColor(kOrange+3);
-    hs_trklen->Add(themap["dirt_cosmic"]);
-    themap["dirt_outfv"]->SetLineColor(kOrange+2);
-    themap["dirt_outfv"]->SetFillColor(kOrange+2);
-    hs_trklen->Add(themap["dirt_outfv"]);
+    // if (_breakdownPlots) {
+      themap["dirt_cosmic"]->SetLineColor(kOrange+3);
+      themap["dirt_cosmic"]->SetFillColor(kOrange+3);
+      hs_trklen->Add(themap["dirt_cosmic"]);
+      themap["dirt_outfv"]->SetLineColor(kOrange+2);
+      themap["dirt_outfv"]->SetFillColor(kOrange+2);
+      hs_trklen->Add(themap["dirt_outfv"]);
+    // } else {
+    //   themap["dirt"]->SetLineColor(kOrange+3);
+    //   themap["dirt"]->SetFillColor(kOrange+3);
+    //   hs_trklen->Add(themap["dirt"]);
+    // }
   }
 
 

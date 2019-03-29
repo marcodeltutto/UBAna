@@ -91,7 +91,12 @@ void Main::Maker::PrintMaUpMECOff()
   }
 }
 
-
+void Main::Maker::PrintReweighKaons()
+{
+  for (int i = 0; i < 10; i++) {
+    std::cout << "**************************** RUNNING WITH KAON FLUX SCALED BY " << _kaon_reweigh_factor << " ****************************" << std::endl;
+  }
+}
 
 
 
@@ -323,6 +328,8 @@ void Main::Maker::FillBootstrap(int m, // true bin m (1 number, unrolled)
                                 std::vector<double> wgts) {
 
 
+  if (j < 0) j = 0; // Negative bins are overflows, and are all added to entry 0 of the vector
+
   bs_poly_reco_per_true["nominal"][m][j] += evt_wgt;
 
   for (size_t i = 0; i < fname.size(); i++) {
@@ -417,7 +424,7 @@ void Main::Maker::MakeFile()
   
   // CSV file for dqdx and track lenght values
   std::ofstream _csvfile;
-  _csvfile.open ("output/dqdx_trklen.csv", std::ofstream::out | std::ofstream::trunc);
+  _csvfile.open ("./dqdx_trklen.csv", std::ofstream::out | std::ofstream::trunc);
   _csvfile << "dqdx,trklen,y" << std::endl;
 
    
@@ -476,22 +483,21 @@ void Main::Maker::MakeFile()
   
   if (evalPOT) {
     
-    cout << " ----- " << endl;
-    cout << "| Calculating POT" << endl;
-    cout << "| " << endl;
-    
+    LOG_NORMAL() << " ~~~~~~~~~~~~~~ " << endl;
+    LOG_NORMAL() << " |   Calculating POT" << endl;
+    LOG_NORMAL() << " |" << endl;
     TChain *cpot;
     cpot = new TChain("UBXSec/pottree");
     cpot->Add(pattern.c_str());
-    cout << "| Number of entries in the pot tree: " << cpot->GetEntries() << endl;
+    LOG_NORMAL() << " | Number of entries in the pot tree: " << cpot->GetEntries() << endl;
     Double_t pot;
     cpot->SetBranchAddress("pot", &pot);
     for (int potEntry = 0; potEntry < cpot->GetEntries(); potEntry++) {
       cpot->GetEntry(potEntry);
       totalPOT += pot;
     } // end loop entries
-    cout << "| Total POT: " << totalPOT << endl;
-    cout << " ----- " << endl << endl;
+    LOG_NORMAL() << " | Total POT: " << totalPOT << endl;
+    LOG_NORMAL() << " ~~~~~~~~~~~~~~ " << endl << endl;
   } // end if evalPOT
   else
     totalPOT = -1.;
@@ -526,7 +532,7 @@ void Main::Maker::MakeFile()
   LOG_NORMAL() << "Number of polybins: " << _n_poly_bins << std::endl;
 
   double nsignal = 0;
-  double nsignal_all = 0;
+  // double nsignal_all = 0;
 
   double nsignal_qe = 0;
   double nsignal_res = 0;
@@ -645,22 +651,40 @@ void Main::Maker::MakeFile()
   hmap_mctruth_mumom["other"] = new TH1D("h_mctruth_mumom_other", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
 
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta;
-  hmap_mctruth_mucostheta["total"] = new TH1D("h_mctruth_mucostheta_total", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["qe"] = new TH1D("h_mctruth_mucostheta_qe", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["res"] = new TH1D("h_mctruth_mucostheta_res", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["dis"] = new TH1D("h_mctruth_mucostheta_dis", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["coh"] = new TH1D("h_mctruth_mucostheta_coh", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["mec"] = new TH1D("h_mctruth_mucostheta_mec", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta["other"] = new TH1D("h_mctruth_mucostheta_other", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["total"] = new TH1D("h_mctruth_mucostheta_total", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["qe"] = new TH1D("h_mctruth_mucostheta_qe", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["res"] = new TH1D("h_mctruth_mucostheta_res", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["dis"] = new TH1D("h_mctruth_mucostheta_dis", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["coh"] = new TH1D("h_mctruth_mucostheta_coh", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["mec"] = new TH1D("h_mctruth_mucostheta_mec", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta["other"] = new TH1D("h_mctruth_mucostheta_other", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
 
   std::map<std::string,TH1D*> hmap_mctruth_muphi;
-  hmap_mctruth_muphi["total"] = new TH1D("h_mctruth_muphi_total", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["qe"] = new TH1D("h_mctruth_muphi_qe", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["res"] = new TH1D("h_mctruth_muphi_res", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["dis"] = new TH1D("h_mctruth_muphi_dis", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["coh"] = new TH1D("h_mctruth_muphi_coh", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["mec"] = new TH1D("h_mctruth_muphi_mec", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi["other"] = new TH1D("h_mctruth_muphi_other", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["total"] = new TH1D("h_mctruth_muphi_total", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["qe"] = new TH1D("h_mctruth_muphi_qe", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["res"] = new TH1D("h_mctruth_muphi_res", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["dis"] = new TH1D("h_mctruth_muphi_dis", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["coh"] = new TH1D("h_mctruth_muphi_coh", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["mec"] = new TH1D("h_mctruth_muphi_mec", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi["other"] = new TH1D("h_mctruth_muphi_other", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+
+  std::map<std::string,TH1D*> hmap_mctruth_chargedmult;
+  hmap_mctruth_chargedmult["total"] = new TH1D("h_mctruth_chargedmult_total", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult["qe"] = new TH1D("h_mctruth_chargedmult_qe", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult["res"] = new TH1D("h_mctruth_chargedmult_res", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult["dis"] = new TH1D("h_mctruth_chargedmult_dis", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult["coh"] = new TH1D("h_mctruth_chargedmult_coh", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult["mec"] = new TH1D("h_mctruth_chargedmult_mec", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult["other"] = new TH1D("h_mctruth_chargedmult_other", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+
+  std::map<std::string,TH2D*> hmap_mctruth_mucostheta_mumom;
+  hmap_mctruth_mucostheta_mumom["total"] = new TH2D("hmap_mctruth_mucostheta_mumom_total", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["qe"] = new TH2D("hmap_mctruth_mucostheta_mumom_qe", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["res"] = new TH2D("hmap_mctruth_mucostheta_mumom_res", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["dis"] = new TH2D("hmap_mctruth_mucostheta_mumom_dis", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_coh", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_mec", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_other", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
 
   //
   // Truth histograms stacked in interaction type - Generated
@@ -684,23 +708,40 @@ void Main::Maker::MakeFile()
   hmap_mctruth_mumom_gen["other"] = new TH1D("h_mctruth_mumom_gen_other", ";True Muon Momentum [GeV];Selected Events", 20, 0, 2.5);
 
   std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen;
-  hmap_mctruth_mucostheta_gen["total"] = new TH1D("h_mctruth_mucostheta_gen_total", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["qe"] = new TH1D("h_mctruth_mucostheta_gen_qe", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["res"] = new TH1D("h_mctruth_mucostheta_gen_res", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["dis"] = new TH1D("h_mctruth_mucostheta_gen_dis", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["coh"] = new TH1D("h_mctruth_mucostheta_gen_coh", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["mec"] = new TH1D("h_mctruth_mucostheta_gen_mec", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
-  hmap_mctruth_mucostheta_gen["other"] = new TH1D("h_mctruth_mucostheta_gen_other", ";True Muon cos(#theta) [GeV];Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["total"] = new TH1D("h_mctruth_mucostheta_gen_total", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["qe"] = new TH1D("h_mctruth_mucostheta_gen_qe", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["res"] = new TH1D("h_mctruth_mucostheta_gen_res", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["dis"] = new TH1D("h_mctruth_mucostheta_gen_dis", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["coh"] = new TH1D("h_mctruth_mucostheta_gen_coh", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["mec"] = new TH1D("h_mctruth_mucostheta_gen_mec", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
+  hmap_mctruth_mucostheta_gen["other"] = new TH1D("h_mctruth_mucostheta_gen_other", ";True Muon cos(#theta);Selected Events", 25, -1, 1);
 
   std::map<std::string,TH1D*> hmap_mctruth_muphi_gen;
-  hmap_mctruth_muphi_gen["total"] = new TH1D("h_mctruth_muphi_gen_total", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["qe"] = new TH1D("h_mctruth_muphi_gen_qe", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["res"] = new TH1D("h_mctruth_muphi_gen_res", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["dis"] = new TH1D("h_mctruth_muphi_gen_dis", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["coh"] = new TH1D("h_mctruth_muphi_gen_coh", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["mec"] = new TH1D("h_mctruth_muphi_gen_mec", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
-  hmap_mctruth_muphi_gen["other"] = new TH1D("h_mctruth_muphi_gen_other", ";True Muon #phi [GeV];Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["total"] = new TH1D("h_mctruth_muphi_gen_total", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["qe"] = new TH1D("h_mctruth_muphi_gen_qe", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["res"] = new TH1D("h_mctruth_muphi_gen_res", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["dis"] = new TH1D("h_mctruth_muphi_gen_dis", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["coh"] = new TH1D("h_mctruth_muphi_gen_coh", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["mec"] = new TH1D("h_mctruth_muphi_gen_mec", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
+  hmap_mctruth_muphi_gen["other"] = new TH1D("h_mctruth_muphi_gen_other", ";True Muon #phi;Selected Events", 20, -3.15, 3.15);
 
+  std::map<std::string,TH1D*> hmap_mctruth_chargedmult_gen;
+  hmap_mctruth_chargedmult_gen["total"] = new TH1D("h_mctruth_chargedmult_gen_total", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult_gen["qe"] = new TH1D("h_mctruth_chargedmult_gen_qe", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult_gen["res"] = new TH1D("h_mctruth_chargedmult_gen_res", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult_gen["dis"] = new TH1D("h_mctruth_chargedmult_gen_dis", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult_gen["coh"] = new TH1D("h_mctruth_chargedmult_gen_coh", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult_gen["mec"] = new TH1D("h_mctruth_chargedmult_gen_mec", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+  hmap_mctruth_chargedmult_gen["other"] = new TH1D("h_mctruth_chargedmult_gen_other", ";True Charged Particle Multiplicity;Selected Events", 10, 0, 10);
+
+  std::map<std::string,TH2D*> hmap_mctruth_mucostheta_mumom_gen;
+  hmap_mctruth_mucostheta_mumom_gen["total"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_total", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["qe"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_qe", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["res"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_res", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["dis"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_dis", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_coh", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_mec", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+  hmap_mctruth_mucostheta_mumom_gen["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_other", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
 
 
   //
@@ -1093,8 +1134,12 @@ void Main::Maker::MakeFile()
   std::vector<std::string> fname_flux_multisim;
 
 
-  if(_maup_mecoff && !isdata) {
+  if (_maup_mecoff && !isdata) {
     PrintMaUpMECOff();
+  }
+
+  if (_reweigh_kaons) {
+    PrintReweighKaons();
   }
     
   int barWidth = 70;
@@ -1157,7 +1202,7 @@ void Main::Maker::MakeFile()
     if (t->file_type == "dirt") event_weight /= _extra_weight;
 
 
-    // bool is_from_kaon = false;
+    bool is_from_kaon = false;
 
     // ************************
     //
@@ -1177,6 +1222,63 @@ void Main::Maker::MakeFile()
         if (t->evtwgt_genie_pm1_funcname.at(i) == "genie_qema_Genie") {
           event_weight *= t->evtwgt_genie_pm1_weight.at(i).at(0);
         }
+      }
+    }
+
+    if (!isdata && false) {
+      LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! MODEL 0" << std::endl;
+      if (t->mode == 0) { // QE
+        event_weight *= 0.95; 
+      }
+      if (t->mode == 1) { // RES
+        event_weight *= 0.75; 
+      }
+      if (t->mode == 2) { // DIS
+        event_weight *= 0.85; 
+      }
+      if (t->mode == 3) { // COH
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 10) { // MEC
+        event_weight *= 0.85; 
+      }
+    }
+
+    if (!isdata && false) {
+      LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! MODEL 1" << std::endl;
+      if (t->mode == 0) { // QE
+        event_weight *= 0.90; 
+      }
+      if (t->mode == 1) { // RES
+        event_weight *= 0.00; 
+      }
+      if (t->mode == 2) { // DIS
+        event_weight *= 3.00; 
+      }
+      if (t->mode == 3) { // COH
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 10) { // MEC
+        event_weight *= 1.10; 
+      }
+    }
+
+    if (!isdata && false) {
+      LOG_CRITICAL() << "SPECIAL WEIGHTS APPLIED!!! MODEL 2" << std::endl;
+      if (t->mode == 0) { // QE
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 1) { // RES
+        event_weight *= 1.50; 
+      }
+      if (t->mode == 2) { // DIS
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 3) { // COH
+        event_weight *= 1.00; 
+      }
+      if (t->mode == 10) { // MEC
+        event_weight *= 0.00; 
       }
     }
 
@@ -1354,8 +1456,13 @@ void Main::Maker::MakeFile()
     // Prepare the vector of weights to be used for bootstraps
     std::vector<double> wgts_genie_multisim;
     if (!isdata && _fill_bootstrap_genie) {
-      for (size_t i = 0; i < fname_genie_multisim.size(); i++) {
-        wgts_genie_multisim.push_back(t->evtwgt_genie_multisim_weight.at(0).at(i));
+      for (size_t i_wgt = 0; i_wgt < fname_genie_multisim.size(); i_wgt++) {
+        double wgt = t->evtwgt_genie_multisim_weight.at(0).at(i_wgt);
+        if (wgt > 100 || wgt < 0) {
+          // LOG_WARNING() << "GENIE multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
+          wgt = 1.;
+        }
+        wgts_genie_multisim.push_back(wgt);
       }
     }
 
@@ -1497,9 +1604,15 @@ void Main::Maker::MakeFile()
 
         for (size_t i_wgt = 0; i_wgt < fname_extra_syst.size(); i_wgt++) {
 
+          double wgt = t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt);
+          if (wgt > 100 || wgt < 0) {
+            // LOG_WARNING() << "EXTRA SYST multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
+            wgt = 1.;
+          }
+
           // std::cout << "weight number " << i_wgt << " = " << t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt) << std::endl;
 
-          wgts_extra_syst.at(i_wgt) *= t->evtwgt_extra_syst_multisim_weight.at(i_func).at(i_wgt);
+          wgts_extra_syst.at(i_wgt) *= wgt;
         }
       }
     }
@@ -1628,7 +1741,7 @@ void Main::Maker::MakeFile()
         keep_all = true;
       }
 
-      // Loop over all the flux reweighting function names and find the one we want unlsee "total" was requested
+      // Loop over all the flux reweighting function names and find the one we want unless "total" was requested
       for (size_t i_func = 0; i_func < t->evtwgt_flux_multisim_funcname.size(); i_func++) {
 
         std::string func_name = t->evtwgt_flux_multisim_funcname.at(i_func);
@@ -1650,17 +1763,34 @@ void Main::Maker::MakeFile()
           continue;
         }
 
+        if (i == _initial_entry) LOG_NORMAL() << "Filling bootstraps for flux systematic " << func_name << std::endl;
+
         for (size_t i_wgt = 0; i_wgt < fname_flux_multisim.size(); i_wgt++) {
 
-          wgts_flux_multisim.at(i_wgt) *= t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt);
+          double wgt = t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt);
+          if (wgt > 100 || wgt < 0) {
+            // LOG_WARNING() << "FLUX multisim weight for universe " << i << " is >100 or <0. Value: " << wgt << std::endl;
+            wgt = 1.;
+          }
+
+          wgts_flux_multisim.at(i_wgt) *= wgt;
+
+          if (_reweigh_kaons
+             && (t->evtwgt_flux_multisim_funcname.at(i_func) == "kminus_PrimaryHadronNormalization" 
+             || t->evtwgt_flux_multisim_funcname.at(i_func) == "kplus_PrimaryHadronFeynmanScaling" 
+             || t->evtwgt_flux_multisim_funcname.at(i_func) == "kzero_PrimaryHadronSanfordWang")) {
+            // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+            if (t->evtwgt_flux_multisim_weight.at(i_func).at(i_wgt) != 1) {
+              is_from_kaon = true;
+            }
+          }
         }
       }
     }
 
-    // if (is_from_kaon) {
-    //   // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    //   event_weight *= 1.5;
-    // }
+    if (is_from_kaon && _reweigh_kaons) {
+      event_weight *= _kaon_reweigh_factor;
+    }
 
 
 /*
@@ -1931,35 +2061,47 @@ void Main::Maker::MakeFile()
       hmap_mctruth_mumom_gen["total"]->Fill(t->true_muon_mom, event_weight);
       hmap_mctruth_mucostheta_gen["total"]->Fill(t->lep_costheta, event_weight);
       hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi, event_weight);
+      hmap_mctruth_chargedmult_gen["total"]->Fill(t->genie_mult_ch, event_weight);
+      hmap_mctruth_mucostheta_mumom_gen["total"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       if (t->mode == 0) {
         hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["qe"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult_gen["qe"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["qe"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 1) {
         hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["res"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["res"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult_gen["res"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["res"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 2) {
         hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["dis"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["dis"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult_gen["dis"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["dis"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 3) {
         hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["coh"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["coh"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult_gen["coh"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["coh"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 10) {
         hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["mec"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta_gen["mec"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult_gen["mec"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom_gen["mec"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
     } // if is signal
 
@@ -2363,14 +2505,17 @@ void Main::Maker::MakeFile()
     // if(t->slc_longesttrack_theta.at(scl_ll_max) > -0.6) continue; // cos(theta) < -0.6
 
 
+    // if(t->slc_nuvtx_x.at(scl_ll_max) > 128.175) continue; // anode_vtx
+    // if(t->slc_nuvtx_x.at(scl_ll_max) <= 128.175) continue; // cathode_vtx
     
-    
+    // if (abs(t->slc_longesttrack_phi.at(scl_ll_max)) < TMath::Pi()/2.) continue; // right (towards the anode)
+    // if (abs(t->slc_longesttrack_phi.at(scl_ll_max)) >= TMath::Pi()/2.) continue; // left (towards the cathode)
 
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi()/4)) continue; // cathode
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > TMath::Pi()/4 && t->slc_longesttrack_phi.at(scl_ll_max) < (3./4.)*TMath::Pi())) continue; // up
     // if (!(t->slc_longesttrack_phi.at(scl_ll_max) > -(3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -TMath::Pi()/4)) continue; // down
     // if (!((t->slc_longesttrack_phi.at(scl_ll_max) > (3./4.)*TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < TMath::Pi())
-            // || (t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -(3./4.)*TMath::Pi()))) continue; // anode
+    //         || (t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -(3./4.)*TMath::Pi()))) continue; // anode
 
 
     //if(t->slc_mult_track_tolerance.at(scl_ll_max) <= 1) continue;
@@ -2385,6 +2530,9 @@ void Main::Maker::MakeFile()
     //if(t->slc_crosses_top_boundary.at(scl_ll_max) == 1) continue;
 
     // if (t->slc_muoncandidate_mom_mcs.at(scl_ll_max) > 2.5) continue;
+
+    // Remove flipped tracks (truth cut)
+    // if (isSignal && (t->lep_costheta * t->slc_longesttrack_theta.at(scl_ll_max) < 0) ) continue;
 
 
     
@@ -2463,13 +2611,12 @@ void Main::Maker::MakeFile()
 
       _true_reco_tree->Fill();
 
-      // *** Migr mat addition
-      int m = _event_histo->h_reco_per_true[0][0]->GetXaxis()->FindBin(_angle_true) - 1;
-      int n = _event_histo->h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1;
+      // For the migration matrix
+      int m = _event_histo->h_reco_per_true[0][0]->GetXaxis()->FindBin(_angle_true) - 1; // true bin
+      int n = _event_histo->h_reco_per_true[0][0]->GetYaxis()->FindBin(_mom_true) - 1; // true bin
       if (m >= 0 && n >= 0 
           && m < _event_histo->h_reco_per_true[0][0]->GetNbinsX()    // Avoid overflows
           && n < _event_histo->h_reco_per_true[0][0]->GetNbinsY()) { // Avoid overflows
-        // std::cout << "_angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << ", n " << n << std::endl;
         _event_histo->h_reco_per_true[m][n]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, _event_histo->bs_genie_multisim_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, _event_histo->bs_extra_syst_multisim_reco_per_true, fname_extra_syst, wgts_extra_syst);
@@ -2477,22 +2624,17 @@ void Main::Maker::MakeFile()
         if(!isdata && _fill_bootstrap_mc_stat) FillBootstrap(_angle_reco, _mom_mcs, m, n, event_weight, _event_histo->bs_mc_stat_multisim_reco_per_true, fname_mc_stat_multisim, wgts_mc_stat_multisim);
       }
 
-      // For the poly version
-      m = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_true, _mom_true) - 1;
-      int i = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_reco, _mom_mcs) - 1;
-      // std::cout << "true | n bins " << _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_true " << _angle_true << ", _mom_true " << _mom_true << ", m " << m << std::endl;
-      // std::cout << "reco | n bins " << _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins() << ", _angle_reco " << _angle_reco << ", _mom_mcs " << _mom_mcs << ", i " << i << std::endl;
-      if (m >= 0 && m < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()
-        && i >= 0 && i < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()) {
+      // For the migration matrix (poly)
+      m = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_true, _mom_true); // true bin
+      int i = _event_histo->h_poly_reco_per_true[0]->FindBin(_angle_reco, _mom_mcs); // reco bin
+      if (m < 0) m = 0; // Negative bins are overflows, and are all added in entry 0 of the vector
+      if (m < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()+1) {
         _event_histo->h_poly_reco_per_true[m]->Fill(_angle_reco, _mom_mcs, event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(m, i, event_weight, _event_histo->bs_genie_multisim_poly_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_flux) FillBootstrap(m, i, event_weight, _event_histo->bs_flux_multisim_poly_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(m, i, event_weight, _event_histo->bs_extra_syst_multisim_poly_reco_per_true, fname_extra_syst, wgts_extra_syst);
+        if(!isdata && _fill_bootstrap_mc_stat) FillBootstrap(m, i, event_weight, _event_histo->bs_mc_stat_multisim_poly_reco_per_true, fname_mc_stat_multisim, wgts_mc_stat_multisim);
       }
-      // *** addition ends
-
-      // // Also fill the same tree for all te universes
-      // FillTrueRecoTree(tmap_mom_tree_gene_multisim_bs, _mom_true, _mom_mcs, _angle_true, _angle_reco, fname_genie_multisim, wgts_genie_multisim);
 
       _event_histo_1d->h_true_reco_mom->Fill(_mom_true, _mom_mcs, event_weight);
       _event_histo_1d->h_true_reco_costheta->Fill(_angle_true, _angle_reco, event_weight);
@@ -2601,7 +2743,6 @@ void Main::Maker::MakeFile()
       nue_cc_selected_total+=t->bnb_weight;
       if (t->nu_e >= 0.05 && t->nu_e <= 1.5){
         nue_cc_selected_total_energy_range+=t->bnb_weight;
-        //std::cout << "Selected nue event, run " << t->run << ", " << t->subrun << ", " << t->event << ", index " << scl_ll_max << std::endl;
       }
     }
     if (isNue) {
@@ -2615,7 +2756,6 @@ void Main::Maker::MakeFile()
         if (std::abs(true_pdg) == 11) n_nue_electron+=t->bnb_weight;
         if (std::abs(true_pdg) == 2212) n_nue_proton+=t->bnb_weight;
         if (std::abs(true_pdg) == 211) n_nue_pion+=t->bnb_weight;
-        //std::cout << "Selected nue event, run " << t->run << ", " << t->subrun << ", " << t->event << ", index " << scl_ll_max << std::endl;
       }
     }
 
@@ -2692,35 +2832,47 @@ void Main::Maker::MakeFile()
       hmap_mctruth_mumom["total"]->Fill(t->true_muon_mom, event_weight);
       hmap_mctruth_mucostheta["total"]->Fill(t->lep_costheta, event_weight);
       hmap_mctruth_muphi["total"]->Fill(t->lep_phi, event_weight);
+      hmap_mctruth_chargedmult["total"]->Fill(t->genie_mult_ch, event_weight);
+      hmap_mctruth_mucostheta_mumom["total"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       if (t->mode == 0) {
         hmap_mctruth_nuenergy["qe"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["qe"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["qe"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["qe"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult["qe"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom["qe"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 1) {
         hmap_mctruth_nuenergy["res"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["res"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["res"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["res"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult["res"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom["res"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 2) {
         hmap_mctruth_nuenergy["dis"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["dis"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["dis"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["dis"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult["dis"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom["dis"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 3) {
         hmap_mctruth_nuenergy["coh"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["coh"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["coh"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["coh"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult["coh"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom["coh"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
       if (t->mode == 10) {
         hmap_mctruth_nuenergy["mec"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["mec"]->Fill(t->true_muon_mom, event_weight);
         hmap_mctruth_mucostheta["mec"]->Fill(t->lep_costheta, event_weight);
         hmap_mctruth_muphi["mec"]->Fill(t->lep_phi, event_weight);
+        hmap_mctruth_chargedmult["mec"]->Fill(t->genie_mult_ch, event_weight);
+        hmap_mctruth_mucostheta_mumom["mec"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       }
 
       pEff->Fill(true, t->nu_e);
@@ -3849,15 +4001,16 @@ void Main::Maker::MakeFile()
   // TH1D * generated_percut = new TH1D("generated_percut", "generated_percut", 8, 0, 7);
   TH1D * generated_signal_percut = new TH1D("generated_signal_percut", "generated_percut", 9, 0, 9);
 
-  selected_percut->SetBinContent(1, selected_events_percut["initial"]); // + 1280310);
-  selected_percut->SetBinContent(2, selected_events_percut["beamflash"]); // + 821708);
-  selected_percut->SetBinContent(3, selected_events_percut["flash_match"]); // + 194732);
-  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"]); // + 154544);
-  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"]); // + 106802);
-  selected_percut->SetBinContent(6, selected_events_percut["quality"]); // + 76023);
-  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"]); // + 72577);
-  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"]); // + 69692);
-  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"]); // + 22657);
+  double pot_scale = 35388924/72299264;
+  selected_percut->SetBinContent(1, selected_events_percut["initial"] * pot_scale); // + 1280310);
+  selected_percut->SetBinContent(2, selected_events_percut["beamflash"] * pot_scale); // + 821708);
+  selected_percut->SetBinContent(3, selected_events_percut["flash_match"] * pot_scale); // + 194732);
+  selected_percut->SetBinContent(4, selected_events_percut["flash_match_deltax"] * pot_scale); // + 154544);
+  selected_percut->SetBinContent(5, selected_events_percut["flash_match_deltaz"] * pot_scale); // + 106802);
+  selected_percut->SetBinContent(6, selected_events_percut["quality"] * pot_scale); // + 76023);
+  selected_percut->SetBinContent(7, selected_events_percut["mcs_length_quality"] * pot_scale); // + 72577);
+  selected_percut->SetBinContent(8, selected_events_percut["mip_consistency"] * pot_scale); // + 69692);
+  selected_percut->SetBinContent(9, selected_events_percut["fiducial_volume"] * pot_scale); // + 22657);
 
   selected_signal_percut->SetBinContent(1, selected_signal_events_percut["initial"]);
   selected_signal_percut->SetBinContent(2, selected_signal_events_percut["beamflash"]);
@@ -4008,10 +4161,14 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_mctruth_mumom, "hmap_mctruth_mumom");
   file_out->WriteObject(&hmap_mctruth_mucostheta, "hmap_mctruth_mucostheta");
   file_out->WriteObject(&hmap_mctruth_muphi, "hmap_mctruth_muphi");
+  file_out->WriteObject(&hmap_mctruth_chargedmult, "hmap_mctruth_chargedmult");
+  file_out->WriteObject(&hmap_mctruth_mucostheta_mumom, "hmap_mctruth_mucostheta_mumom");
   file_out->WriteObject(&hmap_mctruth_nuenergy_gen, "hmap_mctruth_nuenergy_gen");
   file_out->WriteObject(&hmap_mctruth_mumom_gen, "hmap_mctruth_mumom_gen");
   file_out->WriteObject(&hmap_mctruth_mucostheta_gen, "hmap_mctruth_mucostheta_gen");
   file_out->WriteObject(&hmap_mctruth_muphi_gen, "hmap_mctruth_muphi_gen");
+  file_out->WriteObject(&hmap_mctruth_chargedmult_gen, "hmap_mctruth_chargedmult_gen");
+  file_out->WriteObject(&hmap_mctruth_mucostheta_mumom_gen, "hmap_mctruth_mucostheta_mumom_gen");
 
 
 

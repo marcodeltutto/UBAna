@@ -7,6 +7,206 @@ ClassImp(DataTypes::UBTH2Poly)
 
 namespace DataTypes {
 
+
+
+
+
+  Int_t UBTH2Poly::AddBin(TObject *poly)
+  {
+    if (!poly) return 0;
+
+    if (fBins == 0) {
+      fBins = new TList();
+      fBins->SetOwner();
+    }
+
+    fNcells++;
+    Int_t ibin = fNcells-kNOverflow; // Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
+    TH2PolyBin *bin = new TH2PolyBin(poly, ibin); // Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
+
+    // If the bin lies outside histogram boundaries, then extends the boundaries.
+    // Also changes the partition information accordingly
+    Bool_t flag = kFALSE;
+    if (fFloat) {
+      if (fXaxis.GetXmin() > bin->GetXMin()) {
+        fXaxis.Set(100, bin->GetXMin(), fXaxis.GetXmax());
+        flag = kTRUE;
+      }
+      if (fXaxis.GetXmax() < bin->GetXMax()) {
+        fXaxis.Set(100, fXaxis.GetXmin(), bin->GetXMax());
+        flag = kTRUE;
+      }
+      if (fYaxis.GetXmin() > bin->GetYMin()) {
+        fYaxis.Set(100, bin->GetYMin(), fYaxis.GetXmax());
+        flag = kTRUE;
+      }
+      if (fYaxis.GetXmax() < bin->GetYMax()) {
+        fYaxis.Set(100, fYaxis.GetXmin(), bin->GetYMax());
+        flag = kTRUE;
+      }
+      if (flag) ChangePartition(fCellX, fCellY);
+    } else {
+      /*Implement polygon clipping code here*/
+    }
+
+    fBins->Add((TObject*) bin);
+    SetNewBinAdded(kTRUE);
+
+    // Adds the bin to the partition matrix
+    AddBinToPartition(bin);
+
+    return ibin; // Commit c86fa4200b0c50f3990cdfb6b7c4eeb90abd1df3 combatibility
+  }
+
+
+Int_t UBTH2Poly::AddBin(Double_t x1, Double_t y1, Double_t x2, Double_t  y2)
+{
+   Double_t x[] = {x1, x1, x2, x2, x1};
+   Double_t y[] = {y1, y2, y2, y1, y1};
+   TGraph *g = new TGraph(5, x, y);
+   Int_t bin = AddBin(g);
+   return bin;
+}
+
+
+
+  Int_t UBTH2Poly::Fill(Double_t x, Double_t y, Double_t w)
+{
+   if (!fSumw2.fN && w != 1.0 && !TestBit(TH1::kIsNotW)) Sumw2();
+
+   if (fNcells <= kNOverflow) return 0;
+   Int_t overflow = 0;
+   if      (y > fYaxis.GetXmax()) overflow += -1;
+   else if (y > fYaxis.GetXmin()) overflow += -4;
+   else                           overflow += -7;
+   if      (x > fXaxis.GetXmax()) overflow += -2;
+   else if (x > fXaxis.GetXmin()) overflow += -1;
+   if (overflow != -5) {
+      fOverflow[-overflow - 1] += w;
+      if (fSumw2.fN) fSumw2.fArray[-overflow - 1] += w*w;
+      return overflow;
+   }
+
+   // Finds the cell (x,y) coordinates belong to
+   Int_t n = (Int_t)(floor((x-fXaxis.GetXmin())/fStepX));
+   Int_t m = (Int_t)(floor((y-fYaxis.GetXmin())/fStepY));
+
+   // Make sure the array indices are correct.
+   if (n>=fCellX) n = fCellX-1;
+   if (m>=fCellY) m = fCellY-1;
+   if (n<0)       n = 0;
+   if (m<0)       m = 0;
+
+   if (fIsEmpty[n+fCellX*m]) {
+      fOverflow[4]+= w;
+      if (fSumw2.fN) fSumw2.fArray[4] += w*w;
+      return -5;
+   }
+
+   TH2PolyBin *bin;
+   Int_t bi;
+
+   TIter next(&fCells[n+fCellX*m]);
+   TObject *obj;
+
+   while ((obj=next())) {
+      bin  = (TH2PolyBin*)obj;
+      bi = bin->GetBinNumber()-1+kNOverflow;
+      if (bin->IsInside(x,y)) {
+         bin->Fill(w);
+
+         // Statistics
+         fTsumw   = fTsumw + w;
+         fTsumwx  = fTsumwx + w*x;
+         fTsumwx2 = fTsumwx2 + w*x*x;
+         fTsumwy  = fTsumwy + w*y;
+         fTsumwy2 = fTsumwy2 + w*y*y;
+         if (fSumw2.fN) fSumw2.fArray[bi] += w*w;
+         fEntries++;
+
+         SetBinContentChanged(kTRUE);
+
+         return bin->GetBinNumber();
+      }
+   }
+
+   fOverflow[4]+= w;
+   if (fSumw2.fN) fSumw2.fArray[4] += w*w;
+   return -5;
+}
+
+
+
+
+  Double_t UBTH2Poly::GetBinContent(Int_t bin) const
+{
+   if (bin > GetNumberOfBins() || bin == 0 || bin < -kNOverflow) return 0;
+   if (bin<0) return fOverflow[-bin - 1];
+   return ((TH2PolyBin*) fBins->At(bin-1))->GetContent();
+}
+
+
+
+Double_t UBTH2Poly::GetBinError(Int_t bin) const
+{
+   if (bin == 0 || bin > GetNumberOfBins() || bin < - kNOverflow) return 0;
+   // if (bin > (fNcells)) return 0;
+   if (fBuffer) ((TH1*)this)->BufferEmpty();
+   if (fSumw2.fN) {
+      Int_t binIndex = (bin > 0) ? bin+kNOverflow-1 : kNOverflow+bin;
+      Double_t err2 = fSumw2.fArray[binIndex];
+      return TMath::Sqrt(err2);
+   }
+   Double_t error2 = TMath::Abs(GetBinContent(bin));
+   return TMath::Sqrt(error2);
+}
+
+
+void UBTH2Poly::SetBinContent(Int_t bin, Double_t content)
+{
+   if (bin > (fNcells) || bin == 0 || bin < -kNOverflow ) return;
+   if (bin > 0)
+      ((TH2PolyBin*) fBins->At(bin-1))->SetContent(content);
+   else
+      fOverflow[-bin - 1] = content;
+   SetBinContentChanged(kTRUE);
+}
+
+void UBTH2Poly::SetBinError(Int_t bin, Double_t error)
+{
+  if (!fSumw2.fN) Sumw2();
+   if (bin > (fNcells) || bin == 0 || bin < -kNOverflow ) return;
+
+   Int_t binIndex = (bin > 0) ? bin+kNOverflow-1 : kNOverflow+bin;
+   fSumw2.fArray[binIndex] = error * error;
+}
+
+
+  Double_t UBTH2Poly::GetBinWidth(Int_t bin) const
+{
+   Int_t bin_idx = 0;
+   if (bin > GetNumberOfBins() || bin <= 0) bin_idx = 0;
+   else bin_idx = bin - 1;
+
+   TH2PolyBin *thisBin = (TH2PolyBin *) fBins->At(bin_idx);
+   Double_t w = thisBin->GetArea();
+   return w;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   UBTH2Poly& UBTH2Poly::operator=(const UBTH2Poly &h1)
   {
     Warning("operator=","Assignemet operator called, but lacks full implementation.");    
@@ -31,6 +231,7 @@ namespace DataTypes {
   UBTH2Poly* UBTH2Poly::GetCopyWithBinNumbers(const char *name) const {
 
     UBTH2Poly* h = (UBTH2Poly*) this->Clone(name);
+    h->Reset();
 
     TH2PolyBin *thisBin;
 
@@ -53,7 +254,7 @@ namespace DataTypes {
 
      Int_t bin;
   
-     TH2Poly *h1p = (TH2Poly *)h1;
+     UBTH2Poly *h1p = (UBTH2Poly *)h1;
   
      // Check if number of bins is the same.
      if (h1p->GetNumberOfBins() != GetNumberOfBins()) {
@@ -102,18 +303,16 @@ namespace DataTypes {
     }
            
 
-     Int_t bi;
-     // Int_t NOverflow = 9; // has to be hardcoded for older ROOT versions
+     for (bin = -kNOverflow; bin <= GetNumberOfBins(); bin++) {
+        Double_t y = this->GetBinContent(bin) + c1 * h1p->GetBinContent(bin);
+        SetBinContent(bin, y);
 
-     for (bin = 1; bin <= GetNumberOfBins(); bin++) {
-        thisBin = (TH2PolyBin *)fBins->At(bin - 1);
-        h1pBin  = (TH2PolyBin *)h1pBins->At(bin - 1);
-        bi = thisBin->GetBinNumber() - 1;
-        thisBin->SetContent(thisBin->GetContent() + c1 * h1pBin->GetContent());
         if (fSumw2.fN) {
            Double_t e1 = factor * h1p->GetBinError(bin);
-
-           fSumw2.fArray[bi] += c1 * c1 * e1 * e1;
+           int idx = bin+kNOverflow;
+           if (bin==0) continue;
+           if (bin>0) idx -= 1;
+           fSumw2.fArray[idx] += c1 * c1 * e1 * e1;
         }
      }
   
@@ -121,13 +320,13 @@ namespace DataTypes {
      if (resetStats)  {
         // statistics need to be reset in case coefficient are negative
         // ResetStats();
-      std::cout << "kNstat = " << kNstat << std::endl;
+      // std::cout << "kNstat = " << kNstat << std::endl;
         Double_t stats[kNstat] = {0};
         fTsumw = 0;
         fEntries = 1; // to force re-calculation of the statistics in TH1::GetStats
-      std::cout << "Before GetStats" << std::endl;
+      // std::cout << "Before GetStats" << std::endl;
         GetStats(stats);
-      std::cout << "Before PutStats" << std::endl;
+      // std::cout << "Before PutStats" << std::endl;
         PutStats(stats);
         fEntries = TMath::Abs(fTsumw);
         // use effective entries for weighted histograms:  (sum_w) ^2 / sum_w2
@@ -146,7 +345,7 @@ namespace DataTypes {
 
   void UBTH2Poly::GetStats(Double_t *stats) const
   {
-     std::cout << "Start UBTH2Poly::GetStats" << std::endl;
+     // std::cout << "Start UBTH2Poly::GetStats" << std::endl;
     stats[0] = fTsumw;
     stats[1] = fTsumw2;
     stats[2] = fTsumwx;
@@ -154,14 +353,14 @@ namespace DataTypes {
     stats[4] = fTsumwy;
     stats[5] = fTsumwy2;
     stats[6] = fTsumwxy;
-     std::cout << "End UBTH2Poly::GetStats" << std::endl;
+     // std::cout << "End UBTH2Poly::GetStats" << std::endl;
   }
 
   void UBTH2Poly::PutStats(Double_t *stats)
   {
-     std::cout << "Before TH1::PutStats" << std::endl;
+     // std::cout << "Before TH1::PutStats" << std::endl;
      TH1::PutStats(stats);
-     std::cout << "After TH1::PutStats" << std::endl;
+     // std::cout << "After TH1::PutStats" << std::endl;
      fTsumwy  = stats[4];
      fTsumwy2 = stats[5];
      fTsumwxy = stats[6];
@@ -173,11 +372,11 @@ namespace DataTypes {
 
      Int_t bin;
   
-     TH2Poly *h1p = (TH2Poly *)h1;
+     UBTH2Poly *h1p = (UBTH2Poly *)h1;
   
      // Check if number of bins is the same.
      if (h1p->GetNumberOfBins() != GetNumberOfBins()) {
-        Error("Add", "Attempt to add histograms with different number of bins");
+        Error("Add", "Attempt to divide histograms with different number of bins");
         return kFALSE;
      }
   
@@ -206,25 +405,23 @@ namespace DataTypes {
     
            
 
-     Int_t bi;
-     // Int_t NOverflow = 9; // has to be hardcoded for older ROOT versions
 
-     for (bin = 1; bin <= GetNumberOfBins(); bin++) {
-        thisBin = (TH2PolyBin *)fBins->At(bin - 1);
-        h1pBin  = (TH2PolyBin *)h1pBins->At(bin - 1);
+     for (bin = -kNOverflow; bin <= GetNumberOfBins(); bin++) {
 
-        bi = thisBin->GetBinNumber() - 1;
+        Double_t c0 = GetBinContent(bin);
+        Double_t c1 = h1p->GetBinContent(bin);
 
-        Double_t c0 = thisBin->GetContent();
-        Double_t c1 = h1pBin->GetContent();
-
-        if (c1) thisBin->SetContent(c0 / c1);
-        else thisBin->SetContent(0.0);
+        if (c1) SetBinContent(bin, c0 / c1);
+        else SetBinContent(bin, 0.0);
 
         if (fSumw2.fN) {
-           if (c1 == 0) { fSumw2.fArray[bi] = 0; continue; }
+           int idx = bin+kNOverflow;
+           if (bin==0) continue;
+           if (bin>0) idx -= 1;
+           if (c1 == 0) { fSumw2.fArray[idx] = 0; continue; }
+
            Double_t c1sq = c1 * c1;
-           fSumw2.fArray[bi] = (GetBinError(bin) * GetBinError(bin) * c1sq + h1p->GetBinError(bin) * h1p->GetBinError(bin) * c0 * c0) / (c1sq * c1sq);
+           fSumw2.fArray[idx] = (GetBinError(bin) * GetBinError(bin) * c1sq + h1p->GetBinError(bin) * h1p->GetBinError(bin) * c0 * c0) / (c1sq * c1sq);
         }
      }
   
@@ -247,26 +444,34 @@ namespace DataTypes {
       normaliseWidth = kTRUE;
     }
     else {
-      for( int i = 0; i < this->GetNumberOfBins(); i++ ) {
-        this->SetBinContent(i+1, c1 * this->GetBinContent(i+1));
-      }
-      if (fSumw2.fN) {
-        for(Int_t i = 0; i < this->GetNumberOfBins(); ++i) fSumw2.fArray[i] *= (c1 * c1); // update errors
+
+      for (int bin = -kNOverflow; bin <= GetNumberOfBins(); bin++) {
+        SetBinContent(bin, c1 * GetBinContent(bin));
+
+        if (fSumw2.fN) {
+          int idx = bin+kNOverflow;
+          if (bin==0) continue;
+          if (bin>0) idx -= 1;
+          fSumw2.fArray[idx] *= (c1 * c1); // update errors
+        }
       }
     }
 
     if (normaliseWidth) {
 
-      TH2PolyBin *thisBin;
-      for (Int_t bin = 1; bin <= GetNumberOfBins(); bin++) {
-        thisBin = (TH2PolyBin *)fBins->At(bin - 1);
 
-        Double_t w = thisBin->GetArea();
+      for (int bin = -kNOverflow; bin <= GetNumberOfBins(); bin++) {
+        Double_t w = GetBinWidth(bin);
         SetBinContent(bin, c1 * GetBinContent(bin) / w);
+
         if (fSumw2.fN) {
           Double_t e1 = GetBinError(bin) / w;
-          fSumw2.fArray[bin - 1] = c1 * c1 * e1 * e1;
+          int idx = bin+kNOverflow;
+          if (bin==0) continue;
+          if (bin>0) idx -= 1;
+          fSumw2.fArray[idx] = c1 * c1 * e1 * e1;
         }
+
       }
     }
 
@@ -296,6 +501,15 @@ namespace DataTypes {
       w = bin->GetArea();
       if (width) integral += w * bin->GetContent();
       else integral += bin->GetContent();
+    }
+
+    if (opt.Contains("overflow")) {
+      for (int i = 0; i < kNOverflow; i++) {
+        if (width) {
+          Warning("Integral","width (area) not fully supported together with overflow option.");    
+        }
+        else integral += fOverflow[i]; 
+      }
     }
 
     return integral;
@@ -362,7 +576,7 @@ namespace DataTypes {
     if (GetSumw2N()) h1->Sumw2();
 
     for (auto it : loweredge_to_bin) {
-      h1->SetBinContent(bin_counter, RetrieveBinContent(it.second->GetBinNumber()));
+      h1->SetBinContent(bin_counter, GetBinContent(it.second->GetBinNumber()));
       h1->SetBinError(bin_counter, GetBinError(it.second->GetBinNumber()));
       bin_counter++;
     }

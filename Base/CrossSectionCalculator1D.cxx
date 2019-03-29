@@ -91,6 +91,8 @@ namespace Base {
     _frac_covariance_matrix = h;
     _frac_covariance_matrix_is_set = true;
 
+    LOG_INFO() << "Setting fractional covariance matrix. GetNbinsX = " << _frac_covariance_matrix.GetNbinsX() << ", content of bin 1 = " << _frac_covariance_matrix.GetBinContent(1) << std::endl;
+
     if (_covariance_matrix_is_set) {
       LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
       throw std::exception();
@@ -347,7 +349,7 @@ namespace Base {
 
     // Settings for true distributions
     _h_eff_mumom_den->SetTitle("");
-    _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");//->SetTitle("p_{#mu}^{truth} [GeV]");
+    _h_eff_mumom_den->GetXaxis()->SetTitle("p_{#mu}^{truth} [GeV]"); //->SetTitle("cos(#theta_{#mu}^{truth})");
     _h_eff_mumom_den->GetYaxis()->SetTitle("Events");
     _h_eff_mumom_den->SetFillColorAlpha(30, 0.35);
     _h_eff_mumom_den->SetLineColor(30);
@@ -365,7 +367,7 @@ namespace Base {
     TEfficiency* teff_true = new TEfficiency(*_h_eff_mumom_num,*_h_eff_mumom_den);
 
     TCanvas * c_eff_true = new TCanvas;
-    teff_true->SetTitle(";True Muon cos(#theta) [GeV];Efficiency");
+    teff_true->SetTitle(";p_{#mu}^{truth};Efficiency");//->SetTitle(";cos(#theta_{#mu}^{truth});Efficiency");
     teff_true->SetLineColor(kGreen+3);
     teff_true->SetMarkerColor(kGreen+3);
     teff_true->SetMarkerStyle(20);
@@ -385,16 +387,24 @@ namespace Base {
     // Do the smearing
     //
 
-    TMatrix eff_num_true; eff_num_true.Clear(); eff_num_true.ResizeTo(m, 1);
-    TMatrix eff_den_true; eff_den_true.Clear(); eff_den_true.ResizeTo(m, 1);
+    TMatrix eff_num_true; eff_num_true.Clear(); eff_num_true.ResizeTo(m + 1, 1); // Last entry for over/under-flows
+    TMatrix eff_den_true; eff_den_true.Clear(); eff_den_true.ResizeTo(m + 1, 1); // Last entry for over/under-flows
 
     for (int bin = 1; bin < m+1; bin++) {
       eff_num_true[bin-1][0] = _h_eff_mumom_num->GetBinContent(bin);
       eff_den_true[bin-1][0] = _h_eff_mumom_den->GetBinContent(bin);
     }
 
+    eff_num_true[m] = _h_eff_mumom_num->GetBinContent(0) + _h_eff_mumom_num->GetBinContent(m+1);
+    eff_den_true[m] = _h_eff_mumom_den->GetBinContent(0) + _h_eff_mumom_den->GetBinContent(m+1);
+
+
+
+    // Smearing
     TMatrix eff_num_smear = _S * eff_num_true;
     TMatrix eff_den_smear = _S * eff_den_true;
+
+
 
     TH1D* h_eff_mumom_num_smear = (TH1D*) _h_eff_mumom_num->Clone("h_eff_mumom_num_smear");
     TH1D* h_eff_mumom_den_smear = (TH1D*) _h_eff_mumom_den->Clone("h_eff_mumom_den_smear");
@@ -416,7 +426,7 @@ namespace Base {
 
     TCanvas * c = new TCanvas;
     _h_eff_mumom_den->SetTitle("");
-    _h_eff_mumom_den->GetXaxis()->SetTitle("cos(#theta_{#mu}^{truth})");//->SetTitle("p_{#mu}^{truth} [GeV]");
+    _h_eff_mumom_den->GetXaxis()->SetTitle("p_{#mu}^{truth} [GeV]");//->SetTitle("cos(#theta_{#mu}^{truth})");
     _h_eff_mumom_den->GetYaxis()->SetTitle("Events");
     _h_eff_mumom_den->SetFillColorAlpha(30, 0.35);
     _h_eff_mumom_den->SetLineColor(30);
@@ -452,7 +462,7 @@ namespace Base {
 
     TCanvas * c_smear = new TCanvas;
     h_eff_mumom_den_smear->SetTitle("");
-    h_eff_mumom_den_smear->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");//->SetTitle("p_{#mu}^{reco} [GeV]");
+    h_eff_mumom_den_smear->GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");//->SetTitle("cos(#theta_{#mu}^{reco})");
     h_eff_mumom_den_smear->GetYaxis()->SetTitle("Events");
     h_eff_mumom_den_smear->Draw("histo");
     h_eff_mumom_num_smear->Draw("histo same");
@@ -473,7 +483,7 @@ namespace Base {
     TEfficiency* teff_reco = new TEfficiency(*h_eff_mumom_num_smear,*h_eff_mumom_den_smear);
 
     TCanvas * c_eff_reco = new TCanvas;
-    teff_reco->SetTitle(";Reco Muon cos(#theta);Efficiency");//->SetTitle(";Reco Muon Momentum [GeV];Efficiency");
+    teff_reco->SetTitle(";p_{#mu}^{reco} [GeV];Efficiency");//->SetTitle(";cos(#theta_{#mu}^{reco});Efficiency");
     teff_reco->SetLineColor(kGreen+3);
     teff_reco->SetMarkerColor(kGreen+3);
     teff_reco->SetMarkerStyle(20);
@@ -489,7 +499,7 @@ namespace Base {
     name = _folder +_name + "_efficiecy_reco";
     c_eff_reco->SaveAs(name + ".pdf");
 
-    LOG_INFO() << "Statistic option used for efficiency calculation: " << teff_reco->GetStatisticOption() << ", check https://root.cern.ch/doc/v608/classTEfficiency.html#af27fb4e93a1b16ed7a5b593398f86312." << std::endl;
+    // LOG_INFO() << "Statistic option used for efficiency calculation: " << teff_reco->GetStatisticOption() << ", check https://root.cern.ch/doc/v608/classTEfficiency.html#af27fb4e93a1b16ed7a5b593398f86312." << std::endl;
     LOG_INFO() << "Efficiency bin 1: " << teff_reco->GetEfficiency(1) << " - " << teff_reco->GetEfficiencyErrorLow(1) << " + " << teff_reco->GetEfficiencyErrorUp(1) << std::endl;
     LOG_INFO() << "Efficiency bin 2: " << teff_reco->GetEfficiency(2) << " - " << teff_reco->GetEfficiencyErrorLow(2) << " + " << teff_reco->GetEfficiencyErrorUp(2) << std::endl;
 
@@ -553,6 +563,11 @@ namespace Base {
 
 
     if (_dirt_is_set) {
+
+      if (bin_width_scale) {
+        for (auto iter : _hmap_dirt) iter.second->Scale(1, "width");
+      }
+
       // Save dirt in the MC backgrounds ...
       _hmap_bnbcosmic["dirt"] = _hmap_dirt["total"];
       _hmap_bnbcosmic["dirt_outfv"] = _hmap_dirt["outfv"];
@@ -626,11 +641,11 @@ namespace Base {
     f_out << "\\caption{My caption}" << std::endl;
     f_out << "\\label{tab:mylabel}" << std::endl;
     f_out << "\\centering" << std::endl;
-    f_out << "\\begin{tabular}{c|cc|cccccc}" << std::endl;
+    f_out << "\\begin{tabular}{c|cc|ccccccc}" << std::endl;
     f_out << "\\toprule" << std::endl;
     f_out << "    & \\multicolumn{2}{c}{Data}    & \\multicolumn{6}{c}{MC} \\\\" << std::endl;
-    f_out << "Bin & Selected & Cosmic & $\\nu_\\mu$ CC & Cosmic  & OUTFV & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
-    f_out << "    & Events   & Only   & Signal       & in BNB  &       &    &                           &                 \\\\" << std::endl;
+    f_out << "Bin & Selected & Cosmic & $\\nu_\\mu$ CC & Cosmic  & OUTFV & DIRT & NC & $\\nu_e$ and $\\bar{\\nu}_e$ & $\\bar{\\nu}_\\mu$ \\\\" << std::endl;
+    f_out << "    & Events   & Only   & Signal         & in BNB  &       &      &    &                           &                 \\\\" << std::endl;
     f_out << "\\midrule" << std::endl;
     for (int i = 1; i < _h_bnbon->GetNbinsX()+1; i++) {
       f_out << std::setprecision(4) 
@@ -640,6 +655,7 @@ namespace Base {
             << _hmap_bnbcosmic["signal"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["signal"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["cosmic"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["cosmic"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["outfv"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["outfv"]->GetBinError(i) << " & "
+            << _hmap_bnbcosmic["dirt"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["dirt"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["nc"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nc"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["nue"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["nue"]->GetBinError(i) << " & "
             << _hmap_bnbcosmic["anumu"]->GetBinContent(i) << " $\\pm$ " << _hmap_bnbcosmic["anumu"]->GetBinError(i) << " \\\\ " << std::endl;
@@ -657,6 +673,7 @@ namespace Base {
     fout << name << " & " << _hmap_bnbcosmic["signal"]->Integral()
                  << " & " << _hmap_bnbcosmic["cosmic"]->Integral() 
                  << " & " << _hmap_bnbcosmic["outfv"]->Integral()
+                 << " & " << _hmap_bnbcosmic["dirt"]->Integral()
                  << " & " << _hmap_bnbcosmic["nc"]->Integral()
                  << " & " << _hmap_bnbcosmic["nue"]->Integral()
                  << " & " << _hmap_bnbcosmic["anumu"]->Integral()
@@ -743,6 +760,7 @@ namespace Base {
 
     LOG_INFO() << "Number of targets (MC)   = " << _n_target_mc << std::endl;
     LOG_INFO() << "Number of targets (DATA) = " << _n_target_data << std::endl;
+    LOG_INFO() << "Flux                     = " << _flux << std::endl;
 
     double den_data = _flux * _n_target_data * 1e-38;
     double den_mc   = _flux * _n_target_mc   * 1e-38;
@@ -767,7 +785,7 @@ namespace Base {
 
     TCanvas * c;
 
-    if (_name.find("onebin") != std::string::npos) c = new TCanvas("c", "c", 0, 45, 400, 888);
+    if (_name.find("onebin") != std::string::npos) c = new TCanvas("c", "c", 0, 45, 500, 888);
     else c = new TCanvas();
 
     c->SetBottomMargin(0.15);
@@ -781,14 +799,14 @@ namespace Base {
     _h_mc->SetFillColor(29);
 
     if (_name.find("mom") != std::string::npos) {
-      _h_mc->SetMinimum(0.);
+      _h_mc->SetMinimum(-0.05);
       _h_mc->SetMaximum(1.6);
     } else if (_name.find("onebin") != std::string::npos) {
       c->SetLeftMargin(0.2438017);
       c->SetRightMargin(0.1239669);
       c->SetBottomMargin(0.1515789);
       _h_mc->SetMinimum(0.2);
-      _h_mc->SetMaximum(1.5);
+      _h_mc->SetMaximum(1.2);
       _h_mc->GetXaxis()->SetTitle("");
       _h_mc->GetYaxis()->CenterTitle(true);
       _h_mc->GetXaxis()->SetLabelSize(0);
@@ -838,7 +856,7 @@ namespace Base {
     //
 
     if (_extra_fractional_uncertainty != 0) {
-      if (_verbose) std::cout << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
+      LOG_INFO() << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
     }
 
     TH1D * h_syst_unc = (TH1D*) _h_data->Clone("h_syst_unc");
@@ -890,15 +908,15 @@ namespace Base {
           double unc_tot = std::sqrt(unc_stat_2 + unc_syst_2 + extra_unc_2);
 
           if (i == j) {
-            if (_verbose) std::cout << "Bin " << i << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
+            LOG_INFO() << "Bin " << i << " - stat: " << std::sqrt(unc_stat_2) << ", syst: " << std::sqrt(unc_syst_2) << ", tot: " << unc_tot << std::endl;
             h_syst_unc->SetBinError(i+1, unc_tot); 
           }
 
           // Also construct the total covariance matrix
-          double total_syst_unc_2 = unc_syst_2 + extra_unc_2;
+          double total_unc_2 = unc_syst_2 + extra_unc_2;// + unc_stat_2;
 
-          _cov_matrix_total->SetBinContent(i+1, j+1, total_syst_unc_2);
-          _frac_cov_matrix_total->SetBinContent(i+1, j+1, (total_syst_unc_2) / (_h_data->GetBinContent(i+1) * _h_data->GetBinContent(j+1)));
+          _cov_matrix_total->SetBinContent(i+1, j+1, total_unc_2);
+          _frac_cov_matrix_total->SetBinContent(i+1, j+1, (total_unc_2) / (_h_data->GetBinContent(i+1) * _h_data->GetBinContent(j+1)));
 
         } // j
       } // i
@@ -922,7 +940,7 @@ namespace Base {
 
     // Draw the statistic error bars
     _h_data->SetMarkerStyle(kFullCircle);
-    _h_data->SetMarkerSize(0.6);
+    _h_data->SetMarkerSize(1.2);
     _h_data->Draw("E1 X0 same");
 
 
@@ -934,8 +952,8 @@ namespace Base {
       l->SetTextSize(0.03578947);
     }
     else if (_name.find("onebin") != std::string::npos) {
-      l = new TLegend(0.2960373,0.8042986,0.7832168,0.8642534,NULL,"brNDC");
-      l->SetTextSize(0.04298643);
+      l = new TLegend(0.25,0.7717265,0.4623288,0.8308227,NULL,"brNDC");
+      l->SetTextSize(0.035);
     } else {
       l = new TLegend(0.3825215,0.7178947,0.7363897,0.8547368,NULL,"brNDC");
       l->SetTextSize(0.03578947);
@@ -950,14 +968,15 @@ namespace Base {
       l->AddEntry(&_h_alt_mc_xsec, "GENIE Alternative (Stat. Unc.)");
     }
     if (_covariance_matrix_is_set && _covariance_matrix.GetBinContent(1, 1) != 0.) {
-      l->AddEntry(_h_data, "Measured (Stat. #oplus Syst. Unc.)", "ep");
+      l->AddEntry(_h_data, "Data (Stat. #oplus Syst. Unc.)", "ep");
       ///l->AddEntry(h_data, "Measured (Stat. Uncertainty)", "lep");
       if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     } else {
-      l->AddEntry(_h_data, "Measured (Stat. Unc.)", "lep");
+      l->AddEntry(_h_data, "Data (Stat. Unc.)", "lep");
       if (_fake_data_mode) l->AddEntry(_truth_xsec_smeared, "Truth (Smeared)", "l");
     }
-    l->Draw();
+
+    if (_name.find("onebin") == std::string::npos) l->Draw();
 
     // TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
     // prelim->SetTextColor(kGray+1);
@@ -969,8 +988,8 @@ namespace Base {
 
     if (_fake_data_mode) PlottingTools::DrawSimulation();
     else if (_overlay_mode) PlottingTools::DrawOverlay();
-    else if (_name.find("onebin") != std::string::npos) PlottingTools::DrawPreliminaryXSecCentered();
-    else PlottingTools::DrawPreliminaryXSec();
+    // else if (_name.find("onebin") != std::string::npos) PlottingTools::DrawPreliminaryXSecCentered();
+    else if (_name.find("onebin") == std::string::npos) PlottingTools::DrawPreliminaryXSec();
 
     if (_fake_data_mode) {
       TLatex* tex = new TLatex(0.5773639,0.6547368, "FAKE DATA");
@@ -1008,6 +1027,14 @@ namespace Base {
       // TColor::CreateGradientColorTable(NRGBs, stops, mainColour, otherColour, otherColour, NCont);
       // gStyle->SetNumberContours(NCont);
 
+      // const int NRGBs = 3; 
+      // int NCont = 512; 
+      // gStyle->SetNumberContours(NCont); 
+      // Double_t stops[NRGBs] = { 0.00, 0.50, 1.00 }; 
+      // Double_t red[NRGBs]   = { 0.20, 1.00, 1.00 }; 
+      // Double_t green[NRGBs] = { 0.20, 1.00, 0.20 }; 
+      // Double_t blue[NRGBs]  = { 0.20, 1.00, 0.20 }; 
+      // TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
 
       const Int_t Number = 9;
       Double_t Red[Number]    = { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
@@ -1055,7 +1082,7 @@ namespace Base {
       h->Draw();
       _cov_matrix_total->Draw("colz text same");
       // _cov_matrix_total->Draw("colz same");
-      PlottingTools::DrawSimulationXSec();
+      PlottingTools::DrawSimulationCovariance();
       name = _folder +_name + "_tot_covariance";
       cov_c->SaveAs(name + ".pdf");
       cov_c->SaveAs(name + ".C","C");
@@ -1074,7 +1101,7 @@ namespace Base {
       h->Draw();
       _frac_cov_matrix_total->Draw("colz text same");
       // _frac_cov_matrix_total->Draw("colz same");
-      PlottingTools::DrawSimulationXSec();
+      PlottingTools::DrawSimulationCovariance();
       name = _folder +_name + "_tot_fractional_covariance";
       cov_frac_c->SaveAs(name + ".pdf");
       cov_frac_c->SaveAs(name + ".C","C");
@@ -1093,7 +1120,7 @@ namespace Base {
       h->Draw();
       _corr_matrix_total->Draw("colz text same");
       // _corr_matrix_total->Draw("colz same");
-      PlottingTools::DrawSimulationXSec();
+      PlottingTools::DrawSimulationCovariance();
       name = _folder +_name + "_tot_correlation";
       corr_c->SaveAs(name + ".pdf");
       corr_c->SaveAs(name + ".C","C");
@@ -1133,7 +1160,7 @@ namespace Base {
     if (_name.find("costheta") != std::string::npos) {
       leg = new TLegend(0.1733524,0.3936842,0.4340974,0.8442105,NULL,"brNDC");
     } else {
-      leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
+      leg = new TLegend(0.56,0.57,0.82,0.82,NULL,"brNDC");
     }
 
     TCanvas* canvas = new TCanvas();
@@ -1153,6 +1180,7 @@ namespace Base {
     data->Draw("E1 same");
 
     leg->AddEntry(data, "Data (Background subtracted)", "lep");
+    leg->AddEntry(_hmap_bnbcosmic["total"], "Stat. Unc.");
     leg->Draw();
 
 
@@ -1161,7 +1189,7 @@ namespace Base {
 
     TString name = _folder +_name + "_selectedevents_bkgsubtracted";
     canvas->SaveAs(name + ".pdf");
-    canvas->SaveAs(name + ".C","C");
+    canvas->SaveAs(name + ".C");
 
 
   }
@@ -1181,12 +1209,7 @@ namespace Base {
 
     TCanvas* canvas = new TCanvas("canvas", "canvas", 800, 700);
 
-    std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
-    THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
-
     TH1D* data = ProcessDataHisto(_h_bnbon);
-
-    this->DrawDataMC(canvas, hs_mc, data, leg);
 
     if (bin_width_scale) {
       for (auto it : _hmap_bnbcosmic) {
@@ -1194,6 +1217,15 @@ namespace Base {
       }
       data->Scale(1, "width");
     } 
+
+    std::vector<std::string> histos_to_subtract; histos_to_subtract.clear();
+    THStack *hs_mc = this->ProcessTHStack(_hmap_bnbcosmic, leg, histos_to_subtract);
+
+    
+
+    this->DrawDataMC(canvas, hs_mc, data, leg);
+
+    
 
     // hs_mc->Draw("hist");
     // _hmap_bnbcosmic["total"]->Draw("E2 same"); // errors
@@ -1332,11 +1364,12 @@ namespace Base {
 
     bool _breakdownPlots = false;
 
-    bool _draw_beamoff = true, _draw_cosmic = true, _draw_outfv = true, _draw_nue = true, _draw_nc = true, _draw_anumu = true;
+    bool _draw_beamoff = true, _draw_dirt = true, _draw_cosmic = true, _draw_outfv = true, _draw_nue = true, _draw_nc = true, _draw_anumu = true;
 
     for (auto name: histos_to_subtract)
     {
       if (name == "beam-off") _draw_beamoff = false;
+      if (name == "dirt") _draw_dirt = false;
       if (name == "cosmic") _draw_cosmic = false;
       if (name == "outfv") _draw_outfv = false;
       if (name == "nue") _draw_nue = false;
@@ -1350,6 +1383,12 @@ namespace Base {
       themap["beam-off"]->SetFillColor(kBlue+2);
       themap["beam-off"]->SetFillStyle(3004);
       hs_trklen->Add(themap["beam-off"]);
+    }
+
+    if (themap["dirt"] != NULL && _draw_dirt) {
+      themap["dirt"]->SetLineColor(kOrange+3);
+      themap["dirt"]->SetFillColor(kOrange+3);
+      hs_trklen->Add(themap["dirt"]);
     }
 
     if (themap["intimecosmic"] != NULL) {
@@ -1437,7 +1476,7 @@ namespace Base {
 
 
 
-
+    std::string int_option = "width";
 
     if (_breakdownPlots){
       //leg = new TLegend(0.56,0.37,0.82,0.82,NULL,"brNDC");
@@ -1447,63 +1486,63 @@ namespace Base {
     std::stringstream sstm;
   // numu
     if (_breakdownPlots) {
-      sstm << "#nu_{#mu} CC (stopping #mu), " << std::setprecision(2)  << themap["signal_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "#nu_{#mu} CC (stopping #mu), " << std::setprecision(2)  << themap["signal_stopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       leg->AddEntry(themap["signal_stopmu"],sstm.str().c_str(),"f");
       sstm.str("");
-      sstm << "#nu_{#mu} CC (other), " << std::setprecision(2)  << themap["signal_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "#nu_{#mu} CC (other), " << std::setprecision(2)  << themap["signal_nostopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       leg->AddEntry(themap["signal_nostopmu"],sstm.str().c_str(),"f");
       sstm.str("");
       // leg->AddEntry(themap["signal_stopmu"],"#nu_{#mu} CC (stopping #mu)","f");
       // leg->AddEntry(themap["signal_nostopmu"],"#nu_{#mu} CC (other)","f");
     } else {
-      sstm << "#nu_{#mu} CC (signal), " << std::setprecision(2)  << themap["signal"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "#nu_{#mu} CC (signal), " << std::setprecision(2)  << themap["signal"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       leg->AddEntry(themap["signal"],sstm.str().c_str(),"f");
       sstm.str("");
     }
 
   // nue
-    sstm << "#nu_{e}, #bar{#nu}_{e} CC, " << std::setprecision(2)  << themap["nue"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "#nu_{e}, #bar{#nu}_{e} CC, " << std::setprecision(2)  << themap["nue"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     if (_draw_nue) leg->AddEntry(themap["nue"],sstm.str().c_str(),"f");
     sstm.str("");
 
   // anumu
-    sstm << "#bar{#nu}_{#mu} CC, " << std::setprecision(2)  << themap["anumu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "#bar{#nu}_{#mu} CC, " << std::setprecision(2)  << themap["anumu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     if (_draw_anumu)leg->AddEntry(themap["anumu"],sstm.str().c_str(),"f");
     sstm.str("");
 
   // nc, outfv, cosmic
     if (_breakdownPlots) {
-      sstm << "NC (other), " << std::setprecision(2)  << themap["nc_other"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "NC (other), " << std::setprecision(2)  << themap["nc_other"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["nc_other"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["nc_other"],"NC (other)","f");
 
-    sstm << "NC (pion), " << std::setprecision(2)  << themap["nc_pion"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "NC (pion), " << std::setprecision(2)  << themap["nc_pion"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["nc_pion"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["nc_pion"],"NC (pion)","f");
 
-    sstm << "NC (proton), " << std::setprecision(2)  << themap["nc_proton"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "NC (proton), " << std::setprecision(2)  << themap["nc_proton"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["nc_proton"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["nc_proton"],"NC (proton)","f");
 
-    sstm << "OUTFV (stopping #mu), " << std::setprecision(2)  << themap["outfv_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "OUTFV (stopping #mu), " << std::setprecision(2)  << themap["outfv_stopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["outfv_stopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["outfv_stopmu"],"OUTFV (stopping #mu)","f");
 
-    sstm << "OUTFV (other), " << std::setprecision(2)  << themap["outfv_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "OUTFV (other), " << std::setprecision(2)  << themap["outfv_nostopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["outfv_nostopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["outfv_nostopmu"],"OUTFV (other)","f");
 
-    sstm << "Cosmic (stopping #mu), " << std::setprecision(2)  << themap["cosmic_stopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "Cosmic (stopping #mu), " << std::setprecision(2)  << themap["cosmic_stopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["cosmic_stopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
 
-    sstm << "Cosmic (other), " << std::setprecision(2)  << themap["cosmic_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
+    sstm << "Cosmic (other), " << std::setprecision(2)  << themap["cosmic_nostopmu"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
     leg->AddEntry(themap["cosmic_nostopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["cosmic_nostopmu"],"Cosmic (other)","f");
@@ -1511,22 +1550,30 @@ namespace Base {
         leg->AddEntry(themap["intimecosmic"],"In-time cosmics","f");
       }
     } else {
-      sstm << "NC, " << std::setprecision(2)  << themap["nc"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "NC, " << std::setprecision(2)  << themap["nc"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       if (_draw_nc) leg->AddEntry(themap["nc"],sstm.str().c_str(),"f");
       sstm.str("");
 
-      sstm << "OUTFV, " << std::setprecision(2)  << themap["outfv"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "OUTFV, " << std::setprecision(2)  << themap["outfv"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       if (_draw_outfv) leg->AddEntry(themap["outfv"],sstm.str().c_str(),"f");
       sstm.str("");
 
-      sstm << "Cosmic, " << std::setprecision(2)  << themap["cosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "Cosmic, " << std::setprecision(2)  << themap["cosmic"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       if (_draw_cosmic) leg->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
       sstm.str("");
     }
     //leg->AddEntry(themap["total"],"Stat Unc.","f");
 
+
+    if (themap["dirt"] != NULL && _draw_dirt){
+      sstm << "Dirt, " << std::setprecision(2)  << themap["dirt"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
+      leg->AddEntry(themap["dirt"],sstm.str().c_str(),"f");
+      sstm.str("");
+      // leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
+    }
+
     if (themap["beam-off"] != NULL && _draw_beamoff){
-      sstm << "Data (Beam-off), " << std::setprecision(2)  << themap["beam-off"]->Integral() / themap["total"]->Integral()*100. << "%";
+      sstm << "Data (Beam-off), " << std::setprecision(2)  << themap["beam-off"]->Integral(int_option.c_str()) / themap["total"]->Integral(int_option.c_str())*100. << "%";
       leg->AddEntry(themap["beam-off"],sstm.str().c_str(),"f");
       sstm.str("");
       // leg->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
@@ -1544,6 +1591,37 @@ namespace Base {
 
     return histo;
 
+  }
+
+  void CrossSectionCalculator1D::SaveToLatexFile() {
+    // Save on latex file too
+    std::ofstream file_latex;
+    file_latex.open (_folder + _name + ".tex", std::ofstream::out | std::ofstream::trunc);
+    for (int i = 0; i < _h_data->GetNbinsX(); i++) {
+      file_latex << _h_data->GetBinContent(i+1) << " & " << std::sqrt(_cov_matrix_total->GetBinContent(i+1, i+1)) << "\\\\" << std::endl;
+    }
+
+    file_latex << std::endl;
+
+    file_latex << "\\begin{equation}" << std::endl;
+    file_latex << "E_{ij} =" << std::endl;
+    file_latex << "\\begin{bmatrix}" << std::endl;
+
+    for (int i = 0; i < _h_data->GetNbinsX(); i++) {
+      for (int j = 0; j < _h_data->GetNbinsX(); j++) {
+
+        file_latex << std::setprecision(3) << std::scientific << "$" << _cov_matrix_total->GetBinContent(i+1, j+1) << "$  &  ";
+
+      }
+
+      file_latex << " \\\\" << std::endl;
+    }
+
+    file_latex << "\\end{bmatrix}" << std::endl;
+    file_latex << "\\end{equation}" << std::endl << std::endl;
+
+
+    file_latex.close();
   }
 
 

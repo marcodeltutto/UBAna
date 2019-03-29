@@ -49,6 +49,7 @@
 #include <TMath.h>
 #include "Math/SMatrix.h"
 #include "TMatrix.h"
+#include "TMatrixD.h"
 #include "TGraphAsymmErrors.h"
 #include "TLine.h"
 #include "Math/DistFunc.h" // for quantile
@@ -119,6 +120,12 @@ namespace Base {
     double EstimateFlux(std::string flux_file_prefix = "MCC8_FluxHistograms_Uncertainties.root", std::string histogram_file_prefix = "numu/numu_CV_AV_TPC");
 
     ///
+    void SaveEventNumbers(std::string);
+
+    ///
+    void SaveToLatexFile();
+    
+    ///
     THStack * ProcessTHStack(std::map<std::string,UBTH2Poly*> themap, TLegend*, std::vector<std::string>);
 
     ///
@@ -131,12 +138,30 @@ namespace Base {
     void MakeAllCrossSectionPlots(std::string, std::string, std::string);
 
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
-    UBTH2Poly* GetMCCrossSection() {return _h_mc;}
+    UBTH2Poly* GetMCCrossSection() { return _h_mc; }
 
-    ///
+    /// Returns the extracted alternative MC cross section (must be called after ExtractCrossSection)
+    UBTH2Poly* GetAlternativeMCCrossSection() { return _h_alt_mc_xsec; }
+
+    /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the data cross section
+    std::vector<TH1D> GetUnpackedDataCrossSection() { return _xsec_data_histos; }
+
+    /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the MC cross section
+    std::vector<TH1D> GetUnpackedMCCrossSection() { return _xsec_mc_histos; }
+
+    /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the data cross section uncertainties
+    std::vector<TH1D> GetUnpackedDataCrossSectionUncertainty() { return _xsec_data_unc_histos; }
+
+    /// Returns a vector (one entry per cos(theta) bin) of TH1D* containing the MC alternative cross section
+    std::vector<TH1D> GetUnpackedMCAlternativeCrossSection() { return _xsec_mc_alt_histos; }
+
+    /// Returns the total covariance matrix (stat + syst)
+    TH2D GetTotalCovarianceMatrix() {return *_tot_cov_matrix_total;}
+
+    /// Sets the smearing matrix
     void SetSmearingMatrix(TMatrix);
-
-    ///
+ 
+    /// Sets the covariance matrix
     void SetCovarianceMatrix(TH2D);
 
     ///
@@ -172,7 +197,13 @@ namespace Base {
     ///
     void SetNTargetMC(double n = 2.634653975573033e31) {_n_target_mc = n;}
 
+    ///
+    void DoChi2(bool option = true) {_do_chi2 = option;}
+
   private:
+
+    /// Calculates the chi2 between data and MC cross sections
+    void CalculateChi2(); 
 
     std::string _prefixbase = "[CrossSectionCalculator2DPoly] ";
     
@@ -222,6 +253,7 @@ namespace Base {
     double _flux_correction_weight = 1.; ///< Flux correction weight
 
     bool _verbose = true;
+    bool _do_chi2 = false; ///< If true calculated the chi2 between data and MC cross section
 
     double _extra_fractional_uncertainty = 0.; ///< Adds an extra uncertainty on the diagonal
 
@@ -231,12 +263,24 @@ namespace Base {
     TH2D _frac_covariance_matrix; ///< 2D Histogram representing the fractional covariance matrix (to be set externally)
     bool _frac_covariance_matrix_is_set = false; ///< Flag that remembers if the fractional covariance matrix was set for this cross section calculation (if not, no syst will be added)
 
-    UBTH2Poly *_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
-    UBTH2Poly *_cov_matrix_total = NULL; ///< Total  covariance matrix
-    UBTH2Poly *_corr_matrix_total = NULL; ///< Total correlation matrix
+    TH2D *_syst_frac_cov_matrix_total = NULL; ///< Systematics fractional covariance matrix
+    TH2D *_syst_cov_matrix_total = NULL; ///< Systematics covariance matrix
+    TH2D *_syst_corr_matrix_total = NULL; ///< Systematics correlation matrix
+
+    TH2D *_stat_frac_cov_matrix_total = NULL; ///< Statistics fractional covariance matrix
+    TH2D *_stat_cov_matrix_total = NULL; ///< Statistics covariance matrix
+
+    TH2D *_tot_frac_cov_matrix_total = NULL; ///< Total fractional covariance matrix
+    TH2D *_tot_cov_matrix_total = NULL; ///< Total covariance matrix
+    TH2D *_tot_corr_matrix_total = NULL; ///< Total correlation matrix
 
     bool _add_alt_mc_xsec = false; ///< If true draws an alternative MC cross section from ImportAlternativeMC
     UBTH2Poly* _h_alt_mc_xsec; ///< Stores an alternative MC cross section (from Tune3, or theory, in the latter has to be smeared)
+
+    std::vector<TH1D> _xsec_data_histos; ///< Data extracted cross section unpacked per every cos(theta) bin
+    std::vector<TH1D> _xsec_mc_histos; ///< MC cross section unpacked per every cos(theta) bin
+    std::vector<TH1D> _xsec_mc_alt_histos; ///< MC alternative cross section unpacked per every cos(theta) bin
+    std::vector<TH1D> _xsec_data_unc_histos; ///< Data cross section uncertainties unpacked per every cos(theta) bin
 
   };
 }

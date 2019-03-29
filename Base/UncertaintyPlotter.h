@@ -21,6 +21,11 @@
 #include <TLegend.h>
 #include <TH1D.h>
 #include <TH2D.h>
+#include "PlottingTools.h"
+#include "LoggerFeature.h"
+#include "ubana/DataTypes/UBTH2Poly.h"
+
+using namespace DataTypes;
 
 
 namespace Base {
@@ -30,12 +35,12 @@ namespace Base {
      User defined class UncertaintyPlotter ... these comments are used to generate
      doxygen documentation!
   */
-  class UncertaintyPlotter{
+  class UncertaintyPlotter : public LoggerFeature {
     
   public:
     
     /// Default constructor
-    UncertaintyPlotter(){}
+    UncertaintyPlotter(){_cov_names.clear(); _frac_cov_v.clear();}
     
     /// Default destructor
     ~UncertaintyPlotter(){}
@@ -44,7 +49,10 @@ namespace Base {
     void AddFracCovarianceMatrix(std::string, TH2D);
 
     /// Set the cross section
-    void SetCrossSection(TH1D xsec) {_xsec_1d = xsec;}
+    void SetCrossSection(TH1D xsec) {_xsec_1d = xsec; _2d_case = false;}
+
+    /// Set the cross section
+    void SetCrossSection(UBTH2Poly *xsec) {_xsec_2d = xsec; _2d_case = true;}
 
     /// Constructs and saved the plot
     void MakePlot(std::string file_name);
@@ -59,12 +67,20 @@ namespace Base {
 
   protected:
 
+    /// Constructs and saved the plot (1D case)
+    void MakePlot1D(std::string file_name);
+
+    /// Constructs and saved the plot (2D case)
+    void MakePlot2D(std::string file_name);
+
     std::vector<std::string> _cov_names; ///< The names of the covariance matrices
     std::vector<TH2D> _frac_cov_v; ///< The fractional covariance matrices
-    TH1D _xsec_1d; ///< The cross section
+    TH1D _xsec_1d; ///< The cross section (1D case)
+    UBTH2Poly *_xsec_2d; ///< The cross section (2D case)
+    bool _2d_case = false;
 
-    std::vector<Int_t> _line_colors = {kRed+1, kBlue+1, kGreen+1, 10, 11, 12, 13, 14, 15, 16, 17};
-    std::string _xaxis_title;
+    std::vector<Int_t> _line_colors = {46, 9, 30, 44, 40, 41, 38, 1, 1, 1, 1, 1}; ///< The colors used to draw the lines
+    std::string _xaxis_title; ///< Will store the x axis title
     
   };
 }

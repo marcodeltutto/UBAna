@@ -16,8 +16,8 @@ maker.SetOutputFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_da
 
 maker.SetEntries(-1)
 maker.SetInitialEntry(0)
-maker.SetBeamSpillStart(3.6)    
-maker.SetBeamSpillEnd(5.2)
+maker.SetBeamSpillStart(3.5) #3.6    
+maker.SetBeamSpillEnd(5.3) #5.2
 maker.SetFlashShift(0.)    
 maker.SetGainCalibration(243)    
 maker.SetCalculatePOT(True)    

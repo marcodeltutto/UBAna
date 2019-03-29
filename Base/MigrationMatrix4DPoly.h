@@ -118,6 +118,9 @@ namespace Base {
 
   private:
 
+    /// Checks the number of entries for a true bin.
+    void CheckEntries(UBTH2Poly* h, int bin_number);
+
     std::string _prefix = "[MigrationMatrix4DPoly] ";
 
     TTree *_tree;

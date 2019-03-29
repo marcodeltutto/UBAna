@@ -202,11 +202,11 @@ namespace Base {
 
     LOG_NORMAL() << "Number of Universes: " << n_universe << std::endl;
 
-    LOG_NORMAL() << "Universes Names: ";
-    for (auto s : universe_names) {
-    	std::cout << s << ", ";
-    }
-    std::cout << std::endl;
+    // LOG_NORMAL() << "Universes Names: ";
+    // for (auto s : universe_names) {
+    // 	std::cout << s << ", ";
+    // }
+    // std::cout << std::endl;
 
     
     TH2D this_eff_num;

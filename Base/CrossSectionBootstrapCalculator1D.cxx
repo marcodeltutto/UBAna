@@ -193,11 +193,11 @@ namespace Base {
     std::vector<std::string> universe_names = _h_eff_mumom_num.GetUniverseNames();
 
     LOG_NORMAL() << "Number of universes: " << n_universe << std::endl;
-    LOG_NORMAL() << "Universes names: "; 
-    for (auto s : universe_names) {
-    	std::cout << s << ", ";
-    }
-    std::cout << std::endl;
+    // LOG_NORMAL() << "Universes names: "; 
+    // for (auto s : universe_names) {
+    // 	std::cout << s << ", ";
+    // }
+    // std::cout << std::endl;
 
     
     TH1D this_h;
@@ -207,6 +207,8 @@ namespace Base {
     TMatrix S_2d;
 
     // n_universe = 30;
+
+    // this->set_verbosity(Base::msg::kDEBUG);
 
     for (size_t s = 0; s < n_universe; s++) { 
 
@@ -315,7 +317,7 @@ namespace Base {
 
       // Calculate the migration matrix for this universe
       if (_true_to_reco_is_set) {
-        S_2d.Clear(); S_2d.ResizeTo(_n, _m);
+        S_2d.Clear(); S_2d.ResizeTo(_n + 1, _m + 1);
         MigrationMatrix2D migrationmatrix2d;
         migrationmatrix2d.SetNBins(_n, _m);
         migrationmatrix2d.SetTrueRecoHistogram(&this_reco_true);
@@ -352,6 +354,7 @@ namespace Base {
 
 
     } // endl loop over universes
+    std::cout << std::endl;
 
 
     
@@ -364,7 +367,7 @@ namespace Base {
     BootstrapTH1D xsec_mumom_bs;
     xsec_mumom_bs.SetAllHistograms(xsec_mumom_per_universe);
 
-    LOG_NORMAL() << "xsec_mumom_bs.GetNbinsX() " << xsec_mumom_bs.GetNbinsX() << std::endl;
+    LOG_NORMAL() << "Number of bins: " << xsec_mumom_bs.GetNbinsX() << std::endl;
 
     //genie_rw_plotter.SetXSecBootstrap(xsec_mumom_bs);
     //genie_rw_plotter.MakeXsecDiffPlots(true);
@@ -404,7 +407,7 @@ namespace Base {
           it.second->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}");
           it.second->SetMinimum(0.4);
           it.second->SetMaximum(1.2);
-        }else {
+        } else {
           it.second->GetXaxis()->SetTitle("cos(#theta_{#mu})");
           it.second->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
           it.second->SetMaximum(2.2);
@@ -444,6 +447,8 @@ namespace Base {
 
     // Make the fancy plot
     int n_bins_y = 240; // was 60, 120, 240
+    if (xsec_mumom_per_universe.size() == 101) n_bins_y = 120; // 100 universes (GENIE)
+    if (xsec_mumom_per_universe.size() == 1001) n_bins_y = 240; // 1000 universes (flux)
     double bins_y[241];
     for (int i = 0; i < n_bins_y+1; i++) { 
       if(_save_prefix.find("mumom") != std::string::npos) {
@@ -476,12 +481,15 @@ namespace Base {
     gStyle->SetPalette(kBlueGreenYellow);
 
     TCanvas * multisim_xsec_fancy_canvas = new TCanvas();
+    multisim_xsec_fancy_canvas->SetBottomMargin(0.11);
 
     if (_save_prefix.find("mumom") != std::string::npos) {
-      h_2d_all_xsec->GetXaxis()->SetTitle("p_{#mu} [GeV]");
+      h_2d_all_xsec->GetXaxis()->SetTitle("p_{#mu}^{reco} [GeV]");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dp_{#mu} [10^{-38} cm^{2}/GeV]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-      h_2d_all_xsec->SetMaximum(200); // should be 50 or 20
+      h_2d_all_xsec->SetMaximum(100); // should be 50 or 20
+      if (xsec_mumom_per_universe.size() == 101) h_2d_all_xsec->SetMaximum(50); // 100 universes (GENIE)
+      if (xsec_mumom_per_universe.size() == 1001) h_2d_all_xsec->SetMaximum(200); // 1000 universes (flux)
     } else if (_save_prefix.find("onebin") != std::string::npos) {
       h_2d_all_xsec->GetXaxis()->SetTitle("");
       h_2d_all_xsec->GetYaxis()->SetTitle("#sigma [10^{-38} cm^{2}]");
@@ -489,10 +497,12 @@ namespace Base {
       h_2d_all_xsec->GetXaxis()->SetTickLength(0);
       h_2d_all_xsec->GetXaxis()->SetLabelSize(0);
     } else {
-      h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu})");
+      h_2d_all_xsec->GetXaxis()->SetTitle("cos(#theta_{#mu}^{reco})");
       h_2d_all_xsec->GetYaxis()->SetTitle("d#sigma/dcos(#theta_{#mu}) [10^{-38} cm^{2}]");
       h_2d_all_xsec->GetYaxis()->SetTitleOffset(0.75);
-      h_2d_all_xsec->SetMaximum(200);
+      h_2d_all_xsec->SetMaximum(100); // should be 50 or 20
+      if (xsec_mumom_per_universe.size() == 101) h_2d_all_xsec->SetMaximum(50); // 100 universes (GENIE)
+      if (xsec_mumom_per_universe.size() == 1001) h_2d_all_xsec->SetMaximum(200); // 1000 universes (flux)
     }
 
     h_2d_all_xsec->Draw("colz");
@@ -532,7 +542,7 @@ namespace Base {
 
 
 
-    LOG_NORMAL() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+    LOG_NORMAL() << "Finished." << std::endl;
 
 	}
 }

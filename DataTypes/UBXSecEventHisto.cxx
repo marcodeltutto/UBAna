@@ -166,8 +166,8 @@ namespace DataTypes {
       hmap_trktheta_trkmom_poly["signal_stopmu"] = new UBTH2Poly("h_trktheta_trkmom_poly_signal_stopmu", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
       hmap_trktheta_trkmom_poly["signal_nostopmu"] = new UBTH2Poly("h_trktheta_trkmom_poly_signal_nostopmu", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
 
-      h_poly_reco_per_true.resize(_n_poly_bins);
-      for (int m = 0; m < _n_poly_bins; m++) {
+      h_poly_reco_per_true.resize(_n_poly_bins+1);
+      for (int m = 0; m < _n_poly_bins+1; m++) {
         std::stringstream sstm;
         sstm << "poly_reco_per_true_" << m; 
         h_poly_reco_per_true[m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
@@ -220,27 +220,27 @@ namespace DataTypes {
       hmap_trktheta_trkmom_poly_mc_stat_multisim_bs["nue"]["nominal"] = new UBTH2Poly("h_trktheta_trkmom_poly_nue_mc_stat_multisim_nominal", "; Track cos(#theta);", -1., 1., 0., 2.5);
 
       // Reco per true histograms per universe - Double Differential PolyBins - Genie Multisim
-      bs_genie_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
-      for (int m = 0; m < _n_poly_bins; m++) {
-        bs_genie_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
+      bs_genie_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins+1);
+      for (int m = 0; m < _n_poly_bins+1; m++) {
+        bs_genie_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins+1, 0.);
       }
 
       // Reco per true histograms per universe - Double Differential PolyBins - Flux Multisim
-      bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
-      for (int m = 0; m < _n_poly_bins; m++) {
-        bs_flux_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
+      bs_flux_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins+1);
+      for (int m = 0; m < _n_poly_bins+1; m++) {
+        bs_flux_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins+1, 0.);
       }
 
       // Reco per true histograms per universe - Double Differential PolyBins - Extra Syst
-      bs_extra_syst_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
-      for (int m = 0; m < _n_poly_bins; m++) {
-        bs_extra_syst_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
+      bs_extra_syst_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins+1);
+      for (int m = 0; m < _n_poly_bins+1; m++) {
+        bs_extra_syst_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins+1, 0.);
       }
 
       // Reco per true histograms per universe - Double Differential PolyBins - MC Stat
-      bs_mc_stat_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins);
-      for (int m = 0; m < _n_poly_bins; m++) {
-        bs_mc_stat_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins, 0.);
+      bs_mc_stat_multisim_poly_reco_per_true["nominal"].resize(_n_poly_bins+1);
+      for (int m = 0; m < _n_poly_bins+1; m++) {
+        bs_mc_stat_multisim_poly_reco_per_true["nominal"][m].resize(_n_poly_bins+1, 0.);
       }
 
     }
@@ -387,6 +387,7 @@ namespace DataTypes {
             if (y == it->second.first) {
               separator_counter++;
               h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
+              // std::cout << "h->AddBin(" << _bins_double_mucostheta[it->first] << ", " << _bins_double_mumom[it->second.first] << ", " <<  _bins_double_mucostheta[it->first+1] << ", " << _bins_double_mumom[it->second.second+1] << ")" << std::endl;
               continue;
             } else if (y == it->second.second) {
               continue;
@@ -398,6 +399,7 @@ namespace DataTypes {
             if (y == it->second.first) {
               separator_counter++;
               h->AddBin(_bins_double_mucostheta[it->first], _bins_double_mumom[it->second.first], _bins_double_mucostheta[it->first+1], _bins_double_mumom[it->second.second+1]);
+              // std::cout << "h->AddBin(" << _bins_double_mucostheta[it->first] << ", " << _bins_double_mumom[it->second.first] << ", " <<  _bins_double_mucostheta[it->first+1] << ", " << _bins_double_mumom[it->second.second+1] << ")" << std::endl;
               continue;
             } else if (y == it->second.second) {
               continue;
@@ -406,6 +408,7 @@ namespace DataTypes {
 
           separator_counter++;
           h->AddBin(_bins_double_mucostheta[x], _bins_double_mumom[y], _bins_double_mucostheta[x+1], _bins_double_mumom[y+1]);
+          // std::cout << "h->AddBin(" << _bins_double_mucostheta[x] << ", " << _bins_double_mumom[y] << ", " <<  _bins_double_mucostheta[x+1] << ", " << _bins_double_mumom[y+1] << ")" << std::endl;
         }
         separators.emplace_back(separator_counter);
         separator_counter = 0;

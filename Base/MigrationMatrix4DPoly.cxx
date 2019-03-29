@@ -53,26 +53,48 @@ namespace Base {
     _n_bins = n_bins;    
   }
 
+  void MigrationMatrix4DPoly::CheckEntries(UBTH2Poly* h, int bin_number) 
+  {
+    if (h->GetEntries() < 5) {
+      LOG_WARNING() << "Few events simulated in true bin " << bin_number << ", migration matrix will be forced to be diagonal for this bin." << std::endl;
+
+      for (int a = -9; a < h->GetNumberOfBins() + 1; a++) {
+        h->SetBinContent(a, 0.);
+        if (a == bin_number) {
+          h->SetBinContent(a, 1.);
+        }
+      }
+
+    }
+
+  }
 
   TMatrix MigrationMatrix4DPoly::CalculateMigrationMatrix() 
   {
     
-    // Resize the smearing matrix
-    _S.Clear(); _S.ResizeTo(_n_bins, _n_bins);
+    // Resize the smearing matrix (+1 for overflows)
+    _S.Clear(); _S.ResizeTo(_n_bins + 1, _n_bins + 1);
 
-    for (int m = 0; m < _n_bins; m++) { // True bin
+    for (int m = 0; m < _n_bins + 1; m++) { // True bin
+
+      int true_idx = m - 1;
+      if (true_idx < 0) true_idx = _n_bins;
 
       if (_h_reco_per_true.size()) {
         // Case 1, we have set a set of UBTH2Poly per every true bin
         _reco_per_true = (UBTH2Poly*) _h_reco_per_true[m]->Clone("_reco_per_true");
+        // if (true_idx == 10) LOG_CRITICAL() << "entries = " <<_h_reco_per_true[m]->GetEntries() << ", integral = " << _h_reco_per_true[m]->Integral() << std::endl;
       } else {
         // Case 2, we have set a set a vector of lenght _n_bins (reco bins) per every true bin
         _reco_per_true = (UBTH2Poly*) _th2poly_template->Clone("_reco_per_true");
-        for (int i = 0; i < _n_bins; i++) {
-          _reco_per_true->SetBinContent(i+1, _v_reco_per_true[m][i]);
+        for (int i = 1; i < _n_bins + 1; i++) {
+          _reco_per_true->SetBinContent(i, _v_reco_per_true[m][i]);
         }
+        _reco_per_true->SetBinContent(-2, _v_reco_per_true[m][0]); // Set overflows to bin number -2 (just convention)
       }
 
+      // Put diagonal only if small events in this true bin
+      CheckEntries(_reco_per_true, m);
 
       // Normalize to get a probability
       _reco_per_true->Scale(1./_reco_per_true->Integral());
@@ -84,7 +106,7 @@ namespace Base {
 
       // Set values to matrix
       TCanvas *c = new TCanvas();
-       _reco_per_true->Draw("colz text");
+      _reco_per_true->Draw("colz text");
       for (int i = 0; i < _n_bins; i++) {
 
         double value = _reco_per_true->GetBinContent(i+1);
@@ -92,9 +114,18 @@ namespace Base {
         if (std::isnan(value))
           value = 0.;
   
-        _S[i][m] = value;
+        _S[i][true_idx] = value;
         
-       }
+      }
+
+      // Add overflows
+      double overflow = 0.;
+      for (int i = -9; i < 0; i++) {
+        overflow += _reco_per_true->GetBinContent(i);
+      }
+      if (std::isnan(overflow)) overflow = 0.;
+      _S[_n_bins][true_idx] = overflow;
+
 
       // Saving the plot
       if (make_plot && _do_make_plots) {  
@@ -126,12 +157,12 @@ namespace Base {
   void MigrationMatrix4DPoly::PlotMatrix()
   {
 
-    TH2D *h_sm = new TH2D("h_sm", "", _n_bins, 0, _n_bins, _n_bins, 0, _n_bins);
+    TH2D *h_sm = new TH2D("h_sm", "", _n_bins + 1, 0, _n_bins + 1, _n_bins + 1, 0, _n_bins + 1);
 
-    for (int m = 0; m < _n_bins; m++) {  // true
-      for (int i = 0; i < _n_bins; i++) {  // reco
+    for (int m = 0; m < _n_bins + 1; m++) {  // true
+      for (int i = 0; i < _n_bins + 1; i++) {  // reco
         
-        h_sm->SetBinContent(m +1, i +1, _S[i][m]);
+        h_sm->SetBinContent(m + 1, i + 1, _S[i][m]);
 
       }
     }
@@ -152,13 +183,15 @@ namespace Base {
       h_sm->GetXaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
       h_sm->GetYaxis()->SetBinLabel(i+1, bin_labels.at(i).c_str());
     }
+    h_sm->GetXaxis()->SetBinLabel(_n_bins + 1, "OF");
+    h_sm->GetYaxis()->SetBinLabel(_n_bins + 1, "OF");
 
     h_sm->GetXaxis()->SetTickLength(0);
     h_sm->GetYaxis()->SetTickLength(0);
     h_sm->GetXaxis()->SetLabelSize(0.03);
     h_sm->GetYaxis()->SetLabelSize(0.03);
-    h_sm->GetXaxis()->SetTitle("Reconstructed Bin Number");
-    h_sm->GetYaxis()->SetTitle("True Bin Number");
+    h_sm->GetXaxis()->SetTitle("True Bin Number");
+    h_sm->GetYaxis()->SetTitle("Reconstructed Bin Number");
     h_sm->GetZaxis()->SetTitle("Probability");
 
 
@@ -174,7 +207,7 @@ namespace Base {
     // Vertical lines
     Int_t sum = 0;
     for (Int_t s = 0; s < separators_length - 1; s++) {
-      TLine *line = new TLine(separators[s] + sum, 0, separators[s] + sum, _n_bins);
+      TLine *line = new TLine(separators[s] + sum, 0, separators[s] + sum, _n_bins + 1);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
       lines.emplace_back(line);
@@ -184,13 +217,23 @@ namespace Base {
     // Horizontal lines
     sum = 0;
     for (Int_t s = 0; s < separators_length - 1; s++) {
-      TLine *line = new TLine(0, separators[s] + sum, _n_bins, separators[s] + sum);
+      TLine *line = new TLine(0, separators[s] + sum, _n_bins + 1, separators[s] + sum);
       line->SetLineColor(kRed);
       line->SetLineWidth(2);
       lines.emplace_back(line);
       sum += separators[s];
     }
 
+    // Last two lines for overflows
+    TLine *line_of_v = new TLine(_n_bins, 0, _n_bins, _n_bins + 1);
+    line_of_v->SetLineColor(kRed);
+    line_of_v->SetLineWidth(2);
+    lines.emplace_back(line_of_v);
+
+    TLine *line_of_h = new TLine(0, _n_bins, _n_bins + 1, _n_bins);
+    line_of_h->SetLineColor(kRed);
+    line_of_h->SetLineWidth(2);
+    lines.emplace_back(line_of_h);
 
 
 
