@@ -13,7 +13,7 @@ analyser.SetBNBCosmicFile     ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecan
 analyser.SetInTimeCosmicFile  ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_bnbcosmic_mcc8.7_test6.root") # Just a placeholder
 analyser.SetBNBONFile         ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_overlay_ubcodev06_26_01_22__v4.root") # fake data! Overlay
 analyser.SetEXTBNBFile        ("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v4.root") 
-analyser.SetBNBPOT(9.6181e+20)    #88601  1.65319e+20 #9.6181e+20
+analyser.SetBNBPOT(9.1371E20)    #88601  1.65319e+20 #9.6181e+20
 analyser.SetBNBONTriggers(213802895.68115577)   #36749130.19319 #213802895.68115577
 analyser.SetEXTBNBTriggers(72299264)
 # 35388924 bnbon triggers corrspond to 1.592e+20 POT
