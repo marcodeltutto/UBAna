@@ -2,14 +2,13 @@
 
 Based on https://github.com/drinkingkazu/LiteFMWK.
 
-
 ## How to use it?
 Just try:
 ```
 source setup.sh
 ```
 This sets up necessary shell env. variables. 
-You need to have `ROOT6` (if not, you get an error message from `setup.sh`).
+You need to have `ROOT6` (if not, you get an error message from `setup.sh`). The suppoerted ROOT version is v6.06.06.
 There's a support to detect `numpy` and provide a few handy compiler directives as well. Although `numpy` is not required to run the basic functionalities of this code.
 This software is compatible with both macOS and linux operative systems.
 
