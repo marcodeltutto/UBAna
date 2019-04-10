@@ -395,8 +395,8 @@ namespace Base {
       eff_den_true[bin-1][0] = _h_eff_mumom_den->GetBinContent(bin);
     }
 
-    eff_num_true[m] = _h_eff_mumom_num->GetBinContent(0) + _h_eff_mumom_num->GetBinContent(m+1);
-    eff_den_true[m] = _h_eff_mumom_den->GetBinContent(0) + _h_eff_mumom_den->GetBinContent(m+1);
+    eff_num_true[m][0] = _h_eff_mumom_num->GetBinContent(0) + _h_eff_mumom_num->GetBinContent(m+1);
+    eff_den_true[m][0] = _h_eff_mumom_den->GetBinContent(0) + _h_eff_mumom_den->GetBinContent(m+1);
 
 
 

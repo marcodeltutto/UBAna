@@ -595,10 +595,6 @@ namespace Base {
     //
     UBTH2Poly * h_eff = _eff;
 
-    for (int i = 1; i < h_eff->GetNumberOfBins()+1; i++) {
-        LOG_CRITICAL() << "efficiency in bin " << i << " is " << h_eff->GetBinContent(i) << std::endl;
-    }
-
     h_mc->Divide(h_eff);
     h_data->Divide(h_eff);
 
