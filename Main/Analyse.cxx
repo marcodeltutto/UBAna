@@ -195,7 +195,7 @@ namespace Main {
   // Getting the relevant histograms from MC file BNBCosmic
   // *************************************
   std::map<std::string,TH1D*>* temp_map;
-  std::map<std::string,TH2D*>* temp_map_2d;
+  // std::map<std::string,TH2D*>* temp_map_2d;
   mc_bnbcosmic_file->GetObject("hmap_trklen", temp_map);
   std::map<std::string,TH1D*> hmap_trklen_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkmom_classic", temp_map);
@@ -534,44 +534,7 @@ namespace Main {
   }
 
 
-  
-    std::cout << "JJJJJ Just before" << std::endl;
-    std::cout << "maximum " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetMaximum() << std::endl;
-    std::cout << "calling ProjectionY " << std::endl;
-    std::vector<int> bin_numbers;
-    std::cout << "before calling GetCopyWithBinNumbers" << std::endl;
-    UBTH2Poly* h_poly_binnumber = _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetCopyWithBinNumbers("bs");
-    std::cout << "after calling GetCopyWithBinNumbers" << std::endl;
-
-    std::cout << "Original   bin 2, content: " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinContent(9) << " +- " << _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetBinError(9) << std::endl;
-    
-    // h_poly_binnumber->GetYaxis()->SetRangeUser(0,1.28);
-    // h_poly_binnumber->Reset();
-    // for (double x = 0; x < 3; x+=0.3) {
-    // for (double y = 0.1; y < 0.6; y+=0.3) {
-    //   h_poly_binnumber->Fill(x, y, 1);
-    // }}
-    // std::cout << "h_poly_binnumber->GetBinContent(-1): " << h_poly_binnumber->GetBinContent(-1) << std::endl;
-    // std::cout << "h_poly_binnumber->GetBinContent(-2): " << h_poly_binnumber->GetBinContent(-2) << std::endl;
-    // std::cout << "h_poly_binnumber->GetBinContent(-3): " << h_poly_binnumber->GetBinContent(-3) << std::endl;
-    // std::cout << "h_poly_binnumber->GetBinContent(-4): " << h_poly_binnumber->GetBinContent(-4) << std::endl;
-    // std::cout << "h_poly_binnumber->GetBinContent(-5): " << h_poly_binnumber->GetBinContent(-5) << std::endl;
-    // std::cout << "h_poly_binnumber->GetBinContent(-6): " << h_poly_binnumber->GetBinContent(-6) << std::endl;
-    // std::cout << "h_poly_binnumber->GetBinContent(-7): " << h_poly_binnumber->GetBinContent(-7) << std::endl;
-    // std::cout << "h_poly_binnumber->GetBinContent(-8): " << h_poly_binnumber->GetBinContent(-8) << std::endl;
-    // std::cout << "h_poly_binnumber->GetBinContent(-9): " << h_poly_binnumber->GetBinContent(-9) << std::endl;
-
-    // std::cout << "JJJJJ h_poly_binnumber->FindBin(-0.99, 3.) = " << h_poly_binnumber->FindBin(-0.99, 3.)<< std::endl;
-    std::cout << "JJJJJ Just after" << std::endl;
-
-
-
-  
-    
-
-
-
-
+  UBTH2Poly* h_poly_binnumber = _event_histo_mc->hmap_trktheta_trkmom_poly["signal"]->GetCopyWithBinNumbers("bs");
 
 
   gROOT->SetBatch(kTRUE);
@@ -649,9 +612,9 @@ namespace Main {
     TH2D frac_covariance_matrix_dirt;
 
 
-    std::cout << "***************" << std::endl;
-    std::cout << "* Total cross section" << std::endl;
-    std::cout << "***************" << std::endl;
+    LOG_NORMAL() << "***************" << std::endl;
+    LOG_NORMAL() << "* Total cross section" << std::endl;
+    LOG_NORMAL() << "***************" << std::endl;
 
 
     
@@ -934,9 +897,9 @@ namespace Main {
     
 
 
-    std::cout << "***************" << std::endl;
-    std::cout << "* Muon Momentum cross section" << std::endl;
-    std::cout << "***************" << std::endl;
+    LOG_NORMAL() << "***************" << std::endl;
+    LOG_NORMAL() << "* Muon Momentum cross section" << std::endl;
+    LOG_NORMAL() << "***************" << std::endl;
 
 
     // 
@@ -1232,9 +1195,9 @@ namespace Main {
 
 
 
-    std::cout << "***************" << std::endl;
-    std::cout << "* Muon cos(theta) cross section" << std::endl;
-    std::cout << "***************" << std::endl;
+    LOG_NORMAL() << "***************" << std::endl;
+    LOG_NORMAL() << "* Muon cos(theta) cross section" << std::endl;
+    LOG_NORMAL() << "***************" << std::endl;
 
 
     unc_plotter.Reset();
@@ -1524,9 +1487,9 @@ namespace Main {
 
 
 
-    // std::cout << "***************" << std::endl;
-    // std::cout << "* Double differential cross section" << std::endl;
-    // std::cout << "***************" << std::endl;
+    // LOG_NORMAL() << "***************" << std::endl;
+    // LOG_NORMAL() << "* Double differential cross section" << std::endl;
+    // LOG_NORMAL() << "***************" << std::endl;
 
 
     // //
@@ -1764,9 +1727,9 @@ namespace Main {
 
 
 
-    std::cout << "***************" << std::endl;
-    std::cout << "* Double differential cross section (polybins)" << std::endl;
-    std::cout << "***************" << std::endl;
+    LOG_NORMAL() << "***************" << std::endl;
+    LOG_NORMAL() << "* Double differential cross section (polybins)" << std::endl;
+    LOG_NORMAL() << "***************" << std::endl;
 
     unc_plotter.Reset();
     unc_plotter.SetXaxisTitle("p_{#mu}^{reco} [GeV]");
@@ -1991,14 +1954,7 @@ namespace Main {
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_cosmic);
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_dirt);
 
-    LOG_CRITICAL() << "genie = " << std::sqrt(frac_covariance_matrix_genie.GetBinContent(40, 40)) << std::endl;
-    LOG_CRITICAL() << "extra = " << std::sqrt(frac_covariance_matrix_extra_syst.GetBinContent(40, 40)) << std::endl;
-    LOG_CRITICAL() << "flux = " << std::sqrt(frac_covariance_matrix_flux.GetBinContent(40, 40)) << std::endl;
-    LOG_CRITICAL() << "mcstat = " << std::sqrt(frac_covariance_matrix_mc_stat.GetBinContent(40, 40)) << std::endl;
-    LOG_CRITICAL() << "detector = " << std::sqrt(frac_covariance_matrix_detector.GetBinContent(40, 40)) << std::endl;
-    LOG_CRITICAL() << "cosmic = " << std::sqrt(frac_covariance_matrix_cosmic.GetBinContent(40, 40)) << std::endl;
-    LOG_CRITICAL() << "dirt = " << std::sqrt(frac_covariance_matrix_dirt.GetBinContent(40, 40)) << std::endl;
-    LOG_CRITICAL() << "total = " << std::sqrt(frac_covariance_matrix_poly_muangle_mumom.GetBinContent(40, 40)) << std::endl;
+    
 
 
     //
@@ -2142,10 +2098,10 @@ namespace Main {
   
   std::cout << std::endl;
 
-  std::cout << "With the correct normalisation: " << std::endl;
-  std::cout << "\t Number of BNBON events:   " << h_trklen_total_bnbon->Integral(0, h_trklen_total_bnbon->GetNbinsX()+1) << std::endl;
-  std::cout << "\t Number of EXTBNB events:  " << h_trklen_total_extbnb->Integral(0, h_trklen_total_extbnb->GetNbinsX()+1) << std::endl;
-  std::cout << "\t           BNBON - EXTBNB: " << h_trklen_total_bnbon->Integral(0, h_trklen_total_bnbon->GetNbinsX()+1) - h_trklen_total_extbnb->Integral(0, h_trklen_total_extbnb->GetNbinsX()+1) << std::endl;
+  LOG_NORMAL() << "With the correct normalisation: " << std::endl;
+  LOG_NORMAL() << "\t Number of BNBON events:   " << h_trklen_total_bnbon->Integral(0, h_trklen_total_bnbon->GetNbinsX()+1) << std::endl;
+  LOG_NORMAL() << "\t Number of EXTBNB events:  " << h_trklen_total_extbnb->Integral(0, h_trklen_total_extbnb->GetNbinsX()+1) << std::endl;
+  LOG_NORMAL() << "\t           BNBON - EXTBNB: " << h_trklen_total_bnbon->Integral(0, h_trklen_total_bnbon->GetNbinsX()+1) - h_trklen_total_extbnb->Integral(0, h_trklen_total_extbnb->GetNbinsX()+1) << std::endl;
 
   h_trkmom_classic_total_extbnb->Scale(scale_factor_extbnb);
   h_trkmom_classic_total_bnbon->Scale(scale_factor_bnbon);
@@ -2326,8 +2282,8 @@ namespace Main {
   this->DrawDataMC(canvas_trklen, hs_trklen_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trklen_mc, h_trklen_total_bnbon, bnbon_pot_meas);
 
   
-  std::cout << "\t             MC BNBCOSMIC: " << hmap_trklen_mc["total"]->Integral(0, hmap_trklen_mc["total"]->GetNbinsX()+1) << std::endl;
-  std::cout << "\t             DATA (on-off): " << h_trklen_data->Integral(0, h_trklen_data->GetNbinsX()+1) << std::endl;
+  LOG_NORMAL() << "\t             MC BNBCOSMIC: " << hmap_trklen_mc["total"]->Integral(0, hmap_trklen_mc["total"]->GetNbinsX()+1) << std::endl;
+  LOG_NORMAL() << "\t             DATA (on-off): " << h_trklen_data->Integral(0, h_trklen_data->GetNbinsX()+1) << std::endl;
   
 
   double den = hmap_trklen_mc["signal"]->Integral() +
@@ -2340,7 +2296,7 @@ namespace Main {
 
   std::cout << std::endl;
 
-  std::cout << "Number of events per channel (including over/underflow bins):" << std::endl;
+  LOG_NORMAL() << "Number of events per channel (including over/underflow bins):" << std::endl;
 
   int nbins = hmap_trklen_mc["signal"]->GetNbinsX();
 
@@ -2353,18 +2309,18 @@ namespace Main {
   hmap_trklen_mc["beam-off"]->Integral(0, nbins+1);
   if (mc_dirt_file) den += hmap_trklen_mc["dirt"]->Integral(0, nbins+1);
 
-  std::cout << "signal: " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) / den << std::endl;
-  std::cout << "cosmic: " << hmap_trklen_mc["cosmic"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["cosmic"]->Integral(0, nbins+1) / den << std::endl;
-  std::cout << "outfv: " << hmap_trklen_mc["outfv"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["outfv"]->Integral(0, nbins+1) / den << std::endl;
-  std::cout << "nc: " << hmap_trklen_mc["nc"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["nc"]->Integral(0, nbins+1) / den << std::endl;
-  std::cout << "anumu: " << hmap_trklen_mc["anumu"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["anumu"]->Integral(0, nbins+1) / den << std::endl;
-  std::cout << "nue: " << hmap_trklen_mc["nue"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["nue"]->Integral(0, nbins+1) / den << std::endl;
-  if (mc_dirt_file) std::cout << "dirt: " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) / den << std::endl;
-  std::cout << "beam-off: " << hmap_trklen_mc["beam-off"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["beam-off"]->Integral(0, nbins+1) / den << std::endl;
-  std::cout << std::endl;
-  std::cout << "beam-on: " << h_trklen_total_bnbon->Integral(0, nbins+1) << std::endl;
-  std::cout << std::endl;
-  std::cout << "PURITY: " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) / den << std::endl;
+  LOG_NORMAL() << "signal: " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) / den << std::endl;
+  LOG_NORMAL() << "cosmic: " << hmap_trklen_mc["cosmic"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["cosmic"]->Integral(0, nbins+1) / den << std::endl;
+  LOG_NORMAL() << "outfv: " << hmap_trklen_mc["outfv"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["outfv"]->Integral(0, nbins+1) / den << std::endl;
+  LOG_NORMAL() << "nc: " << hmap_trklen_mc["nc"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["nc"]->Integral(0, nbins+1) / den << std::endl;
+  LOG_NORMAL() << "anumu: " << hmap_trklen_mc["anumu"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["anumu"]->Integral(0, nbins+1) / den << std::endl;
+  LOG_NORMAL() << "nue: " << hmap_trklen_mc["nue"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["nue"]->Integral(0, nbins+1) / den << std::endl;
+  if (mc_dirt_file) LOG_NORMAL() << "dirt: " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["dirt"]->Integral(0, nbins+1) / den << std::endl;
+  LOG_NORMAL() << "beam-off: " << hmap_trklen_mc["beam-off"]->Integral(0, nbins+1) << ", " << hmap_trklen_mc["beam-off"]->Integral(0, nbins+1) / den << std::endl;
+  LOG_NORMAL() << std::endl;
+  LOG_NORMAL() << "beam-on: " << h_trklen_total_bnbon->Integral(0, nbins+1) << std::endl;
+  LOG_NORMAL() << std::endl;
+  LOG_NORMAL() << "PURITY: " << hmap_trklen_mc["signal"]->Integral(0, nbins+1) / den << std::endl;
   
   
   name = outdir + "trklen";
@@ -2450,7 +2406,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   // h_trkphi_total_bnbon->Scale(1.02);
   if (_fake_data_mode || _overlay_mode) h_trkphi_total_bnbon->Add(h_trkphi_total_extbnb);
   if (_beamoff_sub) this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_data, bnbon_pot_meas);
-  else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas, true);
+  else this->DrawDataMC(canvas_trkphi, hs_trkphi_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trkphi_mc, h_trkphi_total_bnbon, bnbon_pot_meas);
   
   name = outdir + "trkphi";
   canvas_trkphi->SaveAs(name + ".pdf");
