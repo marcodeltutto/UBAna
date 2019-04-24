@@ -91,7 +91,7 @@ namespace Base {
     _frac_covariance_matrix = h;
     _frac_covariance_matrix_is_set = true;
 
-    LOG_INFO() << "Setting fractional covariance matrix. GetNbinsX = " << _frac_covariance_matrix.GetNbinsX() << ", content of bin 1 = " << _frac_covariance_matrix.GetBinContent(1) << std::endl;
+    LOG_INFO() << "Setting fractional covariance matrix. GetNbinsX = " << _frac_covariance_matrix.GetNbinsX() << ", content of bin 1 = " << _frac_covariance_matrix.GetBinContent(1, 1) << std::endl;
 
     if (_covariance_matrix_is_set) {
       LOG_CRITICAL() << "You have set both a covariance and a fractional covariance matrix. Only one is allowed." << std::endl;
@@ -585,28 +585,6 @@ namespace Base {
     }
 
 
-
-      LOG_INFO() << "Beam-on integral "  << _h_bnbon->Integral() << std::endl;
-      LOG_INFO() << "Beam-off integral " << _hmap_bnbcosmic["beam-off"]->Integral() << std::endl;
-      LOG_INFO() << "MC signal "         << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
-      LOG_INFO() << "MC cosmic "         << _hmap_bnbcosmic["cosmic"]->Integral() << std::endl;
-      LOG_INFO() << "MC outfv "          << _hmap_bnbcosmic["outfv"]->Integral() << std::endl;
-      LOG_INFO() << "MC nc "             << _hmap_bnbcosmic["nc"]->Integral() << std::endl;
-      LOG_INFO() << "MC nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
-      LOG_INFO() << "MC anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
-      if (_dirt_is_set) LOG_INFO() << "MC dirt "           << _hmap_bnbcosmic["dirt"]->Integral() << std::endl;
-
-      LOG_INFO() << "First Bin only: " << std::endl;
-      LOG_INFO() << "Beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
-      LOG_INFO() << "Beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
-      LOG_INFO() << "MC signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
-      LOG_INFO() << "MC cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
-      LOG_INFO() << "MC outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
-      LOG_INFO() << "MC nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
-      LOG_INFO() << "MC nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
-      LOG_INFO() << "MC anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
-      if (_dirt_is_set) LOG_INFO() << "MC dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
-
     if (_h_bnbon->GetNbinsX() == 1) {
       // If one bin means we are dealing with the total cross section, print the number of events
       LOG_INFO() << "Number of events for " << _pot << " POT:" << std::endl;
@@ -628,6 +606,29 @@ namespace Base {
       total_bkg_temp->Add(_hmap_bnbcosmic["anumu"]);
       if (_dirt_is_set) total_bkg_temp->Add(_hmap_bnbcosmic["dirt"]);
       LOG_INFO() << "Total backround " << total_bkg_temp->GetBinContent(1) << " +- " << total_bkg_temp->GetBinError(1) << std::endl;
+    } else {
+
+      LOG_INFO() << "Beam-on integral "  << _h_bnbon->Integral() << std::endl;
+      LOG_INFO() << "Beam-off integral " << _hmap_bnbcosmic["beam-off"]->Integral() << std::endl;
+      LOG_INFO() << "MC signal "         << _hmap_bnbcosmic["signal"]->Integral() << std::endl;
+      LOG_INFO() << "MC cosmic "         << _hmap_bnbcosmic["cosmic"]->Integral() << std::endl;
+      LOG_INFO() << "MC outfv "          << _hmap_bnbcosmic["outfv"]->Integral() << std::endl;
+      LOG_INFO() << "MC nc "             << _hmap_bnbcosmic["nc"]->Integral() << std::endl;
+      LOG_INFO() << "MC nue "            << _hmap_bnbcosmic["nue"]->Integral() << std::endl;
+      LOG_INFO() << "MC anumu "          << _hmap_bnbcosmic["anumu"]->Integral() << std::endl;
+      if (_dirt_is_set) LOG_INFO() << "MC dirt "           << _hmap_bnbcosmic["dirt"]->Integral() << std::endl;
+
+      // LOG_INFO() << "First Bin only: " << std::endl;
+      // LOG_INFO() << "Beam-on integral "  << _h_bnbon->GetBinContent(1) << " +- " << _h_bnbon->GetBinError(1) << std::endl;
+      // LOG_INFO() << "Beam-off integral " << _hmap_bnbcosmic["beam-off"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["beam-off"]->GetBinError(1) << std::endl;
+      // LOG_INFO() << "MC signal "         << _hmap_bnbcosmic["signal"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["signal"]->GetBinError(1) << std::endl;
+      // LOG_INFO() << "MC cosmic "         << _hmap_bnbcosmic["cosmic"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["cosmic"]->GetBinError(1) << std::endl;
+      // LOG_INFO() << "MC outfv "          << _hmap_bnbcosmic["outfv"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["outfv"]->GetBinError(1) << std::endl;
+      // LOG_INFO() << "MC nc "             << _hmap_bnbcosmic["nc"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nc"]->GetBinError(1) << std::endl;
+      // LOG_INFO() << "MC nue "            << _hmap_bnbcosmic["nue"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["nue"]->GetBinError(1) << std::endl;
+      // LOG_INFO() << "MC anumu "          << _hmap_bnbcosmic["anumu"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["anumu"]->GetBinError(1) << std::endl;
+      // if (_dirt_is_set) LOG_INFO() << "MC dirt "           << _hmap_bnbcosmic["dirt"]->GetBinContent(1) << " +- " << _hmap_bnbcosmic["dirt"]->GetBinError(1) << std::endl;
+
     }
 
   }
@@ -856,7 +857,7 @@ namespace Base {
     //
 
     if (_extra_fractional_uncertainty != 0) {
-      LOG_INFO() << "Adding an extra uncertainty of " << _extra_fractional_uncertainty * 100 << "%" << std::endl;
+      LOG_INFO() << "Adding an extra uncertainty of: " << _extra_fractional_uncertainty * 100 << " %." << std::endl;
     }
 
     TH1D * h_syst_unc = (TH1D*) _h_data->Clone("h_syst_unc");
@@ -1147,7 +1148,7 @@ namespace Base {
 
     for (auto hname : histos_to_subtract) 
     {
-      LOG_INFO() << "Going to subtract histogram " << hname << std::endl;
+      LOG_DEBUG() << "Going to subtract histogram " << hname << std::endl;
       // Need to remove from the data histogram
       _h_data_subtracted->Add(_hmap_bnbcosmic[hname], -1.);
       // But also form the total MC one, to properly propagate unc
