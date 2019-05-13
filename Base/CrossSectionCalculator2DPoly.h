@@ -140,6 +140,15 @@ namespace Base {
     /// Returns the extracted MC cross section (must be called after ExtractCrossSection)
     UBTH2Poly* GetMCCrossSection() { return _h_mc; }
 
+    /// Returns the reco efficiency (must be called after ExtractCrossSection)
+    UBTH2Poly* GetEfficiency() { return _eff; }
+
+    /// Returns the total background (must be called after ExtractCrossSection)
+    UBTH2Poly* GetBackground(std::vector<std::string> bkg_prefixs);
+
+    /// Returns the signal (must be called after ExtractCrossSection)
+    UBTH2Poly* GetSignal();
+
     /// Returns the extracted alternative MC cross section (must be called after ExtractCrossSection)
     UBTH2Poly* GetAlternativeMCCrossSection() { return _h_alt_mc_xsec; }
 
@@ -157,6 +166,9 @@ namespace Base {
 
     /// Returns the total covariance matrix (stat + syst)
     TH2D GetTotalCovarianceMatrix() {return *_tot_cov_matrix_total;}
+
+    /// Returns the statistical fractional covariance matrix (diagonal of course)
+    TH2D GetStatFracCovarianceMatrix() {return *_stat_frac_cov_matrix_total;}
 
     /// Sets the smearing matrix
     void SetSmearingMatrix(TMatrix);

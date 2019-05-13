@@ -22,11 +22,12 @@ samples = ['anode_anodevtx',  # Vertex in the anode side, pointing at the anode,
            'cathode', # Pointing at the cathode, 11
            'right', # pointing right (to anode), 12
            'left', # poining left (to cathode), 13
+           'no30deg', # removing costheta between 0.85 and 0.89, 14
            ] 
 
-sample_id = 9
+sample_id = 14
 
-model0 = True
+model0 = False
 model1 = False
 model2 = False
 
@@ -40,6 +41,8 @@ analyser.SetDirtFile          ('/Users/deltutto/CCInclusiveFiles/Output/ubxsecan
 
 analyser.SetBNBONFile         ('/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_run1_ubcodev06_26_01_22__v4_' + samples[sample_id] + '.root')    
 analyser.SetEXTBNBFile        ('/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v4_' + samples[sample_id] + '.root')
+# analyser.SetBNBONFile         ('/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_bnbon_run1_ubcodev06_26_01_22__v4.root')    
+# analyser.SetEXTBNBFile        ('/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_data_extbnb_run1_ubcodev06_26_01_22__v4.root')
 
 
 if model0:

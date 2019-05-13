@@ -170,11 +170,15 @@ namespace DataTypes {
       if (pos != std::string::npos) {  
         std::string function_name = _name_v.at(i).substr (0, pos);
 
-        std::vector<TH1D> vec;
-        vec.resize(2);
-        vec.at(0) = _h_v.at(i);
-
-        output_map[function_name] = vec;
+         auto it = output_map.find(function_name);
+        if(it == output_map.end()) {
+          std::vector<TH1D> vec;
+          vec.resize(2);
+          vec.at(0) = _h_v.at(i);
+          output_map[function_name] = vec;
+        } else {
+           output_map[function_name].at(0) = _h_v.at(i);
+        }
 
       }
 
@@ -183,7 +187,15 @@ namespace DataTypes {
       if (pos != std::string::npos) {  
         std::string function_name = _name_v.at(i).substr (0, pos);
 
-        output_map[function_name].at(1) =  _h_v.at(i);
+        auto it = output_map.find(function_name);
+        if(it == output_map.end()) {
+          std::vector<TH1D> vec;
+          vec.resize(2);
+          vec.at(1) = _h_v.at(i);
+          output_map[function_name] =  vec;
+        } else {
+         output_map[function_name].at(1) = _h_v.at(i);
+        }
       }
     }
 

@@ -2518,6 +2518,9 @@ void Main::Maker::MakeFile()
     //         || (t->slc_longesttrack_phi.at(scl_ll_max) > -TMath::Pi() && t->slc_longesttrack_phi.at(scl_ll_max) < -(3./4.)*TMath::Pi()))) continue; // anode
 
 
+    // No 30 degree
+    // if (t->slc_longesttrack_theta.at(scl_ll_max) > 0.85 && t->slc_longesttrack_theta.at(scl_ll_max) < 0.89) continue;
+
     //if(t->slc_mult_track_tolerance.at(scl_ll_max) <= 1) continue;
 
 

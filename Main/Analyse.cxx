@@ -509,6 +509,7 @@ namespace Main {
   bnbon_file->GetObject("UBXSecEventHisto1D", _event_histo_1d_bnbon);
   UBXSecEventHisto * _event_histo_bnbon = 0;
   bnbon_file->GetObject("UBXSecEventHisto", _event_histo_bnbon);
+
   LOG_NORMAL() << "Event Histo correclty loaded from BNBON file." << std::endl;
 
 
@@ -975,7 +976,7 @@ namespace Main {
           std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
         }
 
-        unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - CC QE, MEC", frac_covariance_matrix_extra_syst);
       }
 
       if (_import_extra_syst_systs) {
@@ -986,7 +987,7 @@ namespace Main {
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_mumom");
         frac_covariance_matrix_extra_syst = *m;
 
-        unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - CC QE, MEC", frac_covariance_matrix_extra_syst);
       }
 
 
@@ -1275,7 +1276,7 @@ namespace Main {
           std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
         }
 
-        unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - CC QE, MEC", frac_covariance_matrix_extra_syst);
       }
 
       if (_import_extra_syst_systs) {
@@ -1286,7 +1287,7 @@ namespace Main {
         TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_muangle");
         frac_covariance_matrix_extra_syst = *m;
         
-        unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
+        unc_plotter.AddFracCovarianceMatrix("XSEC - CC QE, MEC", frac_covariance_matrix_extra_syst);
       }
 
 
@@ -1806,7 +1807,7 @@ namespace Main {
         std::cout << "EXTRA SYSTS - Uncertainties on the diagonal: " << i << " => " << covariance_matrix_extra_syst.GetBinContent(i+1, i+1) << std::endl;
       }
 
-      unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
+      unc_plotter.AddFracCovarianceMatrix("XSEC - CC QE, MEC", frac_covariance_matrix_extra_syst);
     }
 
     if (_import_extra_syst_systs) {
@@ -1817,7 +1818,7 @@ namespace Main {
       TH2D* m = (TH2D*)cov_file->Get("frac_covariance_matrix_extra_syst_poly_muangle_mumom");
       frac_covariance_matrix_extra_syst = *m;
         
-      unc_plotter.AddFracCovarianceMatrix("XSEC - OTHER", frac_covariance_matrix_extra_syst);
+      unc_plotter.AddFracCovarianceMatrix("XSEC - CC QE, MEC", frac_covariance_matrix_extra_syst);
     }
 
 
@@ -1952,9 +1953,8 @@ namespace Main {
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_mc_stat);
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_detector);
     frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_cosmic);
-    frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_dirt);
-
-    
+    frac_covariance_matrix_poly_muangle_mumom.Add(&frac_covariance_matrix_dirt);    
+    unc_plotter.AddFracCovarianceMatrix("TOTAL SYST", frac_covariance_matrix_poly_muangle_mumom);
 
 
     //
@@ -2017,9 +2017,16 @@ namespace Main {
     std::vector<TH1D> xsec_mc_alt_histos;
     if (_import_alternative_mc) xsec_mc_alt_histos = xsec_calc_poly.GetUnpackedMCAlternativeCrossSection();
 
+    UBTH2Poly * eff_muangle_mumom_poly = xsec_calc_poly.GetEfficiency();
+    UBTH2Poly * bkg_muangle_mumom_poly = xsec_calc_poly.GetBackground(bkg_names);
+    UBTH2Poly * sig_muangle_mumom_poly = xsec_calc_poly.GetSignal();
+    
     TH2D tot_cov_muangle_mumom;
     if (do_uncertainties)
       tot_cov_muangle_mumom = xsec_calc_poly.GetTotalCovarianceMatrix();
+
+    // TH2D stat_frac_cov_muangle_mumom = xsec_calc_poly.GetStatFracCovarianceMatrix();
+    // unc_plotter.AddFracCovarianceMatrix("STAT", stat_frac_cov_muangle_mumom);
 
     if (frac_covariance_matrix_poly_muangle_mumom.GetNbinsX() > 1) xsec_calc_poly.SaveToLatexFile();
 
@@ -2066,6 +2073,14 @@ namespace Main {
     save_name = "frac_cov_matrix_poly_muangle_mumom_dirt_" + _prefix;
     frac_covariance_matrix_dirt.Write(save_name.c_str());
 
+    save_name = "efficiency_poly_muangle_mumom_" + _prefix;
+    eff_muangle_mumom_poly->Write(save_name.c_str());
+
+    save_name = "background_poly_muangle_mumom_" + _prefix;
+    bkg_muangle_mumom_poly->Write(save_name.c_str());
+
+    save_name = "signal_poly_muangle_mumom_" + _prefix;
+    sig_muangle_mumom_poly->Write(save_name.c_str());
     
     if (do_uncertainties) {
       unc_plotter.SetCrossSection(xsec_muangle_mumom_poly); 

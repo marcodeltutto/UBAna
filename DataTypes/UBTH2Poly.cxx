@@ -320,13 +320,10 @@ void UBTH2Poly::SetBinError(Int_t bin, Double_t error)
      if (resetStats)  {
         // statistics need to be reset in case coefficient are negative
         // ResetStats();
-      // std::cout << "kNstat = " << kNstat << std::endl;
         Double_t stats[kNstat] = {0};
         fTsumw = 0;
         fEntries = 1; // to force re-calculation of the statistics in TH1::GetStats
-      // std::cout << "Before GetStats" << std::endl;
         GetStats(stats);
-      // std::cout << "Before PutStats" << std::endl;
         PutStats(stats);
         fEntries = TMath::Abs(fTsumw);
         // use effective entries for weighted histograms:  (sum_w) ^2 / sum_w2

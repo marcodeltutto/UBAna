@@ -188,6 +188,20 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     iter.second->Scale(pot_scaling);
     // if (iter.first == "cosmic_nostopmu" || iter.first == "cosmic_nostopmu" || iter.first == "cosmic") iter.second->Scale(0.45);
   }
+
+  if (_breakdownPlots) {
+    themap["signal_nostopmu"]->SetLineColor(kRed+2);
+    themap["signal_nostopmu"]->SetFillColor(kRed+2);
+    hs_trklen->Add(themap["signal_nostopmu"]);
+    themap["signal_stopmu"]->SetLineColor(kRed);
+    themap["signal_stopmu"]->SetFillColor(kRed);
+    hs_trklen->Add(themap["signal_stopmu"]);
+  }
+  else {
+    themap["signal"]->SetLineColor(kRed-4);
+    themap["signal"]->SetFillColor(kRed-4);
+    hs_trklen->Add(themap["signal"]);
+  }
   
   if (themap["beam-off"] != NULL) {
     themap["beam-off"]->SetLineColor(kBlue+2);
@@ -276,19 +290,19 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   hs_trklen->Add(themap["nue"]);
 
   
-  if (_breakdownPlots) {
-    themap["signal_nostopmu"]->SetLineColor(kRed+2);
-    themap["signal_nostopmu"]->SetFillColor(kRed+2);
-    hs_trklen->Add(themap["signal_nostopmu"]);
-    themap["signal_stopmu"]->SetLineColor(kRed);
-    themap["signal_stopmu"]->SetFillColor(kRed);
-    hs_trklen->Add(themap["signal_stopmu"]);
-  }
-  else {
-    themap["signal"]->SetLineColor(kRed-4);
-    themap["signal"]->SetFillColor(kRed-4);
-    hs_trklen->Add(themap["signal"]);
-  }
+  // if (_breakdownPlots) {
+  //   themap["signal_nostopmu"]->SetLineColor(kRed+2);
+  //   themap["signal_nostopmu"]->SetFillColor(kRed+2);
+  //   hs_trklen->Add(themap["signal_nostopmu"]);
+  //   themap["signal_stopmu"]->SetLineColor(kRed);
+  //   themap["signal_stopmu"]->SetFillColor(kRed);
+  //   hs_trklen->Add(themap["signal_stopmu"]);
+  // }
+  // else {
+  //   themap["signal"]->SetLineColor(kRed-4);
+  //   themap["signal"]->SetFillColor(kRed-4);
+  //   hs_trklen->Add(themap["signal"]);
+  // }
   hs_trklen->Draw("hist");
   
   //h_trklen_total->DrawCopy("hist");
