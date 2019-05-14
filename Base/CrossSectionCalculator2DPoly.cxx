@@ -589,14 +589,11 @@ namespace Base {
       }
     }
 
-    LOG_CRITICAL() << "Data bin 10, entries " << h_data->GetBinContent(10) << ", error " << h_data->GetBinError(10) << std::endl;
-
 
     // LOG_INFO() << "Subtracting backgrouds: ";
     for (auto name : bkg_prefixs) 
     {
       // std::cout << name << ", ";
-      LOG_CRITICAL() << "Sub bkg " << name << ", Data bin 10, entries " << h_data->GetBinContent(10) << ", error " << h_data->GetBinError(10) << std::endl;
       h_data->Add(_hmap_bnbcosmic[name], -1.);
       if (_hmap_bnbcosmic[name]->GetSumw2N() == 0) {
         LOG_WARNING() << "Bkg " << name << " does not have Sum2w active." << std::endl;
@@ -606,8 +603,6 @@ namespace Base {
 
 
 
-
-    LOG_CRITICAL() << "After sub, Data bin 10, entries " << h_data->GetBinContent(10) << ", error " << h_data->GetBinError(10) << std::endl;
 
 
     //
@@ -619,7 +614,6 @@ namespace Base {
     h_data->Divide(h_eff);
 
 
-    LOG_CRITICAL() << "After eff, Data bin 10, entries " << h_data->GetBinContent(10) << ", error " << h_data->GetBinError(10) << std::endl;
 
     //
     // Divide by flux, and N_target and bin width
@@ -633,7 +627,6 @@ namespace Base {
     h_mc->Scale(1. / den_mc, "width");
     h_data->Scale(1. / den_data, "width");
 
-    LOG_CRITICAL() << "After scale, Data bin 10, entries " << h_data->GetBinContent(10) << ", error " << h_data->GetBinError(10) << std::endl;
     
 
 
