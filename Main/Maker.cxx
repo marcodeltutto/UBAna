@@ -686,6 +686,15 @@ void Main::Maker::MakeFile()
   hmap_mctruth_mucostheta_mumom["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_mec", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
   hmap_mctruth_mucostheta_mumom["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_other", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
 
+  std::map<std::string,TH2D*> hmap_mctruth_q0_q3;
+  hmap_mctruth_q0_q3["total"] = new TH2D("hmap_mctruth_q0_q3_total", ";Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3["qe"] = new TH2D("hmap_mctruth_q0_q3_qe", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3["res"] = new TH2D("hmap_mctruth_q0_q3_res", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3["dis"] = new TH2D("hmap_mctruth_q0_q3_dis", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3["coh"] = new TH2D("hmap_mctruth_q0_q3_coh", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3["mec"] = new TH2D("hmap_mctruth_q0_q3_mec", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3["other"] = new TH2D("hmap_mctruth_q0_q3_other", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+
   //
   // Truth histograms stacked in interaction type - Generated
   //
@@ -742,6 +751,15 @@ void Main::Maker::MakeFile()
   hmap_mctruth_mucostheta_mumom_gen["coh"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_coh", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
   hmap_mctruth_mucostheta_mumom_gen["mec"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_mec", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
   hmap_mctruth_mucostheta_mumom_gen["other"] = new TH2D("hmap_mctruth_mucostheta_mumom_gen_other", ";True Muon cos(#theta);True Muon Momentum [GeV]", 25, -1, 1, 20, 0, 2.5);
+
+  std::map<std::string,TH2D*> hmap_mctruth_q0_q3_gen;
+  hmap_mctruth_q0_q3_gen["total"] = new TH2D("hmap_mctruth_q0_q3_gen_total", ";Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3_gen["qe"] = new TH2D("hmap_mctruth_q0_q3_gen_qe", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3_gen["res"] = new TH2D("hmap_mctruth_q0_q3_gen_res", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3_gen["dis"] = new TH2D("hmap_mctruth_q0_q3_gen_dis", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3_gen["coh"] = new TH2D("hmap_mctruth_q0_q3_gen_coh", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3_gen["mec"] = new TH2D("hmap_mctruth_q0_q3_gen_mec", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
+  hmap_mctruth_q0_q3_gen["other"] = new TH2D("hmap_mctruth_q0_q3_gen_other", ";;Three-momentum transfer q^{3} [GeV];Energy transfer q^{0} [GeV]", 100, 0, 1.3, 100, 0, 1.3);
 
 
   //
@@ -2055,6 +2073,13 @@ void Main::Maker::MakeFile()
         //std::cout << "This is a signal event but the muon was not reconstructed. Event: " << event << std::endl;
       }
 
+      double m_mu = 0.105658; // GeV
+      double mu_px = t->true_muon_mom * std::sin(std::acos(t->lep_costheta)) * std::cos(t->lep_phi);
+      double mu_py = t->true_muon_mom * std::sin(std::acos(t->lep_costheta)) * std::sin(t->lep_phi);
+      double mu_pz = t->true_muon_mom * t->lep_costheta;
+      double q0 = t->nu_e - std::sqrt(t->true_muon_mom * t->true_muon_mom + m_mu * m_mu);
+      double q3 = std::sqrt(mu_px * mu_px + mu_py * mu_py + (t->nu_e - mu_pz) * (t->nu_e - mu_pz));
+
 
       // Also save the mc truth histogram per interaction type
       hmap_mctruth_nuenergy_gen["total"]->Fill(t->nu_e, event_weight);
@@ -2063,6 +2088,7 @@ void Main::Maker::MakeFile()
       hmap_mctruth_muphi_gen["total"]->Fill(t->lep_phi, event_weight);
       hmap_mctruth_chargedmult_gen["total"]->Fill(t->genie_mult_ch, event_weight);
       hmap_mctruth_mucostheta_mumom_gen["total"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+      hmap_mctruth_q0_q3_gen["total"]->Fill(q0, q3, event_weight);
       if (t->mode == 0) {
         hmap_mctruth_nuenergy_gen["qe"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom_gen["qe"]->Fill(t->true_muon_mom, event_weight);
@@ -2070,6 +2096,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi_gen["qe"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult_gen["qe"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom_gen["qe"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3_gen["qe"]->Fill(q0, q3, event_weight);
       }
       if (t->mode == 1) {
         hmap_mctruth_nuenergy_gen["res"]->Fill(t->nu_e, event_weight);
@@ -2078,6 +2105,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi_gen["res"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult_gen["res"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom_gen["res"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3_gen["res"]->Fill(q0, q3, event_weight);
       }
       if (t->mode == 2) {
         hmap_mctruth_nuenergy_gen["dis"]->Fill(t->nu_e, event_weight);
@@ -2086,6 +2114,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi_gen["dis"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult_gen["dis"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom_gen["dis"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3_gen["dis"]->Fill(q0, q3, event_weight);
       }
       if (t->mode == 3) {
         hmap_mctruth_nuenergy_gen["coh"]->Fill(t->nu_e, event_weight);
@@ -2094,6 +2123,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi_gen["coh"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult_gen["coh"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom_gen["coh"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3_gen["coh"]->Fill(q0, q3, event_weight);
       }
       if (t->mode == 10) {
         hmap_mctruth_nuenergy_gen["mec"]->Fill(t->nu_e, event_weight);
@@ -2102,6 +2132,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi_gen["mec"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult_gen["mec"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom_gen["mec"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3_gen["mec"]->Fill(q0, q3, event_weight);
       }
     } // if is signal
 
@@ -2830,6 +2861,13 @@ void Main::Maker::MakeFile()
         signal_sel_mec += event_weight;
       }
 
+      double m_mu = 0.105658; // GeV
+      double mu_px = t->true_muon_mom * std::sin(std::acos(t->lep_costheta)) * std::cos(t->lep_phi);
+      double mu_py = t->true_muon_mom * std::sin(std::acos(t->lep_costheta)) * std::sin(t->lep_phi);
+      double mu_pz = t->true_muon_mom * t->lep_costheta;
+      double q0 = t->nu_e - std::sqrt(t->true_muon_mom * t->true_muon_mom + m_mu * m_mu);
+      double q3 = std::sqrt(mu_px * mu_px + mu_py * mu_py + (t->nu_e - mu_pz) * (t->nu_e - mu_pz));
+
       // Also save themc truth histogram per interaction type
       hmap_mctruth_nuenergy["total"]->Fill(t->nu_e, event_weight);
       hmap_mctruth_mumom["total"]->Fill(t->true_muon_mom, event_weight);
@@ -2837,6 +2875,7 @@ void Main::Maker::MakeFile()
       hmap_mctruth_muphi["total"]->Fill(t->lep_phi, event_weight);
       hmap_mctruth_chargedmult["total"]->Fill(t->genie_mult_ch, event_weight);
       hmap_mctruth_mucostheta_mumom["total"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+      hmap_mctruth_q0_q3["total"]->Fill(q0, q3, event_weight);
       if (t->mode == 0) {
         hmap_mctruth_nuenergy["qe"]->Fill(t->nu_e, event_weight);
         hmap_mctruth_mumom["qe"]->Fill(t->true_muon_mom, event_weight);
@@ -2844,6 +2883,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi["qe"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult["qe"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom["qe"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3["qe"]->Fill(q0, q3, event_weight);
       }
       if (t->mode == 1) {
         hmap_mctruth_nuenergy["res"]->Fill(t->nu_e, event_weight);
@@ -2852,6 +2892,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi["res"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult["res"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom["res"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3["res"]->Fill(q0, q3, event_weight);
       }
       if (t->mode == 2) {
         hmap_mctruth_nuenergy["dis"]->Fill(t->nu_e, event_weight);
@@ -2860,6 +2901,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi["dis"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult["dis"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom["dis"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3["dis"]->Fill(q0, q3, event_weight);
       }
       if (t->mode == 3) {
         hmap_mctruth_nuenergy["coh"]->Fill(t->nu_e, event_weight);
@@ -2868,6 +2910,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi["coh"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult["coh"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom["coh"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3["coh"]->Fill(q0, q3, event_weight);
       }
       if (t->mode == 10) {
         hmap_mctruth_nuenergy["mec"]->Fill(t->nu_e, event_weight);
@@ -2876,6 +2919,7 @@ void Main::Maker::MakeFile()
         hmap_mctruth_muphi["mec"]->Fill(t->lep_phi, event_weight);
         hmap_mctruth_chargedmult["mec"]->Fill(t->genie_mult_ch, event_weight);
         hmap_mctruth_mucostheta_mumom["mec"]->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
+        hmap_mctruth_q0_q3["mec"]->Fill(q0, q3, event_weight);
       }
 
       pEff->Fill(true, t->nu_e);
@@ -4166,12 +4210,14 @@ void Main::Maker::MakeFile()
   file_out->WriteObject(&hmap_mctruth_muphi, "hmap_mctruth_muphi");
   file_out->WriteObject(&hmap_mctruth_chargedmult, "hmap_mctruth_chargedmult");
   file_out->WriteObject(&hmap_mctruth_mucostheta_mumom, "hmap_mctruth_mucostheta_mumom");
+  file_out->WriteObject(&hmap_mctruth_q0_q3, "hmap_mctruth_q0_q3");
   file_out->WriteObject(&hmap_mctruth_nuenergy_gen, "hmap_mctruth_nuenergy_gen");
   file_out->WriteObject(&hmap_mctruth_mumom_gen, "hmap_mctruth_mumom_gen");
   file_out->WriteObject(&hmap_mctruth_mucostheta_gen, "hmap_mctruth_mucostheta_gen");
   file_out->WriteObject(&hmap_mctruth_muphi_gen, "hmap_mctruth_muphi_gen");
   file_out->WriteObject(&hmap_mctruth_chargedmult_gen, "hmap_mctruth_chargedmult_gen");
   file_out->WriteObject(&hmap_mctruth_mucostheta_mumom_gen, "hmap_mctruth_mucostheta_mumom_gen");
+  file_out->WriteObject(&hmap_mctruth_q0_q3_gen, "hmap_mctruth_q0_q3_gen");
 
 
 

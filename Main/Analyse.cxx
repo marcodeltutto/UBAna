@@ -2376,8 +2376,10 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   if (mc_dirt_file) {
     hmap_trkmom_classic_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
     hmap_trkmom_classic_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
+    hmap_trkmom_classic_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
     hmap_trkmom_classic_mc["dirt_cosmic"] = hmap_trkmom_classic_mc_dirt["cosmic"];
     hmap_trkmom_classic_mc["dirt_outfv"] = hmap_trkmom_classic_mc_dirt["outfv"];
+    hmap_trkmom_classic_mc["dirt"] = hmap_trkmom_classic_mc_dirt["total"];
   }
   if (!_beamoff_sub) hmap_trkmom_classic_mc["beam-off"] = h_trkmom_classic_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_trkmom_classic_total_bnbon->Add(h_trkmom_classic_total_extbnb);
@@ -2397,8 +2399,10 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   if (mc_dirt_file) {
     hmap_trktheta_classic_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
     hmap_trktheta_classic_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
+    hmap_trktheta_classic_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
     hmap_trktheta_classic_mc["dirt_cosmic"] = hmap_trktheta_classic_mc_dirt["cosmic"];
     hmap_trktheta_classic_mc["dirt_outfv"] = hmap_trktheta_classic_mc_dirt["outfv"];
+    hmap_trktheta_classic_mc["dirt"] = hmap_trktheta_classic_mc_dirt["total"];
   }
   if (_beamoff_sub) this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trktheta_classic_mc, h_trktheta_classic_data, bnbon_pot_meas);
   else this->DrawDataMC(canvas_trktheta_classic, hs_trktheta_classic_mc, scale_factor_mc_bnbcosmic, _breakdown_plots, hmap_trktheta_classic_mc, h_trktheta_classic_total_bnbon, bnbon_pot_meas);
@@ -2414,8 +2418,10 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   if (mc_dirt_file) {
     hmap_trkphi_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
     hmap_trkphi_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
+    hmap_trkphi_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
     hmap_trkphi_mc["dirt_cosmic"] = hmap_trkphi_mc_dirt["cosmic"];
     hmap_trkphi_mc["dirt_outfv"] = hmap_trkphi_mc_dirt["outfv"];
+    hmap_trkphi_mc["dirt"] = hmap_trkphi_mc_dirt["total"];
   }
   if (!_beamoff_sub) hmap_trkphi_mc["beam-off"] = h_trkphi_total_extbnb;
   // h_trkphi_total_bnbon->Scale(1.02);
@@ -2445,8 +2451,10 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   if (mc_dirt_file) {
     hmap_multpfp_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
     hmap_multpfp_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
+    hmap_multpfp_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
     hmap_multpfp_mc["dirt_cosmic"] = hmap_multpfp_mc_dirt["cosmic"];
     hmap_multpfp_mc["dirt_outfv"] = hmap_multpfp_mc_dirt["outfv"];
+    hmap_multpfp_mc["dirt"] = hmap_multpfp_mc_dirt["total"];
   }
   if (!_beamoff_sub) hmap_multpfp_mc["beam-off"] = h_multpfp_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_multpfp_total_bnbon->Add(h_multpfp_total_extbnb);
@@ -2463,8 +2471,10 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   if (mc_dirt_file) {
     hmap_multtracktol_mc_dirt["cosmic"]->Scale(scale_factor_mc_dirt);
     hmap_multtracktol_mc_dirt["outfv"]->Scale(scale_factor_mc_dirt);
+    hmap_multtracktol_mc_dirt["total"]->Scale(scale_factor_mc_dirt);
     hmap_multtracktol_mc["dirt_cosmic"] = hmap_multtracktol_mc_dirt["cosmic"];
     hmap_multtracktol_mc["dirt_outfv"] = hmap_multtracktol_mc_dirt["outfv"];
+    hmap_multtracktol_mc["dirt"] = hmap_multtracktol_mc_dirt["total"];
   }
   if (!_beamoff_sub) hmap_multtracktol_mc["beam-off"] = h_multtracktol_total_extbnb;
   if (_fake_data_mode || _overlay_mode) h_multtracktol_total_bnbon->Add(h_multtracktol_total_extbnb);
@@ -2956,6 +2966,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   THStack *hs_mctruth_nuenergy = new THStack("hs_mctruth_nuenergy",";True Neutrino Energy [GeV];Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_nuenergy, hmap_mctruth_nuenergy_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
   name = outdir + "mctruth_nuenergy_sel";
   canvas_mctruth_nuenergy->SaveAs(name + ".pdf");
   canvas_mctruth_nuenergy->SaveAs(name + ".C","C");
@@ -2964,6 +2975,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   THStack *hs_mctruth_mumom = new THStack("hs_mctruth_mumom",";True Muon Momentum [GeV];Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_mumom, hmap_mctruth_mumom_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
   name = outdir + "mctruth_mumom_sel";
   canvas_mctruth_mumom->SaveAs(name + ".pdf");
   canvas_mctruth_mumom->SaveAs(name + ".C","C");
@@ -2972,6 +2984,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   THStack *hs_mctruth_mucostheta = new THStack("hs_mctruth_mucostheta",";True Muon cos(#theta);Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_mucostheta, hmap_mctruth_mucostheta_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
   name = outdir + "mctruth_mucostheta_sel";
   canvas_mctruth_mucostheta->SaveAs(name + ".pdf");
   canvas_mctruth_mucostheta->SaveAs(name + ".C","C");
@@ -2980,6 +2993,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   THStack *hs_mctruth_muphi = new THStack("hs_mctruth_muphi",";True Muon #phi;Selected Signal Events");
   this->PlotMCTHStack(hs_mctruth_muphi, hmap_mctruth_muphi_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
   name = outdir + "mctruth_muphi_sel";
   canvas_mctruth_muphi->SaveAs(name + ".pdf");
   canvas_mctruth_muphi->SaveAs(name + ".C","C");
@@ -2997,6 +3011,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_nuenergy_gen, hmap_mctruth_nuenergy_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
   name = outdir + "mctruth_nuenergy_gen";
   canvas_mctruth_nuenergy_gen->SaveAs(name + ".pdf");
   canvas_mctruth_nuenergy_gen->SaveAs(name + ".C","C");
@@ -3005,6 +3020,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_mumom_gen, hmap_mctruth_mumom_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
   name = outdir + "mctruth_mumom_gen";
   canvas_mctruth_mumom_gen->SaveAs(name + ".pdf");
   canvas_mctruth_mumom_gen->SaveAs(name + ".C","C");
@@ -3013,6 +3029,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_mucostheta_gen, hmap_mctruth_mucostheta_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
   name = outdir + "mctruth_mucostheta_gen";
   canvas_mctruth_mucostheta_gen->SaveAs(name + ".pdf");
   canvas_mctruth_mucostheta_gen->SaveAs(name + ".C","C");
@@ -3021,6 +3038,7 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Generated Signal Events");
   this->PlotMCTHStack(hs_mctruth_muphi_gen, hmap_mctruth_muphi_gen_mc, scale_factor_mc_bnbcosmic);
   PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
   name = outdir + "mctruth_muphi_gen";
   canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
   canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
@@ -3392,9 +3410,10 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
     }
     leg->Draw();
 
-    PlottingTools::DrawPOTRatio(bnbon_pot_meas);
+    // PlottingTools::DrawPOTRatio(bnbon_pot_meas);
     if (_overlay_mode) PlottingTools::DrawOverlay();
-    else PlottingTools::DrawPreliminary();
+    // else PlottingTools::DrawPreliminary();
+    else PlottingTools::DrawOfficial(1.6e20);
 
 
 
