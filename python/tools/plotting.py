@@ -6,7 +6,7 @@ import sys, os, math
 
 def get_mumom_label(text):
 
-  ub_label_mumom = TLatex(0.4670487,0.7515789,"MicroBooNE #bf{" + text + "}")
+  ub_label_mumom = TLatex(0.4240688,0.7473684,"MicroBooNE #bf{" + text + "}")
   if text == "nothing":
     ub_label_mumom = TLatex(0.4670487,0.7515789,"MicroBooNE")
 

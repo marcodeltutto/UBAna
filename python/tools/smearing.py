@@ -54,6 +54,9 @@ def smear_double(xsec_true_h, smearing_m):
 
   for i in xrange(1, xsec_true_h.GetNumberOfBins()+1):
     xsec_true_h.SetBinContent(i, xsec_true_h.GetBinContent(i) * xsec_true_h.GetBinWidth(i))
+    # print xsec_true_h.GetBinWidth(i), ', '
+    
+  # print '---------------'
 
   for i in xrange(1, xsec_true_h.GetNumberOfBins()+1):
     xsec_true_v[i-1][0] = xsec_true_h.GetBinContent(i);
