@@ -75,10 +75,16 @@ namespace Base {
     static void DrawPreliminary();
 
     ///
+    static void DrawOfficial(double pot);
+
+    ///
     static void DrawPreliminaryXSec();
 
     ///
     static void DrawSimulation();
+
+    ///
+    static void DrawSimulationOfficial();
 
     ///
     static void DrawSimulationXSec();

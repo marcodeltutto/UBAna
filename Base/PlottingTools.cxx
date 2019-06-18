@@ -29,6 +29,21 @@ namespace Base {
     prelim->Draw();
   }
 
+  void PlottingTools::DrawOfficial(double pot) {
+    std::stringstream sstm2;
+    sstm2 << "MicroBooNE #bf{" << pot << " POT}";
+    std::string str = sstm2.str();
+    TLatex* prelim = new TLatex(0.1553885,0.8439506, str.c_str());
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    // prelim->SetTextSize(0.1);
+    prelim->SetLineWidth(2);
+    // prelim->SetTextAlign(32);
+    //prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
   void PlottingTools::DrawPreliminaryXSec() {
     TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Preliminary");
     prelim->SetTextFont(62);
@@ -63,8 +78,19 @@ namespace Base {
     prelim->Draw();
   }
 
+  void PlottingTools::DrawSimulationOfficial() {
+    TLatex* prelim = new TLatex(0.8968481,0.9305263, "MicroBooNE #bf{Simulation}");
+    prelim->SetTextFont(62);
+    prelim->SetTextColor(kGray+2);
+    prelim->SetNDC();
+    prelim->SetTextSize(1/30.);
+    prelim->SetTextAlign(32);
+    // prelim->SetTextSize(0.04631579);
+    prelim->Draw();
+  }
+
   void PlottingTools::DrawSimulationXSec() {
-    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE Simulation, Preliminary");
+    TLatex* prelim = new TLatex(0.9,0.93, "MicroBooNE #bf{Simulation}");
     prelim->SetTextFont(62);
     prelim->SetTextColor(kGray+2);
     prelim->SetNDC();
@@ -218,34 +244,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     hs_trklen->Add(themap["intimecosmic"]);
   }
 
-  if (themap["dirt_cosmic"] != NULL && themap["dirt_outfv"] != NULL) {
-    themap["total"]->Add(themap["dirt_cosmic"]);
-    themap["total"]->Add(themap["dirt_outfv"]);
 
-    // if (_breakdownPlots) {
-      themap["dirt_cosmic"]->SetLineColor(kOrange+3);
-      themap["dirt_cosmic"]->SetFillColor(kOrange+3);
-      hs_trklen->Add(themap["dirt_cosmic"]);
-      themap["dirt_outfv"]->SetLineColor(kOrange+2);
-      themap["dirt_outfv"]->SetFillColor(kOrange+2);
-      hs_trklen->Add(themap["dirt_outfv"]);
-    // } else {
-    //   themap["dirt"]->SetLineColor(kOrange+3);
-    //   themap["dirt"]->SetFillColor(kOrange+3);
-    //   hs_trklen->Add(themap["dirt"]);
-    // }
-  }
-
-
-//   themap["total"]->Reset();
-//   themap["total"]->Add(themap["beam-off"]);
-// themap["total"]->Add(themap["cosmic"]);
-// themap["total"]->Add(themap["outfv"]);
-// themap["total"]->Add(themap["nc"]);
-
-// themap["total"]->Add(themap["nue"]);
-// themap["total"]->Add(themap["anumu"]);
-// themap["total"]->Add(themap["signal"]);
 
   if (_breakdownPlots) {
     themap["cosmic_nostopmu"]->SetLineColor(kBlue+2);
@@ -254,6 +253,33 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     themap["cosmic_stopmu"]->SetLineColor(kBlue);
     themap["cosmic_stopmu"]->SetFillColor(kBlue);
     hs_trklen->Add(themap["cosmic_stopmu"]);
+  }
+  else {
+    themap["cosmic"]->SetLineColor(kBlue-3);
+    themap["cosmic"]->SetFillColor(kBlue-3);
+    hs_trklen->Add(themap["cosmic"]);
+  }
+
+
+  if (themap["dirt_cosmic"] != NULL && themap["dirt_outfv"] != NULL) {
+    themap["total"]->Add(themap["dirt_cosmic"]);
+    themap["total"]->Add(themap["dirt_outfv"]);
+
+    if (_breakdownPlots) {
+      themap["dirt_cosmic"]->SetLineColor(kOrange+3);
+      themap["dirt_cosmic"]->SetFillColor(kOrange+3);
+      hs_trklen->Add(themap["dirt_cosmic"]);
+      themap["dirt_outfv"]->SetLineColor(kOrange+2);
+      themap["dirt_outfv"]->SetFillColor(kOrange+2);
+      hs_trklen->Add(themap["dirt_outfv"]);
+    } else {
+      themap["dirt"]->SetLineColor(kOrange+3);
+      themap["dirt"]->SetFillColor(kOrange+3);
+      hs_trklen->Add(themap["dirt"]);
+    }
+  }
+
+  if (_breakdownPlots) {
     themap["outfv_nostopmu"]->SetLineColor(kGreen+3);
     themap["outfv_nostopmu"]->SetFillColor(kGreen+3);
     hs_trklen->Add(themap["outfv_nostopmu"]);
@@ -271,9 +297,6 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     hs_trklen->Add(themap["nc_other"]);
   }
   else {
-    themap["cosmic"]->SetLineColor(kBlue-3);
-    themap["cosmic"]->SetFillColor(kBlue-3);
-    hs_trklen->Add(themap["cosmic"]);
     themap["outfv"]->SetLineColor(kGreen+2);
     themap["outfv"]->SetFillColor(kGreen+2);
     hs_trklen->Add(themap["outfv"]);
@@ -352,7 +375,7 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
   leg2->AddEntry(themap["anumu"],sstm.str().c_str(),"f");
   sstm.str("");
   
-  // nc, outfv, cosmic
+  // nc, outfv
   if (_breakdownPlots) {
     sstm << "NC (other), " << std::setprecision(2)  << themap["nc_other"]->Integral() / themap["total"]->Integral()*100. << "%";
     leg2->AddEntry(themap["nc_other"],sstm.str().c_str(),"f");
@@ -383,7 +406,35 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
     leg2->AddEntry(themap["cosmic_stopmu"],sstm.str().c_str(),"f");
     sstm.str("");
     // leg2->AddEntry(themap["cosmic_stopmu"],"Cosmic (stopping #mu)","f");
+  } else {
+    sstm << "NC, " << std::setprecision(2)  << themap["nc"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["nc"],sstm.str().c_str(),"f");
+    sstm.str("");
+    
+    sstm << "OUTFV, " << std::setprecision(2)  << themap["outfv"]->Integral() / themap["total"]->Integral()*100. << "%";
+    leg2->AddEntry(themap["outfv"],sstm.str().c_str(),"f");
+    sstm.str("");
+  }
 
+  // dirt
+  if (themap["dirt_cosmic"] != NULL && themap["dirt_outfv"] != NULL) {
+    if (_breakdownPlots) {
+      sstm << "Dirt (OUTFV), " << std::setprecision(2)  << themap["dirt_outfv"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg2->AddEntry(themap["dirt_outfv"],sstm.str().c_str(),"f");
+      sstm.str("");
+      sstm << "Dirt (cosmic), " << std::setprecision(2)  << themap["dirt_cosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg2->AddEntry(themap["dirt_cosmic"],sstm.str().c_str(),"f");
+      sstm.str("");
+      // leg2->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
+    } else {
+      sstm << "Dirt, " << std::setprecision(2)  << themap["dirt"]->Integral() / themap["total"]->Integral()*100. << "%";
+      leg2->AddEntry(themap["dirt"],sstm.str().c_str(),"f");
+      sstm.str("");
+    }
+  }
+
+  // cosmic
+  if (_breakdownPlots) {
     sstm << "Cosmic (other), " << std::setprecision(2)  << themap["cosmic_nostopmu"]->Integral() / themap["total"]->Integral()*100. << "%";
     leg2->AddEntry(themap["cosmic_nostopmu"],sstm.str().c_str(),"f");
     sstm.str("");
@@ -396,28 +447,11 @@ TLegend* PlottingTools::DrawTHStack(THStack *hs_trklen,
       sstm.str("");
     }
   } else {
-    sstm << "NC, " << std::setprecision(2)  << themap["nc"]->Integral() / themap["total"]->Integral()*100. << "%";
-    leg2->AddEntry(themap["nc"],sstm.str().c_str(),"f");
-    sstm.str("");
-    
-    sstm << "OUTFV, " << std::setprecision(2)  << themap["outfv"]->Integral() / themap["total"]->Integral()*100. << "%";
-    leg2->AddEntry(themap["outfv"],sstm.str().c_str(),"f");
-    sstm.str("");
-    
     sstm << "Cosmic, " << std::setprecision(2)  << themap["cosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
     leg2->AddEntry(themap["cosmic"],sstm.str().c_str(),"f");
     sstm.str("");
   }
 
-  if (themap["dirt_cosmic"] != NULL && themap["dirt_outfv"] != NULL) {
-    sstm << "Dirt (OUTFV), " << std::setprecision(2)  << themap["dirt_outfv"]->Integral() / themap["total"]->Integral()*100. << "%";
-    leg2->AddEntry(themap["dirt_outfv"],sstm.str().c_str(),"f");
-    sstm.str("");
-    sstm << "Dirt (cosmic), " << std::setprecision(2)  << themap["dirt_cosmic"]->Integral() / themap["total"]->Integral()*100. << "%";
-    leg2->AddEntry(themap["dirt_cosmic"],sstm.str().c_str(),"f");
-    sstm.str("");
-    // leg2->AddEntry(themap["beam-off"],"Data (Beam-off)","f");
-  }
 
   if (themap["beam-off"] != NULL) {
     sstm << "Data (Beam-off), " << std::setprecision(2)  << themap["beam-off"]->Integral() / themap["total"]->Integral()*100. << "%";
