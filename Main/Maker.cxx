@@ -616,6 +616,7 @@ void Main::Maker::MakeFile()
   TTree* _true_reco_tree = new TTree("true_reco_tree", "true_reco_tree");
   _true_reco_tree->Branch("mom_true", &_mom_true, "mom_true/D");
   _true_reco_tree->Branch("mom_mcs", &_mom_mcs, "mom_mcs/D");
+  _true_reco_tree->Branch("mom_range", &_mom_range, "mom_range/D");
   _true_reco_tree->Branch("contained", &_contained, "contained/O");
   _true_reco_tree->Branch("selected", &_selected, "selected/O");
   _true_reco_tree->Branch("angle_true", &_angle_true, "angle_true/D");
@@ -2628,6 +2629,7 @@ void Main::Maker::MakeFile()
       // Fill the true-reco TTree for the nominal case
       _mom_true = t->true_muon_mom;
       _mom_mcs = t->slc_muoncandidate_mom_mcs.at(scl_ll_max);
+      _mom_range = t->slc_muoncandidate_mom_range.at(scl_ll_max);
       _contained = t->slc_muoncandidate_contained.at(scl_ll_max);
       _selected = true;
 
