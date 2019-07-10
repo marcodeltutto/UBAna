@@ -2035,7 +2035,8 @@ void Main::Maker::MakeFile()
       _event_histo_1d->h_eff_muangle_den->Fill(t->lep_costheta, event_weight);
       _event_histo->h_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       _event_histo->h_eff_muangle_mumom_poly_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
-      _event_histo->h_eff_muangle_mumom_poly_den->Fill(t->lep_costheta, t->true_muon_mom, 1.);
+      _event_histo->h_eff_muangle_mumom_poly_den_evt->Fill(t->lep_costheta, t->true_muon_mom, 1.);
+      _event_histo->h_eff_muangle_mumom_poly_den_w2->Fill(t->lep_costheta, t->true_muon_mom, 1.);
       h_eff_muphi_den->Fill(t->lep_phi, event_weight);
       h_eff_mult_den->Fill(t->genie_mult, event_weight);
       h_eff_mult_ch_den->Fill(t->genie_mult_ch, event_weight);
@@ -2670,6 +2671,7 @@ void Main::Maker::MakeFile()
       if (m < _event_histo->h_poly_reco_per_true[0]->GetNumberOfBins()+1) {
         _event_histo->h_poly_reco_per_true[m]->Fill(_angle_reco, _mom_mcs, event_weight);
         _event_histo->h_poly_reco_per_true_evt[m]->Fill(_angle_reco, _mom_mcs, 1.);
+        _event_histo->h_poly_reco_per_true_w2[m]->Fill(_angle_reco, _mom_mcs, event_weight*event_weight);
         if(!isdata && _fill_bootstrap_genie) FillBootstrap(m, i, event_weight, _event_histo->bs_genie_multisim_poly_reco_per_true, fname_genie_multisim, wgts_genie_multisim);
         if(!isdata && _fill_bootstrap_flux) FillBootstrap(m, i, event_weight, _event_histo->bs_flux_multisim_poly_reco_per_true, fname_flux_multisim, wgts_flux_multisim);
         if(!isdata && _fill_bootstrap_extra_syst) FillBootstrap(m, i, event_weight, _event_histo->bs_extra_syst_multisim_poly_reco_per_true, fname_extra_syst, wgts_extra_syst);

@@ -20,11 +20,11 @@ analyser.SetEXTBNBTriggers(72299264.0)
 analyser.SetFluxCorrectionWeight(1.028)
 
 det_syst_list = ["CV", "dataSCE", "withDIC", "squeezeResp", "stretchResp", "DLdown", "DLup", "DTdown", "DTup", "LArG4BugFix", "downPEnoise", "upPEnoise", "noiseAmpDown", "noiseAmpUp", "enhancedexttpcvis", "lifetime10ms", "birksrecomb" ,"deadSaturatedChannels", "altDeadChannels"]
-# det_syst_list = ["withDIC"]
+det_syst_list = ["CV"]
 
 
 for systname in det_syst_list:
-  file_name = "/Users/deltutto/CCInclusiveFiles/Output/DetSyst/ubxsecana_output_mc_bnbcosmic_detsyst_" + systname + "_ubcodev06_26_01_22.root"
+  file_name = "/Users/deltutto/CCInclusiveFiles/Output/DetSyst_tensionsws/ubxsecana_output_mc_bnbcosmic_detsyst_" + systname + "_ubcodev06_26_01_22_tensionsws.root"
   print file_name
   analyser.SetBNBCosmicFile(file_name)
   analyser.SetPrefix(systname)
