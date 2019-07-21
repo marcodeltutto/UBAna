@@ -9,25 +9,13 @@ f_ubana = ROOT.TFile("./xsec_file_cv.root")
 
 total_signal_events = 15348
 
-forward_res = False
+forward_res = True
 
 
 f = ROOT.TFile("/Users/deltutto/CCInclusiveFiles/Output/ubxsecana_output_mc_bnbcosmic_ubcodev06_26_01_22__v4_all.root")
 t = f.Get("true_reco_tree")
 
 gStyle.SetPalette(kBird)
-NRGBs = 5
-NCont = 100
-mainColour = [ 1.00, 1.00, 1.00, 1.00, 1.00 ]
-otherColour = [ 0.99,0.80, 0.60, 0.40, 0.20 ]
-#otherOtherColour = [ 0.9,0.80, 0.80, 0.80, 0.80 ]
-stops = [ 0.00, 0.05, 0.1, 0.4, 1.00 ]
-mainColourArray = array('d', mainColour)
-otherColourArray = array('d', otherColour)
-# otherOtherColourArray = array('d', otherOtherColour)
-stopsArray = array('d', stops)
-TColor.CreateGradientColorTable(NRGBs, stopsArray, mainColourArray, otherColourArray, otherColourArray, NCont)
-gStyle.SetNumberContours(NCont)
 
 simul = TLatex(0.8003914,0.8228228, "MicroBooNE #bf{Simulation}");
 simul.SetTextFont(62);
@@ -50,8 +38,7 @@ gPad.SetTopMargin(padding);
 
 pbins = array("d",[0.00, 0.18, 0.30, 0.45, 0.77, 1.28, 2.50])
 # h_mumom = TH2F("h_mumom",";Generated Muon Momentum [GeV];Measured Muon Momentum [GeV]", 100, 0, 2.5, 100, 0, 2.5);
-# h_mumom = TH2F("h_mumom",";Generated Muon Momentum [GeV];Measured Muon Momentum [GeV];Selected #nu_{#mu} CC Events / 1.6 x 10^{20} POT", 6, pbins, 6, pbins);
-h_mumom = TH2F("h_mumom",";Generated Muon Momentum [GeV];Measured Muon Momentum [GeV];Fraction to Total in Bin [%]", 6, pbins, 6, pbins);
+h_mumom = TH2F("h_mumom",";Generated Muon Momentum [GeV];Measured Muon Momentum [GeV];Selected #nu_{#mu} CC Events / 1.6 x 10^{20} POT", 6, pbins, 6, pbins);
 if forward_res:
   h_mumom = TH1F("h_mumom",";(Generated Muon Momentum) - (Measured Muon Momentum) [GeV]", 100, -2, 2);
   
@@ -63,8 +50,7 @@ h_mumom.GetYaxis().SetTitleSize(0.04)
 h_mumom.GetYaxis().SetTitleOffset(1.4)
 h_mumom.GetYaxis().CenterTitle(True)
 h_mumom.GetZaxis().SetTitleSize(0.04)
-# h_mumom.GetZaxis().SetTitleOffset(1.8)
-h_mumom.GetZaxis().SetTitleOffset(1.0)
+h_mumom.GetZaxis().SetTitleOffset(1.8)
 h_mumom.GetZaxis().CenterTitle(True)
 
 
@@ -79,8 +65,6 @@ h_mumom.Scale(total_signal_events/h_mumom.Integral())
 
 simul.Draw();
 
-
-
 # h_mumom.Scale(1/h_mumom.Integral())
 if forward_res:
   line = TLine(0,0,0,h_mumom.GetMaximum());
@@ -88,17 +72,6 @@ else:
   line = TLine(0,0,2.5,2.5);
 line.SetLineColor(kRed);
 line.Draw();
-
-if not forward_res:
-  # h_mumom_norm = h_mumom.Clone('h_mumom_norm')
-  # h_mumom_norm.Scale(1/h_mumom_norm.Integral()*100)
-  # gStyle.SetPaintTextFormat("4.2f");
-  # h_mumom_norm.SetMarkerSize(0.8)
-  # h_mumom_norm.Draw("TEXT same")
-  h_mumom.Scale(1/h_mumom.Integral()*100)
-  gStyle.SetPaintTextFormat("4.2f");
-  h_mumom.SetMarkerSize(0.8)
-  h_mumom.Draw("col TEXT same")
 
 c_mumom.SaveAs("true_reco_mumom.pdf")
 
@@ -115,8 +88,7 @@ gPad.SetRightMargin(padding);
 gPad.SetTopMargin(padding);
 
 ctbins = array("d",[-1.00, -0.50, 0.00, 0.27, 0.45, 0.62, 0.76, 0.86, 0.94, 1.00])
-# h_muangle = TH2F("h_muangle",";Generated Muon cos(#theta);Measured Muon cos(#theta);Selected #nu_{#mu} CC Events / 1.6 x 10^{20} POT", 9, ctbins, 9, ctbins);
-h_muangle = TH2F("h_muangle",";Generated Muon cos(#theta);Measured Muon cos(#theta);Fraction to Total in Bin [%]", 9, ctbins, 9, ctbins);
+h_muangle = TH2F("h_muangle",";Generated Muon cos(#theta);Measured Muon cos(#theta);Selected #nu_{#mu} CC Events / 1.6 x 10^{20} POT", 9, ctbins, 9, ctbins);
 # h_muangle = TH2F("h_muangle",";Generated Muon cos(#theta);Measured Muon cos(#theta)", 100, -1, 1, 100, -1, 1);
 if forward_res:
   h_muangle = TH1F("h_muangle",";(Generated Muon cos(#theta)) - (Measured Muon cos(#theta))", 100, -0.1, 0.1);
@@ -128,8 +100,7 @@ h_muangle.GetYaxis().SetTitleSize(0.04)
 h_muangle.GetYaxis().SetTitleOffset(1.4)
 h_muangle.GetYaxis().CenterTitle(True)
 h_muangle.GetZaxis().SetTitleSize(0.04)
-# h_muangle.GetZaxis().SetTitleOffset(1.8)
-h_muangle.GetZaxis().SetTitleOffset(1.0)
+h_muangle.GetZaxis().SetTitleOffset(1.8)
 h_muangle.GetZaxis().CenterTitle(True)
 
 if forward_res:
@@ -161,17 +132,6 @@ if forward_res:
   label.SetLineWidth(2);
   label.SetTextFont(42);
   label.Draw();
-
-if not forward_res:
-  # h_muangle_norm = h_muangle.Clone('h_muangle_norm')
-  # h_muangle_norm.Scale(1/h_muangle_norm.Integral()*100)
-  # gStyle.SetPaintTextFormat("4.2f");
-  # h_muangle_norm.SetMarkerSize(0.8)
-  # h_muangle_norm.Draw("TEXT same")
-  h_muangle.Scale(1/h_muangle.Integral()*100)
-  gStyle.SetPaintTextFormat("4.2f");
-  h_muangle.SetMarkerSize(0.8)
-  h_muangle.Draw("col TEXT same")
 
 c_muangle.SaveAs("true_reco_muangle.pdf")
 

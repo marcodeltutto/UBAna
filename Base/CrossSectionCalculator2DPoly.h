@@ -170,9 +170,6 @@ namespace Base {
     /// Returns the statistical fractional covariance matrix (diagonal of course)
     TH2D GetStatFracCovarianceMatrix() {return *_stat_frac_cov_matrix_total;}
 
-    /// Returns the statistical covariance matrix 
-    TH2D GetStatCovarianceMatrix() {return * _stat_cov_matrix_total;}
-
     /// Sets the smearing matrix
     void SetSmearingMatrix(TMatrix);
  
