@@ -147,7 +147,6 @@ namespace DataTypes {
       // Efficiency - Double differential (polybin)
       h_eff_muangle_mumom_poly_num = new UBTH2Poly("h_eff_muangle_mumom_poly_num", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
       h_eff_muangle_mumom_poly_den = new UBTH2Poly("h_eff_muangle_mumom_poly_den", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
-      h_eff_muangle_mumom_poly_den_evt = new UBTH2Poly("h_eff_muangle_mumom_poly_den_evt", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
 
       // Number of events per channel - Double differential (polybin)
       hmap_trktheta_trkmom_poly["total"] = new UBTH2Poly("h_trktheta_trkmom_poly_total", ";cos(#theta);p_{#mu}", -1., 1., 0., 2.5);
@@ -172,13 +171,6 @@ namespace DataTypes {
         std::stringstream sstm;
         sstm << "poly_reco_per_true_" << m; 
         h_poly_reco_per_true[m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true", -1., 1., 0., 2.5);
-      }
-
-      h_poly_reco_per_true_evt.resize(_n_poly_bins+1);
-      for (int m = 0; m < _n_poly_bins+1; m++) {
-        std::stringstream sstm;
-        sstm << "poly_reco_per_true_" << m; 
-        h_poly_reco_per_true_evt[m] = new UBTH2Poly(sstm.str().c_str(), "poly_reco_per_true_evt", -1., 1., 0., 2.5);
       }
 
       // Efficiency - Double Differential PolyBins - Multisim
@@ -260,7 +252,6 @@ namespace DataTypes {
 
       _AddPolyBins_(h_eff_muangle_mumom_poly_num);
       _AddPolyBins_(h_eff_muangle_mumom_poly_den);
-      _AddPolyBins_(h_eff_muangle_mumom_poly_den_evt);
       _AddPolyBins_(hmap_trktheta_trkmom_poly);
       _AddPolyBins_(h_poly_reco_per_true);
 
