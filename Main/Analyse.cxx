@@ -593,61 +593,30 @@ namespace Main {
 
 
     // For tensions ws
-    TH2D * h_evts_reco_true = new TH2D("h_evts", "", 42, 0, 42, 42, 0, 42);
-    TH2D * h_wgt_reco_true = new TH2D("h_wgt", "", 42, 0, 42, 42, 0, 42);
-    TH2D * h_wgt2_reco_true = new TH2D("h_wgt2", "", 42, 0, 42, 42, 0, 42);
-
-    TH1D * h_all_evts_reco_true = new TH1D("h_all_evts", "", 42, 0, 42);
-    TH1D * h_all_wgt_reco_true = new TH1D("h_all_wgt", "", 42, 0, 42);
-    TH1D * h_all_wgt2_reco_true = new TH1D("h_all_wgt2", "", 42, 0, 42);
-
+    TH2D * h_evts_reco_true = new TH2D("h_evts_reco_true", "", 42, 0, 42, 42, 0, 42);
     int _n_bins = 42;
-    for (int m = 0; m < _n_bins; m++) { // True bin
+    for (int m = 0; m < _n_bins + 1; m++) { // True bin
 
-      for (int i = 0; i < _n_bins; i++) { // Reco bin
+      int true_idx = m - 1;
+      if (true_idx < 0) true_idx = _n_bins;
 
-        double value = _event_histo_mc->h_poly_reco_per_true_evt[m+1]->GetBinContent(i+1);
-        double value2 = _event_histo_mc->h_poly_reco_per_true[m+1]->GetBinContent(i+1);
-        double value3 = _event_histo_mc->h_poly_reco_per_true_w2[m+1]->GetBinContent(i+1);
+      // _reco_per_true = (UBTH2Poly*) _h_reco_per_true[m]->Clone("_reco_per_true");      
 
-        if (std::isnan(value)) value = 0.;
-        if (std::isnan(value2)) value2 = 0.;
-        if (std::isnan(value3)) value3 = 0.;
-        
+      for (int i = 0; i < _n_bins; i++) {
 
-        h_evts_reco_true->SetBinContent(i+1, m+1, value);
-        h_wgt_reco_true->SetBinContent(i+1, m+1, value2);
-        h_wgt2_reco_true->SetBinContent(i+1, m+1, value3);
+        double value = _event_histo_mc->h_poly_reco_per_true_evt[m]->GetBinContent(i+1);
+
+        if (std::isnan(value))
+          value = 0.;
+        std::cout << "i " << i << ", true_idx " << true_idx << ", value " << value << std::endl;
+        h_evts_reco_true->SetBinContent(i, true_idx, value);
         
       }
     }
 
-    for (int m = 0; m < _n_bins; m++) {
-
-      double value4 = _event_histo_mc->h_eff_muangle_mumom_poly_den_evt->GetBinContent(m+1);
-      double value5 = _event_histo_mc->h_eff_muangle_mumom_poly_den->GetBinContent(m+1);
-      double value6 = _event_histo_mc->h_eff_muangle_mumom_poly_den_w2->GetBinContent(m+1);
-
-      if (std::isnan(value4)) value4 = 0.;
-      if (std::isnan(value5)) value5 = 0.;
-      if (std::isnan(value6)) value6 = 0.;
-
-      h_all_evts_reco_true->SetBinContent(m+1, value4);
-      h_all_wgt_reco_true->SetBinContent(m+1, value5);
-      h_all_wgt2_reco_true->SetBinContent(m+1, value6);
-    }
-
-
     TFile * f_tensionsws = TFile::Open("tensionsws.root", "RECREATE");
     f_tensionsws->cd();
     h_evts_reco_true->Write();
-    h_wgt_reco_true->Write();
-    h_wgt2_reco_true->Write();
-
-    h_all_evts_reco_true->Write();
-    h_all_wgt_reco_true->Write();
-    h_all_wgt2_reco_true->Write();
-
     f_tensionsws->Close();
 
 
