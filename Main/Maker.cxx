@@ -548,8 +548,6 @@ void Main::Maker::MakeFile()
   double bkg_cosmic_sel = 0;
   double bkg_cosmic_top_sel = 0;
 
-  double real_muon_sel = 0;
-
   double signal_sel_qe = 0;
   double signal_sel_res = 0;
   double signal_sel_dis = 0;
@@ -2800,8 +2798,6 @@ void Main::Maker::MakeFile()
     // SIGNAL
     //
     if(nu_origin && isSignal /*&& true_pdg==13 && true_origin == 0*/) {
-
-      if (true_pdg==13) real_muon_sel += event_weight;
       
       //std::cout << "Is signal and is selected. event: " << t->event << std::endl;
 
@@ -3377,8 +3373,6 @@ void Main::Maker::MakeFile()
   LOG_NORMAL() << "Selected nc is     " << bkg_nc_sel     << ", " << (double)bkg_nc_sel/(double)sel_tot * 100. << std::endl;
   LOG_NORMAL() << "Selected outfv is  " << bkg_outfv_sel  << ", " << (double)bkg_outfv_sel/(double)sel_tot * 100. << std::endl;
   LOG_NORMAL() << "Selected cosmic is " << bkg_cosmic_sel << ", " << (double)bkg_cosmic_sel/(double)sel_tot * 100. << std::endl << std::endl;
-  
-  LOG_NORMAL() << "Number of signal events where we selected a true muon " << real_muon_sel << std::endl;
   
   LOG_NORMAL() << "Efficiency: " << signal_sel/(double)nsignal << std::endl;
   LOG_NORMAL() << "Purity (does not include off-beam and dirt): " << signal_sel/(double)(signal_sel+bkg_anumu_sel+bkg_nue_sel+bkg_nc_sel+bkg_outfv_sel+bkg_cosmic_sel) << std::endl;

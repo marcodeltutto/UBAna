@@ -3369,11 +3369,9 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   canvas_mc_eff_q0_q3_total->SaveAs(name + ".pdf");
   canvas_mc_eff_q0_q3_total->SaveAs(name + ".C","C");
 
-  TFile * f_temp = new TFile("./efficiency_ub_numu_ccinclusive.root", "NEW");
-  f_temp->cd();
-  h_mc_eff_total->Write("efficiency_pmu_costhetamu");
-  h_mc_eff_q0_q3_total->Write("efficiency_q0_q3");
-  f_temp->Close();
+
+
+
   
   // Computing time
   clock_t end = clock();
