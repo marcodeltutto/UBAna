@@ -592,67 +592,6 @@ namespace Main {
     }
 
 
-    // // For tensions ws
-    // TH2D * h_evts_reco_true = new TH2D("h_evts", "", 42, 0, 42, 42, 0, 42);
-    // TH2D * h_wgt_reco_true = new TH2D("h_wgt", "", 42, 0, 42, 42, 0, 42);
-    // TH2D * h_wgt2_reco_true = new TH2D("h_wgt2", "", 42, 0, 42, 42, 0, 42);
-
-    // TH1D * h_all_evts_reco_true = new TH1D("h_all_evts", "", 42, 0, 42);
-    // TH1D * h_all_wgt_reco_true = new TH1D("h_all_wgt", "", 42, 0, 42);
-    // TH1D * h_all_wgt2_reco_true = new TH1D("h_all_wgt2", "", 42, 0, 42);
-
-    // int _n_bins = 42;
-    // for (int m = 0; m < _n_bins; m++) { // True bin
-
-    //   for (int i = 0; i < _n_bins; i++) { // Reco bin
-
-    //     double value = _event_histo_mc->h_poly_reco_per_true_evt[m+1]->GetBinContent(i+1);
-    //     double value2 = _event_histo_mc->h_poly_reco_per_true[m+1]->GetBinContent(i+1);
-    //     double value3 = _event_histo_mc->h_poly_reco_per_true_w2[m+1]->GetBinContent(i+1);
-
-    //     if (std::isnan(value)) value = 0.;
-    //     if (std::isnan(value2)) value2 = 0.;
-    //     if (std::isnan(value3)) value3 = 0.;
-        
-
-    //     h_evts_reco_true->SetBinContent(i+1, m+1, value);
-    //     h_wgt_reco_true->SetBinContent(i+1, m+1, value2);
-    //     h_wgt2_reco_true->SetBinContent(i+1, m+1, value3);
-        
-    //   }
-    // }
-
-    // for (int m = 0; m < _n_bins; m++) {
-
-    //   double value4 = _event_histo_mc->h_eff_muangle_mumom_poly_den_evt->GetBinContent(m+1);
-    //   double value5 = _event_histo_mc->h_eff_muangle_mumom_poly_den->GetBinContent(m+1);
-    //   double value6 = _event_histo_mc->h_eff_muangle_mumom_poly_den_w2->GetBinContent(m+1);
-
-    //   if (std::isnan(value4)) value4 = 0.;
-    //   if (std::isnan(value5)) value5 = 0.;
-    //   if (std::isnan(value6)) value6 = 0.;
-
-    //   h_all_evts_reco_true->SetBinContent(m+1, value4);
-    //   h_all_wgt_reco_true->SetBinContent(m+1, value5);
-    //   h_all_wgt2_reco_true->SetBinContent(m+1, value6);
-    // }
-
-
-    // TFile * f_tensionsws = TFile::Open("tensionsws.root", "RECREATE");
-    // f_tensionsws->cd();
-    // h_evts_reco_true->Write();
-    // h_wgt_reco_true->Write();
-    // h_wgt2_reco_true->Write();
-
-    // h_all_evts_reco_true->Write();
-    // h_all_wgt_reco_true->Write();
-    // h_all_wgt2_reco_true->Write();
-
-    // f_tensionsws->Close();
-
-    // // End tensions workshop
-
-
     // Create a list of the backgrounds that will be subtracted
     std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
     if (mc_dirt_file) {

@@ -2041,7 +2041,7 @@ void Main::Maker::MakeFile()
       _event_histo->h_eff_muangle_mumom_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       _event_histo->h_eff_muangle_mumom_poly_den->Fill(t->lep_costheta, t->true_muon_mom, event_weight);
       _event_histo->h_eff_muangle_mumom_poly_den_evt->Fill(t->lep_costheta, t->true_muon_mom, 1.);
-      _event_histo->h_eff_muangle_mumom_poly_den_w2->Fill(t->lep_costheta, t->true_muon_mom, event_weight*event_weight);
+      _event_histo->h_eff_muangle_mumom_poly_den_w2->Fill(t->lep_costheta, t->true_muon_mom, 1.);
       h_eff_muphi_den->Fill(t->lep_phi, event_weight);
       h_eff_mult_den->Fill(t->genie_mult, event_weight);
       h_eff_mult_ch_den->Fill(t->genie_mult_ch, event_weight);
