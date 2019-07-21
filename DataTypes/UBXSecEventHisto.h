@@ -126,10 +126,8 @@ namespace DataTypes {
     UBTH2Poly * h_eff_muangle_mumom_poly_num = 0; ///< Efficiency Numerator - Double Differential (polybin)
     UBTH2Poly * h_eff_muangle_mumom_poly_den = 0; ///< Efficiency Denominator - Double Differential (polybin)
     UBTH2Poly * h_eff_muangle_mumom_poly_den_evt = 0; ///< Efficiency Denominator - Double Differential (polybin) - No event weight applied
-    UBTH2Poly * h_eff_muangle_mumom_poly_den_w2 = 0; ///< Efficiency Denominator - Double Differential (polybin) - Sum of weight squareds
     std::vector<UBTH2Poly*> h_poly_reco_per_true; ///< Per true bins m (unrolled) it contains the distribution of the reco quantity
     std::vector<UBTH2Poly*> h_poly_reco_per_true_evt; ///< Per true bins m (unrolled) it contains the distribution of the reco quantity - No event weight applied
-    std::vector<UBTH2Poly*> h_poly_reco_per_true_w2; ///< Per true bins m (unrolled) it contains the distribution of the reco quantity - Sum of weight squareds
 
 
     BootstrapTH2DPoly * bs_genie_multisim_eff_poly_muangle_mumom_num = 0; ///< Efficiency Numerator - Double Differential PolyBins - Genie Multisim
