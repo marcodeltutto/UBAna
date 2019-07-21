@@ -1209,6 +1209,11 @@ void Main::Maker::MakeFile()
       }
     }
 
+    LOG_CRITICAL() << "-*************" << std::endl;
+    for (auto iter : _event_histo->hmap_trktheta_trkmom_poly) {
+      std::cout << "i = " << i << ", name is " << iter.first << std::endl;
+    }
+
 
     // ************************
     //
@@ -2082,9 +2087,12 @@ void Main::Maker::MakeFile()
       double mu_px = t->true_muon_mom * std::sin(std::acos(t->lep_costheta)) * std::cos(t->lep_phi);
       double mu_py = t->true_muon_mom * std::sin(std::acos(t->lep_costheta)) * std::sin(t->lep_phi);
       double mu_pz = t->true_muon_mom * t->lep_costheta;
-      double q0 = t->nu_e - std::sqrt(t->true_muon_mom * t->true_muon_mom + m_mu * m_mu);
-      double q3 = std::sqrt(mu_px * mu_px + mu_py * mu_py + (t->nu_e - mu_pz) * (t->nu_e - mu_pz));
-
+      double q0 = -1;
+      double q3 = -1;
+      if (!isdata) {
+        q0 = t->nu_e - std::sqrt(t->true_muon_mom * t->true_muon_mom + m_mu * m_mu);
+        q3 = std::sqrt(mu_px * mu_px + mu_py * mu_py + (t->nu_e - mu_pz) * (t->nu_e - mu_pz));
+      }
 
       // Also save the mc truth histogram per interaction type
       hmap_mctruth_nuenergy_gen["total"]->Fill(t->nu_e, event_weight);
@@ -2533,6 +2541,9 @@ void Main::Maker::MakeFile()
     if (isSignal && nu_origin) selected_signal_events_percut["fiducial_volume"]+=event_weight;
     selected_events_percut["fiducial_volume"]+=event_weight;
 
+    // Remove runs>7000 (where there is only ext)
+    if (t->run > 7000) continue;
+
     // Select the bump only
     // if(t->slc_iscontained.at(scl_ll_max)) continue; // Uncontained
     // if(t->slc_ntrack.at(scl_ll_max) != 1) continue; // Multiplicity == 1
@@ -2592,6 +2603,11 @@ void Main::Maker::MakeFile()
     hmap_multpfp["total"]->Fill(t->slc_mult_pfp.at(scl_ll_max), event_weight);
     hmap_multtracktol["total"]->Fill(t->slc_mult_track_tolerance.at(scl_ll_max), event_weight);
     _event_histo->hmap_trktheta_trkmom["total"]->Fill(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight);
+    LOG_CRITICAL() << "-----------------------" << std::endl;
+    for (auto iter : _event_histo->hmap_trktheta_trkmom_poly) {
+      std::cout << "name is " << iter.first << std::endl;
+    }
+    std::cout << _event_histo->hmap_trktheta_trkmom_poly["total"]->GetTitle() << std::endl;
     _event_histo->hmap_trktheta_trkmom_poly["total"]->Fill(t->slc_longesttrack_theta.at(scl_ll_max), t->slc_muoncandidate_mom_mcs.at(scl_ll_max), event_weight);
 
 
@@ -2875,8 +2891,12 @@ void Main::Maker::MakeFile()
       double mu_px = t->true_muon_mom * std::sin(std::acos(t->lep_costheta)) * std::cos(t->lep_phi);
       double mu_py = t->true_muon_mom * std::sin(std::acos(t->lep_costheta)) * std::sin(t->lep_phi);
       double mu_pz = t->true_muon_mom * t->lep_costheta;
-      double q0 = t->nu_e - std::sqrt(t->true_muon_mom * t->true_muon_mom + m_mu * m_mu);
-      double q3 = std::sqrt(mu_px * mu_px + mu_py * mu_py + (t->nu_e - mu_pz) * (t->nu_e - mu_pz));
+      double q0 = -1;
+      double q3 = -1;
+      if (!isdata) {
+        q0 = t->nu_e - std::sqrt(t->true_muon_mom * t->true_muon_mom + m_mu * m_mu);
+        q3 = std::sqrt(mu_px * mu_px + mu_py * mu_py + (t->nu_e - mu_pz) * (t->nu_e - mu_pz));
+      }
 
       // Also save themc truth histogram per interaction type
       hmap_mctruth_nuenergy["total"]->Fill(t->nu_e, event_weight);

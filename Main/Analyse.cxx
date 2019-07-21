@@ -592,63 +592,65 @@ namespace Main {
     }
 
 
-    // For tensions ws
-    TH2D * h_evts_reco_true = new TH2D("h_evts", "", 42, 0, 42, 42, 0, 42);
-    TH2D * h_wgt_reco_true = new TH2D("h_wgt", "", 42, 0, 42, 42, 0, 42);
-    TH2D * h_wgt2_reco_true = new TH2D("h_wgt2", "", 42, 0, 42, 42, 0, 42);
+    // // For tensions ws
+    // TH2D * h_evts_reco_true = new TH2D("h_evts", "", 42, 0, 42, 42, 0, 42);
+    // TH2D * h_wgt_reco_true = new TH2D("h_wgt", "", 42, 0, 42, 42, 0, 42);
+    // TH2D * h_wgt2_reco_true = new TH2D("h_wgt2", "", 42, 0, 42, 42, 0, 42);
 
-    TH1D * h_all_evts_reco_true = new TH1D("h_all_evts", "", 42, 0, 42);
-    TH1D * h_all_wgt_reco_true = new TH1D("h_all_wgt", "", 42, 0, 42);
-    TH1D * h_all_wgt2_reco_true = new TH1D("h_all_wgt2", "", 42, 0, 42);
+    // TH1D * h_all_evts_reco_true = new TH1D("h_all_evts", "", 42, 0, 42);
+    // TH1D * h_all_wgt_reco_true = new TH1D("h_all_wgt", "", 42, 0, 42);
+    // TH1D * h_all_wgt2_reco_true = new TH1D("h_all_wgt2", "", 42, 0, 42);
 
-    int _n_bins = 42;
-    for (int m = 0; m < _n_bins; m++) { // True bin
+    // int _n_bins = 42;
+    // for (int m = 0; m < _n_bins; m++) { // True bin
 
-      for (int i = 0; i < _n_bins; i++) { // Reco bin
+    //   for (int i = 0; i < _n_bins; i++) { // Reco bin
 
-        double value = _event_histo_mc->h_poly_reco_per_true_evt[m+1]->GetBinContent(i+1);
-        double value2 = _event_histo_mc->h_poly_reco_per_true[m+1]->GetBinContent(i+1);
-        double value3 = _event_histo_mc->h_poly_reco_per_true_w2[m+1]->GetBinContent(i+1);
+    //     double value = _event_histo_mc->h_poly_reco_per_true_evt[m+1]->GetBinContent(i+1);
+    //     double value2 = _event_histo_mc->h_poly_reco_per_true[m+1]->GetBinContent(i+1);
+    //     double value3 = _event_histo_mc->h_poly_reco_per_true_w2[m+1]->GetBinContent(i+1);
 
-        if (std::isnan(value)) value = 0.;
-        if (std::isnan(value2)) value2 = 0.;
-        if (std::isnan(value3)) value3 = 0.;
+    //     if (std::isnan(value)) value = 0.;
+    //     if (std::isnan(value2)) value2 = 0.;
+    //     if (std::isnan(value3)) value3 = 0.;
         
 
-        h_evts_reco_true->SetBinContent(i+1, m+1, value);
-        h_wgt_reco_true->SetBinContent(i+1, m+1, value2);
-        h_wgt2_reco_true->SetBinContent(i+1, m+1, value3);
+    //     h_evts_reco_true->SetBinContent(i+1, m+1, value);
+    //     h_wgt_reco_true->SetBinContent(i+1, m+1, value2);
+    //     h_wgt2_reco_true->SetBinContent(i+1, m+1, value3);
         
-      }
-    }
+    //   }
+    // }
 
-    for (int m = 0; m < _n_bins; m++) {
+    // for (int m = 0; m < _n_bins; m++) {
 
-      double value4 = _event_histo_mc->h_eff_muangle_mumom_poly_den_evt->GetBinContent(m+1);
-      double value5 = _event_histo_mc->h_eff_muangle_mumom_poly_den->GetBinContent(m+1);
-      double value6 = _event_histo_mc->h_eff_muangle_mumom_poly_den_w2->GetBinContent(m+1);
+    //   double value4 = _event_histo_mc->h_eff_muangle_mumom_poly_den_evt->GetBinContent(m+1);
+    //   double value5 = _event_histo_mc->h_eff_muangle_mumom_poly_den->GetBinContent(m+1);
+    //   double value6 = _event_histo_mc->h_eff_muangle_mumom_poly_den_w2->GetBinContent(m+1);
 
-      if (std::isnan(value4)) value4 = 0.;
-      if (std::isnan(value5)) value5 = 0.;
-      if (std::isnan(value6)) value6 = 0.;
+    //   if (std::isnan(value4)) value4 = 0.;
+    //   if (std::isnan(value5)) value5 = 0.;
+    //   if (std::isnan(value6)) value6 = 0.;
 
-      h_all_evts_reco_true->SetBinContent(m+1, value4);
-      h_all_wgt_reco_true->SetBinContent(m+1, value5);
-      h_all_wgt2_reco_true->SetBinContent(m+1, value6);
-    }
+    //   h_all_evts_reco_true->SetBinContent(m+1, value4);
+    //   h_all_wgt_reco_true->SetBinContent(m+1, value5);
+    //   h_all_wgt2_reco_true->SetBinContent(m+1, value6);
+    // }
 
 
-    TFile * f_tensionsws = TFile::Open("tensionsws.root", "RECREATE");
-    f_tensionsws->cd();
-    h_evts_reco_true->Write();
-    h_wgt_reco_true->Write();
-    h_wgt2_reco_true->Write();
+    // TFile * f_tensionsws = TFile::Open("tensionsws.root", "RECREATE");
+    // f_tensionsws->cd();
+    // h_evts_reco_true->Write();
+    // h_wgt_reco_true->Write();
+    // h_wgt2_reco_true->Write();
 
-    h_all_evts_reco_true->Write();
-    h_all_wgt_reco_true->Write();
-    h_all_wgt2_reco_true->Write();
+    // h_all_evts_reco_true->Write();
+    // h_all_wgt_reco_true->Write();
+    // h_all_wgt2_reco_true->Write();
 
-    f_tensionsws->Close();
+    // f_tensionsws->Close();
+
+    // // End tensions workshop
 
 
     // Create a list of the backgrounds that will be subtracted
@@ -2121,6 +2123,8 @@ namespace Main {
       if (_import_alternative_mc) xsec_mc_alt_histos.at(i).Write(save_name.c_str());
     }
 
+    TH2D stat_cov_matrix = xsec_calc_poly.GetStatCovarianceMatrix();
+
     save_name = "frac_cov_matrix_poly_muangle_mumom_genie_" + _prefix;
     frac_covariance_matrix_genie.Write(save_name.c_str());
     save_name = "frac_cov_matrix_poly_muangle_mumom_mec_ccqe_reint_" + _prefix;
@@ -2150,6 +2154,91 @@ namespace Main {
       unc_plotter.MakePlot("relative_uncertainty_muangle_mumom");
     }
 
+
+
+
+    // For tensions ws
+    bool tw = true;
+    bool tw_save_xsec = true;
+
+    if (tw) {
+      TH2D * h_evts_reco_true = new TH2D("h_evts", "", 42, 0, 42, 42, 0, 42);
+      TH2D * h_wgt_reco_true = new TH2D("h_wgt", "", 42, 0, 42, 42, 0, 42);
+      TH2D * h_wgt2_reco_true = new TH2D("h_wgt2", "", 42, 0, 42, 42, 0, 42);
+
+      TH1D * h_all_evts_reco_true = new TH1D("h_all_evts", "", 42, 0, 42);
+      TH1D * h_all_wgt_reco_true = new TH1D("h_all_wgt", "", 42, 0, 42);
+      TH1D * h_all_wgt2_reco_true = new TH1D("h_all_wgt2", "", 42, 0, 42);
+
+      TH1D * h_xsec = new TH1D("h_xsec", "", 42, 0, 42);
+      TH1D * h_bkg = new TH1D("h_bkg", "", 42, 0, 42);
+
+      int _n_bins = 42;
+      // for (int m = 0; m < _n_bins; m++) { // True bin
+
+      //   for (int i = 0; i < _n_bins; i++) { // Reco bin
+
+      //     double value = _event_histo_mc->h_poly_reco_per_true_evt[m+1]->GetBinContent(i+1);
+      //     double value2 = _event_histo_mc->h_poly_reco_per_true[m+1]->GetBinContent(i+1);
+      //     double value3 = _event_histo_mc->h_poly_reco_per_true_w2[m+1]->GetBinContent(i+1);
+
+      //     if (std::isnan(value)) value = 0.;
+      //     if (std::isnan(value2)) value2 = 0.;
+      //     if (std::isnan(value3)) value3 = 0.;
+          
+
+      //     h_evts_reco_true->SetBinContent(i+1, m+1, value);
+      //     h_wgt_reco_true->SetBinContent(i+1, m+1, value2);
+      //     h_wgt2_reco_true->SetBinContent(i+1, m+1, value3);
+          
+      //   }
+      // }
+
+      for (int m = 0; m < _n_bins; m++) {
+
+        // double value4 = _event_histo_mc->h_eff_muangle_mumom_poly_den_evt->GetBinContent(m+1);
+        // double value5 = _event_histo_mc->h_eff_muangle_mumom_poly_den->GetBinContent(m+1);
+        // double value6 = _event_histo_mc->h_eff_muangle_mumom_poly_den_w2->GetBinContent(m+1);
+        double value7, value8 = 0.;
+        if (tw_save_xsec) value7 = xsec_muangle_mumom_poly->GetBinContent(m+1);
+        value8 = bkg_muangle_mumom_poly->GetBinContent(m+1);
+
+        // if (std::isnan(value4)) value4 = 0.;
+        // if (std::isnan(value5)) value5 = 0.;
+        // if (std::isnan(value6)) value6 = 0.;
+        if (std::isnan(value7)) value7 = 0.;
+        if (std::isnan(value8)) value8 = 0.;
+
+        // h_all_evts_reco_true->SetBinContent(m+1, value4);
+        // h_all_wgt_reco_true->SetBinContent(m+1, value5);
+        // h_all_wgt2_reco_true->SetBinContent(m+1, value6);
+
+        if (tw_save_xsec) h_xsec->SetBinContent(m+1, value7);
+        h_bkg->SetBinContent(m+1, value8);
+      }
+
+
+      TFile * f_tensionsws = TFile::Open("tensionsws.root", "RECREATE");
+      f_tensionsws->cd();
+      
+      // h_evts_reco_true->Write();
+      // h_wgt_reco_true->Write();
+      // h_wgt2_reco_true->Write();
+
+      // h_all_evts_reco_true->Write();
+      // h_all_wgt_reco_true->Write();
+      // h_all_wgt2_reco_true->Write();
+
+      stat_cov_matrix.Write("stat_cov_matrix");
+
+      h_xsec->Write();
+      h_bkg->Write();
+
+      f_tensionsws->Close();
+    }
+
+    // End tensions workshop
+
   }
 
 
@@ -2162,7 +2251,7 @@ namespace Main {
 
   gROOT->SetBatch(kFALSE);
 
-  
+
 
 
   // *************************************
