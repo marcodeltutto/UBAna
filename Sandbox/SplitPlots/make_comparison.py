@@ -67,14 +67,15 @@ def get_chi2 (name):
   all_files.append(f_ubana)
   xsec_data_muangle_mumom_h = f_ubana.Get('xsec_poly_muangle_mumom_' + name)
   xsec_muangle_mumom_reco_genie_h = f_ubana.Get('xsec_poly_muangle_mumom_mc_' + name)
+  tot_covariance_data_muangle_mumom_h = f_ubana.Get('tot_covariance_matrix_poly_muangle_mumom_' + name) 
 
   # Tune 3 prediction comes from tune3 file
   f_ubana_t3 = ROOT.TFile("xsec_file_cv_tune3.root");
   xsec_muangle_mumom_reco_genie_tune3_h = f_ubana_t3.Get('xsec_poly_muangle_mumom_mc_cv_tune3')
 
   # Coveriance matrix always comes from cv file
-  f_ubana_cv = TFile('xsec_file_' + 'cv' + '.root')
-  tot_covariance_data_muangle_mumom_h = f_ubana_cv.Get('tot_covariance_matrix_poly_muangle_mumom_' + 'cv') 
+  # f_ubana_cv = TFile('xsec_file_' + 'cv' + '.root')
+  # tot_covariance_data_muangle_mumom_h = f_ubana_cv.Get('tot_covariance_matrix_poly_muangle_mumom_' + 'cv') 
   
   covariance_data_muangle_mumom_m = TMatrix()
   covariance_data_muangle_mumom_m.Clear()
@@ -116,19 +117,20 @@ samples = ['cv', # central value
            # 'split_sample_up_anodevtx', # Vertex in the anode side, pointing up, 1
            # 'split_sample_down_anodevtx', # Vertex in the anode side, pointing down, 2
            # 'split_sample_cathode_anodevtx', # Vertex in the anode side, pointing at the acathode, 3
-           'split_sample_anode_cathodevtx', # Vertex in the cathode side, pointing at the anode, 4
-           'split_sample_up_cathodevtx', # Vertex in the cathode side, pointing up, 5
-           'split_sample_down_cathodevtx', # Vertex in the cathode side, pointing down, 6
-           'split_sample_cathode_cathodevtx', # Vertex in the cathode side, pointing at the cathode, 7
+           # 'split_sample_anode_cathodevtx', # Vertex in the cathode side, pointing at the anode, 4
+           # 'split_sample_up_cathodevtx', # Vertex in the cathode side, pointing up, 5
+           # 'split_sample_down_cathodevtx', # Vertex in the cathode side, pointing down, 6
+           # 'split_sample_cathode_cathodevtx', # Vertex in the cathode side, pointing at the cathode, 7
            # 'split_sample_anodevtx', # Vertex in the anode side, 8
            # 'split_sample_cathodevtx', # Vertex in the cathode side, 9
            # 'split_sample_anode', # Pointing at the anode, 10
            # 'split_sample_cathode', # Pointing at the cathode, 11
            # 'split_sample_right', # pointing right (to anode), 12
            # 'split_sample_left', # poining left (to cathode), 13
-           # 'model0', # 0.95 QE, 0.85 MEC, 0.75 RES, 0.85 DIS, 12
-           # 'model1', # 0.90 QE, 1.00 MEC, 0.00 RES, 0.85 DIS, 13
-           # 'model2' # 1.00 QE, 0.00 MEC, 1.50 RES, 1.00 DIS, 14
+           'split_sample_no30deg', # removing costheta between 0.85 and 0.89, 14
+           # 'model0', # 0.95 QE, 0.85 MEC, 0.75 RES, 0.85 DIS
+           # 'model1', # 0.90 QE, 1.00 MEC, 0.00 RES, 0.85 DIS
+           # 'model2' # 1.00 QE, 0.00 MEC, 1.50 RES, 1.00 DIS
            ] 
 
 # samples = ['split_sample_anode_anodevtx'] # Pointing at the cathode, 11
