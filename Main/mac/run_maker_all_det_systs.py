@@ -15,7 +15,7 @@ det_syst_list = ["CV"]
 for systname in det_syst_list:
   
   maker.SetInputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/detsyst/ubxsec_output_mc_bnbcosmic_detsyst_" + systname + "_ubcodev06_26_01_22.root")
-  maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/detsyst_tensionsws/ubxsecana_output_mc_bnbcosmic_detsyst_" + systname + "_ubcodev06_26_01_22_tensionsws.root");
+  maker.SetOutputFile("/uboone/data/users/mdeltutt/ubxsec_static/v06_26_01_22/detsyst/ubxsecana_output_mc_bnbcosmic_detsyst_" + systname + "_ubcodev06_26_01_22_tensionsws.root");
 
   maker.SetEntries(-1)
   maker.SetBeamSpillStart(3.1)    

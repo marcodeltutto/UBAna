@@ -592,34 +592,6 @@ namespace Main {
     }
 
 
-    // For tensions ws
-    TH2D * h_evts_reco_true = new TH2D("h_evts_reco_true", "", 42, 0, 42, 42, 0, 42);
-    int _n_bins = 42;
-    for (int m = 0; m < _n_bins + 1; m++) { // True bin
-
-      int true_idx = m - 1;
-      if (true_idx < 0) true_idx = _n_bins;
-
-      // _reco_per_true = (UBTH2Poly*) _h_reco_per_true[m]->Clone("_reco_per_true");      
-
-      for (int i = 0; i < _n_bins; i++) {
-
-        double value = _event_histo_mc->h_poly_reco_per_true_evt[m]->GetBinContent(i+1);
-
-        if (std::isnan(value))
-          value = 0.;
-        std::cout << "i " << i << ", true_idx " << true_idx << ", value " << value << std::endl;
-        h_evts_reco_true->SetBinContent(i, true_idx, value);
-        
-      }
-    }
-
-    TFile * f_tensionsws = TFile::Open("tensionsws.root", "RECREATE");
-    f_tensionsws->cd();
-    h_evts_reco_true->Write();
-    f_tensionsws->Close();
-
-
     // Create a list of the backgrounds that will be subtracted
     std::vector<std::string> bkg_names = {"beam-off", "cosmic", "outfv", "nc", "nue", "anumu"};
     if (mc_dirt_file) {
