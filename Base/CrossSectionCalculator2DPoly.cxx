@@ -273,6 +273,13 @@ namespace Base {
     }
     flux_latex.close();
 
+    std::ofstream flux_txt;
+    flux_txt.open (_folder + "_flux.txt", std::ofstream::out | std::ofstream::trunc);
+    for (int i = 0; i < 136; i++) {
+      flux_txt<< h_flux_numu->GetBinLowEdge(i+1) << ", " << h_flux_numu->GetBinLowEdge(i+1) + h_flux_numu->GetBinWidth(i+1) << ", " << h_flux_numu->GetBinContent(i+1) << std::endl;
+    }
+    flux_txt.close();
+
     
     _flux = h_flux_numu->Integral();
 
