@@ -195,7 +195,7 @@ namespace Main {
   // Getting the relevant histograms from MC file BNBCosmic
   // *************************************
   std::map<std::string,TH1D*>* temp_map;
-  // std::map<std::string,TH2D*>* temp_map_2d;
+  std::map<std::string,TH2D*>* temp_map_2d;
   mc_bnbcosmic_file->GetObject("hmap_trklen", temp_map);
   std::map<std::string,TH1D*> hmap_trklen_mc = *temp_map;
   mc_bnbcosmic_file->GetObject("hmap_trkmom_classic", temp_map);
@@ -254,24 +254,24 @@ namespace Main {
   std::map<std::string,TH1D*> hmap_mctruth_muphi_mc = *temp_map;
   // mc_bnbcosmic_file->GetObject("hmap_mctruth_chargedmult", temp_map);
   // std::map<std::string,TH1D*> hmap_mctruth_chargedmult_mc = *temp_map;
-  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom", temp_map_2d);
-  // std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_mc = *temp_map_2d;
-  // mc_bnbcosmic_file->GetObject("hmap_mctruth_q0_q3", temp_map_2d);
-  // std::map<std::string,TH2D*> hmap_mctruth_q0_q3_mc = *temp_map_2d;
-  // mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
-  // std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc = *temp_map;
-  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
-  // std::map<std::string,TH1D*> hmap_mctruth_mumom_gen_mc = *temp_map;
-  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_gen", temp_map);
-  // std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc = *temp_map;
-  // mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
-  // std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc = *temp_map;
-  // // mc_bnbcosmic_file->GetObject("hmap_mctruth_chargedmult_gen", temp_map);
-  // // std::map<std::string,TH1D*> hmap_mctruth_chargedmult_gen_mc = *temp_map;
-  // mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom_gen", temp_map_2d);
-  // std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_gen_mc = *temp_map_2d;
-  // mc_bnbcosmic_file->GetObject("hmap_mctruth_q0_q3_gen", temp_map_2d);
-  // std::map<std::string,TH2D*> hmap_mctruth_q0_q3_gen_mc = *temp_map_2d;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom", temp_map_2d);
+  std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_mc = *temp_map_2d;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_q0_q3", temp_map_2d);
+  std::map<std::string,TH2D*> hmap_mctruth_q0_q3_mc = *temp_map_2d;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_nuenergy_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_nuenergy_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mumom_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mumom_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_mucostheta_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_muphi_gen", temp_map);
+  std::map<std::string,TH1D*> hmap_mctruth_muphi_gen_mc = *temp_map;
+  // mc_bnbcosmic_file->GetObject("hmap_mctruth_chargedmult_gen", temp_map);
+  // std::map<std::string,TH1D*> hmap_mctruth_chargedmult_gen_mc = *temp_map;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_mucostheta_mumom_gen", temp_map_2d);
+  std::map<std::string,TH2D*> hmap_mctruth_muangle_mumom_gen_mc = *temp_map_2d;
+  mc_bnbcosmic_file->GetObject("hmap_mctruth_q0_q3_gen", temp_map_2d);
+  std::map<std::string,TH2D*> hmap_mctruth_q0_q3_gen_mc = *temp_map_2d;
   TH1D* h_flsPe_wcut_mc = (TH1D*)mc_bnbcosmic_file->Get("h_flsPe_wcut");
 
   
@@ -3011,41 +3011,41 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
   // canvas_mctruth_chargedmult->SaveAs(name + ".C","C");
 
 
-  // TCanvas* canvas_mctruth_nuenergy_gen = new TCanvas();
-  // THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Generated Signal Events");
-  // this->PlotMCTHStack(hs_mctruth_nuenergy_gen, hmap_mctruth_nuenergy_gen_mc, scale_factor_mc_bnbcosmic);
-  // PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  // PlottingTools::DrawSimulationOfficial();
-  // name = outdir + "mctruth_nuenergy_gen";
-  // canvas_mctruth_nuenergy_gen->SaveAs(name + ".pdf");
-  // canvas_mctruth_nuenergy_gen->SaveAs(name + ".C","C");
+  TCanvas* canvas_mctruth_nuenergy_gen = new TCanvas();
+  THStack *hs_mctruth_nuenergy_gen = new THStack("hs_mctruth_nuenergy_gen",";True Neutrino Energy [GeV];Generated Signal Events");
+  this->PlotMCTHStack(hs_mctruth_nuenergy_gen, hmap_mctruth_nuenergy_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
+  name = outdir + "mctruth_nuenergy_gen";
+  canvas_mctruth_nuenergy_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_nuenergy_gen->SaveAs(name + ".C","C");
 
-  // TCanvas* canvas_mctruth_mumom_gen = new TCanvas();
-  // THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Generated Signal Events");
-  // this->PlotMCTHStack(hs_mctruth_mumom_gen, hmap_mctruth_mumom_gen_mc, scale_factor_mc_bnbcosmic);
-  // PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  // PlottingTools::DrawSimulationOfficial();
-  // name = outdir + "mctruth_mumom_gen";
-  // canvas_mctruth_mumom_gen->SaveAs(name + ".pdf");
-  // canvas_mctruth_mumom_gen->SaveAs(name + ".C","C");
+  TCanvas* canvas_mctruth_mumom_gen = new TCanvas();
+  THStack *hs_mctruth_mumom_gen = new THStack("hs_mctruth_mumom_gen",";True Muon Momentum [GeV];Generated Signal Events");
+  this->PlotMCTHStack(hs_mctruth_mumom_gen, hmap_mctruth_mumom_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
+  name = outdir + "mctruth_mumom_gen";
+  canvas_mctruth_mumom_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_mumom_gen->SaveAs(name + ".C","C");
 
-  // TCanvas* canvas_mctruth_mucostheta_gen = new TCanvas();
-  // THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Generated Signal Events");
-  // this->PlotMCTHStack(hs_mctruth_mucostheta_gen, hmap_mctruth_mucostheta_gen_mc, scale_factor_mc_bnbcosmic);
-  // PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  // PlottingTools::DrawSimulationOfficial();
-  // name = outdir + "mctruth_mucostheta_gen";
-  // canvas_mctruth_mucostheta_gen->SaveAs(name + ".pdf");
-  // canvas_mctruth_mucostheta_gen->SaveAs(name + ".C","C");
+  TCanvas* canvas_mctruth_mucostheta_gen = new TCanvas();
+  THStack *hs_mctruth_mucostheta_gen = new THStack("hs_mctruth_mucostheta_gen",";True Muon cos(#theta);Generated Signal Events");
+  this->PlotMCTHStack(hs_mctruth_mucostheta_gen, hmap_mctruth_mucostheta_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
+  name = outdir + "mctruth_mucostheta_gen";
+  canvas_mctruth_mucostheta_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_mucostheta_gen->SaveAs(name + ".C","C");
 
-  // TCanvas* canvas_mctruth_muphi_gen = new TCanvas();
-  // THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Generated Signal Events");
-  // this->PlotMCTHStack(hs_mctruth_muphi_gen, hmap_mctruth_muphi_gen_mc, scale_factor_mc_bnbcosmic);
-  // PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
-  // PlottingTools::DrawSimulationOfficial();
-  // name = outdir + "mctruth_muphi_gen";
-  // canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
-  // canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
+  TCanvas* canvas_mctruth_muphi_gen = new TCanvas();
+  THStack *hs_mctruth_muphi_gen = new THStack("hs_mctruth_muphi_gen",";True Muon #phi;Generated Signal Events");
+  this->PlotMCTHStack(hs_mctruth_muphi_gen, hmap_mctruth_muphi_gen_mc, scale_factor_mc_bnbcosmic);
+  PlottingTools::DrawSimPOT(mc_pot_sim, bnbon_pot_meas);
+  PlottingTools::DrawSimulationOfficial();
+  name = outdir + "mctruth_muphi_gen";
+  canvas_mctruth_muphi_gen->SaveAs(name + ".pdf");
+  canvas_mctruth_muphi_gen->SaveAs(name + ".C","C");
 
   // TCanvas* canvas_mctruth_chargedmult_gen = new TCanvas();
   // THStack *hs_mctruth_chargedmult_gen = new THStack("hs_mctruth_chargedmult_gen",";Charged Particle Multiplicity;Generated Signal Events");
@@ -3305,75 +3305,75 @@ TCanvas* canvas_binnumber_poly = new TCanvas("canvas_binnumber_poly", "canvas", 
 
 
 
-  // //
-  // // Efficiency plots - p_mu, cos(theta_mu)
-  // //
+  //
+  // Efficiency plots - p_mu, cos(theta_mu)
+  //
 
-  // TCanvas* canvas_mc_eff_total = new TCanvas();
-  // TH2D* h_mc_eff_total = (TH2D*) hmap_mctruth_muangle_mumom_mc["total"]->Clone("h_mc_eff_total");
-  // h_mc_eff_total->Divide(hmap_mctruth_muangle_mumom_gen_mc["total"]);
-  // h_mc_eff_total->SetTitle("All Events");
-  // h_mc_eff_total->Draw("colz");
-  // name = outdir + "mctruth_efficiency_muangle_mumom_total";
-  // canvas_mc_eff_total->SaveAs(name + ".pdf");
-  // canvas_mc_eff_total->SaveAs(name + ".C","C");
+  TCanvas* canvas_mc_eff_total = new TCanvas();
+  TH2D* h_mc_eff_total = (TH2D*) hmap_mctruth_muangle_mumom_mc["total"]->Clone("h_mc_eff_total");
+  h_mc_eff_total->Divide(hmap_mctruth_muangle_mumom_gen_mc["total"]);
+  h_mc_eff_total->SetTitle("All Events");
+  h_mc_eff_total->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_total";
+  canvas_mc_eff_total->SaveAs(name + ".pdf");
+  canvas_mc_eff_total->SaveAs(name + ".C","C");
 
-  // TCanvas* canvas_mc_eff_qe = new TCanvas();
-  // TH2D* h_mc_eff_qe = (TH2D*) hmap_mctruth_muangle_mumom_mc["qe"]->Clone("h_mc_eff_qe");
-  // h_mc_eff_qe->Divide(hmap_mctruth_muangle_mumom_gen_mc["qe"]);
-  // h_mc_eff_qe->SetTitle("QE Events Only");
-  // h_mc_eff_qe->Draw("colz");
-  // name = outdir + "mctruth_efficiency_muangle_mumom_qe";
-  // canvas_mc_eff_qe->SaveAs(name + ".pdf");
-  // canvas_mc_eff_qe->SaveAs(name + ".C","C");
+  TCanvas* canvas_mc_eff_qe = new TCanvas();
+  TH2D* h_mc_eff_qe = (TH2D*) hmap_mctruth_muangle_mumom_mc["qe"]->Clone("h_mc_eff_qe");
+  h_mc_eff_qe->Divide(hmap_mctruth_muangle_mumom_gen_mc["qe"]);
+  h_mc_eff_qe->SetTitle("QE Events Only");
+  h_mc_eff_qe->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_qe";
+  canvas_mc_eff_qe->SaveAs(name + ".pdf");
+  canvas_mc_eff_qe->SaveAs(name + ".C","C");
 
-  // TCanvas* canvas_mc_eff_res = new TCanvas();
-  // TH2D* h_mc_eff_res = (TH2D*) hmap_mctruth_muangle_mumom_mc["res"]->Clone("h_mc_eff_res");
-  // h_mc_eff_res->Divide(hmap_mctruth_muangle_mumom_gen_mc["res"]);
-  // h_mc_eff_res->SetTitle("RES Events Only");
-  // h_mc_eff_res->Draw("colz");
-  // name = outdir + "mctruth_efficiency_muangle_mumom_res";
-  // canvas_mc_eff_res->SaveAs(name + ".pdf");
-  // canvas_mc_eff_res->SaveAs(name + ".C","C");
+  TCanvas* canvas_mc_eff_res = new TCanvas();
+  TH2D* h_mc_eff_res = (TH2D*) hmap_mctruth_muangle_mumom_mc["res"]->Clone("h_mc_eff_res");
+  h_mc_eff_res->Divide(hmap_mctruth_muangle_mumom_gen_mc["res"]);
+  h_mc_eff_res->SetTitle("RES Events Only");
+  h_mc_eff_res->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_res";
+  canvas_mc_eff_res->SaveAs(name + ".pdf");
+  canvas_mc_eff_res->SaveAs(name + ".C","C");
 
-  // TCanvas* canvas_mc_eff_dis = new TCanvas();
-  // TH2D* h_mc_eff_dis = (TH2D*) hmap_mctruth_muangle_mumom_mc["dis"]->Clone("h_mc_eff_dis");
-  // h_mc_eff_dis->Divide(hmap_mctruth_muangle_mumom_gen_mc["dis"]);
-  // h_mc_eff_dis->SetTitle("DIS Events Only");
-  // h_mc_eff_dis->Draw("colz");
-  // name = outdir + "mctruth_efficiency_muangle_mumom_dis";
-  // canvas_mc_eff_dis->SaveAs(name + ".pdf");
-  // canvas_mc_eff_dis->SaveAs(name + ".C","C");
+  TCanvas* canvas_mc_eff_dis = new TCanvas();
+  TH2D* h_mc_eff_dis = (TH2D*) hmap_mctruth_muangle_mumom_mc["dis"]->Clone("h_mc_eff_dis");
+  h_mc_eff_dis->Divide(hmap_mctruth_muangle_mumom_gen_mc["dis"]);
+  h_mc_eff_dis->SetTitle("DIS Events Only");
+  h_mc_eff_dis->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_dis";
+  canvas_mc_eff_dis->SaveAs(name + ".pdf");
+  canvas_mc_eff_dis->SaveAs(name + ".C","C");
 
-  // TCanvas* canvas_mc_eff_mec = new TCanvas();
-  // TH2D* h_mc_eff_mec = (TH2D*) hmap_mctruth_muangle_mumom_mc["mec"]->Clone("h_mc_eff_mec");
-  // h_mc_eff_mec->Divide(hmap_mctruth_muangle_mumom_gen_mc["mec"]);
-  // h_mc_eff_mec->SetTitle("MEC Events Only");
-  // h_mc_eff_mec->Draw("colz");
-  // name = outdir + "mctruth_efficiency_muangle_mumom_mec";
-  // canvas_mc_eff_mec->SaveAs(name + ".pdf");
-  // canvas_mc_eff_mec->SaveAs(name + ".C","C");
+  TCanvas* canvas_mc_eff_mec = new TCanvas();
+  TH2D* h_mc_eff_mec = (TH2D*) hmap_mctruth_muangle_mumom_mc["mec"]->Clone("h_mc_eff_mec");
+  h_mc_eff_mec->Divide(hmap_mctruth_muangle_mumom_gen_mc["mec"]);
+  h_mc_eff_mec->SetTitle("MEC Events Only");
+  h_mc_eff_mec->Draw("colz");
+  name = outdir + "mctruth_efficiency_muangle_mumom_mec";
+  canvas_mc_eff_mec->SaveAs(name + ".pdf");
+  canvas_mc_eff_mec->SaveAs(name + ".C","C");
 
 
 
-  // //
-  // // Efficiency plots - q0, q3
-  // //
+  //
+  // Efficiency plots - q0, q3
+  //
   
-  // TCanvas* canvas_mc_eff_q0_q3_total = new TCanvas();
-  // TH2D* h_mc_eff_q0_q3_total = (TH2D*) hmap_mctruth_q0_q3_mc["total"]->Clone("h_mc_eff_q0_q3_total");
-  // h_mc_eff_q0_q3_total->Divide(hmap_mctruth_q0_q3_gen_mc["total"]);
-  // h_mc_eff_q0_q3_total->SetTitle("All Events");
-  // h_mc_eff_q0_q3_total->Draw("colz");
-  // name = outdir + "mctruth_efficiency_q0_q3_total";
-  // canvas_mc_eff_q0_q3_total->SaveAs(name + ".pdf");
-  // canvas_mc_eff_q0_q3_total->SaveAs(name + ".C","C");
+  TCanvas* canvas_mc_eff_q0_q3_total = new TCanvas();
+  TH2D* h_mc_eff_q0_q3_total = (TH2D*) hmap_mctruth_q0_q3_mc["total"]->Clone("h_mc_eff_q0_q3_total");
+  h_mc_eff_q0_q3_total->Divide(hmap_mctruth_q0_q3_gen_mc["total"]);
+  h_mc_eff_q0_q3_total->SetTitle("All Events");
+  h_mc_eff_q0_q3_total->Draw("colz");
+  name = outdir + "mctruth_efficiency_q0_q3_total";
+  canvas_mc_eff_q0_q3_total->SaveAs(name + ".pdf");
+  canvas_mc_eff_q0_q3_total->SaveAs(name + ".C","C");
 
-  // TFile * f_temp = new TFile("./efficiency_ub_numu_ccinclusive.root", "NEW");
-  // f_temp->cd();
-  // h_mc_eff_total->Write("efficiency_pmu_costhetamu");
-  // h_mc_eff_q0_q3_total->Write("efficiency_q0_q3");
-  // f_temp->Close();
+  TFile * f_temp = new TFile("./efficiency_ub_numu_ccinclusive.root", "NEW");
+  f_temp->cd();
+  h_mc_eff_total->Write("efficiency_pmu_costhetamu");
+  h_mc_eff_q0_q3_total->Write("efficiency_q0_q3");
+  f_temp->Close();
   
   // Computing time
   clock_t end = clock();

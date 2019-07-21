@@ -296,7 +296,7 @@ namespace Main{
 
 
     // These variables are filled in the reco-true TTree in the code
-    double _mom_true, _mom_mcs, _mom_range;
+    double _mom_true, _mom_mcs;
     bool _contained, _selected;
     double _angle_true, _angle_reco;
     double _event_weight_fortree;
